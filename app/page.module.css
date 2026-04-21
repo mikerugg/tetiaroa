@@ -962,7 +962,7 @@
 .panorama {
   position: relative;
   min-height: 540px;
-  height: 78vh;
+  height: 90vh;
   overflow: hidden;
   background: #000;
 }
