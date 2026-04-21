@@ -1380,9 +1380,10 @@
   }
 
   .hero {
-    min-height: 640px;
-    height: 94vh;
-    height: 94svh;
+    min-height: 100vh;
+    min-height: 100svh;
+    height: 100vh;
+    height: 100svh;
   }
 
   .heroInner {
@@ -1524,9 +1525,10 @@
   }
 
   .panorama {
-    min-height: 420px;
-    height: 62vh;
-    height: 62svh;
+    min-height: 100vh;
+    min-height: 100svh;
+    height: 100vh;
+    height: 100svh;
   }
 
   .impact {
