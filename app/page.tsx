@@ -244,7 +244,7 @@ export default function Home() {
           </a>
           <div className={styles.links}>
             <Link href="/">Home</Link>
-            <Link href="/social">Social Feed</Link>
+            <Link href="/impact">Impact Feed</Link>
             <Link href="/turtle-tales">Turtle Tales</Link>
           </div>
           <div className={styles.navActions}>

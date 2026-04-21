@@ -21,7 +21,7 @@ type FeedPost = Program & {
 };
 
 export const metadata: Metadata = {
-  title: "Social Feed / Tetiaroa Society",
+  title: "Impact Feed / Tetiaroa Society",
   description:
     "Programs on the atoll and field notes from Tetiaroa, remixed into a social feed.",
 };
@@ -200,11 +200,11 @@ export default function SocialPage() {
             Home
           </Link>
           <Link
-            href="/social"
+            href="/impact"
             className={`${styles.navLink} ${styles.navLinkActive}`}
             aria-current="page"
           >
-            Social Feed
+            Impact Feed
           </Link>
           <Link href="/turtle-tales" className={styles.navLink}>
             Turtle Tales

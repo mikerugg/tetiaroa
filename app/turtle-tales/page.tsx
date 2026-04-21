@@ -30,8 +30,8 @@ export default function TurtleTalesPage() {
           <Link href="/" className={styles.navLink}>
             Home
           </Link>
-          <Link href="/social" className={styles.navLink}>
-            Social Feed
+          <Link href="/impact" className={styles.navLink}>
+            Impact Feed
           </Link>
           <Link
             href="/turtle-tales"
