@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tetiaroa Society — Save the Island. Save the World.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #07100e;
+    --ink-2: #0c1614;
+    --body: #cfd5d0;
+    --muted: #7a867f;
+    --paper: #f4f1ea;
+    --lagoon: #1f6b6e;
+    --lagoon-2: #2b8f8f;
+    --glow: #8fc9c9;
+    --sand: #d9ceaf;
+    --coral: #e24a2b;
+    --display: "Fraunces", "Times New Roman", serif;
+    --sans: "Inter", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--ink); color: var(--body); }
+  body {
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  ::selection { background: var(--coral); color: var(--paper); }
+
+  /* ------- Nav ------- */
+  nav.top {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 44px;
+    color: var(--paper);
+    background: linear-gradient(180deg, rgba(7,16,14,0.85) 0%, rgba(7,16,14,0) 100%);
+    transition: background 0.3s ease;
+  }
+  nav.top.scrolled { background: rgba(7,16,14,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.06); }
+  nav.top .brand {
+    font-family: var(--display); font-weight: 500;
+    font-size: 18px; letter-spacing: 0.02em;
+    display: flex; align-items: center; gap: 10px;
+    color: var(--paper);
+  }
+  nav.top .brand svg { width: 22px; height: 22px; }
+  nav.top .links { display: flex; gap: 30px; font-size: 13px; letter-spacing: 0.04em; }
+  nav.top .links a { color: rgba(244, 241, 234, 0.75); transition: color 0.2s; }
+  nav.top .links a:hover { color: var(--paper); }
+  nav.top .right { display: flex; gap: 14px; align-items: center; }
+  nav.top .search {
+    font-family: var(--mono); font-size: 12px; color: rgba(244,241,234,0.7);
+    display: flex; align-items: center; gap: 6px;
+  }
+  nav.top .donate {
+    font-family: var(--sans); font-weight: 600; font-size: 13px;
+    letter-spacing: 0.02em;
+    padding: 10px 22px;
+    background: var(--coral); color: var(--paper);
+    border-radius: 2px;
+    transition: transform 0.2s, background 0.2s;
+  }
+  nav.top .donate:hover { background: #ff5d3a; transform: translateY(-1px); }
+
+  /* ------- Hero ------- */
+  .hero {
+    position: relative; height: 100vh; min-height: 720px;
+    overflow: hidden; background: #000;
+    color: var(--paper);
+  }
+  .hero video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; z-index: 1;
+    filter: saturate(1.08) contrast(1.03);
+  }
+  .hero .scrim {
+    position: absolute; inset: 0; z-index: 2;
+    background:
+      linear-gradient(180deg, rgba(7,16,14,0.55) 0%, rgba(7,16,14,0.08) 28%, rgba(7,16,14,0.12) 55%, rgba(7,16,14,0.92) 100%),
+      linear-gradient(90deg, rgba(7,16,14,0.65) 0%, rgba(7,16,14,0) 55%);
+  }
+  .hero .hero-inner {
+    position: relative; z-index: 3;
+    height: 100%;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 48px 96px;
+    max-width: 1600px; margin: 0 auto;
+  }
+  .hero .badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    padding: 6px 12px;
+    border: 1px solid rgba(244,241,234,0.35);
+    border-radius: 2px;
+    margin-bottom: 28px;
+    align-self: flex-start;
+    color: rgba(244,241,234,0.9);
+    backdrop-filter: blur(6px);
+    background: rgba(7,16,14,0.2);
+  }
+  .hero .badge .pill { width: 6px; height: 6px; border-radius: 50%; background: var(--glow); }
+  .hero h1 {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(60px, 10vw, 168px);
+    line-height: 0.88;
+    letter-spacing: -0.035em;
+    margin: 0;
+    max-width: 1300px;
+    color: var(--paper);
+  }
+  .hero h1 .em {
+    font-style: italic;
+    font-variation-settings: "SOFT" 100;
+    color: var(--glow);
+  }
+  .hero .hero-row {
+    margin-top: 40px;
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  }
+  .hero .cta-primary {
+    font-family: var(--sans); font-weight: 600; font-size: 16px;
+    padding: 18px 34px;
+    background: var(--coral); color: var(--paper);
+    border-radius: 2px;
+    display: inline-flex; align-items: center; gap: 12px;
+    transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 12px 40px rgba(226, 74, 43, 0.35);
+  }
+  .hero .cta-primary:hover { background: #ff5d3a; transform: translateY(-2px); }
+  .hero .cta-primary .arrow {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--paper); color: var(--coral);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 14px; line-height: 0;
+  }
+  .hero .cta-secondary {
+    font-family: var(--sans); font-weight: 500; font-size: 15px;
+    padding: 18px 28px;
+    background: rgba(244,241,234,0.12);
+    color: var(--paper);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(244,241,234,0.25);
+    border-radius: 2px;
+    display: inline-flex; align-items: center; gap: 10px;
+    transition: background 0.2s;
+  }
+  .hero .cta-secondary:hover { background: rgba(244,241,234,0.2); }
+  .hero .cta-secondary .play {
+    width: 10px; height: 12px;
+    background: var(--paper);
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+  }
+  .hero .sound-toggle {
+    position: absolute; bottom: 36px; right: 48px; z-index: 5;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(244,241,234,0.8);
+    padding: 8px 14px;
+    border: 1px solid rgba(244,241,234,0.25);
+    border-radius: 2px;
+    cursor: pointer;
+    background: rgba(7,16,14,0.4);
+    backdrop-filter: blur(8px);
+  }
+  .hero .corner-tr {
+    position: absolute; top: 96px; right: 48px; z-index: 3;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(244,241,234,0.75);
+    text-align: right; line-height: 1.9;
+  }
+
+  /* ------- Rail (streaming-style) ------- */
+  .rail-section { padding: 70px 0 40px; }
+  .rail-section.first { padding-top: 90px; margin-top: -60px; position: relative; z-index: 4; }
+  .rail-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 0 48px; margin-bottom: 26px;
+    max-width: 1600px; margin-left: auto; margin-right: auto;
+  }
+  .rail-head h2 {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(28px, 3vw, 40px);
+    letter-spacing: -0.02em; line-height: 1;
+    color: var(--paper);
+    margin: 0;
+  }
+  .rail-head h2 .em { font-style: italic; color: var(--glow); }
+  .rail-head .tag {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .rail-head .see-all {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--glow);
+    border-bottom: 1px solid var(--glow);
+    padding-bottom: 2px;
+  }
+  .rail {
+    display: flex; gap: 16px;
+    padding: 0 48px 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(244,241,234,0.2) transparent;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+  .rail::-webkit-scrollbar { height: 6px; }
+  .rail::-webkit-scrollbar-thumb { background: rgba(244,241,234,0.15); border-radius: 3px; }
+  .rail::-webkit-scrollbar-track { background: transparent; }
+
+  /* ------- Card base ------- */
+  .card {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+    overflow: hidden;
+  }
+  .card .img-wrap {
+    position: relative; overflow: hidden;
+    background: var(--ink-2);
+  }
+  .card .img-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.4s;
+  }
+  .card:hover { transform: translateY(-6px); }
+  .card:hover .img-wrap img { transform: scale(1.06); filter: saturate(1.15); }
+  .card .img-wrap::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(7,16,14,0.9) 100%);
+    pointer-events: none;
+  }
+
+  /* ------- Species rail ------- */
+  .card-species {
+    width: 260px;
+  }
+  .card-species .img-wrap { aspect-ratio: 3/4; border-radius: 3px; }
+  .card-species .meta {
+    position: absolute; left: 16px; right: 16px; bottom: 14px; z-index: 2;
+    color: var(--paper);
+  }
+  .card-species .meta .name {
+    font-family: var(--display); font-size: 22px; font-weight: 400;
+    line-height: 1.1; letter-spacing: -0.01em;
+  }
+  .card-species .meta .sci {
+    font-family: var(--mono); font-size: 11px; font-style: italic;
+    color: rgba(244,241,234,0.75); margin-top: 4px; letter-spacing: 0.02em;
+  }
+  .card-species .corner {
+    position: absolute; top: 12px; left: 12px; z-index: 2;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em;
+    color: var(--paper);
+    background: rgba(7,16,14,0.55); backdrop-filter: blur(6px);
+    padding: 4px 8px; border-radius: 2px;
+  }
+  .card-species .status {
+    position: absolute; top: 12px; right: 12px; z-index: 2;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 2px;
+    backdrop-filter: blur(6px);
+  }
+  .card-species .status.recovering { background: rgba(31, 107, 110, 0.85); color: var(--paper); }
+  .card-species .status.stable { background: rgba(7, 16, 14, 0.6); color: var(--glow); }
+
+  /* ------- Program rail (wider, video-like) ------- */
+  .card-program {
+    width: 380px;
+  }
+  .card-program .img-wrap { aspect-ratio: 16/10; border-radius: 3px; }
+  .card-program .info {
+    padding: 16px 2px 4px;
+  }
+  .card-program .tag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--glow);
+  }
+  .card-program .title {
+    font-family: var(--display); font-size: 22px; font-weight: 400;
+    line-height: 1.15; margin-top: 8px; color: var(--paper);
+    letter-spacing: -0.01em;
+  }
+  .card-program .sub {
+    font-size: 13px; color: var(--muted); margin-top: 6px; line-height: 1.5;
+  }
+  .card-program .play-ring {
+    position: absolute; bottom: 16px; left: 16px; z-index: 2;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(244,241,234,0.92);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink);
+    transition: transform 0.3s;
+  }
+  .card-program:hover .play-ring { transform: scale(1.1); }
+  .card-program .play-ring::before {
+    content: ""; display: block;
+    width: 10px; height: 12px; background: var(--ink);
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    margin-left: 2px;
+  }
+  .card-program .duration {
+    position: absolute; top: 12px; right: 12px; z-index: 2;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+    color: var(--paper);
+    background: rgba(7,16,14,0.7); backdrop-filter: blur(6px);
+    padding: 3px 7px; border-radius: 2px;
+  }
+
+  /* ------- Featured hero card (big one) ------- */
+  .featured-row {
+    padding: 0 48px; max-width: 1600px; margin: 70px auto 40px;
+    display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px;
+  }
+  .featured-card {
+    position: relative; aspect-ratio: 16/10;
+    overflow: hidden; border-radius: 3px;
+    cursor: pointer;
+  }
+  .featured-card img, .featured-card video {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .featured-card:hover img, .featured-card:hover video { transform: scale(1.04); }
+  .featured-card::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(7,16,14,0.95) 100%);
+  }
+  .featured-card .body {
+    position: absolute; left: 32px; right: 32px; bottom: 28px; z-index: 2;
+    color: var(--paper);
+  }
+  .featured-card .body .eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--glow); margin-bottom: 14px;
+  }
+  .featured-card .body h3 {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(32px, 3vw, 48px);
+    letter-spacing: -0.02em; line-height: 1;
+    margin: 0;
+    max-width: 520px;
+  }
+  .featured-card .body .em { font-style: italic; color: var(--glow); }
+  .featured-card .body .sub {
+    margin-top: 12px; color: rgba(244,241,234,0.8); font-size: 14px;
+    max-width: 460px; line-height: 1.55;
+  }
+  .featured-card .body .watch {
+    margin-top: 18px;
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--sans); font-size: 13px; font-weight: 500;
+    padding: 10px 20px; background: rgba(244,241,234,0.14);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(244,241,234,0.3);
+    border-radius: 2px;
+  }
+
+  .side-stack { display: grid; grid-template-rows: 1fr 1fr; gap: 16px; }
+  .side-stack .featured-card .body h3 { font-size: clamp(22px, 2vw, 28px); }
+
+  /* ------- Impact band ------- */
+  .impact {
+    padding: 120px 48px;
+    max-width: 1600px; margin: 40px auto;
+    display: grid; grid-template-columns: 1.2fr 2fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .impact .left h2 {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(40px, 4.5vw, 64px);
+    letter-spacing: -0.02em; line-height: 1;
+    color: var(--paper); margin: 0 0 24px;
+  }
+  .impact .left h2 .em { font-style: italic; color: var(--glow); }
+  .impact .left p {
+    font-size: 15px; line-height: 1.6; color: var(--body); max-width: 420px;
+  }
+  .impact .stats {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 0;
+  }
+  .impact .stats .stat {
+    padding: 28px 28px 28px 0;
+    border-top: 1px solid rgba(244,241,234,0.15);
+    border-right: 1px solid rgba(244,241,234,0.1);
+  }
+  .impact .stats .stat:nth-child(2n) { border-right: none; padding-left: 28px; }
+  .impact .stats .stat:nth-last-child(-n+2) { border-bottom: 1px solid rgba(244,241,234,0.15); }
+  .impact .stat .num {
+    font-family: var(--display); font-size: clamp(54px, 5.5vw, 88px); font-weight: 300;
+    line-height: 0.95; letter-spacing: -0.03em;
+    color: var(--paper);
+  }
+  .impact .stat .num .unit { font-family: var(--mono); font-size: 16px; color: var(--glow); margin-left: 8px; letter-spacing: 0.05em; font-weight: 400; vertical-align: 0.8em; }
+  .impact .stat .lbl {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); margin-top: 14px;
+    max-width: 240px; line-height: 1.5;
+  }
+
+  /* ------- Panorama ------- */
+  .panorama {
+    position: relative; height: 78vh; min-height: 540px;
+    overflow: hidden; background: #000;
+  }
+  .panorama video, .panorama img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    filter: saturate(1.08);
+  }
+  .panorama .p-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(7,16,14,0.3) 0%, transparent 40%, rgba(7,16,14,0.85) 100%);
+  }
+  .panorama .p-copy {
+    position: absolute; left: 0; right: 0; bottom: 56px;
+    padding: 0 48px;
+    max-width: 1600px; margin: 0 auto;
+    z-index: 2;
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;
+    color: var(--paper);
+  }
+  .panorama .p-title {
+    font-family: var(--display);
+    font-size: clamp(36px, 5vw, 72px);
+    font-weight: 400; line-height: 0.98;
+    letter-spacing: -0.02em;
+    max-width: 900px;
+  }
+  .panorama .p-title .em { font-style: italic; color: var(--glow); }
+  .panorama .p-cta {
+    font-family: var(--sans); font-weight: 600; font-size: 14px;
+    padding: 14px 24px; background: var(--paper); color: var(--ink);
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  /* ------- Stories ------- */
+  .stories-head { margin-top: 60px; }
+
+  /* ------- Join band ------- */
+  .join {
+    position: relative;
+    padding: 140px 48px 120px;
+    background: linear-gradient(180deg, var(--ink) 0%, #0a1b19 100%);
+    overflow: hidden;
+  }
+  .join::before {
+    content: ""; position: absolute; top: -10%; right: -10%;
+    width: 60%; height: 120%;
+    background: radial-gradient(circle, rgba(143,201,201,0.18) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .join .wrap { position: relative; z-index: 2; max-width: 1400px; margin: 0 auto; }
+  .join .eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--glow); margin-bottom: 28px;
+  }
+  .join h2 {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(56px, 8vw, 136px);
+    line-height: 0.92; letter-spacing: -0.03em;
+    color: var(--paper);
+    max-width: 1300px;
+  }
+  .join h2 .em { font-style: italic; color: var(--glow); }
+  .join .sub {
+    margin-top: 32px; max-width: 560px;
+    font-size: 16px; line-height: 1.6; color: var(--body);
+  }
+  .join .actions {
+    margin-top: 48px;
+    display: flex; gap: 16px; flex-wrap: wrap; align-items: center;
+  }
+  .join .actions .btn {
+    font-family: var(--sans); font-weight: 600; font-size: 15px;
+    padding: 18px 32px; border-radius: 2px;
+    display: inline-flex; align-items: center; gap: 12px;
+    transition: transform 0.2s, background 0.2s;
+    cursor: pointer;
+  }
+  .join .btn.primary { background: var(--coral); color: var(--paper); box-shadow: 0 12px 40px rgba(226,74,43,0.35); }
+  .join .btn.primary:hover { background: #ff5d3a; transform: translateY(-2px); }
+  .join .btn.ghost { background: rgba(244,241,234,0.1); color: var(--paper); border: 1px solid rgba(244,241,234,0.25); }
+  .join .btn.ghost:hover { background: rgba(244,241,234,0.18); }
+  .join .btn.link { padding: 18px 0; color: var(--glow); font-weight: 500; font-size: 14px; letter-spacing: 0.02em; }
+
+  .join .give-row {
+    margin-top: 72px; display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid rgba(244,241,234,0.15);
+  }
+  .join .give {
+    padding: 30px 24px 30px 0;
+    border-right: 1px solid rgba(244,241,234,0.1);
+    cursor: pointer;
+    transition: padding 0.3s, background 0.3s;
+  }
+  .join .give:last-child { border-right: none; }
+  .join .give:hover { padding-left: 14px; background: rgba(143,201,201,0.04); }
+  .join .give .amt {
+    font-family: var(--display); font-size: 44px; font-weight: 400; line-height: 1;
+    color: var(--paper);
+  }
+  .join .give .amt .per { font-family: var(--mono); font-size: 12px; color: var(--glow); margin-left: 6px; }
+  .join .give .what {
+    margin-top: 10px; font-size: 13px; color: var(--muted); line-height: 1.5;
+  }
+  .join .give .arrow {
+    margin-top: 14px; font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--glow);
+  }
+
+  /* ------- Footer ------- */
+  footer.foot {
+    background: #050a09;
+    color: rgba(244,241,234,0.6);
+    padding: 80px 48px 32px;
+    font-size: 13px;
+  }
+  footer.foot .wrap { max-width: 1600px; margin: 0 auto; }
+  footer.foot .cols {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 40px; margin-bottom: 50px;
+  }
+  footer.foot .brand-col .mark {
+    font-family: var(--display); font-size: 28px; color: var(--paper);
+    margin-bottom: 20px; letter-spacing: -0.01em;
+  }
+  footer.foot .tagline {
+    font-size: 13px; line-height: 1.6; color: rgba(244, 241, 234, 0.5); max-width: 320px;
+  }
+  footer.foot h4 {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--paper); margin: 0 0 16px; font-weight: 500;
+  }
+  footer.foot ul { list-style: none; padding: 0; margin: 0; }
+  footer.foot li { margin-bottom: 10px; }
+  footer.foot a:hover { color: var(--paper); }
+  footer.foot .legal {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+    padding-top: 28px; border-top: 1px solid rgba(244,241,234,0.1);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(244,241,234,0.4);
+  }
+  footer.foot .legal .partners { display: flex; gap: 20px; flex-wrap: wrap; }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal.d1 { transition-delay: 0.08s; }
+  .reveal.d2 { transition-delay: 0.16s; }
+  .reveal.d3 { transition-delay: 0.24s; }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .featured-row { grid-template-columns: 1fr; }
+    .impact { grid-template-columns: 1fr; gap: 40px; padding: 80px 32px; }
+    .impact .stats { grid-template-columns: 1fr 1fr; }
+    .join .give-row { grid-template-columns: 1fr 1fr; }
+    footer.foot .cols { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 700px) {
+    nav.top { padding: 14px 20px; }
+    nav.top .links { display: none; }
+    .hero .hero-inner { padding: 0 24px 60px; }
+    .rail-head, .rail { padding-left: 24px; padding-right: 24px; }
+    .card-program { width: 280px; }
+    .card-species { width: 200px; }
+    .impact { grid-template-columns: 1fr; }
+    .impact .stats { grid-template-columns: 1fr; }
+    .panorama .p-copy { flex-direction: column; align-items: flex-start; }
+    .join { padding: 80px 24px; }
+    .join .give-row { grid-template-columns: 1fr; }
+    footer.foot { padding: 60px 24px 28px; }
+    footer.foot .cols { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top" id="topnav">
+  <a href="#" class="brand">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+      <circle cx="12" cy="12" r="9"/>
+      <ellipse cx="12" cy="12" rx="9" ry="4"/>
+      <circle cx="8" cy="11" r="0.6" fill="currentColor"/>
+      <circle cx="14" cy="13" r="0.6" fill="currentColor"/>
+      <circle cx="16.5" cy="10.5" r="0.6" fill="currentColor"/>
+    </svg>
+    Tetiaroa Society
+  </a>
+  <div class="links">
+    <a href="#wildlife">Wildlife</a>
+    <a href="#programs">Programs</a>
+    <a href="#atoll">The Atoll</a>
+    <a href="#stories">Stories</a>
+    <a href="#join">Support</a>
+  </div>
+  <div class="right">
+    <a href="#join" class="donate">Donate</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero">
+  <video autoplay muted loop playsinline preload="auto" poster="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1800&q=80">
+    <source src="https://tetiaroa.vercel.app/turtleclip.mp4" type="video/mp4">
+  </video>
+  <div class="scrim"></div>
+
+  <div class="corner-tr">
+    17° 00′ 18″ S · 149° 34′ 13″ W<br>
+    Society Islands · French Polynesia
+  </div>
+
+  <div class="hero-inner">
+    <div class="badge"><span class="pill"></span>Now streaming from Tetiaroa</div>
+    <h1>
+      Save the <span class="em">island.</span><br>
+      Save the world.
+    </h1>
+    <div class="hero-row">
+      <a href="#join" class="cta-primary">
+        Protect the atoll
+        <span class="arrow">→</span>
+      </a>
+      <a href="#atoll" class="cta-secondary">
+        <span class="play"></span>
+        Watch the film · 2:14
+      </a>
+    </div>
+  </div>
+
+  <div class="sound-toggle" id="sound-toggle">♪ Sound off</div>
+</section>
+
+<!-- ============ WILDLIFE RAIL ============ -->
+<section class="rail-section first" id="wildlife">
+  <div class="rail-head reveal">
+    <div>
+      <div class="tag">— Now protected</div>
+      <h2>Meet the <span class="em">residents.</span></h2>
+    </div>
+    <a class="see-all" href="#">See all 167 species →</a>
+  </div>
+  <div class="rail">
+    <a class="card card-species">
+      <div class="img-wrap">
+        <img src="https://www.tetiaroasociety.org/sites/default/files/styles/hero_sm_square/public/2019-03/DSC09915.jpeg.webp?itok=995rcV0-" alt="Green sea turtle">
+        <div class="corner">01 / 10</div>
+        <div class="status recovering">Recovering</div>
+      </div>
+      <div class="meta">
+        <div class="name">Green sea turtle</div>
+        <div class="sci">Chelonia mydas · honu</div>
+      </div>
+    </a>
+    <a class="card card-species">
+      <div class="img-wrap">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Sula_sula_by_Gregg_Yan_01.jpg" alt="Red-footed booby">
+        <div class="corner">02 / 10</div>
+        <div class="status stable">Stable</div>
+      </div>
+      <div class="meta">
+        <div class="name">Red-footed booby</div>
+        <div class="sci">Sula sula</div>
+      </div>
+    </a>
+    <a class="card card-species">
+      <div class="img-wrap">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6upBXglbywltBlwdWEHujusg747j6lHzcTA&s" alt="Blacktip reef shark">
+        <div class="corner">03 / 10</div>
+        <div class="status stable">Stable</div>
+      </div>
+      <div class="meta">
+        <div class="name">Blacktip reef shark</div>
+        <div class="sci">Carcharhinus melanopterus</div>
+      </div>
+    </a>
+    <a class="card card-species">
+      <div class="img-wrap">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpNmYDUUmMwFmLsFFHNmv_FjRHu2u5jY5cVA&s" alt="Coconut crab">
+        <div class="corner">04 / 10</div>
+        <div class="status recovering">Recovering</div>
+      </div>
+      <div class="meta">
+        <div class="name">Coconut crab</div>
+        <div class="sci">Birgus latro</div>
+      </div>
+    </a>
+    <a class="card card-species">
+      <div class="img-wrap">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRpyF22--UtYEhOuNammB-3XyMlfIrbFxzjQ&s" alt="Great frigatebird">
+        <div class="corner">05 / 10</div>
+        <div class="status stable">Stable</div>
+      </div>
+      <div class="meta">
+        <div class="name">Great frigatebird</div>
+        <div class="sci">Fregata minor</div>
+      </div>
+    </a>
+    <a class="card card-species">
+      <div class="img-wrap">
+        <img src="https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=600&q=85&auto=format" alt="Acropora coral">
+        <div class="corner">06 / 10</div>
+        <div class="status recovering">Recovering</div>
+      </div>
+      <div class="meta">
+        <div class="name">Acropora coral</div>
+        <div class="sci">Acropora spp.</div>
+      </div>
+    </a>
+    <a class="card card-species">
+      <div class="img-wrap">
+        <img src="https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=600&q=85&auto=format" alt="Pacific reef heron">
+        <div class="corner">07 / 10</div>
+        <div class="status stable">Stable</div>
+      </div>
+      <div class="meta">
+        <div class="name">Pacific reef heron</div>
+        <div class="sci">Egretta sacra</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ============ FEATURED PROGRAM ============ -->
+<div class="featured-row">
+  <div class="featured-card reveal">
+    <img src="https://images.unsplash.com/photo-1518877593221-1f28583780b4?w=1600&q=85&auto=format" alt="Reef science">
+    <div class="body">
+      <div class="eyebrow">— Featured program</div>
+      <h3>A lab that doesn't<br>look like <span class="em">a lab.</span></h3>
+      <div class="sub">The Ecostation on Motu Onetahi hosts researchers from 22 institutions on 14 concurrent projects. Open data. Slow timescales. Real answers.</div>
+      <div class="watch">Watch the program film →</div>
+    </div>
+  </div>
+  <div class="side-stack">
+    <div class="featured-card reveal d1">
+      <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1200&q=85&auto=format" alt="Turtle nesting">
+      <div class="body">
+        <div class="eyebrow">— Season in progress</div>
+        <h3>Honu <span class="em">season</span></h3>
+        <div class="sub">214 nests. 18,400 eggs. Patrolled nightly, Oct–Mar.</div>
+      </div>
+    </div>
+    <div class="featured-card reveal d2">
+      <img src="https://images.unsplash.com/photo-1587613864411-ac83abff7c2e?w=1200&q=85&auto=format" alt="Seabird monitoring">
+      <div class="body">
+        <div class="eyebrow">— Year 4 results</div>
+        <h3>After the <span class="em">rats.</span></h3>
+        <div class="sub">520 hectares, zero rats, six seabird species returning.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PROGRAMS RAIL ============ -->
+<section class="rail-section" id="programs">
+  <div class="rail-head reveal">
+    <div>
+      <div class="tag">— What we're doing</div>
+      <h2>Programs on <span class="em">the atoll.</span></h2>
+    </div>
+    <a class="see-all" href="#">All programs →</a>
+  </div>
+  <div class="rail">
+    <a class="card card-program">
+      <div class="img-wrap">
+        <img src="https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=1200&q=85&auto=format" alt="Coral">
+        <div class="play-ring"></div>
+        <div class="duration">4 YR</div>
+      </div>
+      <div class="info">
+        <div class="tag">Reef</div>
+        <div class="title">Coral resilience, year 4.</div>
+        <div class="sub">Tracking recovery from the 2016 bleaching event.</div>
+      </div>
+    </a>
+    <a class="card card-program">
+      <div class="img-wrap">
+        <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1200&q=85&auto=format" alt="Turtle">
+        <div class="play-ring"></div>
+        <div class="duration">ANNUAL</div>
+      </div>
+      <div class="info">
+        <div class="tag">Marine</div>
+        <div class="title">Turtle nesting patrol.</div>
+        <div class="sub">Nightly from October to March. 214 nests in 2025.</div>
+      </div>
+    </a>
+    <a class="card card-program">
+      <div class="img-wrap">
+        <img src="https://images.unsplash.com/photo-1587613864411-ac83abff7c2e?w=1200&q=85&auto=format" alt="Seabirds">
+        <div class="play-ring"></div>
+        <div class="duration">ONGOING</div>
+      </div>
+      <div class="info">
+        <div class="tag">Avian</div>
+        <div class="title">Seabird recovery.</div>
+        <div class="sub">Quarterly transects across all 12 motu since 2022.</div>
+      </div>
+    </a>
+    <a class="card card-program">
+      <div class="img-wrap">
+        <img src="https://images.unsplash.com/photo-1502810190503-8303352d0dd1?w=1200&q=85&auto=format" alt="Atoll">
+        <div class="play-ring"></div>
+        <div class="duration">2022</div>
+      </div>
+      <div class="info">
+        <div class="tag">Restoration</div>
+        <div class="title">Rat-free atoll.</div>
+        <div class="sub">520 hectares. Largest eradication in French Polynesia.</div>
+      </div>
+    </a>
+    <a class="card card-program">
+      <div class="img-wrap">
+        <img src="https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?w=1200&q=85&auto=format" alt="Mosquito">
+        <div class="play-ring"></div>
+        <div class="duration">PILOT</div>
+      </div>
+      <div class="info">
+        <div class="tag">Biosecurity</div>
+        <div class="title">Mosquito elimination.</div>
+        <div class="sub">Atoll-wide suppression with no insecticide.</div>
+      </div>
+    </a>
+    <a class="card card-program">
+      <div class="img-wrap">
+        <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1200&q=85&auto=format" alt="Education">
+        <div class="play-ring"></div>
+        <div class="duration">K–12</div>
+      </div>
+      <div class="info">
+        <div class="tag">Education</div>
+        <div class="title">Ora Hoa classroom.</div>
+        <div class="sub">Polynesian students, Polynesian science, every term.</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ============ IMPACT ============ -->
+<section class="impact" id="atoll">
+  <div class="left reveal">
+    <h2>Small atoll. <span class="em">Big numbers.</span></h2>
+    <p>Since 2010, Tetiaroa Society has run one of the most continuous conservation programs in the Pacific. The receipts:</p>
+  </div>
+  <div class="stats">
+    <div class="stat reveal">
+      <div class="num">12<span class="unit">motu</span></div>
+      <div class="lbl">islets under continuous stewardship</div>
+    </div>
+    <div class="stat reveal d1">
+      <div class="num">167</div>
+      <div class="lbl">native species actively monitored</div>
+    </div>
+    <div class="stat reveal d2">
+      <div class="num">520<span class="unit">ha</span></div>
+      <div class="lbl">atoll surface now rat-free</div>
+    </div>
+    <div class="stat reveal d3">
+      <div class="num">22</div>
+      <div class="lbl">research institutions, open data</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PANORAMA ============ -->
+<section class="panorama">
+  <video autoplay muted loop playsinline preload="auto" poster="https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=2400&q=85&auto=format">
+    <source src="https://tetiaroa.vercel.app/atoll.mp4" type="video/mp4">
+  </video>
+  <div class="p-overlay"></div>
+  <div class="p-copy">
+    <div class="p-title">Twelve motu. One lagoon.<br>Six km² of <span class="em">experiment.</span></div>
+    <a class="p-cta">Explore the atoll →</a>
+  </div>
+</section>
+
+<!-- ============ STORIES ============ -->
+<section class="rail-section stories-head" id="stories">
+  <div class="rail-head reveal">
+    <div>
+      <div class="tag">— Field notes</div>
+      <h2>From the <span class="em">atoll.</span></h2>
+    </div>
+    <a class="see-all" href="#">All stories →</a>
+  </div>
+  <div class="rail">
+    <a class="card card-program">
+      <div class="img-wrap">
+        <img src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1400&q=85&auto=format" alt="Reef storm">
+        <div class="play-ring"></div>
+        <div class="duration">8 MIN</div>
+      </div>
+      <div class="info">
+        <div class="tag">Research</div>
+        <div class="title">What the reef remembers about a storm.</div>
+        <div class="sub">Three years of resilience data from the windward side.</div>
+      </div>
+    </a>
+    <a class="card card-program">
+      <div class="img-wrap">
+        <img src="https://images.unsplash.com/photo-1591025207163-942350e47db2?w=1400&q=85&auto=format" alt="Turtle moonlight">
+        <div class="play-ring"></div>
+        <div class="duration">5 MIN</div>
+      </div>
+      <div class="info">
+        <div class="tag">Wildlife</div>
+        <div class="title">Counting honu by moonlight.</div>
+        <div class="sub">A season with Te Mana o Te Moana. 214 nests.</div>
+      </div>
+    </a>
+    <a class="card card-program">
+      <div class="img-wrap">
+        <img src="https://images.unsplash.com/photo-1530541930197-ff16ac917b0e?w=1400&q=85&auto=format" alt="Seabirds return">
+        <div class="play-ring"></div>
+        <div class="duration">6 MIN</div>
+      </div>
+      <div class="info">
+        <div class="tag">Restoration</div>
+        <div class="title">After the rats: what comes back.</div>
+        <div class="sub">Seabird transects two years post-eradication.</div>
+      </div>
+    </a>
+    <a class="card card-program">
+      <div class="img-wrap">
+        <img src="https://images.unsplash.com/photo-1518877593221-1f28583780b4?w=1400&q=85&auto=format" alt="Ecostation">
+        <div class="play-ring"></div>
+        <div class="duration">3 MIN</div>
+      </div>
+      <div class="info">
+        <div class="tag">The House</div>
+        <div class="title">A day at the Ecostation.</div>
+        <div class="sub">Inside Te Fare rua ihi — the House of Multiple Sciences.</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ============ JOIN ============ -->
+<section class="join" id="join">
+  <div class="wrap">
+    <div class="eyebrow reveal">— Be part of it</div>
+    <h2 class="reveal d1">A place worth <span class="em">keeping whole.</span></h2>
+    <div class="sub reveal d2">Tetiaroa Society runs entirely on members and donors. Every gift funds a specific monitoring program — with quarterly field updates from the team.</div>
+
+    <div class="actions reveal d2">
+      <a class="btn primary">Become a member →</a>
+      <a class="btn ghost">Make a one-time gift</a>
+      <a class="btn link">Read the 2025 annual report ↗</a>
+    </div>
+
+    <div class="give-row">
+      <div class="give">
+        <div class="amt">$25<span class="per">/mo</span></div>
+        <div class="what">A week of seabird transect supplies — tags, batteries, notebooks.</div>
+        <div class="arrow">Friend →</div>
+      </div>
+      <div class="give">
+        <div class="amt">$100<span class="per">/mo</span></div>
+        <div class="what">One full turtle-patrol night during nesting season.</div>
+        <div class="arrow">Steward →</div>
+      </div>
+      <div class="give">
+        <div class="amt">$500<span class="per">/mo</span></div>
+        <div class="what">A junior researcher at the Ecostation for a month of fieldwork.</div>
+        <div class="arrow">Patron →</div>
+      </div>
+      <div class="give">
+        <div class="amt">—<span class="per">other</span></div>
+        <div class="what">Pick an amount, or fund a program directly.</div>
+        <div class="arrow">Choose your own →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="cols">
+      <div class="brand-col">
+        <div class="mark">Tetiaroa Society</div>
+        <div class="tagline">A 501(c)(3) nonprofit dedicated to conservation, education, and research on Tetiaroa Atoll — ensuring island communities have a future as rich as their past.</div>
+      </div>
+      <div>
+        <h4>Programs</h4>
+        <ul>
+          <li><a href="#">Atoll Restoration</a></li>
+          <li><a href="#">Seabird monitoring</a></li>
+          <li><a href="#">Turtle conservation</a></li>
+          <li><a href="#">Blue Climate Initiative</a></li>
+          <li><a href="#">Education</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>The Atoll</h4>
+        <ul>
+          <li><a href="#">Geography & motu</a></li>
+          <li><a href="#">Cultural heritage</a></li>
+          <li><a href="#">Wildlife</a></li>
+          <li><a href="#">Ecostation</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Publications</h4>
+        <ul>
+          <li><a href="#">Annual reports</a></li>
+          <li><a href="#">Field notes</a></li>
+          <li><a href="#">Open data</a></li>
+          <li><a href="#">CASUP plan</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="#">Newsletter</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Partnerships</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">
+      <div>© 2026 Tetiaroa Society · EIN 45-1080688</div>
+      <div class="partners">
+        <span>Te Mana o Te Moana</span>
+        <span>Island Conservation</span>
+        <span>The Brando</span>
+        <span>CRIOBE</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll state
+  const nav = document.getElementById("topnav");
+  function onScroll() {
+    nav.classList.toggle("scrolled", window.scrollY > 40);
+  }
+  document.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add("in");
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -60px 0px" });
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+  // Smooth anchor
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener("click", (e) => {
+      const id = a.getAttribute("href").slice(1);
+      const el = document.getElementById(id);
+      if (el) { e.preventDefault(); el.scrollIntoView({ behavior: "smooth", block: "start" }); }
+    });
+  });
+
+  // Sound toggle (demo only — hero video is muted by browser policy)
+  const st = document.getElementById("sound-toggle");
+  let muted = true;
+  st.addEventListener("click", () => {
+    const v = document.querySelector(".hero video");
+    muted = !muted;
+    try { v.muted = muted; if (!muted) v.play(); } catch(e) {}
+    st.textContent = muted ? "♪ Sound off" : "♪ Sound on";
+  });
+</script>
+
+</body>
+</html>

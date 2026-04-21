@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tetiaroa Society — A living laboratory for island conservation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0c1614;
+    --ink-2: #1b2a27;
+    --body: #2a3b37;
+    --muted: #6a7a76;
+    --paper: #f4f1ea;
+    --paper-2: #ece7db;
+    --paper-3: #e0dacb;
+    --line: #1b2a27;
+    --line-soft: rgba(27, 42, 39, 0.18);
+    --lagoon: #1f6b6e;       /* deep teal */
+    --lagoon-2: #2b8f8f;
+    --sand: #d9ceaf;
+    --coral: #c24d2c;
+    --display: "Fraunces", "Times New Roman", serif;
+    --sans: "Inter", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--body);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- Typography ---------- */
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .eyebrow .dash { color: var(--lagoon); margin-right: 6px; }
+  .display { font-family: var(--display); font-weight: 400; letter-spacing: -0.02em; line-height: 0.98; color: var(--ink); }
+  .italic { font-style: italic; font-variation-settings: "SOFT" 50; }
+
+  /* ---------- Nav ---------- */
+  nav.top {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 40px;
+    color: var(--paper);
+    mix-blend-mode: difference;
+    transition: background 0.3s ease;
+  }
+  nav.top .brand {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: 0.02em;
+    display: flex; align-items: center; gap: 10px;
+  }
+  nav.top .brand svg { width: 22px; height: 22px; }
+  nav.top .links { display: flex; gap: 32px; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; }
+  nav.top .links a { opacity: 0.85; transition: opacity 0.2s; }
+  nav.top .links a:hover { opacity: 1; }
+  nav.top .cta {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 9px 16px; border: 1px solid currentColor;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  /* Chapter progress */
+  .progress-rail {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+    height: 2px; background: transparent; pointer-events: none;
+  }
+  .progress-rail .bar {
+    height: 100%; width: 0%; background: var(--lagoon);
+    transition: width 0.12s linear;
+  }
+
+  .chapter-dots {
+    position: fixed; right: 28px; top: 50%; transform: translateY(-50%);
+    z-index: 45; display: flex; flex-direction: column; gap: 14px;
+    mix-blend-mode: difference; color: var(--paper);
+  }
+  .chapter-dots a {
+    display: flex; align-items: center; gap: 12px; justify-content: flex-end;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    opacity: 0.55; transition: opacity 0.25s;
+  }
+  .chapter-dots a:hover { opacity: 1; }
+  .chapter-dots a.on { opacity: 1; }
+  .chapter-dots a .tick {
+    width: 22px; height: 1px; background: currentColor;
+    transition: width 0.3s ease;
+  }
+  .chapter-dots a.on .tick { width: 40px; background: var(--lagoon-2); }
+  .chapter-dots a .label { white-space: nowrap; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative; height: 100vh; min-height: 720px;
+    overflow: hidden; background: #000;
+    color: var(--paper);
+  }
+  .hero video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; z-index: 1;
+    filter: saturate(1.05) contrast(1.02);
+  }
+  .hero .scrim {
+    position: absolute; inset: 0; z-index: 2;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.1) 30%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0.65) 100%),
+      linear-gradient(90deg, rgba(0,0,0,0.35) 0%, transparent 50%);
+  }
+  .hero .hero-inner {
+    position: relative; z-index: 3; height: 100%;
+    display: grid; grid-template-rows: auto 1fr auto;
+    padding: 110px 48px 40px;
+  }
+  .hero .hero-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    opacity: 0.85;
+  }
+  .hero .hero-meta .dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--coral);
+    display: inline-block; margin-right: 8px; animation: pulse 2s infinite;
+    vertical-align: middle;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+  }
+  .hero .hero-body {
+    align-self: center;
+    display: grid; grid-template-columns: 1.4fr 1fr; gap: 60px; align-items: end;
+  }
+  .hero h1 {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(48px, 7.5vw, 120px);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    margin: 0;
+  }
+  .hero h1 .em {
+    font-style: italic;
+    font-variation-settings: "SOFT" 100;
+    color: #e9d9b4;
+  }
+  .hero .hero-sub {
+    font-family: var(--sans); font-weight: 300;
+    font-size: 17px; line-height: 1.6; max-width: 420px;
+    color: rgba(244, 241, 234, 0.88);
+    padding-bottom: 8px;
+  }
+  .hero .hero-foot {
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .hero .scroll-hint {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero .scroll-hint .line {
+    width: 40px; height: 1px; background: currentColor; display: inline-block;
+    animation: slide 2.2s ease-in-out infinite;
+  }
+  @keyframes slide {
+    0%, 100% { transform: translateY(0); opacity: 0.5; }
+    50% { transform: translateY(8px); opacity: 1; }
+  }
+  .hero .coords {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    text-align: right; line-height: 1.7;
+    opacity: 0.75;
+  }
+
+  /* ---------- Sections ---------- */
+  section.chapter { position: relative; padding: 120px 48px; }
+  section.chapter .wrap { max-width: 1280px; margin: 0 auto; }
+  .section-head {
+    display: grid; grid-template-columns: 160px 1fr; gap: 40px;
+    align-items: start; margin-bottom: 64px;
+  }
+  .section-head .num {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+    color: var(--ink);
+  }
+  .section-head h2 {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(40px, 5vw, 72px);
+    line-height: 1; letter-spacing: -0.02em;
+    margin: 0;
+    color: var(--ink);
+    max-width: 900px;
+  }
+  .section-head h2 .em { font-style: italic; color: var(--lagoon); font-variation-settings: "SOFT" 80; }
+
+  /* ---------- Chapter 02: Life (species) ---------- */
+  .life { background: var(--paper); }
+  .life .prose {
+    grid-column: 2;
+    max-width: 640px;
+    margin-top: 12px;
+    font-size: 18px; line-height: 1.65;
+    color: var(--body);
+  }
+  .life .prose p + p { margin-top: 18px; }
+  .species-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 20px; margin-top: 80px;
+  }
+  .species {
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .species:hover { transform: translateY(-6px); }
+  .species .s-img {
+    position: relative; aspect-ratio: 3/4; overflow: hidden;
+    background: var(--paper-3);
+  }
+  .species .s-img img, .species .s-img svg {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.4s;
+    filter: saturate(0.9);
+  }
+  .species:hover .s-img img, .species:hover .s-img svg {
+    transform: scale(1.08);
+    filter: saturate(1.1);
+  }
+  .species .s-img .ph-tag {
+    position: absolute; bottom: 10px; right: 10px;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em;
+    color: rgba(244,241,234,0.75);
+    background: rgba(12, 22, 20, 0.55);
+    padding: 3px 7px;
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .species .s-num {
+    position: absolute; top: 12px; left: 12px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em;
+    color: var(--paper);
+    background: rgba(12, 22, 20, 0.6);
+    padding: 4px 8px;
+    backdrop-filter: blur(4px);
+  }
+  .species .s-name {
+    font-family: var(--display); font-size: 20px;
+    color: var(--ink); margin-top: 14px; line-height: 1.1;
+  }
+  .species .s-sci {
+    font-family: var(--mono); font-size: 10px; color: var(--muted);
+    font-style: italic; margin-top: 4px; letter-spacing: 0.02em;
+  }
+  .species .s-status {
+    margin-top: 8px; font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .species .s-status.endangered { color: var(--coral); }
+  .species .s-status.recovering { color: var(--lagoon); }
+  .species .s-status.stable { color: var(--muted); }
+
+  /* ---------- Chapter 03: Work ---------- */
+  .work {
+    background: var(--ink);
+    color: var(--paper);
+    position: relative;
+    overflow: hidden;
+  }
+  .work .section-head .num { color: var(--paper); border-top-color: rgba(244, 241, 234, 0.3); }
+  .work .section-head h2 { color: var(--paper); }
+  .work .section-head h2 .em { color: #8fc9c9; }
+  .work .prose { color: rgba(244, 241, 234, 0.8); }
+
+  .work-grid {
+    display: grid; grid-template-columns: 1.3fr 1fr;
+    gap: 60px; margin-top: 40px;
+  }
+  .work-copy { max-width: 560px; }
+  .work-copy .lede { font-size: 19px; line-height: 1.65; color: rgba(244, 241, 234, 0.9); }
+  .work-copy .lede + p { margin-top: 18px; color: rgba(244, 241, 234, 0.7); font-size: 16px; }
+
+  .work-visual {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+  }
+  .work-visual img { width: 100%; height: 100%; object-fit: cover; }
+  .work-visual .caption {
+    position: absolute; bottom: 20px; left: 20px; right: 20px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--paper);
+    background: rgba(12, 22, 20, 0.7);
+    backdrop-filter: blur(6px);
+    padding: 10px 14px;
+  }
+  .work-visual .caption .tag { color: #8fc9c9; margin-right: 10px; }
+
+  /* Timeline */
+  .timeline {
+    margin-top: 100px;
+    border-top: 1px solid rgba(244, 241, 234, 0.2);
+    padding-top: 40px;
+  }
+  .timeline .t-head {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    opacity: 0.7; margin-bottom: 32px;
+  }
+  .timeline .t-rows {
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    gap: 0;
+    position: relative;
+  }
+  .timeline .t-rows::before {
+    content: ""; position: absolute; top: 24px; left: 0; right: 0;
+    height: 1px; background: rgba(244, 241, 234, 0.2);
+  }
+  .timeline .t-item { padding: 0 12px; position: relative; }
+  .timeline .t-item::before {
+    content: ""; position: absolute; top: 19px; left: 12px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--paper); border: 2px solid var(--ink);
+    outline: 1px solid var(--paper);
+  }
+  .timeline .t-item.active::before { background: var(--coral); }
+  .timeline .yr {
+    font-family: var(--display); font-size: 32px; font-weight: 400;
+    margin-top: 48px; color: var(--paper); line-height: 1;
+  }
+  .timeline .ev {
+    font-family: var(--sans); font-size: 13px; line-height: 1.5;
+    color: rgba(244, 241, 234, 0.75);
+    margin-top: 10px;
+  }
+
+  /* Stat band */
+  .stat-band {
+    margin-top: 100px; padding-top: 56px;
+    border-top: 1px solid rgba(244, 241, 234, 0.2);
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+  }
+  .stat-band .stat .num {
+    font-family: var(--display); font-size: 72px; font-weight: 300;
+    color: var(--paper); line-height: 0.95;
+    letter-spacing: -0.03em;
+  }
+  .stat-band .stat .num .unit { font-size: 28px; color: #8fc9c9; margin-left: 4px; vertical-align: super; font-weight: 400; }
+  .stat-band .stat .lbl {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(244, 241, 234, 0.7);
+    margin-top: 14px; padding-top: 14px;
+    border-top: 1px solid rgba(244, 241, 234, 0.15);
+    max-width: 220px;
+  }
+
+  /* ---------- Chapter 04: Promise (quote) ---------- */
+  .promise {
+    background: var(--paper-2);
+    padding: 160px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .promise .wrap { max-width: 1080px; margin: 0 auto; }
+  .promise .eyebrow { margin-bottom: 40px; }
+  .promise blockquote {
+    margin: 0; padding: 0;
+    font-family: var(--display); font-weight: 300;
+    font-size: clamp(36px, 4.4vw, 68px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .promise blockquote .em { font-style: italic; color: var(--lagoon); font-variation-settings: "SOFT" 80; }
+  .promise blockquote .mark {
+    font-family: var(--display);
+    font-size: 2em;
+    line-height: 0;
+    color: var(--lagoon);
+    opacity: 0.5;
+    vertical-align: -0.2em;
+    margin-right: 0.08em;
+  }
+  .promise .attribution {
+    margin-top: 56px;
+    display: flex; gap: 20px; align-items: center;
+  }
+  .promise .attribution .avatar {
+    width: 56px; height: 56px; border-radius: 50%; overflow: hidden;
+    background: var(--paper-3);
+  }
+  .promise .attribution .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .promise .attribution .name {
+    font-family: var(--display); font-size: 18px; color: var(--ink);
+  }
+  .promise .attribution .role {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-top: 4px;
+  }
+
+  /* Land-sea connection diagram / wide imagery */
+  .panorama {
+    position: relative; height: 70vh; min-height: 500px;
+    overflow: hidden; background: #000;
+  }
+  .panorama img, .panorama video {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    filter: saturate(1.05);
+  }
+  .panorama .p-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(12,22,20,0.25) 0%, transparent 40%, rgba(12,22,20,0.55) 100%);
+  }
+  .panorama .p-copy {
+    position: absolute; bottom: 48px; left: 48px; right: 48px;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    color: var(--paper); z-index: 2;
+  }
+  .panorama .p-copy .p-title {
+    font-family: var(--display); font-size: 48px; font-weight: 400; line-height: 1;
+    max-width: 620px;
+  }
+  .panorama .p-copy .p-meta {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    opacity: 0.8; text-align: right;
+  }
+
+  /* ---------- Journal ---------- */
+  .journal { background: var(--paper); padding-bottom: 80px; }
+  .journal-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 40px; margin-top: 40px;
+  }
+  .article .a-img {
+    aspect-ratio: 4/3; overflow: hidden; background: var(--paper-3);
+    margin-bottom: 20px;
+  }
+  .article .a-img img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .article:hover .a-img img { transform: scale(1.05); }
+  .article .a-meta {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--lagoon);
+  }
+  .article h3 {
+    font-family: var(--display); font-weight: 400;
+    font-size: 26px; line-height: 1.15;
+    color: var(--ink); margin: 10px 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .article .a-ex {
+    font-size: 14px; color: var(--muted); line-height: 1.5;
+  }
+  .article .a-read {
+    margin-top: 12px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink);
+    display: inline-block;
+    padding-bottom: 2px;
+  }
+
+  /* ---------- End CTA ---------- */
+  .join {
+    position: relative;
+    padding: 140px 48px;
+    background: var(--ink);
+    color: var(--paper);
+    overflow: hidden;
+  }
+  .join::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: url("https://images.unsplash.com/photo-1597466765990-64ad1c35dafc?w=2000&q=80&auto=format");
+    background-size: cover; background-position: center;
+    opacity: 0.35;
+    filter: saturate(0.7);
+  }
+  .join::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(12,22,20,0.6) 0%, rgba(12,22,20,0.85) 100%);
+  }
+  .join .wrap { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; }
+  .join .eyebrow { color: rgba(244,241,234,0.7); margin-bottom: 32px; }
+  .join h2 {
+    font-family: var(--display); font-weight: 300;
+    font-size: clamp(48px, 6.5vw, 96px);
+    line-height: 0.98; letter-spacing: -0.02em;
+    color: var(--paper);
+    max-width: 1000px;
+  }
+  .join h2 .em { font-style: italic; color: #8fc9c9; font-variation-settings: "SOFT" 80; }
+  .join .j-sub {
+    max-width: 560px; font-size: 17px; line-height: 1.6;
+    color: rgba(244, 241, 234, 0.8); margin-top: 32px;
+  }
+  .join .give-options {
+    margin-top: 56px;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid rgba(244, 241, 234, 0.25);
+  }
+  .join .give {
+    padding: 32px 28px 32px 0;
+    border-right: 1px solid rgba(244, 241, 234, 0.15);
+    display: flex; flex-direction: column; gap: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .join .give:last-child { border-right: none; }
+  .join .give:hover { background: rgba(244,241,234,0.04); padding-left: 16px; }
+  .join .give .amt {
+    font-family: var(--display); font-size: 42px; font-weight: 400;
+    color: var(--paper); line-height: 1;
+  }
+  .join .give .amt .per { font-family: var(--mono); font-size: 12px; color: #8fc9c9; margin-left: 6px; letter-spacing: 0.1em; }
+  .join .give .what {
+    font-size: 14px; color: rgba(244, 241, 234, 0.75);
+    line-height: 1.5;
+  }
+  .join .give .arrow {
+    margin-top: auto;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: #8fc9c9;
+  }
+  .join .actions {
+    margin-top: 56px;
+    display: flex; gap: 20px; align-items: center;
+  }
+  .join .actions .btn {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 16px 28px;
+    border: 1px solid var(--paper);
+    transition: background 0.2s, color 0.2s;
+    cursor: pointer;
+  }
+  .join .actions .btn.primary { background: var(--paper); color: var(--ink); }
+  .join .actions .btn.primary:hover { background: #8fc9c9; border-color: #8fc9c9; }
+  .join .actions .btn:hover { background: var(--paper); color: var(--ink); }
+
+  /* ---------- Footer ---------- */
+  footer.foot {
+    background: var(--ink-2);
+    color: rgba(244, 241, 234, 0.7);
+    padding: 80px 48px 40px;
+    font-size: 13px;
+  }
+  footer.foot .wrap { max-width: 1280px; margin: 0 auto; }
+  footer.foot .cols {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 40px; margin-bottom: 60px;
+  }
+  footer.foot .brand-col {
+    padding-right: 40px;
+  }
+  footer.foot .brand-col .mark {
+    font-family: var(--display); font-size: 28px; color: var(--paper);
+    margin-bottom: 20px; letter-spacing: -0.01em;
+  }
+  footer.foot .brand-col .tagline {
+    font-size: 14px; line-height: 1.6;
+    color: rgba(244, 241, 234, 0.65);
+  }
+  footer.foot h4 {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--paper); margin: 0 0 18px;
+    font-weight: 500;
+  }
+  footer.foot ul { list-style: none; padding: 0; margin: 0; }
+  footer.foot li { margin-bottom: 10px; }
+  footer.foot a:hover { color: var(--paper); }
+  footer.foot .legal {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 32px; border-top: 1px solid rgba(244, 241, 234, 0.15);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(244, 241, 234, 0.5);
+  }
+  footer.foot .legal .partners { display: flex; gap: 20px; }
+
+  /* ---------- Motion on scroll ---------- */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal.d1 { transition-delay: 0.1s; }
+  .reveal.d2 { transition-delay: 0.2s; }
+  .reveal.d3 { transition-delay: 0.3s; }
+  .reveal.d4 { transition-delay: 0.4s; }
+
+  /* Responsive tidy */
+  @media (max-width: 1100px) {
+    .hero .hero-body { grid-template-columns: 1fr; gap: 32px; }
+    .section-head { grid-template-columns: 1fr; }
+    .species-grid { grid-template-columns: repeat(3, 1fr); }
+    .work-grid { grid-template-columns: 1fr; }
+    .stat-band { grid-template-columns: repeat(2, 1fr); }
+    .timeline .t-rows { grid-template-columns: repeat(3, 1fr); }
+    .journal-grid { grid-template-columns: 1fr; }
+    .join .give-options { grid-template-columns: 1fr; }
+    .join .give { border-right: none; border-bottom: 1px solid rgba(244,241,234,0.15); }
+    footer.foot .cols { grid-template-columns: 1fr 1fr; }
+    .chapter-dots { display: none; }
+  }
+  @media (max-width: 640px) {
+    nav.top { padding: 14px 20px; }
+    nav.top .links { display: none; }
+    section.chapter { padding: 80px 24px; }
+    .hero .hero-inner { padding: 100px 24px 28px; }
+    .species-grid { grid-template-columns: repeat(2, 1fr); }
+    .promise { padding: 100px 24px; }
+    .join { padding: 100px 24px; }
+    footer.foot { padding: 60px 24px 30px; }
+    footer.foot .cols { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-rail"><div class="bar" id="pbar"></div></div>
+
+<nav class="top">
+  <a href="#" class="brand">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+      <circle cx="12" cy="12" r="9"/>
+      <ellipse cx="12" cy="12" rx="9" ry="4"/>
+      <circle cx="8" cy="11" r="0.6" fill="currentColor"/>
+      <circle cx="14" cy="13" r="0.6" fill="currentColor"/>
+      <circle cx="16.5" cy="10.5" r="0.6" fill="currentColor"/>
+    </svg>
+    Tetiaroa Society
+  </a>
+  <div class="links">
+    <a href="#atoll">Atoll</a>
+    <a href="#life">Wildlife</a>
+    <a href="#work">Our work</a>
+    <a href="#journal">Journal</a>
+    <a href="#join">Support</a>
+  </div>
+  <a href="#join" class="cta">Donate</a>
+</nav>
+
+
+
+<!-- ============ HERO / CHAPTER 01 ============ -->
+<section class="hero" id="hero">
+  <video autoplay muted loop playsinline preload="auto" poster="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1800&q=80">
+    <source src="https://tetiaroa.vercel.app/turtleclip.mp4" type="video/mp4">
+  </video>
+  <div class="scrim"></div>
+  <div class="hero-inner">
+    <div class="hero-meta">
+      <div><span class="dot"></span>LIVE FROM THE ATOLL · APR 2026</div>
+      <div>N° 01 — THE ATOLL</div>
+    </div>
+
+    <div class="hero-body">
+      <h1>
+        Save the <span class="em">island.</span><br>
+        Save the world.
+      </h1>
+      <div class="hero-sub">
+        For two decades, Tetiaroa Society has kept a twelve-motu atoll in the South Pacific under continuous scientific care — a rare chapter of restraint in the Anthropocene.
+      </div>
+    </div>
+
+    <div class="hero-foot">
+      <div class="scroll-hint">
+        <span>Scroll to read</span><span class="line"></span>
+      </div>
+      <div class="coords">
+        17° 00′ 18″ S · 149° 34′ 13″ W<br>
+        Society Islands · French Polynesia<br>
+        Est. 2010 — 501(c)(3) nonprofit
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 02 · LIFE ============ -->
+<section class="chapter life" id="life">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="num">— Ch. 02 / Life</div>
+      <div>
+        <h2>A living <span class="em">laboratory</span><br>for island<br>conservation.</h2>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:-40px;">
+      <div></div>
+      <div class="prose reveal d1">
+        <p>Ten species of seabird nest on Tetiaroa's motu. Green sea turtles (<em>honu</em>) return to the same sand where they hatched — up to ten nests, 60–110 eggs at a time. Blacktip reef sharks patrol the lagoon. The world's largest land arthropod, the coconut crab, lives beneath the palms.</p>
+        <p>For a century, introduced rats ate the eggs and pulled the whole food web down with them. In 2022, a multi-year eradication across 520 hectares removed them. This is the inventory we now keep.</p>
+      </div>
+    </div>
+
+    <div class="species-grid">
+      <a class="species reveal d1">
+        <div class="s-img">
+          <img src="https://www.tetiaroasociety.org/sites/default/files/styles/hero_sm_square/public/2019-03/DSC09915.jpeg.webp?itok=995rcV0-" alt="Green sea turtle">
+          <div class="s-num">01 / 10</div>
+        </div>
+        <div class="s-name">Green sea turtle</div>
+        <div class="s-sci">Chelonia mydas · <em>honu</em></div>
+        <div class="s-status recovering">◦ Recovering</div>
+      </a>
+      <a class="species reveal d2">
+        <div class="s-img">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Sula_sula_by_Gregg_Yan_01.jpg" alt="Red-footed booby">
+          <div class="s-num">02 / 10</div>
+        </div>
+        <div class="s-name">Red-footed booby</div>
+        <div class="s-sci">Sula sula</div>
+        <div class="s-status stable">◦ Stable</div>
+      </a>
+      <a class="species reveal d3">
+        <div class="s-img">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6upBXglbywltBlwdWEHujusg747j6lHzcTA&s" alt="Blacktip reef shark">
+          <div class="s-num">03 / 10</div>
+        </div>
+        <div class="s-name">Blacktip reef shark</div>
+        <div class="s-sci">Carcharhinus melanopterus</div>
+        <div class="s-status stable">◦ Stable</div>
+      </a>
+      <a class="species reveal d4">
+        <div class="s-img">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpNmYDUUmMwFmLsFFHNmv_FjRHu2u5jY5cVA&s" alt="Coconut crab">
+          <div class="s-num">04 / 10</div>
+        </div>
+        <div class="s-name">Coconut crab</div>
+        <div class="s-sci">Birgus latro</div>
+        <div class="s-status recovering">◦ Recovering</div>
+      </a>
+      <a class="species reveal d4">
+        <div class="s-img">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRpyF22--UtYEhOuNammB-3XyMlfIrbFxzjQ&s" alt="Great frigatebird">
+          <div class="s-num">05 / 10</div>
+        </div>
+        <div class="s-name">Great frigatebird</div>
+        <div class="s-sci">Fregata minor</div>
+        <div class="s-status stable">◦ Stable</div>
+      </a>
+    </div>
+
+    <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted);">
+      <span>— 5 of 167 species monitored</span>
+      <a href="#" style="color: var(--ink); border-bottom: 1px solid var(--ink); padding-bottom: 2px;">See full inventory →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WIDE PANORAMA ============ -->
+<section class="panorama">
+  <video autoplay muted loop playsinline preload="auto" poster="https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=2400&q=85&auto=format">
+    <source src="https://tetiaroa.vercel.app/atoll.mp4" type="video/mp4">
+  </video>
+  <div class="p-overlay"></div>
+  <div class="p-copy">
+    <div class="p-title">Twelve motu. One lagoon. Six square kilometers of experiment.</div>
+    <div class="p-meta">
+      Aerial — Motu Onetahi<br>
+      Photo: TS Field Archive · 2025
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 03 · WORK ============ -->
+<section class="chapter work" id="work">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="num">— Ch. 03 / Work</div>
+      <div>
+        <h2>A lab that doesn't<br>look like <span class="em">a lab.</span></h2>
+      </div>
+    </div>
+
+    <div class="work-grid">
+      <div class="work-copy reveal d1">
+        <p class="lede">Long-term monitoring. Rat-free seabird recovery. Mosquito elimination without insecticide. The Ecostation on Motu Onetahi — <em>Te Fare rua ihi</em>, the House of Multiple Sciences — hosts researchers from 22 institutions on 14 concurrent projects.</p>
+        <p>A quiet kind of science: patient, local, and unafraid of slow timescales. Seabird transects every quarter. Turtle nests mapped nightly, October through March. Reef surveys annually. Data is open; results are published; methods travel.</p>
+        <p>We call it a living laboratory because the atoll is both the question and the answer.</p>
+      </div>
+      <div class="work-visual reveal d2">
+        <img src="https://images.unsplash.com/photo-1518877593221-1f28583780b4?w=1200&q=85&auto=format" alt="Reef researcher">
+        <div class="caption">
+          <span class="tag">— field</span>
+          Reef survey · Motu Tiaraunu · June 2025
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline reveal">
+      <div class="t-head">— a slow chronology</div>
+      <div class="t-rows">
+        <div class="t-item">
+          <div class="yr">1967</div>
+          <div class="ev">Marlon Brando acquires Tetiaroa with the intent of keeping it whole.</div>
+        </div>
+        <div class="t-item">
+          <div class="yr">2010</div>
+          <div class="ev">Tetiaroa Society founded as a 501(c)(3) dedicated to the atoll.</div>
+        </div>
+        <div class="t-item">
+          <div class="yr">2014</div>
+          <div class="ev">Ecostation opens on Motu Onetahi — the House of Multiple Sciences.</div>
+        </div>
+        <div class="t-item">
+          <div class="yr">2018</div>
+          <div class="ev">TARP begins: multi-year baseline across every habitat on the atoll.</div>
+        </div>
+        <div class="t-item active">
+          <div class="yr">2022</div>
+          <div class="ev">Rat eradication completed across 520 hectares — largest of its kind in FP.</div>
+        </div>
+        <div class="t-item">
+          <div class="yr">2026</div>
+          <div class="ev">Seabird recovery year 4 published; mosquito elimination scales atoll-wide.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-band reveal">
+      <div class="stat">
+        <div class="num">12<span class="unit">motu</span></div>
+        <div class="lbl">islets under continuous stewardship since 2010</div>
+      </div>
+      <div class="stat">
+        <div class="num">167</div>
+        <div class="lbl">native species monitored across land & reef</div>
+      </div>
+      <div class="stat">
+        <div class="num">22</div>
+        <div class="lbl">research institutions contributing open data</div>
+      </div>
+      <div class="stat">
+        <div class="num">0<span class="unit">rats</span></div>
+        <div class="lbl">detected across 9 of 12 motu as of Q1 2026</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 04 · PROMISE ============ -->
+<section class="chapter promise" id="promise">
+  <div class="wrap reveal">
+    <div class="eyebrow"><span class="dash">—</span>Ch. 04 / The Promise</div>
+    <blockquote>
+      <span class="mark">“</span>To keep an island whole is to keep a promise to <span class="em">every island that isn't.</span> The atoll is the measurement, and it is the message.<span class="mark">”</span>
+    </blockquote>
+    <div class="attribution">
+      <div class="avatar">
+        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80" alt="">
+      </div>
+      <div>
+        <div class="name">Dr. Frank Murphy</div>
+        <div class="role">— Executive Director · letter from the 2025 annual report</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ JOURNAL ============ -->
+<section class="chapter journal" id="journal">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="num">— Field notes</div>
+      <div>
+        <h2>From the <span class="em">atoll,</span> in our own words.</h2>
+      </div>
+    </div>
+    <div class="journal-grid">
+      <a class="article reveal d1">
+        <div class="a-img"><img src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1000&q=80&auto=format" alt=""></div>
+        <div class="a-meta">— Research · 8 min read</div>
+        <h3>What the reef remembers about a storm.</h3>
+        <div class="a-ex">Three years of coral resilience data from the windward reef, and what it suggests about recovery rates in a warming Pacific.</div>
+        <div class="a-read">Read the field note</div>
+      </a>
+      <a class="article reveal d2">
+        <div class="a-img"><img src="https://images.unsplash.com/photo-1591025207163-942350e47db2?w=1000&q=80&auto=format" alt=""></div>
+        <div class="a-meta">— Wildlife · 5 min read</div>
+        <h3>Counting honu by moonlight.</h3>
+        <div class="a-ex">Notes from a season of turtle monitoring with Te Mana o Te Moana — 214 nests, 18,400 eggs, and the strangest low tide in a decade.</div>
+        <div class="a-read">Read the field note</div>
+      </a>
+      <a class="article reveal d3">
+        <div class="a-img"><img src="https://images.unsplash.com/photo-1530541930197-ff16ac917b0e?w=1000&q=80&auto=format" alt=""></div>
+        <div class="a-meta">— Restoration · 6 min read</div>
+        <h3>After the rats: measuring what comes back.</h3>
+        <div class="a-ex">Seabird transects two years post-eradication are showing nesting patterns we had only read about in historical accounts.</div>
+        <div class="a-read">Read the field note</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ JOIN / CHAPTER 05 ============ -->
+<section class="join" id="join">
+  <div class="wrap">
+    <div class="eyebrow reveal"><span class="dash">—</span>Ch. 05 / Join</div>
+    <h2 class="reveal d1">Walk the atoll with us, <span class="em">one year at a time.</span></h2>
+    <p class="j-sub reveal d2">Tetiaroa Society runs entirely on the support of members and donors. Every gift funds a specific monitoring program of your choice, with quarterly field updates from the team.</p>
+
+    <div class="give-options reveal d2">
+      <div class="give">
+        <div class="amt">$25<span class="per">/ mo</span></div>
+        <div class="what">Funds a week of seabird transect supplies — nest tags, batteries, field notebooks.</div>
+        <div class="arrow">Friend of the atoll →</div>
+      </div>
+      <div class="give">
+        <div class="amt">$100<span class="per">/ mo</span></div>
+        <div class="what">Underwrites one turtle-season patrol night. 214 nests protected last year.</div>
+        <div class="arrow">Steward →</div>
+      </div>
+      <div class="give">
+        <div class="amt">$500<span class="per">/ mo</span></div>
+        <div class="what">Keeps a junior researcher at the Ecostation for a month of fieldwork.</div>
+        <div class="arrow">Patron →</div>
+      </div>
+    </div>
+
+    <div class="actions reveal d3">
+      <a class="btn primary">Become a member →</a>
+      <a class="btn">Make a one-time gift</a>
+      <a class="btn" style="border: none; padding-left: 0;">Read the annual report ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="cols">
+      <div class="brand-col">
+        <div class="mark">Tetiaroa Society</div>
+        <div class="tagline">A 501(c)(3) nonprofit dedicated to education, conservation, and research on Tetiaroa Atoll — ensuring island communities have a future as rich as their past.</div>
+      </div>
+      <div>
+        <h4>Programs</h4>
+        <ul>
+          <li><a href="#">Atoll Restoration (TARP)</a></li>
+          <li><a href="#">Seabird monitoring</a></li>
+          <li><a href="#">Turtle conservation</a></li>
+          <li><a href="#">Blue Climate Initiative</a></li>
+          <li><a href="#">Education</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>The Atoll</h4>
+        <ul>
+          <li><a href="#">Geography & motu</a></li>
+          <li><a href="#">Cultural heritage</a></li>
+          <li><a href="#">Wildlife</a></li>
+          <li><a href="#">Ecostation</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Publications</h4>
+        <ul>
+          <li><a href="#">Annual reports</a></li>
+          <li><a href="#">Field notes</a></li>
+          <li><a href="#">Open data</a></li>
+          <li><a href="#">CASUP plan</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="#">Newsletter</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Partnerships</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">
+      <div>© 2026 Tetiaroa Society · EIN 45-1080688</div>
+      <div class="partners">
+        <span>Te Mana o Te Moana</span>
+        <span>Island Conservation</span>
+        <span>The Brando</span>
+        <span>CRIOBE</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add("in");
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -60px 0px" });
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+  // Progress bar
+  const pbar = document.getElementById("pbar");
+  function onScroll() {
+    const h = document.documentElement;
+    const pct = h.scrollTop / (h.scrollHeight - h.clientHeight);
+    pbar.style.width = (pct * 100) + "%";
+  }
+  document.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  // Chapter dots
+  const dots = document.querySelectorAll(".chapter-dots a");
+  const chapterIds = ["hero", "life", "work", "promise", "join"];
+  const chIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        dots.forEach(d => d.classList.toggle("on", d.dataset.dot === id));
+      }
+    });
+  }, { threshold: 0.35 });
+  chapterIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) chIO.observe(el);
+  });
+
+  // Smooth anchor
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener("click", (e) => {
+      const id = a.getAttribute("href").slice(1);
+      const el = document.getElementById(id);
+      if (el) {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+
+  // Give option interactive
+  document.querySelectorAll(".give").forEach(g => {
+    g.addEventListener("click", () => {
+      document.querySelectorAll(".give").forEach(x => x.style.background = "");
+      g.style.background = "rgba(143,201,201,0.08)";
+    });
+  });
+</script>
+
+</body>
+</html>
