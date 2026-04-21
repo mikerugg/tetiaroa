@@ -95,8 +95,6 @@ export function ChronologySection({
             <div className={styles.sectionTag}>The chronology</div>
             <h2 className={styles.chronologyTitle}>
               Track the work.
-              <br />
-              <span className={styles.emphasis}>Follow the turn</span> in each year.
             </h2>
           </div>
           <p className={styles.chronologyCopy}>
