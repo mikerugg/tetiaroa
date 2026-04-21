@@ -70,10 +70,6 @@
   gap: 14px;
 }
 
-.mobileRouteDock {
-  display: none;
-}
-
 .donate {
   display: inline-flex;
   align-items: center;
@@ -1390,15 +1386,11 @@
     display: none;
   }
 
-  .mobileRouteDock {
-    display: grid;
-  }
-
   .hero {
-    min-height: 100vh;
-    min-height: 100svh;
-    height: 100vh;
-    height: 100svh;
+    min-height: 110vh;
+    min-height: 110svh;
+    height: 110vh;
+    height: 110svh;
   }
 
   .heroInner {

@@ -47,7 +47,7 @@ export default function TurtleTalesPage() {
         </a>
       </header>
 
-      <PrimaryRouteDock active="turtle-tales" className={styles.mobileRouteDock} />
+      <PrimaryRouteDock active="turtle-tales" />
 
       <main className={styles.main}>
         <section className={styles.hero}>

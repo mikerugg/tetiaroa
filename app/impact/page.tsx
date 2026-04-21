@@ -216,7 +216,7 @@ export default function SocialPage() {
         </Link>
       </header>
 
-      <PrimaryRouteDock active="impact" className={styles.mobileRouteDock} />
+      <PrimaryRouteDock active="impact" />
 
       <main className={styles.layout}>
         <aside className={styles.sidebar}>

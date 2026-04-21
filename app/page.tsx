@@ -254,7 +254,7 @@ export default function Home() {
           </div>
         </nav>
 
-        <PrimaryRouteDock active="home" className={styles.mobileRouteDock} />
+        <PrimaryRouteDock active="home" />
 
         <section className={styles.hero} id="hero">
           <video

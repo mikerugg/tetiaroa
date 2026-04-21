@@ -21,10 +21,6 @@
   backdrop-filter: blur(18px);
 }
 
-.mobileRouteDock {
-  display: none;
-}
-
 .navLinks {
   display: flex;
   align-items: center;
@@ -576,10 +572,6 @@
     align-items: center;
     gap: 10px 12px;
     padding: 12px 14px;
-  }
-
-  .mobileRouteDock {
-    display: grid;
   }
 
   .navLinks {
