@@ -73,7 +73,7 @@ const species: Species[] = [
     status: "recovering",
     sequence: "04 / 10",
     image:
-      "https://images.unsplash.com/photo-1572715376701-98568319fd0f?w=900&q=80&auto=format&fit=crop",
+      "https://upload.wikimedia.org/wikipedia/commons/c/c1/Birgus_latro.jpg",
     alt: "Large coconut crab on rock",
   },
   {
