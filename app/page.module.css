@@ -1321,10 +1321,10 @@
   }
 
   .hero {
-    min-height: 110vh;
-    min-height: 110svh;
-    height: 110vh;
-    height: 110svh;
+    min-height: 100vh;
+    min-height: 100svh;
+    height: 100vh;
+    height: 100svh;
   }
 
   .heroInner {
