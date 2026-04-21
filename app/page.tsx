@@ -254,6 +254,25 @@ export default function Home() {
           </div>
         </nav>
 
+        <nav className={styles.mobileRouteDock} aria-label="Primary mobile navigation">
+          <Link
+            href="/"
+            className={`${styles.mobileRouteDockLink} ${styles.mobileRouteDockLinkActive}`}
+            aria-current="page"
+          >
+            Home
+          </Link>
+          <Link href="/impact" className={styles.mobileRouteDockLink}>
+            Impact Feed
+          </Link>
+          <Link href="/turtle-tales" className={styles.mobileRouteDockLink}>
+            Turtle Tales
+          </Link>
+          <Link href="/#join" className={styles.mobileRouteDockLink}>
+            Donate
+          </Link>
+        </nav>
+
         <section className={styles.hero} id="hero">
           <video
             id="hero-video"
