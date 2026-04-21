@@ -19,6 +19,7 @@ export function ChronologySection({
   const [activeYear, setActiveYear] = useState(items[0]?.year ?? "");
   const cardRefs = useRef<Record<string, HTMLElement | null>>({});
   const nodeRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const nodesRailRef = useRef<HTMLDivElement | null>(null);
 
   const handleEntries = useEffectEvent((entries: IntersectionObserverEntry[]) => {
     const visibleEntries = entries.filter((entry) => entry.isIntersecting);
@@ -70,12 +71,15 @@ export function ChronologySection({
 
   useEffect(() => {
     const activeNode = nodeRefs.current[activeYear];
+    const nodesRail = nodesRailRef.current;
 
-    if (activeNode) {
-      activeNode.scrollIntoView({
+    if (activeNode && nodesRail) {
+      const targetLeft =
+        activeNode.offsetLeft - nodesRail.offsetLeft - (nodesRail.clientWidth - activeNode.clientWidth) / 2;
+
+      nodesRail.scrollTo({
+        left: Math.max(0, targetLeft),
         behavior: "smooth",
-        block: "nearest",
-        inline: "center",
       });
     }
   }, [activeYear]);
@@ -110,7 +114,10 @@ export function ChronologySection({
           >
             <div className={styles.chronologyTrack} aria-hidden="true" />
             <div className={styles.chronologyProgress} aria-hidden="true" />
-            <div className={styles.chronologyNodes}>
+            <div
+              ref={nodesRailRef}
+              className={styles.chronologyNodes}
+            >
               {items.map((item) => {
                 const isActive = item.year === activeYear;
 

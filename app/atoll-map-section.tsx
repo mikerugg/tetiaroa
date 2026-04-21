@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import type { CSSProperties } from "react";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import styles from "./atoll-map-section.module.css";
 
 const GOOGLE_MAPS_EMBED_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY;
@@ -11,6 +11,8 @@ const TETIAROA_CENTER = {
   lng: -149.56,
 };
 const DEFAULT_ZOOM = 14;
+const MOBILE_DEFAULT_ZOOM = DEFAULT_ZOOM - 1;
+const MOBILE_VIEWPORT_MEDIA_QUERY = "(max-width: 700px)";
 
 const filters = [
   "All Sites",
@@ -184,12 +186,43 @@ function getPanel(site: MapSite, tab: TabId) {
   }
 }
 
+function getDefaultZoom(isMobileViewport: boolean) {
+  return isMobileViewport ? MOBILE_DEFAULT_ZOOM : DEFAULT_ZOOM;
+}
+
 export function AtollMapSection() {
   const [isPending, startTransition] = useTransition();
   const [activeFilter, setActiveFilter] = useState<SiteFilter>("All Sites");
   const [activeTab, setActiveTab] = useState<TabId>("map");
   const [selectedSiteId, setSelectedSiteId] = useState(mapSites[0]?.id ?? "");
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
   const [zoom, setZoom] = useState(DEFAULT_ZOOM);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(MOBILE_VIEWPORT_MEDIA_QUERY);
+
+    const syncViewport = (nextIsMobileViewport: boolean) => {
+      setIsMobileViewport(nextIsMobileViewport);
+      setZoom((currentZoom) => {
+        if (currentZoom === DEFAULT_ZOOM || currentZoom === MOBILE_DEFAULT_ZOOM) {
+          return getDefaultZoom(nextIsMobileViewport);
+        }
+
+        return currentZoom;
+      });
+    };
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      syncViewport(event.matches);
+    };
+
+    syncViewport(mediaQuery.matches);
+    mediaQuery.addEventListener("change", handleChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange);
+    };
+  }, []);
 
   const visibleSites =
     activeFilter === "All Sites"
@@ -219,7 +252,7 @@ export function AtollMapSection() {
     startTransition(() => {
       setActiveFilter(nextFilter);
       setSelectedSiteId(nextVisible[0]?.id ?? mapSites[0]?.id ?? "");
-      setZoom(DEFAULT_ZOOM);
+      setZoom(getDefaultZoom(isMobileViewport));
     });
   };
 
@@ -382,7 +415,7 @@ export function AtollMapSection() {
               className={`${styles.controlButton} ${styles.controlButtonWide}`}
               onClick={() => {
                 startTransition(() => {
-                  setZoom(DEFAULT_ZOOM);
+                  setZoom(getDefaultZoom(isMobileViewport));
                   setSelectedSiteId(visibleSites[0]?.id ?? mapSites[0]?.id ?? "");
                 });
               }}
