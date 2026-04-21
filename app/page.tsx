@@ -288,12 +288,6 @@ export default function Home() {
               Save the world.
             </h1>
             <div className={styles.heroActions}>
-              <a href="#join" className={styles.ctaPrimary}>
-                Protect the atoll
-                <span className={styles.ctaArrow} aria-hidden="true">
-                  -&gt;
-                </span>
-              </a>
               <a href="#atoll" className={styles.ctaSecondary}>
                 <span className={styles.playIcon} aria-hidden="true" />
                 Watch the film / 2:14
@@ -324,9 +318,6 @@ export default function Home() {
               <br />
               look like <span className={styles.emphasis}>a lab.</span>
             </div>
-            <a href="#explore" className={styles.panoramaCta}>
-              Explore the atoll -&gt;
-            </a>
           </div>
         </section>
 
