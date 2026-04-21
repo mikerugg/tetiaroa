@@ -3,10 +3,10 @@ import Image from "next/image";
 import { AtollMapSection } from "./atoll-map-section";
 import { ChronologySection } from "./chronology-section";
 import {
-  HeroSoundToggle,
   HomepageInitialScrollReset,
   HomepageNavState,
 } from "./homepage-client";
+import { PrimaryRouteDock } from "./primary-route-dock";
 import styles from "./page.module.css";
 import { TetiaroaMark } from "./tetiaroa-mark";
 
@@ -254,28 +254,10 @@ export default function Home() {
           </div>
         </nav>
 
-        <nav className={styles.mobileRouteDock} aria-label="Primary mobile navigation">
-          <Link
-            href="/"
-            className={`${styles.mobileRouteDockLink} ${styles.mobileRouteDockLinkActive}`}
-            aria-current="page"
-          >
-            Home
-          </Link>
-          <Link href="/impact" className={styles.mobileRouteDockLink}>
-            Impact Feed
-          </Link>
-          <Link href="/turtle-tales" className={styles.mobileRouteDockLink}>
-            Turtle Tales
-          </Link>
-          <Link href="/#join" className={styles.mobileRouteDockLink}>
-            Donate
-          </Link>
-        </nav>
+        <PrimaryRouteDock active="home" className={styles.mobileRouteDock} />
 
         <section className={styles.hero} id="hero">
           <video
-            id="hero-video"
             className={styles.heroVideo}
             autoPlay
             muted
@@ -318,8 +300,6 @@ export default function Home() {
               </a>
             </div>
           </div>
-
-          <HeroSoundToggle videoId="hero-video" />
         </section>
 
         <ChronologySection items={chronology} />

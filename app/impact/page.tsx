@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import type { CSSProperties } from "react";
+import { PrimaryRouteDock } from "../primary-route-dock";
 import styles from "./page.module.css";
 import { programs, stories, type Program } from "../site-content";
 import { TetiaroaMark } from "../tetiaroa-mark";
@@ -214,6 +215,8 @@ export default function SocialPage() {
           Support the work
         </Link>
       </header>
+
+      <PrimaryRouteDock active="impact" className={styles.mobileRouteDock} />
 
       <main className={styles.layout}>
         <aside className={styles.sidebar}>

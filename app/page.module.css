@@ -74,10 +74,6 @@
   display: none;
 }
 
-.mobileRouteDockLink {
-  color: inherit;
-}
-
 .donate {
   display: inline-flex;
   align-items: center;
@@ -303,29 +299,6 @@
   height: 12px;
   background: var(--paper);
   clip-path: polygon(0 0, 100% 50%, 0 100%);
-}
-
-.soundToggle {
-  position: absolute;
-  right: 48px;
-  bottom: 36px;
-  z-index: 5;
-  padding: 8px 14px;
-  border: 1px solid rgba(244, 241, 234, 0.25);
-  border-radius: 2px;
-  background: rgba(7, 16, 14, 0.4);
-  color: rgba(244, 241, 234, 0.8);
-  backdrop-filter: blur(8px);
-  cursor: pointer;
-  font-family: var(--font-mono), monospace;
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  animation: driftIn 1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.28s both;
-}
-
-.soundToggle:hover {
-  background: rgba(244, 241, 234, 0.12);
 }
 
 .chronologySection {
@@ -1418,60 +1391,7 @@
   }
 
   .mobileRouteDock {
-    position: fixed;
-    right: 16px;
-    bottom: calc(6px + env(safe-area-inset-bottom));
-    left: 16px;
-    z-index: 60;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 8px;
-    padding: 8px;
-    border: 1px solid rgba(244, 241, 234, 0.14);
-    border-radius: 22px;
-    background:
-      linear-gradient(180deg, rgba(244, 241, 234, 0.1) 0%, rgba(244, 241, 234, 0.04) 100%),
-      rgba(7, 16, 14, 0.76);
-    box-shadow:
-      0 18px 48px rgba(0, 0, 0, 0.32),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(20px) saturate(150%);
-    -webkit-backdrop-filter: blur(20px) saturate(150%);
-  }
-
-  .mobileRouteDockLink {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 52px;
-    padding: 8px 5px;
-    border-radius: 16px;
-    color: rgba(244, 241, 234, 0.68);
-    font-family: var(--font-mono), monospace;
-    font-size: 9px;
-    font-weight: 600;
-    line-height: 1.25;
-    letter-spacing: 0.1em;
-    text-align: center;
-    text-transform: uppercase;
-    transition:
-      transform 0.2s ease,
-      background 0.2s ease,
-      color 0.2s ease;
-  }
-
-  .mobileRouteDockLink:hover {
-    transform: translateY(-1px);
-    background: rgba(244, 241, 234, 0.06);
-    color: rgba(244, 241, 234, 0.84);
-  }
-
-  .mobileRouteDockLinkActive {
-    background:
-      radial-gradient(circle at top center, rgba(143, 201, 201, 0.22), transparent 68%),
-      rgba(244, 241, 234, 0.12);
-    color: var(--paper);
-    box-shadow: inset 0 0 0 1px rgba(244, 241, 234, 0.08);
   }
 
   .hero {
@@ -1513,13 +1433,6 @@
     width: 100%;
     padding: 16px 18px;
     font-size: 14px;
-  }
-
-  .soundToggle {
-    right: 20px;
-    bottom: calc(94px + env(safe-area-inset-bottom));
-    padding: 7px 10px;
-    font-size: 9px;
   }
 
   .chronologySection {

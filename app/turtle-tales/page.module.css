@@ -36,6 +36,10 @@
   height: 22px;
 }
 
+.mobileRouteDock {
+  display: none;
+}
+
 .navLinks {
   display: flex;
   align-items: center;
@@ -987,16 +991,16 @@
     padding: 12px 14px;
   }
 
-  .navLinks {
-    grid-column: 1 / -1;
+  .mobileRouteDock {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    width: 100%;
-    gap: 8px;
+  }
+
+  .navLinks {
+    display: none;
   }
 
   .main {
-    padding: 18px 12px 34px;
+    padding: 18px 12px calc(112px + env(safe-area-inset-bottom));
   }
 
   .heroCopy,
@@ -1034,6 +1038,10 @@
     padding: 0 10px;
     font-size: 10px;
     text-align: center;
+  }
+
+  .topAction {
+    display: none;
   }
 
   .wordmark {

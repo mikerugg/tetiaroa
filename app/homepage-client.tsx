@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import styles from "./page.module.css";
+import { useEffect } from "react";
 
 export function HomepageInitialScrollReset() {
   useEffect(() => {
@@ -46,39 +45,4 @@ export function HomepageNavState() {
   }, []);
 
   return null;
-}
-
-export function HeroSoundToggle({ videoId }: { videoId: string }) {
-  const [muted, setMuted] = useState(true);
-
-  const handleClick = () => {
-    const nextMuted = !muted;
-    const video = document.getElementById(videoId) as HTMLVideoElement | null;
-
-    setMuted(nextMuted);
-
-    if (!video) {
-      return;
-    }
-
-    video.muted = nextMuted;
-
-    if (!nextMuted) {
-      void video.play().catch(() => {
-        video.muted = true;
-        setMuted(true);
-      });
-    }
-  };
-
-  return (
-    <button
-      type="button"
-      className={styles.soundToggle}
-      aria-pressed={!muted}
-      onClick={handleClick}
-    >
-      {muted ? "♪ Sound off" : "♪ Sound on"}
-    </button>
-  );
 }
