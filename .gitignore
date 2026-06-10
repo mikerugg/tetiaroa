@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+/downloads
+/tetiaroa-old
 
 # next.js
 /.next/
