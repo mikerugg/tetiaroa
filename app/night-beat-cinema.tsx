@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useSyncExternalStore } from "react";
-import styles from "./page.module.css";
+import styles from "./home-experience.module.css";
 
 type Rgb = [number, number, number];
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import styles from "./page.module.css";
+import styles from "./home-experience.module.css";
 
 const VERT_SRC = `
 attribute vec2 aPos;

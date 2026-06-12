@@ -635,7 +635,7 @@
     height: 46px;
   }
 
-  .navLinks a[href="/descent"] {
+  .navLinks a[href="/"] {
     display: none;
   }
 

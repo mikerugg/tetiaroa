@@ -636,7 +636,7 @@ export default function FieldStationPage() {
         <nav className={styles.colophonNav} aria-label="Other editions">
           <span>OTHER EDITIONS:</span>
           <Link href="/">Current site</Link>
-          <Link href="/descent">01 — Te Hohonu</Link>
+          <Link href="/">01 — Te Hohonu</Link>
           <Link href="/ocean-cinema">02 — Ocean Cinema</Link>
         </nav>
       </footer>

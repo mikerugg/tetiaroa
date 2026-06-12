@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import styles from "./page.module.css";
+import styles from "./home-experience.module.css";
 
 export function DeepDrag({ children }: { children: React.ReactNode }) {
   const panelRef = useRef<HTMLDivElement | null>(null);

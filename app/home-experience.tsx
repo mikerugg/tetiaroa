@@ -1,12 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { HomepageInitialScrollReset } from "../homepage-client";
+import { HomepageInitialScrollReset } from "./homepage-client";
 import { DepthScene, type DepthStop } from "./depth-scene";
 import { VrViewer } from "./vr-viewer";
 import { LanternDonate, type LanternTier } from "./lantern-donate";
 import { NightBeatCinema } from "./night-beat-cinema";
 import { ScanPanel } from "./scan-panel";
-import styles from "./page.module.css";
+import styles from "./home-experience.module.css";
 
 const depthStops: DepthStop[] = [
   {
@@ -170,7 +170,7 @@ const historyFrames = [
   },
 ];
 
-export default function DescentPage() {
+export default function HomeExperience() {
   return (
     <>
       <HomepageInitialScrollReset />
@@ -178,7 +178,7 @@ export default function DescentPage() {
         <DepthScene stops={depthStops} />
 
         <nav className={styles.topNav}>
-          <Link href="/descent" className={styles.brand}>
+          <Link href="/" className={styles.brand}>
             <Image
               src="/logos/TSFP_Logo_2026_White.png"
               alt="Tetiaroa Society"
@@ -192,8 +192,11 @@ export default function DescentPage() {
             Concept 01 / Te Hohonu &middot; the deep
           </span>
           <div className={styles.navLinks}>
-            <Link href="/">Current homepage</Link>
-            <a href="#lanterns" className={styles.donateLink}>
+            <Link href="/first-prototype" className={styles.prototypeLink}>
+              First prototype
+            </Link>
+            <Link href="/our-logo">Our logo</Link>
+            <a href="#donation-levels" className={styles.donateLink}>
               Donate
             </a>
           </div>
@@ -571,7 +574,7 @@ export default function DescentPage() {
             </div>
           </div>
           <div className={styles.footerLinks}>
-            <Link href="/">Current homepage</Link>
+            <Link href="/first-prototype">First prototype</Link>
             <Link href="/our-logo">Logo meaning</Link>
             <Link href="/impact">Impact Feed</Link>
             <Link href="/turtle-tales">Turtle Tales</Link>

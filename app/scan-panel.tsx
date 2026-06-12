@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import styles from "./page.module.css";
+import styles from "./home-experience.module.css";
 
 export function ScanPanel({ children }: { children: React.ReactNode }) {
   const panelRef = useRef<HTMLDivElement | null>(null);

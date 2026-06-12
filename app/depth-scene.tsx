@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import styles from "./page.module.css";
+import styles from "./home-experience.module.css";
 
 export type DepthStop = {
   id: string;

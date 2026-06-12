@@ -24,7 +24,7 @@ export default function MarkPage() {
           <span className={styles.conceptTag}>The mark / TSFP 2026</span>
           <div className={styles.navLinks}>
             <Link href="/">Current homepage</Link>
-            <Link href="/descent">Te Hohonu</Link>
+            <Link href="/">Te Hohonu</Link>
             <a href="#legend">Legend</a>
           </div>
         </nav>
@@ -50,7 +50,8 @@ export default function MarkPage() {
 
             <div className={styles.heroInner}>
               <div className={styles.eyebrow}>Tetiaroa Society</div>
-              <h1>Seven symbols. One home.</h1>
+              <h1>Seven symbols.</h1>
+              <h1>One home.</h1>
               <p>
                Discover the story and meaning behind our logo.
               </p>
@@ -75,7 +76,7 @@ export default function MarkPage() {
           </div>
           <div className={styles.footerLinks}>
             <Link href="/">Current homepage</Link>
-            <Link href="/descent">Te Hohonu</Link>
+            <Link href="/">Te Hohonu</Link>
             <Link href="/impact">Impact Feed</Link>
             <Link href="/turtle-tales">Turtle Tales</Link>
           </div>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import styles from "./page.module.css";
+import styles from "./home-experience.module.css";
 
 export type LanternTier = {
   amount: string;
@@ -36,7 +36,11 @@ export function LanternDonate({ tiers }: { tiers: LanternTier[] }) {
   })();
 
   return (
-    <div className={styles.lanternBlock}>
+    <div
+      id="donation-levels"
+      className={styles.lanternBlock}
+      aria-label="Select your donation level"
+    >
       <div className={styles.lanternGrid}>
         {tiers.map((tier, index) => {
           const isLit =

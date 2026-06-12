@@ -1,14 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
-import { AtollMapSection } from "./atoll-map-section";
-import { ChronologySection } from "./chronology-section";
+import { AtollMapSection } from "../atoll-map-section";
+import { ChronologySection } from "../chronology-section";
 import {
   HomepageInitialScrollReset,
   HomepageNavState,
-} from "./homepage-client";
-import { PrimaryRouteDock } from "./primary-route-dock";
-import styles from "./page.module.css";
-import { TetiaroaMark } from "./tetiaroa-mark";
+} from "../homepage-client";
+import { PrimaryRouteDock } from "../primary-route-dock";
+import styles from "../page.module.css";
+import { TetiaroaMark } from "../tetiaroa-mark";
 
 type Species = {
   name: string;

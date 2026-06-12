@@ -490,6 +490,10 @@
   color: #ffffff;
 }
 
+.prototypeLink {
+  display: inline-flex;
+}
+
 .donateLink {
   background: var(--flame);
   color: #241303;
@@ -1589,6 +1593,7 @@
 
 .lanternBlock {
   margin-top: 56px;
+  scroll-margin-top: 200px;
 }
 
 .lanternGrid {
@@ -1934,6 +1939,10 @@
 
   .lanternGrid {
     grid-template-columns: 1fr;
+  }
+
+  .prototypeLink {
+    display: none;
   }
 
   .donateBar {
