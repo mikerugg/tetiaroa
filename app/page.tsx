@@ -39,6 +39,13 @@ type GivingLevel = {
   label: string;
 };
 
+type FooterItem = string | { label: string; href: string };
+
+type FooterColumn = {
+  heading: string;
+  items: FooterItem[];
+};
+
 const species: Species[] = [
   {
     name: "Green sea turtle",
@@ -178,7 +185,7 @@ const givingLevels: GivingLevel[] = [
   },
 ];
 
-const footerColumns = [
+const footerColumns: FooterColumn[] = [
   {
     heading: "Programs",
     items: [
@@ -191,7 +198,13 @@ const footerColumns = [
   },
   {
     heading: "The Atoll",
-    items: ["Geography & motu", "Cultural heritage", "Wildlife", "Ecostation"],
+    items: [
+      "Geography & motu",
+      "Cultural heritage",
+      { label: "Logo meaning", href: "/our-logo" },
+      "Wildlife",
+      "Ecostation",
+    ],
   },
   {
     heading: "Publications",
@@ -429,8 +442,12 @@ export default function Home() {
                   <h3 className={styles.footerHeading}>{column.heading}</h3>
                   <ul className={styles.footerList}>
                     {column.items.map((item) => (
-                      <li key={item}>
-                        <span>{item}</span>
+                      <li key={typeof item === "string" ? item : item.label}>
+                        {typeof item === "string" ? (
+                          <span>{item}</span>
+                        ) : (
+                          <Link href={item.href}>{item.label}</Link>
+                        )}
                       </li>
                     ))}
                   </ul>

@@ -4,6 +4,7 @@ import { HomepageInitialScrollReset } from "../homepage-client";
 import { DepthScene, type DepthStop } from "./depth-scene";
 import { VrViewer } from "./vr-viewer";
 import { LanternDonate, type LanternTier } from "./lantern-donate";
+import { NightRelay, type RelayLine } from "./night-relay";
 import { ScanPanel } from "./scan-panel";
 import styles from "./page.module.css";
 
@@ -28,7 +29,6 @@ const depthStops: DepthStop[] = [
     label: "Honu XR",
     color: "#02060e",
     transmission: "−104 m — this is my dive. welcome aboard",
-    side: "left",
   },
   {
     id: "turtles",
@@ -36,7 +36,6 @@ const depthStops: DepthStop[] = [
     label: "Turtle sanctuary",
     color: "#0e7e8a",
     transmission: "−5 m — nursery on the port side",
-    side: "left",
   },
   {
     id: "sharks",
@@ -44,7 +43,6 @@ const depthStops: DepthStop[] = [
     label: "Shark nursery",
     color: "#0b4e66",
     transmission: "−20 m — easy… juveniles on the reef edge",
-    side: "left",
   },
   {
     id: "twin",
@@ -52,7 +50,6 @@ const depthStops: DepthStop[] = [
     label: "Digital twin",
     color: "#071f33",
     transmission: "−40 m — scanning. the twin is in sync",
-    side: "left",
   },
   {
     id: "kids",
@@ -60,7 +57,6 @@ const depthStops: DepthStop[] = [
     label: "The shallows",
     color: "#8fd8cf",
     transmission: "surfacing — warm water ahead",
-    side: "left",
   },
   {
     id: "history",
@@ -68,14 +64,13 @@ const depthStops: DepthStop[] = [
     label: "1967",
     color: "#d9a05f",
     transmission: "back at the waterline — 1967",
-    side: "left",
   },
   {
     id: "lanterns",
     depth: 0,
     label: "Night beach",
     color: "#04101e",
-    transmission: "night ops — lanterns on the beach",
+    transmission: "night ops — the chain starts on this beach",
   },
 ];
 
@@ -84,7 +79,7 @@ const lanternTiers: LanternTier[] = [
     amount: "$25",
     period: "/mo",
     name: "Friend",
-    description: "A week of seabird transect supplies — tags, batteries, notebooks.",
+    description: "Keeps a patrol equipped on the beach — tags, batteries, red torches.",
   },
   {
     amount: "$100",
@@ -96,7 +91,8 @@ const lanternTiers: LanternTier[] = [
     amount: "$500",
     period: "/mo",
     name: "Patron",
-    description: "A junior researcher at the Ecostation for a month of fieldwork.",
+    description:
+      "A month of the science that travels — Ecostation fieldwork and the digital twin in sync.",
   },
   {
     amount: "$—",
@@ -104,6 +100,33 @@ const lanternTiers: LanternTier[] = [
     name: "Your own",
     description: "Pick an amount, or fund a program directly.",
     custom: true,
+  },
+];
+
+const relayLines: RelayLine[] = [
+  {
+    text: "a nest begins to hatch — the patrol guides 96 baby turtles to the water.",
+    at: 0.1,
+  },
+  {
+    text: "Footage and data from the night steam to our servers and across the world.",
+    at: 0.26,
+  },
+  {
+    text: "In a classroom on the other side of the world, a child puts on a headset and discovers a passion for the ocean.",
+    at: 0.42,
+  },
+  {
+    text: "One of those kids starts a local beach clean-up.",
+    at: 0.58,
+  },
+  {
+    text: "25 years later, one of those sea turtle hatchlings returns to the same beach to lay her own eggs.",
+    at: 0.74,
+  },
+  {
+    text: "Those kids, now grown, start their own conservation projects and teach their own children about our place in this world.",
+    at: 0.90,
   },
 ];
 
@@ -163,7 +186,7 @@ export default function DescentPage() {
     <>
       <HomepageInitialScrollReset />
       <div className={styles.page}>
-        <DepthScene stops={depthStops} showSub={false} />
+        <DepthScene stops={depthStops} />
 
         <nav className={styles.topNav}>
           <Link href="/descent" className={styles.brand}>
@@ -531,22 +554,16 @@ export default function DescentPage() {
           <div className={styles.stars} aria-hidden="true" />
           <div className={styles.nightInner}>
             <div className={styles.nightEyebrow}>
-              Night beach &mdash; get involved
+              We need you
             </div>
-            <h2 className={styles.nightTitle}>Add your light.</h2>
-            <p className={styles.nightCopy}>
-              The patrols run after dark. The lanterns are the people who fund
-              them. Pick one and light it.
-            </p>
+            <h2 className={`${styles.nightTitle} ${styles.nightTitleLong}`}>
+              What hatches here
+              <br />
+              doesn&apos;t stay here.
+            </h2>
+            
 
-            <div className={styles.litRow} aria-hidden="true">
-              {Array.from({ length: 14 }, (_, index) => (
-                <span key={index} className={styles.litDot} />
-              ))}
-              <span className={styles.litCaption}>
-                1,408 lanterns lit this season
-              </span>
-            </div>
+            <NightRelay lines={relayLines} />
 
             <LanternDonate tiers={lanternTiers} />
           </div>
@@ -568,6 +585,7 @@ export default function DescentPage() {
           </div>
           <div className={styles.footerLinks}>
             <Link href="/">Current homepage</Link>
+            <Link href="/our-logo">Logo meaning</Link>
             <Link href="/impact">Impact Feed</Link>
             <Link href="/turtle-tales">Turtle Tales</Link>
           </div>

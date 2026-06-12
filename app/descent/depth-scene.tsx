@@ -10,7 +10,6 @@ export type DepthStop = {
   label: string;
   color: string;
   transmission?: string;
-  side?: "left" | "right";
 };
 
 type Particle = {
@@ -30,9 +29,8 @@ type Bubble = {
   age: number;
 };
 
-const LIGHTS_ON_DEPTH = 30;
-const LIGHTS_OFF_DEPTH = 26;
 const MAX_DEPTH = 104;
+const BEAM_SECTION_IDS = new Set(["honu-xr", "sharks", "twin", "lanterns"]);
 
 function hexToRgb(hex: string): [number, number, number] {
   const value = hex.replace("#", "");
@@ -66,7 +64,6 @@ export function DepthScene({
   const readingRef = useRef<HTMLSpanElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const subRef = useRef<HTMLDivElement | null>(null);
-  const subFlipRef = useRef<HTMLDivElement | null>(null);
   const subTiltRef = useRef<HTMLDivElement | null>(null);
   const commsRef = useRef<HTMLDivElement | null>(null);
   const pingRef = useRef<HTMLDivElement | null>(null);
@@ -81,7 +78,6 @@ export function DepthScene({
     const reading = readingRef.current;
     const track = trackRef.current;
     const sub = subRef.current;
-    const subFlip = subFlipRef.current;
     const subTilt = subTiltRef.current;
     const comms = commsRef.current;
     const ping = pingRef.current;
@@ -96,7 +92,6 @@ export function DepthScene({
       !reading ||
       !track ||
       !sub ||
-      !subFlip ||
       !subTilt ||
       !comms ||
       !ping ||
@@ -129,13 +124,8 @@ export function DepthScene({
     let prevProbe: number | null = null;
     let lastPlungeAt = 0;
     let lastBloomAt = 0;
-    let lightsOn = false;
     let firstApply = true;
     let commsTimer = 0;
-    let tx = 0;
-    let activeSide: "left" | "right" = stops[0]?.side ?? "right";
-    let facingRight = false;
-    let commsOnLeft = false;
     let gapTargetId: string | null = null;
 
     const measure = () => {
@@ -229,18 +219,6 @@ export function DepthScene({
       );
       vignette.style.opacity = String(depth01 * 0.85);
 
-      if (!lightsOn && depthNow > LIGHTS_ON_DEPTH) {
-        lightsOn = true;
-        sub.classList.add(styles.subLights);
-
-        if (!firstApply) {
-          showTransmission("getting dark — lights on");
-        }
-      } else if (lightsOn && depthNow < LIGHTS_OFF_DEPTH) {
-        lightsOn = false;
-        sub.classList.remove(styles.subLights);
-      }
-
       const nearest = t < 0.5 ? index : next;
 
       if (nearest !== activeIndex) {
@@ -252,10 +230,9 @@ export function DepthScene({
           );
         });
         sub.classList.toggle(
-          styles.subDocked,
-          stops[nearest].id === "honu-xr",
+          styles.subLights,
+          BEAM_SECTION_IDS.has(stops[nearest].id),
         );
-        activeSide = stops[nearest].side ?? "right";
       }
 
       // Radio chatter only plays in the open water between stops: announce
@@ -347,34 +324,12 @@ export function DepthScene({
 
       apply();
 
-      // Sub dynamics: pitch into the descent, lag a little behind the dive,
-      // and swim across to whichever side the current stop calls for.
-      const travel = Math.max(window.innerWidth - sub.offsetWidth - 18 - 22, 0);
-      const targetX = activeSide === "left" ? -travel : 0;
-
-      tx = lerp(tx, targetX, 0.03);
-
-      const swimming = Math.abs(targetX - tx) > 14;
+      // Sub dynamics: stay docked to the right while pitching with the dive.
       const rot = clamp(-smoothVel * 0.35, -16, 16);
       const ty = clamp(-smoothVel * 0.5, -30, 30);
 
-      sub.style.transform = `translate(${tx}px, ${ty}px)`;
+      sub.style.transform = `translateY(${ty}px)`;
       subTilt.style.transform = `rotate(${rot}deg)`;
-
-      // Face the direction of travel while swimming; face the page when parked.
-      const shouldFaceRight = swimming ? targetX > tx : activeSide === "left";
-
-      if (shouldFaceRight !== facingRight) {
-        facingRight = shouldFaceRight;
-        subFlip.style.transform = facingRight ? "scaleX(-1)" : "";
-      }
-
-      const onLeftHalf = tx < -travel / 2;
-
-      if (onLeftHalf !== commsOnLeft) {
-        commsOnLeft = onLeftHalf;
-        sub.classList.toggle(styles.subOnLeft, commsOnLeft);
-      }
 
       if (context) {
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -438,14 +393,11 @@ export function DepthScene({
 
         if (bubbleVisibility > 0.05) {
           // Thruster wash off the sub's tail while the dive is moving.
-          if (
-            (Math.abs(smoothVel) > 6 || swimming) &&
-            Math.random() < 0.45
-          ) {
+          if (Math.abs(smoothVel) > 6 && Math.random() < 0.225) {
             const rect = sub.getBoundingClientRect();
 
             if (rect.width > 0) {
-              const tailX = facingRight ? rect.left + 14 : rect.right - 14;
+              const tailX = rect.right - 14;
 
               spawnBubble(tailX, rect.top + rect.height * 0.55, 18);
             }
@@ -570,15 +522,15 @@ export function DepthScene({
       >
         <div ref={commsRef} className={styles.subComms} />
         <div ref={pingRef} className={styles.subPing} />
-        <div ref={subFlipRef} className={styles.subFlip}>
+        <div>
           <div className={styles.subBob}>
             <div ref={subTiltRef} className={styles.subTilt}>
               <div className={styles.subBeam} />
               <Image
-                src="/sub-character.png"
+                src="/Honu-Cartoon-Sub-sm.png"
                 alt=""
-                width={1250}
-                height={1115}
+                width={347}
+                height={283}
                 className={styles.subSprite}
                 sizes="140px"
               />

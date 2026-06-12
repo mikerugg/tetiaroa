@@ -1204,11 +1204,13 @@
   margin-top: 10px;
 }
 
-.footerList span {
+.footerList span,
+.footerList a {
   transition: color 0.2s ease;
 }
 
-.footerList span:hover {
+.footerList span:hover,
+.footerList a:hover {
   color: var(--paper);
 }
 

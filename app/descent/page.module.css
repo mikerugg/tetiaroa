@@ -245,10 +245,6 @@
   display: none;
 }
 
-.subFlip {
-  transition: transform 0.45s ease;
-}
-
 .subBob {
   animation: subBob 3.4s ease-in-out infinite;
 }
@@ -278,18 +274,18 @@
 
 .subBeam {
   position: absolute;
-  right: 86%;
-  top: 52%;
+  right: 83%;
+  top: 22%;
   width: 170px;
   height: 96px;
   transform: translateY(-50%);
   background: linear-gradient(
     270deg,
-    rgba(255, 240, 190, 0.34),
-    rgba(255, 240, 190, 0.06) 70%,
+    rgba(255, 240, 190, 0.5),
+    rgba(255, 240, 190, 0.2) 70%,
     transparent
   );
-  clip-path: polygon(100% 38%, 0 0, 0 100%, 100% 62%);
+  clip-path: polygon(100% 48%, 0 0, 0 100%, 100% 62%);
   mix-blend-mode: screen;
   opacity: 0;
   transition: opacity 0.5s ease;
@@ -305,18 +301,9 @@
     drop-shadow(-10px 4px 18px rgba(255, 236, 170, 0.4));
 }
 
-.subDocked .subBeam {
-  opacity: 1;
-  background: linear-gradient(
-    270deg,
-    rgba(255, 244, 205, 0.5),
-    rgba(255, 244, 205, 0.1) 70%,
-    transparent
-  );
-}
-
 .subComms {
   position: absolute;
+  display: none;
   right: calc(100% + 12px);
   top: 26%;
   width: max-content;
@@ -342,22 +329,9 @@
   transform: translateX(0);
 }
 
-/* When the sub is parked on the left of the page, its radio bubble and
-   sonar ping mirror to its right side. */
-.subOnLeft .subComms {
-  right: auto;
-  left: calc(100% + 12px);
-  border-radius: 10px 10px 10px 2px;
-}
-
-.subOnLeft .subPing {
-  left: auto;
-  right: 8%;
-  margin: -15px -15px 0 0;
-}
-
 .subPing {
   position: absolute;
+  display: none;
   left: 8%;
   top: 46%;
   width: 30px;
@@ -1448,29 +1422,122 @@
   max-width: 52ch;
 }
 
-.litRow {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin-top: 28px;
+.nightTitleLong {
+  font-size: clamp(36px, 5vw, 72px);
 }
 
-.litDot {
-  width: 6px;
-  height: 6px;
+.relay {
+  --relay: 0;
+  position: relative;
+  margin: 40px 0 8px;
+  max-width: 720px;
+}
+
+.relayThread {
+  position: absolute;
+  top: 22px;
+  bottom: 30px;
+  left: 4.5px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.relayThread::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 180, 84, 0.9),
+    rgba(255, 180, 84, 0.35)
+  );
+  clip-path: inset(0 0 calc((1 - var(--relay, 0)) * 100%) 0);
+}
+
+.relayList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.relayLine {
+  --lit: clamp(0, (var(--relay, 0) - var(--at, 0)) * 9, 1);
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  gap: 18px;
+  align-items: baseline;
+  padding: 13px 0;
+}
+
+.relayLamp {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.relayLamp::after {
+  content: "";
+  position: absolute;
+  inset: 0;
   border-radius: 50%;
   background: var(--flame);
-  box-shadow: 0 0 10px 2px rgba(255, 180, 84, 0.55);
-  opacity: 0.85;
+  box-shadow: 0 0 16px 4px rgba(255, 180, 84, 0.55);
+  opacity: var(--lit, 0);
 }
 
-.litCaption {
-  margin-left: 10px;
+.relayText {
   font-family: var(--font-mono), monospace;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(255, 217, 160, 0.8);
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: #ffe2b2;
+  opacity: calc(0.26 + var(--lit, 0) * 0.74);
+  text-shadow: 0 0 calc(var(--lit, 0) * 14px) rgba(255, 180, 84, 0.3);
+}
+
+.relayClose {
+  --lit: clamp(0, (var(--relay, 0) - var(--at, 0)) * 9, 1);
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  gap: 18px;
+  align-items: center;
+  margin-top: 26px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.relayCloseText {
+  margin: 0;
+  font-family: var(--font-display), serif;
+  font-style: italic;
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.35;
+  color: var(--paper);
+  opacity: calc(0.2 + var(--lit, 0) * 0.8);
+}
+
+.relayYours {
+  color: var(--flame);
+  font-style: normal;
+  font-weight: 600;
+}
+
+.relayLampYours {
+  width: 16px;
+  height: 16px;
+  margin-left: -3px;
+}
+
+.relayLampYours::after {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.nightInner:has(.lanternLit) .relayLampYours::after {
+  opacity: 1;
+  box-shadow: 0 0 26px 8px rgba(255, 180, 84, 0.65);
+  animation: flicker 1.8s ease-in-out infinite;
 }
 
 .lanternBlock {
@@ -1800,6 +1867,15 @@
 @media (max-width: 640px) {
   .band {
     padding: 12vh 7vw;
+  }
+
+  .relayText {
+    font-size: 13px;
+  }
+
+  .relayLine {
+    gap: 14px;
+    padding: 11px 0;
   }
 
   .deep {
