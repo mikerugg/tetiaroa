@@ -4,7 +4,7 @@ import { HomepageInitialScrollReset } from "../homepage-client";
 import { DepthScene, type DepthStop } from "./depth-scene";
 import { VrViewer } from "./vr-viewer";
 import { LanternDonate, type LanternTier } from "./lantern-donate";
-import { NightRelay, type RelayLine } from "./night-relay";
+import { NightBeatCinema } from "./night-beat-cinema";
 import { ScanPanel } from "./scan-panel";
 import styles from "./page.module.css";
 
@@ -103,31 +103,20 @@ const lanternTiers: LanternTier[] = [
   },
 ];
 
-const relayLines: RelayLine[] = [
-  {
-    text: "a nest begins to hatch — the patrol guides 96 baby turtles to the water.",
-    at: 0.1,
-  },
-  {
-    text: "Footage and data from the night steam to our servers and across the world.",
-    at: 0.26,
-  },
-  {
-    text: "In a classroom on the other side of the world, a child puts on a headset and discovers a passion for the ocean.",
-    at: 0.42,
-  },
-  {
-    text: "One of those kids starts a local beach clean-up.",
-    at: 0.58,
-  },
-  {
-    text: "25 years later, one of those sea turtle hatchlings returns to the same beach to lay her own eggs.",
-    at: 0.74,
-  },
-  {
-    text: "Those kids, now grown, start their own conservation projects and teach their own children about our place in this world.",
-    at: 0.90,
-  },
+const nightEyebrow = "We need you";
+const nightTitleLines: [string, string] = [
+  "What hatches here",
+  "doesn't stay here.",
+];
+
+// one subtitle per beat, one line on screen at a time
+const beatLines = [
+  "On Teti'aroa, a nest begins to hatch — the patrol guides 96 baby turtles to the water.",
+  "Footage and data from the night steam to our servers and across the world.",
+  "In a classroom on the other side of the world, a child puts on a headset and discovers a passion for the ocean.",
+  "One of those kids starts a local beach clean-up.",
+  "25 years later, one of those sea turtle hatchlings returns to the same beach to lay her own eggs.",
+  "Those kids, now grown, start their own conservation projects and teach their own children about our place in this world.",
 ];
 
 const scanReadouts = [
@@ -232,10 +221,10 @@ export default function DescentPage() {
           </div>
 
           <div className={styles.heroInner}>
-            <div className={styles.heroBadge}>
+            {/* <div className={styles.heroBadge}>
               <span className={styles.badgeDot} aria-hidden="true" />
               Now streaming from Teti&#39;aroa
-            </div>
+            </div> */}
             <h1 className={styles.heroTitle}>
               Save the island.
               <br />
@@ -265,7 +254,7 @@ export default function DescentPage() {
 
           <div className={styles.heroInner}>
             <div className={styles.eyebrow}>Te Hohonu &mdash; the deep</div>
-            <h2 className={styles.heroTitle}>Go deeper.</h2>
+            <h2 className={styles.heroTitle}>Dive deeper.</h2>
             <p className={styles.heroSub}>
               One atoll. A hundred metres of story. Scroll to dive.
             </p>
@@ -553,17 +542,15 @@ export default function DescentPage() {
         <section className={styles.night} id="lanterns">
           <div className={styles.stars} aria-hidden="true" />
           <div className={styles.nightInner}>
-            <div className={styles.nightEyebrow}>
-              We need you
-            </div>
-            <h2 className={`${styles.nightTitle} ${styles.nightTitleLong}`}>
-              What hatches here
-              <br />
-              doesn&apos;t stay here.
-            </h2>
-            
-
-            <NightRelay lines={relayLines} />
+            <NightBeatCinema
+              lines={beatLines}
+              eyebrow={nightEyebrow}
+              titleLines={nightTitleLines}
+            />
+            <p className={styles.nightClose}>
+              Every chain starts with one light on a beach.{" "}
+              <strong className={styles.nightYours}>Yours.</strong>
+            </p>
 
             <LanternDonate tiers={lanternTiers} />
           </div>

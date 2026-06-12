@@ -28,11 +28,11 @@ export function LanternDonate({ tiers }: { tiers: LanternTier[] }) {
 
     if (selectedTier.custom) {
       return customAmount
-        ? `Light your lantern — $${customAmount}/mo`
+        ? `Light the path — $${customAmount}/mo`
         : "Enter an amount to light it";
     }
 
-    return `Light your lantern — ${selectedTier.amount}${selectedTier.period}`;
+    return `Light the path — ${selectedTier.amount}${selectedTier.period}`;
   })();
 
   return (
