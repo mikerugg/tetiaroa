@@ -347,7 +347,7 @@ export const quickScanRows = [
     id: "section-kicker",
     role: "Section kicker",
     defaultLeftFontId: "mono",
-    defaultRightFontId: "geist-mono",
+    defaultRightFontId: "mono",
     sample: (
       <>
         Project 01 &mdash; Honu XR
@@ -362,7 +362,7 @@ export const quickScanRows = [
     id: "hero-headline",
     role: "Hero headline",
     defaultLeftFontId: "depth",
-    defaultRightFontId: "display",
+    defaultRightFontId: "depth",
     sample: "Meet Honu. Built to bring the ocean to everyone.",
     sampleClassName:
       "text-[clamp(3rem,6vw,6.8rem)] uppercase leading-[0.9] tracking-[0.01em]",
@@ -371,7 +371,7 @@ export const quickScanRows = [
     id: "body-paragraph",
     role: "Body paragraph",
     defaultLeftFontId: "sans",
-    defaultRightFontId: "geist-sans",
+    defaultRightFontId: "sans",
     sample:
       "Built by Tetiaroa Society with DOER Marine and Google, Honu carries scientists and budding oceanographers to reefs and species too deep for a diver to reach.",
     sampleClassName: "max-w-3xl text-base leading-7 text-[#d8e9e4]/82 sm:text-lg",
@@ -380,7 +380,7 @@ export const quickScanRows = [
     id: "program-chips",
     role: "Program chips",
     defaultLeftFontId: "mono",
-    defaultRightFontId: "geist-mono",
+    defaultRightFontId: "mono",
     sample: (
       <div className="flex flex-wrap gap-3">
         <span className="rounded-full border border-white/20 bg-white/[0.06] px-4 py-2 text-[11px] uppercase tracking-[0.14em]">
@@ -397,7 +397,7 @@ export const quickScanRows = [
     id: "depth-watermark",
     role: "Depth watermark",
     defaultLeftFontId: "depth",
-    defaultRightFontId: "display",
+    defaultRightFontId: "depth",
     sample: "-104",
     sampleClassName:
       "text-[clamp(5rem,10vw,9rem)] uppercase leading-none text-white/[0.18]",
@@ -406,7 +406,7 @@ export const quickScanRows = [
     id: "image-caption",
     role: "Image caption",
     defaultLeftFontId: "mono",
-    defaultRightFontId: "geist-mono",
+    defaultRightFontId: "mono",
     sample: "honu - design render - doer marine",
     sampleClassName:
       "text-[11px] uppercase tracking-[0.18em] text-[#5be8d4]/80",
@@ -415,7 +415,7 @@ export const quickScanRows = [
     id: "editorial-story-line",
     role: "Editorial story line",
     defaultLeftFontId: "display-italic",
-    defaultRightFontId: "geist-sans-italic",
+    defaultRightFontId: "display-italic",
     sample: "A classroom can put on a headset and go on a VR field trip to Tetiaroa.",
     sampleClassName: "max-w-2xl text-2xl leading-snug sm:text-3xl",
   },
@@ -546,7 +546,7 @@ export function QuickScan({
     <section className="px-5 py-12 sm:px-8 lg:px-12">
       <div className="mx-auto max-w-7xl">
         <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#5be8d4]">
-          Same content / quick scan
+          Font compare : Left Fonts will update the above real section.
         </div>
 
         <div className="mt-7 grid gap-5">
