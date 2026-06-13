@@ -151,15 +151,17 @@ export function NightBeatCinema({
   if (reduced) {
     return (
       <div className={styles.cinemaStatic}>
-        <div className={styles.nightEyebrow}>{eyebrow}</div>
-        <h2 className={`${styles.nightTitle} ${styles.nightTitleLong}`}>
+        <div className={`${styles.nightEyebrow} font-mono`}>{eyebrow}</div>
+        <h2
+          className={`${styles.nightTitle} ${styles.nightTitleLong} font-depth`}
+        >
           {titleLines[0]}
           <br />
           {titleLines[1]}
         </h2>
         <ul className={styles.cinemaStaticList}>
           {lines.map((line) => (
-            <li key={line} className={styles.cinemaStaticLine}>
+            <li key={line} className={`${styles.cinemaStaticLine} font-mono`}>
               <span className={styles.cinemaStaticDot} aria-hidden="true" />
               {line}
             </li>
@@ -174,8 +176,10 @@ export function NightBeatCinema({
       <div ref={stageRef} className={styles.cinemaStage}>
         <div className={styles.stars} aria-hidden="true" />
         <div className={styles.cinemaTitleFrame}>
-          <div className={styles.nightEyebrow}>{eyebrow}</div>
-          <h2 className={`${styles.nightTitle} ${styles.nightTitleLong}`}>
+          <div className={`${styles.nightEyebrow} font-mono`}>{eyebrow}</div>
+          <h2
+            className={`${styles.nightTitle} ${styles.nightTitleLong} font-depth`}
+          >
             {titleLines[0]}
             <br />
             {titleLines[1]}
@@ -198,7 +202,11 @@ export function NightBeatCinema({
             />
           ))}
         </div>
-        <p ref={subRef} className={styles.cinemaSub} aria-hidden="true" />
+        <p
+          ref={subRef}
+          className={`${styles.cinemaSub} font-display`}
+          aria-hidden="true"
+        />
         <ul className={styles.srOnly}>
           {lines.map((line) => (
             <li key={line}>{line}</li>

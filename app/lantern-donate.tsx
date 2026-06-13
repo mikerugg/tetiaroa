@@ -57,13 +57,13 @@ export function LanternDonate({ tiers }: { tiers: LanternTier[] }) {
               onClick={() => setSelected(index)}
             >
               <span className={styles.flame} aria-hidden="true" />
-              <span className="font-[var(--font-depth)] text-4xl leading-none text-[var(--paper)]">
+              <span className="font-depth text-4xl leading-none text-[var(--paper)]">
                 {tier.custom && customAmount ? `$${customAmount}` : tier.amount}
-                <span className="ml-1 font-[var(--font-mono)] text-xs tracking-[0.1em] text-[#f4f1ea]/60">
+                <span className="ml-1 font-mono text-xs tracking-[0.1em] text-[#f4f1ea]/60">
                   {tier.period}
                 </span>
               </span>
-              <span className="font-[var(--font-mono)] text-[11px] uppercase tracking-[0.2em] text-[#ffd9a0]">
+              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#ffd9a0]">
                 {tier.name}
               </span>
               <span className="text-[13.5px] leading-[1.5] text-[#f4f1ea]/70">
@@ -75,7 +75,7 @@ export function LanternDonate({ tiers }: { tiers: LanternTier[] }) {
       </div>
 
       {selectedTier?.custom ? (
-        <label className="mt-6 flex items-center gap-2 font-[var(--font-mono)] text-[11px] uppercase tracking-[0.18em] text-[#ffd9a0]/85">
+        <label className="mt-6 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-[#ffd9a0]/85">
           your amount
           <span className="ml-2 text-[15px] text-[var(--paper)]">$</span>
           <input
@@ -84,7 +84,7 @@ export function LanternDonate({ tiers }: { tiers: LanternTier[] }) {
             inputMode="numeric"
             value={customAmount}
             placeholder="50"
-            className="w-[110px] rounded-[10px] border border-[#ffb454]/40 bg-[#0a1626]/70 px-3 py-2.5 font-[var(--font-mono)] text-[15px] tracking-[0.05em] text-[var(--paper)] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#ffb454]/60"
+            className="w-[110px] rounded-[10px] border border-[#ffb454]/40 bg-[#0a1626]/70 px-3 py-2.5 font-mono text-[15px] tracking-[0.05em] text-[var(--paper)] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#ffb454]/60"
             onChange={(event) =>
               setCustomAmount(event.target.value.replace(/[^0-9]/g, ""))
             }

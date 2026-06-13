@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
+import {
+  Anton,
+  Fraunces,
+  Geist,
+  Geist_Mono,
+  Inter,
+  JetBrains_Mono,
+} from "next/font/google";
 import "./globals.css";
 
 const display = Fraunces({
@@ -19,6 +26,22 @@ const mono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
+const depth = Anton({
+  variable: "--font-depth",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "Tetiaroa Society",
   description:
@@ -33,7 +56,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${display.variable} ${sans.variable} ${mono.variable}`}
+      className={`${display.variable} ${sans.variable} ${mono.variable} ${depth.variable} ${geistSans.variable} ${geistMono.variable}`}
     >
       <body>{children}</body>
     </html>

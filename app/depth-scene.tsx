@@ -439,7 +439,7 @@ export function DepthScene({
         className={showSub ? styles.sub : `${styles.sub} ${styles.subHidden}`}
         aria-hidden="true"
       >
-        <div ref={commsRef} className={styles.subComms} />
+        <div ref={commsRef} className={`${styles.subComms} font-mono`} />
         <div ref={pingRef} className={styles.subPing} />
         <div>
           <div className={styles.subBob}>
@@ -458,7 +458,7 @@ export function DepthScene({
         </div>
       </div>
       <div className={styles.gauge} aria-label="Dive depth navigation">
-        <div className={styles.gaugeReading}>
+        <div className={`${styles.gaugeReading} font-mono`}>
           <span ref={readingRef}>&minus;0 m</span>
         </div>
         <div ref={trackRef} className={styles.gaugeTrack}>
@@ -467,7 +467,7 @@ export function DepthScene({
               key={stop.id}
               type="button"
               data-stop-id={stop.id}
-              className={styles.gaugeStop}
+              className={`${styles.gaugeStop} font-mono`}
               onClick={() => {
                 document.getElementById(stop.id)?.scrollIntoView({
                   behavior: "smooth",

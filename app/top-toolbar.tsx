@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const toolbarPillClass =
-  "rounded-full border border-[#5be8d4]/40 px-3 py-[5px] font-[var(--font-mono)] text-[11px] uppercase tracking-[0.16em] text-[#5be8d4] hover:bg-[#5be8d4]/10 hover:text-[#8ff4e6]";
+  "rounded-full border border-current px-3 py-[5px] font-mono text-[11px] uppercase tracking-[0.16em] text-[#5be8d4] hover:bg-[#5be8d4]/10 hover:text-[#8ff4e6]";
 
 export function TopToolbar() {
   return (
@@ -23,7 +23,7 @@ export function TopToolbar() {
           priority
         />
       </Link>
-      <span className="self-center rounded-full border border-[#5be8d4]/40 px-3 py-[5px] font-[var(--font-mono)] text-[11px] uppercase tracking-[0.16em] text-[#5be8d4] max-[860px]:hidden">
+      <span className="self-center rounded-full border border-[#5be8d4]/40 px-3 py-[5px] font-mono text-[11px] uppercase tracking-[0.16em] text-[#5be8d4] max-[860px]:hidden">
         Concept 01 / Te Hohonu &middot; the deep
       </span>
       <div className="flex h-full items-center gap-[22px] text-sm text-[#f4f1ea]/85 max-[860px]:gap-3.5 max-[860px]:text-[13px]">

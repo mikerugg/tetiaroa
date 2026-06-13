@@ -284,18 +284,18 @@ export function VrViewer({ src }: { src: string }) {
 
       <div className={styles.hudFrame} aria-hidden="true" />
       <div className={styles.reticle} aria-hidden="true" />
-      <div className={styles.hudFeed} aria-hidden="true">
+      <div className={`${styles.hudFeed} font-mono`} aria-hidden="true">
         <span className={styles.hudDot} />
         rec &mdash; capturing dive 15
       </div>
-      <div className={styles.hudDepth} aria-hidden="true">
+      <div className={`${styles.hudDepth} font-mono`} aria-hidden="true">
         &minus;104 m &middot; 8k 360&deg;
       </div>
       <div
         className={
           hintVisible
-            ? styles.hudHint
-            : `${styles.hudHint} ${styles.hudHintHidden}`
+            ? `${styles.hudHint} font-mono`
+            : `${styles.hudHint} ${styles.hudHintHidden} font-mono`
         }
         aria-hidden="true"
       >

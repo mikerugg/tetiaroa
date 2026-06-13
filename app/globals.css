@@ -51,6 +51,189 @@ textarea {
   font: inherit;
 }
 
+.font-sans {
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-display), "Times New Roman", serif;
+}
+
+.font-mono {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
+.font-depth {
+  font-family: var(--font-depth), var(--font-sans), system-ui, sans-serif;
+}
+
+.font-geist-sans {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+.font-geist-mono {
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
+.font-test-cormorant {
+  font-family: var(--font-test-cormorant), Georgia, serif;
+}
+
+.font-test-playfair {
+  font-family: var(--font-test-playfair), Georgia, serif;
+}
+
+.font-test-dm-serif {
+  font-family: var(--font-test-dm-serif), Georgia, serif;
+}
+
+.font-test-libre-baskerville {
+  font-family: var(--font-test-libre-baskerville), Georgia, serif;
+}
+
+.font-test-source-serif {
+  font-family: var(--font-test-source-serif), Georgia, serif;
+}
+
+.font-test-instrument-serif {
+  font-family: var(--font-test-instrument-serif), Georgia, serif;
+}
+
+.font-test-newsreader {
+  font-family: var(--font-test-newsreader), Georgia, serif;
+}
+
+.font-test-eb-garamond {
+  font-family: var(--font-test-eb-garamond), Georgia, serif;
+}
+
+.font-test-crimson-pro {
+  font-family: var(--font-test-crimson-pro), Georgia, serif;
+}
+
+.font-test-spectral {
+  font-family: var(--font-test-spectral), Georgia, serif;
+}
+
+.font-test-literata {
+  font-family: var(--font-test-literata), Georgia, serif;
+}
+
+.font-test-manrope {
+  font-family: var(--font-test-manrope), system-ui, sans-serif;
+}
+
+.font-test-ibm-plex-sans {
+  font-family: var(--font-test-ibm-plex-sans), system-ui, sans-serif;
+}
+
+.font-test-space-grotesk {
+  font-family: var(--font-test-space-grotesk), system-ui, sans-serif;
+}
+
+.font-test-public-sans {
+  font-family: var(--font-test-public-sans), system-ui, sans-serif;
+}
+
+.font-test-source-sans {
+  font-family: var(--font-test-source-sans), system-ui, sans-serif;
+}
+
+.font-test-work-sans {
+  font-family: var(--font-test-work-sans), system-ui, sans-serif;
+}
+
+.font-test-plus-jakarta {
+  font-family: var(--font-test-plus-jakarta), system-ui, sans-serif;
+}
+
+.font-test-outfit {
+  font-family: var(--font-test-outfit), system-ui, sans-serif;
+}
+
+.font-test-albert-sans {
+  font-family: var(--font-test-albert-sans), system-ui, sans-serif;
+}
+
+.font-test-bebas {
+  font-family: var(--font-test-bebas), Impact, sans-serif;
+}
+
+.font-test-archivo-black {
+  font-family: var(--font-test-archivo-black), Impact, sans-serif;
+}
+
+.font-test-league-gothic {
+  font-family: var(--font-test-league-gothic), Impact, sans-serif;
+}
+
+.font-test-oswald {
+  font-family: var(--font-test-oswald), Impact, sans-serif;
+}
+
+.font-test-barlow-condensed {
+  font-family: var(--font-test-barlow-condensed), Impact, sans-serif;
+}
+
+.font-test-teko {
+  font-family: var(--font-test-teko), Impact, sans-serif;
+}
+
+.font-test-fjalla {
+  font-family: var(--font-test-fjalla), Impact, sans-serif;
+}
+
+.font-test-roboto-condensed {
+  font-family: var(--font-test-roboto-condensed), Impact, sans-serif;
+}
+
+.font-test-archivo-narrow {
+  font-family: var(--font-test-archivo-narrow), Impact, sans-serif;
+}
+
+.font-test-fira-code {
+  font-family: var(--font-test-fira-code), ui-monospace, SFMono-Regular, monospace;
+}
+
+.font-test-ibm-plex-mono {
+  font-family: var(--font-test-ibm-plex-mono), ui-monospace, SFMono-Regular,
+    monospace;
+}
+
+.font-test-roboto-mono {
+  font-family: var(--font-test-roboto-mono), ui-monospace, SFMono-Regular,
+    monospace;
+}
+
+.font-test-source-code-pro {
+  font-family: var(--font-test-source-code-pro), ui-monospace, SFMono-Regular,
+    monospace;
+}
+
+.font-test-space-mono {
+  font-family: var(--font-test-space-mono), ui-monospace, SFMono-Regular,
+    monospace;
+}
+
+.font-test-inconsolata {
+  font-family: var(--font-test-inconsolata), ui-monospace, SFMono-Regular,
+    monospace;
+}
+
+.font-test-dm-mono {
+  font-family: var(--font-test-dm-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
+.font-test-azeret-mono {
+  font-family: var(--font-test-azeret-mono), ui-monospace, SFMono-Regular,
+    monospace;
+}
+
+.font-test-red-hat-mono {
+  font-family: var(--font-test-red-hat-mono), ui-monospace, SFMono-Regular,
+    monospace;
+}
+
 img,
 video {
   display: block;

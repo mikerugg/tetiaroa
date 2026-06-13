@@ -194,7 +194,7 @@ export default function HomeExperience() {
           </video>
           <div className={styles.heroScrim} aria-hidden="true" />
 
-          <div className={styles.cornerCoords}>
+          <div className={`${styles.cornerCoords} font-mono`}>
             17&deg; 00&apos; 18&quot; S / 149&deg; 34&apos; 13&quot; W
             <br />
             Society Islands / French Polynesia
@@ -205,12 +205,12 @@ export default function HomeExperience() {
               <span className={styles.badgeDot} aria-hidden="true" />
               Now streaming from Teti&#39;aroa
             </div> */}
-            <h1 className={styles.heroTitle}>
+            <h1 className={`${styles.heroTitle} font-depth`}>
               Save the island.
               <br />
               <span className={styles.heroTitleAccent}>Save the world.</span>
             </h1>
-            <a href="#dive" className={styles.watchCta}>
+            <a href="#dive" className={`${styles.watchCta} font-mono`}>
               <span className={styles.playIcon} aria-hidden="true" />
               Watch the film / 2:14
             </a>
@@ -233,32 +233,34 @@ export default function HomeExperience() {
           <div className={styles.heroScrim} aria-hidden="true" />
 
           <div className={styles.heroInner}>
-            <div className={styles.eyebrow}>Te Hohonu &mdash; the deep</div>
-            <h2 className={styles.heroTitle}>Dive deeper.</h2>
+            <div className={`${styles.eyebrow} font-mono`}>
+              Te Hohonu &mdash; the deep
+            </div>
+            <h2 className={`${styles.heroTitle} font-depth`}>Dive deeper.</h2>
             <p className={styles.heroSub}>
               One atoll. A hundred metres of story. Scroll to dive.
             </p>
           </div>
 
-          <div className={styles.diveCue} aria-hidden="true">
+          <div className={`${styles.diveCue} font-mono`} aria-hidden="true">
             dive
             <span className={styles.diveChevron} />
           </div>
         </section>
 
         <section className={styles.deep} id="honu-xr">
-          <div className={styles.depthWatermark} aria-hidden="true">
+          <div className={`${styles.depthWatermark} font-depth`} aria-hidden="true">
             &minus;104
           </div>
           <div className={styles.deepInner}>
             <div className={styles.deepHead}>
               <div className={styles.deepText}>
-              <div className={styles.bandKicker}>
+              <div className={`${styles.bandKicker} font-mono`}>
                 Project 01 &mdash; Honu XR
                 <br />
                 the deep-water submersible
               </div>
-              <h2 className={`${styles.bandTitle} ${styles.deepTitle}`}>
+              <h2 className={`${styles.bandTitle} ${styles.deepTitle} font-depth`}>
                 Meet Honu. Built to bring the ocean to everyone.
               </h2>
               <p className={`${styles.bandCopy} ${styles.deepCopy}`}>
@@ -271,8 +273,12 @@ export default function HomeExperience() {
                 go on a VR field trip to Tetiaroa.
               </p>
               <div className={styles.deepChips}>
-                <span className={styles.statChip}>built with doer marine + google</span>
-                <span className={styles.statChip}>xr field trips for every classroom</span>
+                <span className={`${styles.statChip} font-mono`}>
+                  built with doer marine + google
+                </span>
+                <span className={`${styles.statChip} font-mono`}>
+                  xr field trips for every classroom
+                </span>
               </div>
             </div>
               <figure className={styles.deepRender}>
@@ -284,7 +290,7 @@ export default function HomeExperience() {
                   className={styles.deepRenderImage}
                   sizes="(max-width: 960px) 80vw, 480px"
                 />
-                <figcaption className={styles.deepRenderCaption}>
+                <figcaption className={`${styles.deepRenderCaption} font-mono`}>
                   honu &middot; design render &middot; doer marine
                 </figcaption>
               </figure>
@@ -294,7 +300,7 @@ export default function HomeExperience() {
               href="https://www.youtube.com/watch?v=B9IGe7s6Ook"
               target="_blank"
               rel="noreferrer"
-              className={styles.deepCta}
+              className={`${styles.deepCta} font-mono`}
             >
               Watch in fullscreen / VR &rarr;
             </a>
@@ -302,22 +308,26 @@ export default function HomeExperience() {
         </section>
 
         <section className={styles.band} id="turtles">
-          <div className={styles.depthWatermark} aria-hidden="true">
+          <div className={`${styles.depthWatermark} font-depth`} aria-hidden="true">
             &minus;5
           </div>
           <div className={styles.bandGrid}>
             <div className={styles.bandText}>
-              <div className={styles.bandKicker}>
+              <div className={`${styles.bandKicker} font-mono`}>
                 Project 02 &mdash; sea turtle sanctuary
               </div>
-              <h2 className={styles.bandTitle}>The nursery in the shallows.</h2>
+              <h2 className={`${styles.bandTitle} font-depth`}>
+                The nursery in the shallows.
+              </h2>
               <p className={styles.bandCopy}>
                 Every November, green sea turtles emerge out on the same sand
                 where they hatched. Last season the patrol counted 214 nests
                 &mdash; each one mapped, shaded, and kept safe until the
                 hatchlings made it to the sea.
               </p>
-              <span className={styles.statChip}>214 nests / 2025 season</span>
+              <span className={`${styles.statChip} font-mono`}>
+                214 nests / 2025 season
+              </span>
             </div>
             <div className={styles.bandMedia}>
               <video
@@ -331,7 +341,7 @@ export default function HomeExperience() {
               >
                 <source src="/turtleclip.mp4" type="video/mp4" />
               </video>
-              <span className={styles.mediaCaption}>
+              <span className={`${styles.mediaCaption} font-mono`}>
                 honu &middot; green sea turtle &middot; &minus;5 m
               </span>
             </div>
@@ -339,15 +349,15 @@ export default function HomeExperience() {
         </section>
 
         <section className={styles.band} id="sharks">
-          <div className={styles.depthWatermark} aria-hidden="true">
+          <div className={`${styles.depthWatermark} font-depth`} aria-hidden="true">
             &minus;20
           </div>
           <div className={`${styles.bandGrid} ${styles.bandGridFlip}`}>
             <div className={styles.bandText}>
-              <div className={styles.bandKicker}>
+              <div className={`${styles.bandKicker} font-mono`}>
                 Project 03 &mdash; lemon shark nursery
               </div>
-              <h2 className={styles.bandTitle}>
+              <h2 className={`${styles.bandTitle} font-depth`}>
                 Where the lagoon raises predators.
               </h2>
               <p className={styles.bandCopy}>
@@ -356,7 +366,9 @@ export default function HomeExperience() {
                 &mdash; and with it, the food web that holds the whole atoll
                 together.
               </p>
-              <span className={styles.statChip}>3 km of protected reef edge</span>
+              <span className={`${styles.statChip} font-mono`}>
+                3 km of protected reef edge
+              </span>
             </div>
             <div className={styles.bandMedia}>
               <video
@@ -370,7 +382,7 @@ export default function HomeExperience() {
               >
                 <source src="/lemon-shark.mp4" type="video/mp4" />
               </video>
-              <span className={styles.mediaCaption}>
+              <span className={`${styles.mediaCaption} font-mono`}>
                 ma&#39;o &middot; lemon shark &middot; &minus;20 m
               </span>
             </div>
@@ -378,21 +390,25 @@ export default function HomeExperience() {
         </section>
 
         <section className={styles.band} id="twin">
-          <div className={styles.depthWatermark} aria-hidden="true">
+          <div className={`${styles.depthWatermark} font-depth`} aria-hidden="true">
             &minus;40
           </div>
           <div className={styles.bandGrid}>
             <div className={styles.bandText}>
-              <div className={styles.bandKicker}>
+              <div className={`${styles.bandKicker} font-mono`}>
                 Project 04 &mdash; digital twin + biocode
               </div>
-              <h2 className={styles.bandTitle}>Foundational Data.</h2>
+              <h2 className={`${styles.bandTitle} font-depth`}>
+                Foundational Data.
+              </h2>
               <p className={styles.bandCopy}>
                 Every reef head, every current, every one of 167 species
                 &mdash; scanned, sequenced, and rebuilt as a living digital
                 twin. When the real Tetiaroa changes, the twin sees it first.
               </p>
-              <span className={styles.statChip}>167 species in the biocode</span>
+              <span className={`${styles.statChip} font-mono`}>
+                167 species in the biocode
+              </span>
             </div>
             <ScanPanel>
               <Image
@@ -408,7 +424,7 @@ export default function HomeExperience() {
                 {scanReadouts.map((readout) => (
                   <span
                     key={readout.label}
-                    className={styles.readout}
+                    className={`${styles.readout} font-mono`}
                     style={{ "--at": readout.at } as React.CSSProperties}
                   >
                     {readout.label}
@@ -421,8 +437,10 @@ export default function HomeExperience() {
 
         <section className={styles.shallows} id="kids">
           <div className={styles.shallowsInner}>
-            <div className={styles.shallowsEyebrow}>Come up for air</div>
-            <h2 className={styles.shallowsTitle}>
+            <div className={`${styles.shallowsEyebrow} font-mono`}>
+              Come up for air
+            </div>
+            <h2 className={`${styles.shallowsTitle} font-display`}>
               Tamari&#39;i <br /> &mdash;{" "}
               <em className={styles.wavy}>little chiefs of the lagoon.</em>
             </h2>
@@ -445,8 +463,12 @@ export default function HomeExperience() {
                     />
                   </div>
                   <div className={styles.kidBody}>
-                    <span className={styles.kidBadge}>{program.badge}</span>
-                    <h3 className={styles.kidTitle}>{program.title}</h3>
+                    <span className={`${styles.kidBadge} font-mono`}>
+                      {program.badge}
+                    </span>
+                    <h3 className={`${styles.kidTitle} font-display`}>
+                      {program.title}
+                    </h3>
                     <p className={styles.kidCopy}>{program.copy}</p>
                   </div>
                 </article>
@@ -465,7 +487,7 @@ export default function HomeExperience() {
               >
                 <source src="/turtlecare.mp4" type="video/mp4" />
               </video>
-              <span className={styles.mediaCaption}>
+              <span className={`${styles.mediaCaption} font-mono`}>
                 release day at the sanctuary &mdash; the part nobody skips
               </span>
             </div>
@@ -474,8 +496,10 @@ export default function HomeExperience() {
 
         <section className={styles.history} id="history">
           <div className={styles.historyHead}>
-            <div className={styles.historyEyebrow}>Back to the surface</div>
-            <h2 className={styles.historyTitle}>
+            <div className={`${styles.historyEyebrow} font-mono`}>
+              Back to the surface
+            </div>
+            <h2 className={`${styles.historyTitle} font-depth`}>
               1967. A promise at the waterline.
             </h2>
           </div>
@@ -491,8 +515,10 @@ export default function HomeExperience() {
                   sizes="(max-width: 960px) 100vw, 1180px"
                 />
                 <div className={styles.grain} aria-hidden="true" />
-                <span className={styles.frameYear}>{frame.year}</span>
-                <figcaption className={styles.frameCaption}>
+                <span className={`${styles.frameYear} font-mono`}>
+                  {frame.year}
+                </span>
+                <figcaption className={`${styles.frameCaption} font-display`}>
                   {frame.caption}
                 </figcaption>
               </figure>
@@ -510,8 +536,8 @@ export default function HomeExperience() {
               >
                 <source src="/atoll.mp4" type="video/mp4" />
               </video>
-              <span className={styles.frameYear}>Today</span>
-              <figcaption className={styles.frameCaption}>
+              <span className={`${styles.frameYear} font-mono`}>Today</span>
+              <figcaption className={`${styles.frameCaption} font-display`}>
                 Tetiaroa Society has kept the promise since 2010. The film never
                 stopped rolling.
               </figcaption>
@@ -527,7 +553,7 @@ export default function HomeExperience() {
               eyebrow={nightEyebrow}
               titleLines={nightTitleLines}
             />
-            <p className={styles.nightClose}>
+            <p className={`${styles.nightClose} font-display`}>
                Every story begins with a single step.{" "}
               <strong className={styles.nightYours}>Light the way.</strong>
             </p>
