@@ -7,6 +7,7 @@ import { LanternDonate, type LanternTier } from "./lantern-donate";
 import { NightBeatCinema } from "./night-beat-cinema";
 import { ScanPanel } from "./scan-panel";
 import styles from "./home-experience.module.css";
+import { TopToolbar } from "./top-toolbar";
 
 const depthStops: DepthStop[] = [
   {
@@ -33,42 +34,42 @@ const depthStops: DepthStop[] = [
   {
     id: "turtles",
     depth: 5,
-    label: "Turtle sanctuary",
+    label: "Turtles",
     color: "#0e7e8a",
     transmission: "−5 m — nursery on the port side",
   },
   {
     id: "sharks",
     depth: 20,
-    label: "Shark nursery",
+    label: "Sharks",
     color: "#0b4e66",
     transmission: "−20 m — easy… juveniles on the reef edge",
   },
   {
     id: "twin",
     depth: 40,
-    label: "Digital twin",
+    label: "Data",
     color: "#071f33",
     transmission: "−40 m — scanning. the twin is in sync",
   },
   {
     id: "kids",
     depth: 2,
-    label: "The shallows",
+    label: "Tamari'i",
     color: "#8fd8cf",
     transmission: "surfacing — warm water ahead",
   },
   {
     id: "history",
     depth: 0,
-    label: "1967",
+    label: "Our Story",
     color: "#d9a05f",
     transmission: "back at the waterline — 1967",
   },
   {
     id: "lanterns",
     depth: 0,
-    label: "Night beach",
+    label: "Connected",
     color: "#04101e",
     transmission: "night ops — the chain starts on this beach",
   },
@@ -111,18 +112,18 @@ const nightTitleLines: [string, string] = [
 
 // one subtitle per beat, one line on screen at a time
 const beatLines = [
-  "On Teti'aroa, a nest begins to hatch — the patrol guides 96 baby turtles to the water.",
-  "Footage and data from the night steam to our servers and across the world.",
+  "On Teti'aroa, a nest begins to hatch — our staff guide 96 baby turtles to the water.",
+  "Footage and data from the night patrol steam to our servers and across the world.",
   "In a classroom on the other side of the world, a child puts on a headset and discovers a passion for the ocean.",
-  "One of those kids starts a local beach clean-up.",
+  "One of those kids starts a local beach clean-up, another studies marine biology.",
   "25 years later, one of those sea turtle hatchlings returns to the same beach to lay her own eggs.",
-  "Those kids, now grown, start their own conservation projects and teach their own children about our place in this world.",
+  "... and those kids, now grown, teach their own children about our place in this world.",
 ];
 
 const scanReadouts = [
-  { label: "bathymetry — mapped", at: 0.3 },
-  { label: "reef cover — resolved", at: 0.52 },
-  { label: "biocode — 167 spp sequenced", at: 0.74 },
+  { label: "reef health — indexed", at: 0.3 },
+  { label: "species DNA — cataloged", at: 0.52 },
+  { label: "ecosystem signals — synced", at: 0.74 },
 ];
 
 const kidPrograms = [
@@ -176,31 +177,7 @@ export default function HomeExperience() {
       <HomepageInitialScrollReset />
       <div className={styles.page}>
         <DepthScene stops={depthStops} />
-
-        <nav className={styles.topNav}>
-          <Link href="/" className={styles.brand}>
-            <Image
-              src="/logos/TSFP_Logo_2026_White.png"
-              alt="Tetiaroa Society"
-              width={596}
-              height={371}
-              className={styles.brandLogo}
-              priority
-            />
-          </Link>
-          <span className={styles.conceptTag}>
-            Concept 01 / Te Hohonu &middot; the deep
-          </span>
-          <div className={styles.navLinks}>
-            <Link href="/first-prototype" className={styles.prototypeLink}>
-              First prototype
-            </Link>
-            <Link href="/our-logo">Our logo</Link>
-            <a href="#donation-levels" className={styles.donateLink}>
-              Donate
-            </a>
-          </div>
-        </nav>
+        <TopToolbar />
 
         <section className={styles.hero} id="hero">
           <video
@@ -264,8 +241,8 @@ export default function HomeExperience() {
           </div>
 
           <div className={styles.diveCue} aria-hidden="true">
+            dive
             <span className={styles.diveChevron} />
-            dive &mdash; 0 m
           </div>
         </section>
 
@@ -331,7 +308,7 @@ export default function HomeExperience() {
           <div className={styles.bandGrid}>
             <div className={styles.bandText}>
               <div className={styles.bandKicker}>
-                Project 02 &mdash; sea turtle sanctuary &middot; sunlit lagoon
+                Project 02 &mdash; sea turtle sanctuary
               </div>
               <h2 className={styles.bandTitle}>The nursery in the shallows.</h2>
               <p className={styles.bandCopy}>
@@ -368,7 +345,7 @@ export default function HomeExperience() {
           <div className={`${styles.bandGrid} ${styles.bandGridFlip}`}>
             <div className={styles.bandText}>
               <div className={styles.bandKicker}>
-                Project 03 &mdash; lemon shark nursery &middot; reef edge
+                Project 03 &mdash; lemon shark nursery
               </div>
               <h2 className={styles.bandTitle}>
                 Where the lagoon raises predators.
@@ -409,7 +386,7 @@ export default function HomeExperience() {
               <div className={styles.bandKicker}>
                 Project 04 &mdash; digital twin + biocode
               </div>
-              <h2 className={styles.bandTitle}>An atoll that knows itself.</h2>
+              <h2 className={styles.bandTitle}>Foundational Data.</h2>
               <p className={styles.bandCopy}>
                 Every reef head, every current, every one of 167 species
                 &mdash; scanned, sequenced, and rebuilt as a living digital
@@ -446,7 +423,7 @@ export default function HomeExperience() {
           <div className={styles.shallowsInner}>
             <div className={styles.shallowsEyebrow}>Come up for air</div>
             <h2 className={styles.shallowsTitle}>
-              Tamari&#39;i &mdash;{" "}
+              Tamari&#39;i <br /> &mdash;{" "}
               <em className={styles.wavy}>little chiefs of the lagoon.</em>
             </h2>
             <p className={styles.shallowsCopy}>
@@ -551,8 +528,8 @@ export default function HomeExperience() {
               titleLines={nightTitleLines}
             />
             <p className={styles.nightClose}>
-              Every chain starts with one light on a beach.{" "}
-              <strong className={styles.nightYours}>Yours.</strong>
+               Every story begins with a single step.{" "}
+              <strong className={styles.nightYours}>Light the way.</strong>
             </p>
 
             <LanternDonate tiers={lanternTiers} />

@@ -3,6 +3,9 @@
 import { useEffect, useRef } from "react";
 import styles from "./home-experience.module.css";
 
+const SCAN_START = 0.14;
+const SCAN_RANGE = 0.38;
+
 export function ScanPanel({ children }: { children: React.ReactNode }) {
   const panelRef = useRef<HTMLDivElement | null>(null);
 
@@ -24,7 +27,7 @@ export function ScanPanel({ children }: { children: React.ReactNode }) {
 
       panel.style.setProperty(
         "--scan",
-        String(clampUnit((traversed - 0.18) / 0.55)),
+        String(clampUnit((traversed - SCAN_START) / SCAN_RANGE)),
       );
     };
 

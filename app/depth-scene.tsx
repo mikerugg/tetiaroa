@@ -67,8 +67,6 @@ export function DepthScene({
   const subTiltRef = useRef<HTMLDivElement | null>(null);
   const commsRef = useRef<HTMLDivElement | null>(null);
   const pingRef = useRef<HTMLDivElement | null>(null);
-  const plungeRef = useRef<HTMLDivElement | null>(null);
-  const bloomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const backdrop = backdropRef.current;
@@ -81,8 +79,6 @@ export function DepthScene({
     const subTilt = subTiltRef.current;
     const comms = commsRef.current;
     const ping = pingRef.current;
-    const plunge = plungeRef.current;
-    const bloom = bloomRef.current;
 
     if (
       !backdrop ||
@@ -94,9 +90,7 @@ export function DepthScene({
       !sub ||
       !subTilt ||
       !comms ||
-      !ping ||
-      !plunge ||
-      !bloom
+      !ping
     ) {
       return;
     }
@@ -119,11 +113,7 @@ export function DepthScene({
     let scrollQueued = false;
     let lastScrollY = window.scrollY;
     let smoothVel = 0;
-    let plungeY = Number.MAX_SAFE_INTEGER;
-    let bloomY = Number.MAX_SAFE_INTEGER;
     let prevProbe: number | null = null;
-    let lastPlungeAt = 0;
-    let lastBloomAt = 0;
     let firstApply = true;
     let commsTimer = 0;
     let gapTargetId: string | null = null;
@@ -145,19 +135,6 @@ export function DepthScene({
         );
       });
 
-      // The waterline sits at the bottom of the last surface section before
-      // the first deep stop.
-      const diveIndex = stops.findIndex((stop) => stop.depth > 2);
-      const surfaceStop = stops[Math.max(diveIndex - 1, 0)];
-      const surface = document.getElementById(surfaceStop?.id ?? "");
-      const history = document.getElementById("history");
-
-      plungeY = surface
-        ? surface.offsetTop + surface.offsetHeight - window.innerHeight * 0.25
-        : Number.MAX_SAFE_INTEGER;
-      bloomY = history
-        ? history.offsetTop - window.innerHeight * 0.1
-        : Number.MAX_SAFE_INTEGER;
     };
 
     const showTransmission = (text: string | undefined) => {
@@ -181,12 +158,6 @@ export function DepthScene({
     const hideTransmission = () => {
       window.clearTimeout(commsTimer);
       comms.classList.remove(styles.commsShow);
-    };
-
-    const triggerOverlay = (element: HTMLElement, className: string) => {
-      element.classList.remove(className);
-      void element.offsetWidth;
-      element.classList.add(className);
     };
 
     const apply = () => {
@@ -253,38 +224,6 @@ export function DepthScene({
       } else if (!inGap && gapTargetId) {
         gapTargetId = null;
         hideTransmission();
-      }
-
-      if (prevProbe !== null && !reducedMotion) {
-        const now = performance.now();
-
-        // The dive begins: crossing the hero waterline going down plunges,
-        // coming back up through it surfaces.
-        if (prevProbe < plungeY && probe >= plungeY && now - lastPlungeAt > 900) {
-          lastPlungeAt = now;
-          triggerOverlay(plunge, styles.plungeRun);
-        } else if (
-          prevProbe > plungeY &&
-          probe <= plungeY &&
-          now - lastBloomAt > 900
-        ) {
-          lastBloomAt = now;
-          triggerOverlay(bloom, styles.bloomRun);
-        }
-
-        // The ascent ends at the 1967 beach: surfacing bloom on the way down
-        // the page, re-submerging plunge when scrolling back up.
-        if (prevProbe < bloomY && probe >= bloomY && now - lastBloomAt > 900) {
-          lastBloomAt = now;
-          triggerOverlay(bloom, styles.bloomRun);
-        } else if (
-          prevProbe > bloomY &&
-          probe <= bloomY &&
-          now - lastPlungeAt > 900
-        ) {
-          lastPlungeAt = now;
-          triggerOverlay(plunge, styles.plungeRun);
-        }
       }
 
       prevProbe = probe;
@@ -495,26 +434,6 @@ export function DepthScene({
         className={styles.deepVignette}
         aria-hidden="true"
       />
-      <div ref={plungeRef} className={styles.plunge} aria-hidden="true">
-        <svg
-          className={styles.plungeWave}
-          viewBox="0 0 1440 80"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M0 40 Q 60 8 120 40 T 240 40 T 360 40 T 480 40 T 600 40 T 720 40 T 840 40 T 960 40 T 1080 40 T 1200 40 T 1320 40 T 1440 40 L 1440 80 L 0 80 Z"
-            fill="currentColor"
-          />
-        </svg>
-        <div className={styles.plungeBody} />
-      </div>
-      <div ref={bloomRef} className={styles.bloom} aria-hidden="true">
-        <span className={styles.streak} />
-        <span className={styles.streak} />
-        <span className={styles.streak} />
-        <span className={styles.streak} />
-        <span className={styles.streak} />
-      </div>
       <div
         ref={subRef}
         className={showSub ? styles.sub : `${styles.sub} ${styles.subHidden}`}

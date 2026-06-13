@@ -71,6 +71,85 @@ section[id] {
   color: var(--paper);
 }
 
+@keyframes donate-lava {
+  0% {
+    background-position:
+      8% 48%,
+      88% 42%,
+      48% 88%,
+      0% 50%;
+    background-size:
+      520% 560%,
+      480% 540%,
+      560% 620%,
+      180% 100%;
+  }
+
+  33% {
+    background-position:
+      74% 28%,
+      30% 82%,
+      92% 62%,
+      50% 50%;
+    background-size:
+      620% 520%,
+      560% 640%,
+      500% 560%,
+      180% 100%;
+  }
+
+  66% {
+    background-position:
+      24% 78%,
+      78% 18%,
+      18% 34%,
+      100% 50%;
+    background-size:
+      500% 650%,
+      650% 500%,
+      600% 620%,
+      180% 100%;
+  }
+
+  100% {
+    background-position:
+      8% 48%,
+      88% 42%,
+      48% 88%,
+      0% 50%;
+    background-size:
+      520% 560%,
+      480% 540%,
+      560% 620%,
+      180% 100%;
+  }
+}
+
+.donate-lava {
+  background:
+    radial-gradient(
+      circle at 8% 48%,
+      rgba(251, 146, 60, 0.98) 0 10%,
+      rgba(251, 146, 60, 0.62) 24%,
+      rgba(251, 146, 60, 0) 44%
+    ),
+    radial-gradient(
+      circle at 88% 42%,
+      rgba(249, 115, 22, 0.94) 0 12%,
+      rgba(249, 115, 22, 0.62) 26%,
+      rgba(249, 115, 22, 0) 46%
+    ),
+    radial-gradient(
+      circle at 48% 88%,
+      rgba(124, 45, 6, 0.86) 0 12%,
+      rgba(124, 45, 6, 0.52) 28%,
+      rgba(124, 45, 6, 0) 48%
+    ),
+    linear-gradient(90deg, #5a1f05, #9a3412, #f97316, #fb923c, #5a1f05);
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat;
+  animation: donate-lava 13s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

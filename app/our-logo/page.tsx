@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HomepageInitialScrollReset } from "../homepage-client";
+import { TopToolbar } from "../top-toolbar";
 import { LogoCanvas } from "./logo-canvas";
 import { motifs } from "./motifs";
 import styles from "./page.module.css";
@@ -10,24 +11,7 @@ export default function MarkPage() {
     <>
       <HomepageInitialScrollReset />
       <div className={styles.page}>
-        <nav className={styles.topNav} aria-label="Logo meaning navigation">
-          <Link href="/our-logo" className={styles.brand}>
-            <Image
-              src="/logos/TSFP_Logo_2026_White.png"
-              alt="Tetiaroa Society"
-              width={596}
-              height={371}
-              className={styles.brandLogo}
-              priority
-            />
-          </Link>
-          <span className={styles.conceptTag}>The mark / TSFP 2026</span>
-          <div className={styles.navLinks}>
-            <Link href="/">Current homepage</Link>
-            <Link href="/">Te Hohonu</Link>
-            <a href="#legend">Legend</a>
-          </div>
-        </nav>
+        <TopToolbar />
 
         <main>
           <section className={styles.hero} id="hero">

@@ -21,7 +21,7 @@ export const motifs: Motif[] = [
     title: "The Braid",
     shortName: "Braid",
     meaning:
-      "Traditional skill made visible in rooftops, ropes, and ornaments: a link that binds a united society.",
+      "Traditional skill made visible in rooftops, ropes, and ornaments: a link that binds us all together.",
     keywords: ["link", "craft", "society"],
   },
   {
@@ -29,7 +29,7 @@ export const motifs: Motif[] = [
     title: "The Waves",
     shortName: "Waves",
     meaning:
-      "The ocean surrounding Tetiaroa: an inexhaustible source of life and the living link between all of us.",
+      "The ocean surrounding Teti'aroa: an inexhaustible source of life and the living link between all of us.",
     keywords: ["ocean", "life", "connection"],
   },
   {
