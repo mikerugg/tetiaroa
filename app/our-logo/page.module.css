@@ -624,6 +624,11 @@
     margin: 8px 7% 0;
   }
 
+  .stageLogo .logoMotifMuted {
+    opacity: calc(0.04 + (var(--motif-progress, 1) * 0.92));
+    filter: none;
+  }
+
   .panelTrack {
     width: 100%;
     margin-top: 0;
