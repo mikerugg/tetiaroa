@@ -625,7 +625,7 @@
   }
 
   .stageLogo .logoMotifMuted {
-    opacity: calc(0.04 + (var(--motif-progress, 1) * 0.92));
+    opacity: calc(0.12 + (var(--motif-progress, 1) * 0.22));
     filter: none;
   }
 
