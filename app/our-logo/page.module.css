@@ -170,7 +170,6 @@
 .stageGrid {
   position: absolute;
   inset: 12vh 0;
-  z-index: 0;
   border-top: 1px solid rgba(244, 241, 234, 0.08);
   border-bottom: 1px solid rgba(244, 241, 234, 0.08);
   opacity: 0.8;
@@ -197,7 +196,6 @@
 .stageHalo {
   position: absolute;
   inset: 22vh 2vw 18vh;
-  z-index: 0;
   border-radius: 50%;
   opacity: 0.52;
   background:
@@ -208,7 +206,6 @@
 
 .stageLogo {
   position: relative;
-  z-index: 1;
   width: 100%;
   color: var(--mark-blue-2);
   filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.42));
@@ -216,7 +213,6 @@
 
 .stageCaption {
   position: relative;
-  z-index: 1;
   display: flex;
   justify-content: space-between;
   margin: 20px 7% 0;
