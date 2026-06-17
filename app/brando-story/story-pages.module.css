@@ -1,0 +1,314 @@
+.page {
+  min-height: 100vh;
+  color: #f8ecd8;
+  background: #120d09;
+}
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 58px;
+  padding: 0 44px;
+  pointer-events: none;
+}
+
+.brand,
+.navLinks a {
+  color: rgba(248, 236, 216, 0.8);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55);
+  pointer-events: auto;
+}
+
+.brand {
+  color: #fff7e8;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 5px;
+  border: 1px solid rgba(248, 236, 216, 0.13);
+  background: rgba(18, 13, 9, 0.28);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(15px);
+  pointer-events: auto;
+}
+
+.navLinks a {
+  padding: 9px 12px;
+  color: rgba(248, 236, 216, 0.64);
+}
+
+.navLinks a[aria-current="page"] {
+  color: #fff7e8;
+  background: rgba(248, 236, 216, 0.1);
+}
+
+.section {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.imageStage,
+.image,
+.veil,
+.texture {
+  position: absolute;
+  inset: 0;
+}
+
+.imageStage {
+  z-index: 0;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.veil,
+.texture {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.texture {
+  opacity: 0.48;
+  mix-blend-mode: multiply;
+  background:
+    radial-gradient(circle at 11% 21%, rgba(255, 255, 255, 0.1) 0 1px, transparent 2px),
+    radial-gradient(circle at 58% 69%, rgba(0, 0, 0, 0.18) 0 1px, transparent 2px),
+    linear-gradient(90deg, rgba(255, 247, 232, 0.03), transparent 14%, rgba(0, 0, 0, 0.1) 64%, transparent);
+  background-size: 29px 29px, 37px 37px, 100% 100%;
+}
+
+.copyWrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-height: 100vh;
+  min-height: 100svh;
+  align-items: center;
+  padding: 88px 7vw 64px;
+}
+
+.copy {
+  max-width: 475px;
+  text-shadow: 0 3px 18px rgba(0, 0, 0, 0.52);
+}
+
+.historyLabel {
+  margin: 0 0 24px;
+  color: rgba(248, 236, 216, 0.78);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.21em;
+  text-transform: uppercase;
+}
+
+.copy h1 {
+  margin: 0;
+  color: #fff9ed;
+  font-size: clamp(60px, 6.8vw, 116px);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.copy p {
+  margin: 22px 0 0;
+  color: rgba(255, 247, 232, 0.84);
+  font-size: clamp(15px, 1.03vw, 18px);
+  line-height: 1.62;
+}
+
+.copy p + p {
+  margin-top: 17px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 34px;
+  color: #fff9ed;
+  font-size: clamp(20px, 1.6vw, 28px);
+  line-height: 1;
+  text-decoration: none;
+}
+
+.cta::before {
+  display: block;
+  width: 52px;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  opacity: 0.7;
+}
+
+.cta span {
+  transition: transform 220ms ease;
+}
+
+.cta:hover span {
+  transform: translateX(6px);
+}
+
+.firstSight .veil {
+  background:
+    linear-gradient(90deg, rgba(13, 8, 5, 0.97) 0%, rgba(13, 8, 5, 0.85) 20%, rgba(13, 8, 5, 0.42) 40%, rgba(13, 8, 5, 0.09) 72%),
+    linear-gradient(180deg, rgba(13, 8, 5, 0.16), rgba(13, 8, 5, 0.08) 48%, rgba(13, 8, 5, 0.52));
+}
+
+.vow .veil {
+  background:
+    linear-gradient(90deg, rgba(13, 8, 5, 0.98) 0%, rgba(13, 8, 5, 0.87) 22%, rgba(13, 8, 5, 0.42) 41%, rgba(13, 8, 5, 0.06) 76%),
+    radial-gradient(ellipse at 75% 49%, rgba(255, 229, 179, 0.1), transparent 36%),
+    linear-gradient(180deg, rgba(13, 8, 5, 0.18), rgba(13, 8, 5, 0.58));
+}
+
+.work .veil {
+  background:
+    linear-gradient(90deg, rgba(78, 52, 31, 0.88) 0%, rgba(78, 52, 31, 0.56) 23%, rgba(78, 52, 31, 0.1) 49%, rgba(5, 19, 18, 0.12) 76%),
+    linear-gradient(180deg, rgba(11, 17, 13, 0.04), rgba(11, 17, 13, 0.12) 52%, rgba(11, 17, 13, 0.34));
+}
+
+.work .copy {
+  max-width: 520px;
+}
+
+.work .copy p {
+  max-width: 492px;
+}
+
+.quote {
+  position: absolute;
+  right: clamp(160px, 19vw, 330px);
+  bottom: clamp(58px, 8vh, 100px);
+  z-index: 2;
+  max-width: 330px;
+  color: rgba(255, 247, 232, 0.76);
+  font-size: clamp(22px, 2.2vw, 38px);
+  font-style: italic;
+  line-height: 1.1;
+  text-shadow: 0 3px 22px rgba(0, 0, 0, 0.58);
+  transform: rotate(-3deg);
+}
+
+@media (max-width: 1120px) {
+  .copy {
+    max-width: 430px;
+  }
+
+  .copy h1 {
+    font-size: clamp(52px, 7vw, 86px);
+  }
+
+  .quote {
+    right: 7vw;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 760px) {
+  .nav {
+    min-height: 54px;
+    justify-content: center;
+    padding: 8px 18px;
+  }
+
+  .brand {
+    display: none;
+  }
+
+  .navLinks {
+    width: min(100%, 420px);
+    justify-content: space-between;
+  }
+
+  .navLinks a {
+    padding: 9px 7px;
+    font-size: 9px;
+    letter-spacing: 0.13em;
+  }
+
+  .copyWrap {
+    align-items: flex-end;
+    padding: 34vh 7vw 8vh;
+  }
+
+  .copy,
+  .work .copy,
+  .work .copy p {
+    max-width: none;
+  }
+
+  .copy h1 {
+    font-size: clamp(44px, 14.5vw, 68px);
+    line-height: 0.92;
+  }
+
+  .copy p {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .historyLabel {
+    margin-bottom: 15px;
+    font-size: 10px;
+  }
+
+  .cta {
+    margin-top: 26px;
+    font-size: 22px;
+  }
+
+  .cta::before {
+    width: 38px;
+  }
+
+.firstSight .image {
+    object-position: 59% center;
+  }
+
+  .vow .image {
+    object-position: 50% center;
+  }
+
+  .work .image {
+    object-position: 42% center;
+  }
+
+  .firstSight .veil,
+  .vow .veil,
+  .work .veil {
+    background:
+      linear-gradient(180deg, rgba(13, 8, 5, 0.02) 0%, rgba(13, 8, 5, 0.13) 28%, rgba(13, 8, 5, 0.94) 72%, rgba(13, 8, 5, 0.98) 100%),
+      linear-gradient(90deg, rgba(13, 8, 5, 0.2), rgba(13, 8, 5, 0.04));
+  }
+
+  .quote {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta span {
+    transition: none;
+  }
+}

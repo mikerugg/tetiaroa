@@ -1,0 +1,332 @@
+.page {
+  min-height: 100vh;
+  color: #fff7e8;
+  background: #0f0a06;
+}
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 58px;
+  padding: 0 42px;
+  pointer-events: none;
+}
+
+.brand,
+.navLinks a {
+  color: rgba(255, 247, 232, 0.76);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.62);
+  pointer-events: auto;
+}
+
+.brand {
+  color: #fff7e8;
+}
+
+.navLinks {
+  display: flex;
+  gap: 1px;
+  border: 1px solid rgba(255, 247, 232, 0.16);
+  background: rgba(13, 8, 4, 0.3);
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(16px);
+  pointer-events: auto;
+}
+
+.navLinks a {
+  display: flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 14px;
+  color: rgba(255, 247, 232, 0.58);
+  text-decoration: none;
+}
+
+.navLinks a[aria-current="page"] {
+  color: #fff7e8;
+  background: rgba(255, 247, 232, 0.12);
+}
+
+.section {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.image,
+.veil,
+.grain {
+  position: absolute;
+  inset: 0;
+}
+
+.image {
+  z-index: 0;
+  object-fit: cover;
+}
+
+.veil,
+.grain {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.grain {
+  opacity: 0.26;
+  mix-blend-mode: overlay;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.2) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 72% 66%, rgba(0, 0, 0, 0.22) 0 1px, transparent 1.8px);
+  background-size: 31px 31px, 43px 43px;
+}
+
+.copy {
+  position: relative;
+  z-index: 2;
+  width: min(690px, 88vw);
+  padding: 122px 0 72px 7vw;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.58);
+}
+
+.label {
+  margin: 0 0 22px;
+  color: rgba(255, 247, 232, 0.82);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.copy h1 {
+  margin: 0;
+  color: #fff9ef;
+  font-size: clamp(56px, 6.3vw, 108px);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.copy p {
+  margin: 24px 0 0;
+  max-width: 530px;
+  color: rgba(255, 247, 232, 0.86);
+  font-size: clamp(15px, 1.05vw, 18px);
+  line-height: 1.65;
+}
+
+.copy p + p {
+  margin-top: 18px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 34px;
+  color: #fff9ef;
+  font-size: clamp(21px, 1.5vw, 28px);
+  line-height: 1;
+  text-decoration: none;
+}
+
+.cta::before {
+  display: block;
+  width: 52px;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  opacity: 0.72;
+}
+
+.cta span {
+  transition: transform 220ms ease;
+}
+
+.cta:hover span {
+  transform: translateX(6px);
+}
+
+.lagoonWitness .section {
+  display: flex;
+  align-items: center;
+}
+
+.lagoonWitness .veil {
+  background:
+    linear-gradient(90deg, rgba(17, 13, 9, 0.9) 0%, rgba(17, 13, 9, 0.62) 23%, rgba(17, 13, 9, 0.14) 54%, rgba(17, 13, 9, 0.08)),
+    radial-gradient(ellipse at 21% 58%, rgba(0, 0, 0, 0.32), transparent 41%),
+    linear-gradient(180deg, rgba(17, 13, 9, 0.1), rgba(17, 13, 9, 0.34));
+}
+
+.lagoonWitness .copy {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.archiveVow .veil {
+  background:
+    linear-gradient(90deg, rgba(10, 7, 4, 0.96) 0%, rgba(10, 7, 4, 0.82) 24%, rgba(10, 7, 4, 0.28) 48%, rgba(10, 7, 4, 0.04) 72%),
+    linear-gradient(180deg, rgba(10, 7, 4, 0.04), rgba(10, 7, 4, 0.55));
+}
+
+.archiveVow .copy {
+  padding-top: 148px;
+}
+
+.artifact {
+  position: absolute;
+  right: min(34vw, 560px);
+  bottom: clamp(58px, 9vh, 96px);
+  z-index: 2;
+  width: min(300px, 24vw);
+  color: rgba(54, 34, 17, 0.9);
+  font-size: clamp(22px, 2vw, 34px);
+  font-style: italic;
+  line-height: 1.1;
+  text-shadow: none;
+  transform: rotate(-1deg);
+}
+
+.livingHandoff .veil {
+  background:
+    linear-gradient(90deg, rgba(9, 8, 6, 0.94) 0%, rgba(9, 8, 6, 0.74) 22%, rgba(9, 8, 6, 0.22) 49%, rgba(9, 8, 6, 0.02) 75%),
+    linear-gradient(180deg, rgba(9, 8, 6, 0.06), rgba(9, 8, 6, 0.42));
+}
+
+.livingHandoff .copy {
+  padding-top: 136px;
+}
+
+@media (max-width: 980px) {
+  .copy {
+    width: min(520px, 88vw);
+  }
+
+  .artifact {
+    display: none;
+  }
+}
+
+@media (max-width: 680px) {
+  .nav {
+    min-height: 54px;
+    justify-content: center;
+    padding: 8px 16px;
+  }
+
+  .brand {
+    display: none;
+  }
+
+  .navLinks {
+    width: min(100%, 430px);
+  }
+
+  .navLinks a {
+    flex: 1;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 6px;
+    font-size: 8px;
+    letter-spacing: 0.11em;
+    text-align: center;
+  }
+
+  .section {
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .copy,
+  .archiveVow .copy,
+  .livingHandoff .copy {
+    width: 100%;
+    padding: 34vh 7vw 7.5vh;
+  }
+
+  .copy h1 {
+    font-size: clamp(42px, 13.2vw, 62px);
+    line-height: 0.94;
+  }
+
+  .copy p {
+    margin-top: 20px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .copy p + p {
+    margin-top: 15px;
+  }
+
+  .label {
+    margin-bottom: 14px;
+    font-size: 10px;
+  }
+
+  .cta {
+    margin-top: 25px;
+    font-size: 22px;
+  }
+
+  .cta::before {
+    width: 38px;
+  }
+
+  .lagoonWitness .image {
+    object-position: 82% center;
+  }
+
+  .archiveVow .image {
+    object-position: 58% center;
+  }
+
+  .livingHandoff .image {
+    object-position: 18% center;
+  }
+
+  .livingHandoff .section::after {
+    position: absolute;
+    right: -18vw;
+    bottom: 0;
+    z-index: 1;
+    width: 64vw;
+    height: 36vh;
+    background-image: url("/story/history-new-living-handoff.png");
+    background-repeat: no-repeat;
+    background-position: 100% center;
+    background-size: auto 100%;
+    content: "";
+    opacity: 0.42;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse at 62% 52%, #000 0%, #000 43%, transparent 74%);
+  }
+
+  .lagoonWitness .veil,
+  .archiveVow .veil,
+  .livingHandoff .veil {
+    background:
+      linear-gradient(180deg, rgba(10, 7, 4, 0.02) 0%, rgba(10, 7, 4, 0.1) 26%, rgba(10, 7, 4, 0.92) 69%, rgba(10, 7, 4, 0.98) 100%),
+      linear-gradient(90deg, rgba(10, 7, 4, 0.18), rgba(10, 7, 4, 0.04));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta span {
+    transition: none;
+  }
+}

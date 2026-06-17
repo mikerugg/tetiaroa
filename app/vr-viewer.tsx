@@ -34,6 +34,18 @@ const DRAG_SENSITIVITY = 0.0032;
 const PITCH_LIMIT = 1.2;
 const IDLE_DRIFT = 0.0007;
 
+export type VrViewerLabels = {
+  recording: string;
+  depth: string;
+  dragHint: string;
+};
+
+const defaultLabels: VrViewerLabels = {
+  recording: "rec — capturing dive 15",
+  depth: "−104 m · 8k 360°",
+  dragHint: "drag to look",
+};
+
 function compileShader(
   gl: WebGLRenderingContext,
   type: number,
@@ -56,7 +68,13 @@ function compileShader(
   return shader;
 }
 
-export function VrViewer({ src }: { src: string }) {
+export function VrViewer({
+  src,
+  labels = defaultLabels,
+}: {
+  src: string;
+  labels?: VrViewerLabels;
+}) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -286,10 +304,10 @@ export function VrViewer({ src }: { src: string }) {
       <div className={styles.reticle} aria-hidden="true" />
       <div className={`${styles.hudFeed} font-mono`} aria-hidden="true">
         <span className={styles.hudDot} />
-        rec &mdash; capturing dive 15
+        {labels.recording}
       </div>
       <div className={`${styles.hudDepth} font-mono`} aria-hidden="true">
-        &minus;104 m &middot; 8k 360&deg;
+        {labels.depth}
       </div>
       <div
         className={
@@ -299,7 +317,7 @@ export function VrViewer({ src }: { src: string }) {
         }
         aria-hidden="true"
       >
-        drag to look
+        {labels.dragHint}
       </div>
     </div>
   );

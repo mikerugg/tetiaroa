@@ -8,6 +8,7 @@ import {
   JetBrains_Mono,
 } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
 
 const display = Fraunces({
   variable: "--font-display",
@@ -16,10 +17,7 @@ const display = Fraunces({
   weight: ["400", "500", "600"],
 });
 
-const sans = Inter({
-  variable: "--font-sans",
-  subsets: ["latin"],
-});
+const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 const mono = JetBrains_Mono({
   variable: "--font-mono",
@@ -56,7 +54,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${display.variable} ${sans.variable} ${mono.variable} ${depth.variable} ${geistSans.variable} ${geistMono.variable}`}
+      className={cn(display.variable, mono.variable, depth.variable, geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
     >
       <body>{children}</body>
     </html>

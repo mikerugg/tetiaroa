@@ -1,183 +1,43 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { ArrowUpRightIcon, PlayIcon } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { DocumentLanguage } from "./document-language";
+import { homeCopies, type HomeLocale } from "./home-copy";
 import { HomepageInitialScrollReset } from "./homepage-client";
-import { DepthScene, type DepthStop } from "./depth-scene";
+import { DepthScene } from "./depth-scene";
 import { VrViewer } from "./vr-viewer";
-import { LanternDonate, type LanternTier } from "./lantern-donate";
+import { LanternDonate } from "./lantern-donate";
 import { NightBeatCinema } from "./night-beat-cinema";
 import { ScanPanel } from "./scan-panel";
 import styles from "./home-experience.module.css";
+import { FrenchVersionPrompt } from "./french-version-prompt";
+import { SiteFooter } from "./site-footer";
 import { TopToolbar } from "./top-toolbar";
 
-const depthStops: DepthStop[] = [
-  {
-    id: "hero",
-    depth: 0,
-    label: "Surface",
-    color: "#2ea8b5",
-    transmission: "0 m — thanks for diving with us",
-  },
-  {
-    id: "dive",
-    depth: 0,
-    label: "The dive",
-    color: "#1e96a6",
-    transmission: "ballast trimmed — ready when you are",
-  },
-  {
-    id: "honu-xr",
-    depth: 104,
-    label: "Honu XR",
-    color: "#02060e",
-    transmission: "−104 m — this is my dive. welcome aboard",
-  },
-  {
-    id: "turtles",
-    depth: 5,
-    label: "Turtles",
-    color: "#0e7e8a",
-    transmission: "−5 m — nursery on the port side",
-  },
-  {
-    id: "sharks",
-    depth: 20,
-    label: "Sharks",
-    color: "#0b4e66",
-    transmission: "−20 m — easy… juveniles on the reef edge",
-  },
-  {
-    id: "twin",
-    depth: 40,
-    label: "Data",
-    color: "#071f33",
-    transmission: "−40 m — scanning. the twin is in sync",
-  },
-  {
-    id: "kids",
-    depth: 2,
-    label: "Tamari'i",
-    color: "#8fd8cf",
-    transmission: "surfacing — warm water ahead",
-  },
-  {
-    id: "history",
-    depth: 0,
-    label: "Our Story",
-    color: "#d9a05f",
-    transmission: "back at the waterline — 1967",
-  },
-  {
-    id: "lanterns",
-    depth: 0,
-    label: "Connected",
-    color: "#04101e",
-    transmission: "night ops — the chain starts on this beach",
-  },
-];
+export default function HomeExperience({
+  locale = "en",
+}: {
+  locale?: HomeLocale;
+}) {
+  const copy = homeCopies[locale];
 
-const lanternTiers: LanternTier[] = [
-  {
-    amount: "$25",
-    period: "/mo",
-    name: "Friend",
-    description: "Keeps a patrol equipped on the beach — tags, batteries, red torches.",
-  },
-  {
-    amount: "$100",
-    period: "/mo",
-    name: "Steward",
-    description: "One full turtle-patrol night during nesting season.",
-  },
-  {
-    amount: "$500",
-    period: "/mo",
-    name: "Patron",
-    description:
-      "A month of the science that travels — Ecostation fieldwork and the digital twin in sync.",
-  },
-  {
-    amount: "$—",
-    period: "/mo",
-    name: "Your own",
-    description: "Pick an amount, or fund a program directly.",
-    custom: true,
-  },
-];
-
-const nightEyebrow = "We need you";
-const nightTitleLines: [string, string] = [
-  "What hatches here",
-  "doesn't stay here.",
-];
-
-// one subtitle per beat, one line on screen at a time
-const beatLines = [
-  "On Teti'aroa, a nest begins to hatch — our staff guide 96 baby turtles to the water.",
-  "Footage and data from the night patrol steam to our servers and across the world.",
-  "In a classroom on the other side of the world, a child puts on a headset and discovers a passion for the ocean.",
-  "One of those kids starts a local beach clean-up, another studies marine biology.",
-  "25 years later, one of those sea turtle hatchlings returns to the same beach to lay her own eggs.",
-  "... and those kids, now grown, teach their own children about our place in this world.",
-];
-
-const scanReadouts = [
-  { label: "reef health — indexed", at: 0.3 },
-  { label: "species DNA — cataloged", at: 0.52 },
-  { label: "ecosystem signals — synced", at: 0.74 },
-];
-
-const kidPrograms = [
-  {
-    badge: "Ages 6+",
-    title: "Snorkel school",
-    copy: "First fins, first reef. Lagoon safety and species spotting before the homework starts.",
-    image:
-      "https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=900&q=80&auto=format&fit=crop",
-    alt: "Bright coral in shallow water",
-  },
-  {
-    badge: "Nesting season",
-    title: "Junior night patrol",
-    copy: "Kids walk a real nesting beach with the turtle team — torches off, eyes up.",
-    image:
-      "https://images.unsplash.com/photo-1591025207163-942350e47db2?w=900&q=80&auto=format&fit=crop",
-    alt: "Sea turtle near the surface at night",
-  },
-  {
-    badge: "Every term",
-    title: "Ora Hoa classroom",
-    copy: "Ora Hoa — 'friends of life' — brings Polynesian students and Polynesian science to the Ecostation all year long.",
-    image:
-      "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=900&q=80&auto=format&fit=crop",
-    alt: "Students learning outdoors",
-  },
-];
-
-const historyFrames = [
-  {
-    year: "1960",
-    caption:
-      "Filming Mutiny on the Bounty, Marlon Brando climbed the rigging and saw a ring of sand on the horizon.",
-    image:
-      "https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=2000&q=85&auto=format&fit=crop",
-    alt: "Aerial view of a Polynesian atoll",
-  },
-  {
-    year: "1967",
-    caption: "He bought Tetiaroa and set one rule: hold the atoll intact.",
-    image:
-      "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=2000&q=85&auto=format&fit=crop",
-    alt: "Sea turtle on a tropical beach at golden hour",
-  },
-];
-
-export default function HomeExperience() {
   return (
     <>
+      <DocumentLanguage lang={copy.locale} />
       <HomepageInitialScrollReset />
       <div className={styles.page}>
-        <DepthScene stops={depthStops} />
-        <TopToolbar />
+        <DepthScene stops={copy.depthStops} ariaLabel={copy.depthAriaLabel} />
+        <TopToolbar copy={copy.toolbar} />
+        {copy.locale === "en" ? <FrenchVersionPrompt /> : null}
 
         <section className={styles.hero} id="hero">
           <video
@@ -197,7 +57,7 @@ export default function HomeExperience() {
           <div className={`${styles.cornerCoords} font-mono`}>
             17&deg; 00&apos; 18&quot; S / 149&deg; 34&apos; 13&quot; W
             <br />
-            Society Islands / French Polynesia
+            {copy.hero.coordinatesPlace}
           </div>
 
           <div className={styles.heroInner}>
@@ -206,14 +66,23 @@ export default function HomeExperience() {
               Now streaming from Teti&#39;aroa
             </div> */}
             <h1 className={`${styles.heroTitle} font-depth`}>
-              Save the island.
+              {copy.hero.titleLine1}
               <br />
-              <span className={styles.heroTitleAccent}>Save the world.</span>
+              <span className={styles.heroTitleAccent}>
+                {copy.hero.titleLine2}
+              </span>
             </h1>
-            <a href="#dive" className={`${styles.watchCta} font-mono`}>
-              <span className={styles.playIcon} aria-hidden="true" />
-              Watch the film / 2:14
-            </a>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className={cn(styles.watchCta, "h-auto font-mono")}
+            >
+              <a href="#dive">
+                <PlayIcon data-icon="inline-start" aria-hidden="true" />
+                {copy.hero.watchCta}
+              </a>
+            </Button>
           </div>
         </section>
 
@@ -234,16 +103,18 @@ export default function HomeExperience() {
 
           <div className={styles.heroInner}>
             <div className={`${styles.eyebrow} font-mono`}>
-              Te Hohonu &mdash; the deep
+              {copy.dive.eyebrow}
             </div>
-            <h2 className={`${styles.heroTitle} font-depth`}>Dive deeper.</h2>
+            <h2 className={`${styles.heroTitle} font-depth`}>
+              {copy.dive.title}
+            </h2>
             <p className={styles.heroSub}>
-              One atoll. A hundred metres of story. Scroll to dive.
+              {copy.dive.copy}
             </p>
           </div>
 
           <div className={`${styles.diveCue} font-mono`} aria-hidden="true">
-            dive
+            {copy.dive.cue}
             <span className={styles.diveChevron} />
           </div>
         </section>
@@ -256,54 +127,60 @@ export default function HomeExperience() {
             <div className={styles.deepHead}>
               <div className={styles.deepText}>
               <div className={`${styles.bandKicker} font-mono`}>
-                Project 01 &mdash; Honu XR
+                {copy.honu.kickerLine1}
                 <br />
-                the deep-water submersible
+                {copy.honu.kickerLine2}
               </div>
               <h2 className={`${styles.bandTitle} ${styles.deepTitle} font-depth`}>
-                Meet Honu. Built to bring the ocean to everyone.
+                {copy.honu.title}
               </h2>
               <p className={`${styles.bandCopy} ${styles.deepCopy}`}>
-                Built by Tetiaroa Society with DOER Marine and Google, Honu
-                &mdash; Tahitian for sea turtle &mdash; carries scientists and
-                budding oceanographers to reefs and species too deep for a
-                diver to reach. Descents will be filmed
-                by state-of-the-art 360&deg; XR cameras:
-                Now any classroom on Earth can put on a headset and
-                go on a VR field trip to Tetiaroa.
+                {copy.honu.copy}
               </p>
               <div className={styles.deepChips}>
-                <span className={`${styles.statChip} font-mono`}>
-                  built with doer marine + google
-                </span>
-                <span className={`${styles.statChip} font-mono`}>
-                  xr field trips for every classroom
-                </span>
+                <Badge
+                  variant="outline"
+                  className={cn(styles.statChip, "h-auto font-mono")}
+                >
+                  {copy.honu.chips[0]}
+                </Badge>
+                <Badge
+                  variant="outline"
+                  className={cn(styles.statChip, "h-auto font-mono")}
+                >
+                  {copy.honu.chips[1]}
+                </Badge>
               </div>
             </div>
               <figure className={styles.deepRender}>
                 <Image
                   src="/sub-render.png"
-                  alt="Render of the Honu submersible — acrylic dome, robotic arms, DOER Marine livery"
+                  alt={copy.honu.renderAlt}
                   width={1318}
                   height={1030}
                   className={styles.deepRenderImage}
                   sizes="(max-width: 960px) 80vw, 480px"
                 />
                 <figcaption className={`${styles.deepRenderCaption} font-mono`}>
-                  honu &middot; design render &middot; doer marine
+                  {copy.honu.renderCaption}
                 </figcaption>
               </figure>
             </div>
-            <VrViewer src="/vr-clip.mp4" />
-            <a
-              href="https://www.youtube.com/watch?v=B9IGe7s6Ook"
-              target="_blank"
-              rel="noreferrer"
-              className={`${styles.deepCta} font-mono`}
+            <VrViewer src="/vr-clip.mp4" labels={copy.honu.viewer} />
+            <Button
+              asChild
+              variant="link"
+              className={cn(styles.deepCta, "h-auto p-0 font-mono")}
             >
-              Watch in fullscreen / VR &rarr;
-            </a>
+              <a
+                href="https://www.youtube.com/watch?v=B9IGe7s6Ook"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {copy.honu.cta}
+                <ArrowUpRightIcon data-icon="inline-end" aria-hidden="true" />
+              </a>
+            </Button>
           </div>
         </section>
 
@@ -314,20 +191,20 @@ export default function HomeExperience() {
           <div className={styles.bandGrid}>
             <div className={styles.bandText}>
               <div className={`${styles.bandKicker} font-mono`}>
-                Project 02 &mdash; sea turtle sanctuary
+                {copy.turtles.kicker}
               </div>
               <h2 className={`${styles.bandTitle} font-depth`}>
-                The nursery in the shallows.
+                {copy.turtles.title}
               </h2>
               <p className={styles.bandCopy}>
-                Every November, green sea turtles emerge out on the same sand
-                where they hatched. Last season the patrol counted 214 nests
-                &mdash; each one mapped, shaded, and kept safe until the
-                hatchlings made it to the sea.
+                {copy.turtles.copy}
               </p>
-              <span className={`${styles.statChip} font-mono`}>
-                214 nests / 2025 season
-              </span>
+              <Badge
+                variant="outline"
+                className={cn(styles.statChip, "h-auto font-mono")}
+              >
+                {copy.turtles.stat}
+              </Badge>
             </div>
             <div className={styles.bandMedia}>
               <video
@@ -341,9 +218,12 @@ export default function HomeExperience() {
               >
                 <source src="/turtleclip.mp4" type="video/mp4" />
               </video>
-              <span className={`${styles.mediaCaption} font-mono`}>
-                honu &middot; green sea turtle &middot; &minus;5 m
-              </span>
+              <Badge
+                variant="secondary"
+                className={cn(styles.mediaCaption, "h-auto font-mono")}
+              >
+                {copy.turtles.caption}
+              </Badge>
             </div>
           </div>
         </section>
@@ -355,20 +235,20 @@ export default function HomeExperience() {
           <div className={`${styles.bandGrid} ${styles.bandGridFlip}`}>
             <div className={styles.bandText}>
               <div className={`${styles.bandKicker} font-mono`}>
-                Project 03 &mdash; lemon shark nursery
+                {copy.sharks.kicker}
               </div>
               <h2 className={`${styles.bandTitle} font-depth`}>
-                Where the lagoon raises predators.
+                {copy.sharks.title}
               </h2>
               <p className={styles.bandCopy}>
-                Juvenile lemon sharks spend their first years inside the
-                reef&apos;s protection. The sanctuary keeps the nursery intact
-                &mdash; and with it, the food web that holds the whole atoll
-                together.
+                {copy.sharks.copy}
               </p>
-              <span className={`${styles.statChip} font-mono`}>
-                3 km of protected reef edge
-              </span>
+              <Badge
+                variant="outline"
+                className={cn(styles.statChip, "h-auto font-mono")}
+              >
+                {copy.sharks.stat}
+              </Badge>
             </div>
             <div className={styles.bandMedia}>
               <video
@@ -382,9 +262,12 @@ export default function HomeExperience() {
               >
                 <source src="/lemon-shark.mp4" type="video/mp4" />
               </video>
-              <span className={`${styles.mediaCaption} font-mono`}>
-                ma&#39;o &middot; lemon shark &middot; &minus;20 m
-              </span>
+              <Badge
+                variant="secondary"
+                className={cn(styles.mediaCaption, "h-auto font-mono")}
+              >
+                {copy.sharks.caption}
+              </Badge>
             </div>
           </div>
         </section>
@@ -396,24 +279,25 @@ export default function HomeExperience() {
           <div className={styles.bandGrid}>
             <div className={styles.bandText}>
               <div className={`${styles.bandKicker} font-mono`}>
-                Project 04 &mdash; digital twin + biocode
+                {copy.twin.kicker}
               </div>
               <h2 className={`${styles.bandTitle} font-depth`}>
-                Foundational Data.
+                {copy.twin.title}
               </h2>
               <p className={styles.bandCopy}>
-                Every reef head, every current, every one of 167 species
-                &mdash; scanned, sequenced, and rebuilt as a living digital
-                twin. When the real Tetiaroa changes, the twin sees it first.
+                {copy.twin.copy}
               </p>
-              <span className={`${styles.statChip} font-mono`}>
-                167 species in the biocode
-              </span>
+              <Badge
+                variant="outline"
+                className={cn(styles.statChip, "h-auto font-mono")}
+              >
+                {copy.twin.stat}
+              </Badge>
             </div>
             <ScanPanel>
               <Image
                 src="https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=1400&q=85&auto=format&fit=crop"
-                alt="Branching coral being mapped"
+                alt={copy.twin.imageAlt}
                 fill
                 className={styles.mediaImage}
                 sizes="(max-width: 960px) 100vw, 46vw"
@@ -421,14 +305,15 @@ export default function HomeExperience() {
               <div className={styles.scanGrid} aria-hidden="true" />
               <div className={styles.scanLine} aria-hidden="true" />
               <div className={styles.scanReadouts}>
-                {scanReadouts.map((readout) => (
-                  <span
+                {copy.twin.readouts.map((readout) => (
+                  <Badge
                     key={readout.label}
-                    className={`${styles.readout} font-mono`}
-                    style={{ "--at": readout.at } as React.CSSProperties}
+                    variant="secondary"
+                    className={cn(styles.readout, "h-auto font-mono")}
+                    style={{ "--at": readout.at } as CSSProperties}
                   >
                     {readout.label}
-                  </span>
+                  </Badge>
                 ))}
               </div>
             </ScanPanel>
@@ -438,21 +323,23 @@ export default function HomeExperience() {
         <section className={styles.shallows} id="kids">
           <div className={styles.shallowsInner}>
             <div className={`${styles.shallowsEyebrow} font-mono`}>
-              Come up for air
+              {copy.kids.eyebrow}
             </div>
             <h2 className={`${styles.shallowsTitle} font-display`}>
-              Tamari&#39;i <br /> &mdash;{" "}
-              <em className={styles.wavy}>little chiefs of the lagoon.</em>
+              {copy.kids.titleLead} <br /> &mdash;{" "}
+              <em className={styles.wavy}>{copy.kids.titleEmphasis}</em>
             </h2>
             <p className={styles.shallowsCopy}>
-              Tamari&#39;i means children &mdash; and these are science classes
-              you can swim in. Tetiaroa&apos;s classrooms have no walls and the
-              field trips have fins.
+              {copy.kids.copy}
             </p>
 
             <div className={styles.kidCards}>
-              {kidPrograms.map((program) => (
-                <article key={program.title} className={styles.kidCard}>
+              {copy.kids.programs.map((program) => (
+                <Card
+                  key={program.title}
+                  size="sm"
+                  className={cn(styles.kidCard, "gap-0 py-0")}
+                >
                   <div className={styles.kidMedia}>
                     <Image
                       src={program.image}
@@ -462,16 +349,21 @@ export default function HomeExperience() {
                       sizes="(max-width: 700px) 100vw, 320px"
                     />
                   </div>
-                  <div className={styles.kidBody}>
-                    <span className={`${styles.kidBadge} font-mono`}>
+                  <CardHeader className={styles.kidBody}>
+                    <Badge
+                      variant="secondary"
+                      className={cn(styles.kidBadge, "h-auto font-mono")}
+                    >
                       {program.badge}
-                    </span>
-                    <h3 className={`${styles.kidTitle} font-display`}>
+                    </Badge>
+                    <CardTitle className={`${styles.kidTitle} font-display`}>
                       {program.title}
-                    </h3>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className={styles.kidCardContent}>
                     <p className={styles.kidCopy}>{program.copy}</p>
-                  </div>
-                </article>
+                  </CardContent>
+                </Card>
               ))}
             </div>
 
@@ -487,61 +379,13 @@ export default function HomeExperience() {
               >
                 <source src="/turtlecare.mp4" type="video/mp4" />
               </video>
-              <span className={`${styles.mediaCaption} font-mono`}>
-                release day at the sanctuary &mdash; the part nobody skips
-              </span>
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.history} id="history">
-          <div className={styles.historyHead}>
-            <div className={`${styles.historyEyebrow} font-mono`}>
-              Back to the surface
-            </div>
-            <h2 className={`${styles.historyTitle} font-depth`}>
-              1967. A promise at the waterline.
-            </h2>
-          </div>
-
-          <div className={styles.frames}>
-            {historyFrames.map((frame) => (
-              <figure key={frame.year} className={styles.frame}>
-                <Image
-                  src={frame.image}
-                  alt={frame.alt}
-                  fill
-                  className={`${styles.mediaImage} ${styles.frameSepia}`}
-                  sizes="(max-width: 960px) 100vw, 1180px"
-                />
-                <div className={styles.grain} aria-hidden="true" />
-                <span className={`${styles.frameYear} font-mono`}>
-                  {frame.year}
-                </span>
-                <figcaption className={`${styles.frameCaption} font-display`}>
-                  {frame.caption}
-                </figcaption>
-              </figure>
-            ))}
-
-            <figure className={styles.frame}>
-              <video
-                className={styles.mediaVideo}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-hidden="true"
+              <Badge
+                variant="secondary"
+                className={cn(styles.mediaCaption, "h-auto font-mono")}
               >
-                <source src="/atoll.mp4" type="video/mp4" />
-              </video>
-              <span className={`${styles.frameYear} font-mono`}>Today</span>
-              <figcaption className={`${styles.frameCaption} font-display`}>
-                Tetiaroa Society has kept the promise since 2010. The film never
-                stopped rolling.
-              </figcaption>
-            </figure>
+                {copy.kids.bannerCaption}
+              </Badge>
+            </div>
           </div>
         </section>
 
@@ -549,40 +393,25 @@ export default function HomeExperience() {
           <div className={styles.stars} aria-hidden="true" />
           <div className={styles.nightInner}>
             <NightBeatCinema
-              lines={beatLines}
-              eyebrow={nightEyebrow}
-              titleLines={nightTitleLines}
+              lines={copy.night.beatLines}
+              eyebrow={copy.night.eyebrow}
+              titleLines={copy.night.titleLines}
             />
             <p className={`${styles.nightClose} font-display`}>
-               Every story begins with a single step.{" "}
-              <strong className={styles.nightYours}>Light the way.</strong>
+              {copy.night.closeLead}{" "}
+              <strong className={styles.nightYours}>
+                {copy.night.closeStrong}
+              </strong>
             </p>
 
-            <LanternDonate tiers={lanternTiers} />
+            <LanternDonate
+              tiers={copy.lantern.tiers}
+              labels={copy.lantern.labels}
+            />
           </div>
         </section>
 
-        <footer className={styles.footerMini}>
-          <div className={styles.footerBrand}>
-            <Image
-              src="/logos/TSFP_Logo_2026_White.png"
-              alt="Tetiaroa Society"
-              width={596}
-              height={371}
-              className={styles.footerLogo}
-            />
-            <div>
-              Concept 01 &mdash; Te Hohonu. A homepage study for Tetiaroa
-              Society / EIN 45-1080688.
-            </div>
-          </div>
-          <div className={styles.footerLinks}>
-            <Link href="/first-prototype">First prototype</Link>
-            <Link href="/our-logo">Logo meaning</Link>
-            <Link href="/impact">Impact Feed</Link>
-            <Link href="/turtle-tales">Turtle Tales</Link>
-          </div>
-        </footer>
+        <SiteFooter copy={copy.footer} />
       </div>
     </>
   );

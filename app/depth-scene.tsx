@@ -53,9 +53,11 @@ function clamp(value: number, min: number, max: number) {
 export function DepthScene({
   stops,
   showSub = true,
+  ariaLabel = "Dive depth navigation",
 }: {
   stops: DepthStop[];
   showSub?: boolean;
+  ariaLabel?: string;
 }) {
   const backdropRef = useRef<HTMLDivElement | null>(null);
   const raysRef = useRef<HTMLDivElement | null>(null);
@@ -161,6 +163,28 @@ export function DepthScene({
     };
 
     const apply = () => {
+      const historySection = document.getElementById("history");
+
+      if (historySection) {
+        const historyRect = historySection.getBoundingClientRect();
+        const historyItems = Array.from(
+          historySection.querySelectorAll(":scope > article"),
+        );
+        const historyActive =
+          (historyRect.top < window.innerHeight * 0.75 &&
+            historyRect.bottom > window.innerHeight * 0.25) ||
+          historyItems.some((item) => {
+            const itemRect = item.getBoundingClientRect();
+
+            return itemRect.top < window.innerHeight && itemRect.bottom > 0;
+          });
+
+        document.documentElement.toggleAttribute(
+          "data-history-active",
+          historyActive,
+        );
+      }
+
       const probe = window.scrollY + window.innerHeight * 0.55;
       let index = 0;
 
@@ -194,6 +218,7 @@ export function DepthScene({
 
       if (nearest !== activeIndex) {
         activeIndex = nearest;
+        document.documentElement.dataset.depthStop = stops[nearest].id;
         stopButtons.forEach((button, buttonIndex) => {
           button.classList.toggle(
             styles.gaugeStopActive,
@@ -421,6 +446,8 @@ export function DepthScene({
       window.removeEventListener("resize", onResize);
       window.removeEventListener("scroll", onScroll);
       document.documentElement.style.removeProperty("--depth01");
+      delete document.documentElement.dataset.depthStop;
+      document.documentElement.removeAttribute("data-history-active");
     };
   }, [stops]);
 
@@ -457,7 +484,7 @@ export function DepthScene({
           </div>
         </div>
       </div>
-      <div className={styles.gauge} aria-label="Dive depth navigation">
+      <div className={styles.gauge} aria-label={ariaLabel}>
         <div className={`${styles.gaugeReading} font-mono`}>
           <span ref={readingRef}>&minus;0 m</span>
         </div>
