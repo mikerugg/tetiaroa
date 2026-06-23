@@ -174,12 +174,23 @@ const roleTranslations: Record<string, string> = {
   "Scientific Advisor Emeritus": "Membre émérite du conseil scientifique",
 };
 
+const roleDisplayBreaks: Record<string, string> = {
+  "Director of Conservation, Science and Education":
+    "Director of Conservation\nScience and Education",
+  "Director of Operations, Bailey Field Station":
+    "Director of Operations\nBailey Field Station",
+  "Direction conservation, science et éducation":
+    "Direction conservation\nscience et éducation",
+  "Direction des opérations, Bailey Field Station":
+    "Direction des opérations\nBailey Field Station",
+};
+
 const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
   en: {
     heroImageAlt: "Tetiaroa Society team gathered at the field station",
     heroEyebrow: "Our team",
     heroTitle: "The people protecting Teti'aroa.",
-    introTitle: "A team rooted in conservation.",
+    introTitle: "A team rooted in Conservation.",
     introDescription:
       "Tetiaroa Society brings together on-island staff, leadership, board members, scientific advisors, partners, and donors to care for the atoll and share what we learn.",
     meetCta: "Meet the team",
@@ -641,10 +652,12 @@ function getTeamGroups(locale: TeamLocale): TeamGroup[] {
 
 function getRoleLabel(role: string, locale: TeamLocale) {
   if (locale === "en") {
-    return role;
+    return roleDisplayBreaks[role] ?? role;
   }
 
-  return roleTranslations[role] ?? role;
+  const translatedRole = roleTranslations[role] ?? role;
+
+  return roleDisplayBreaks[translatedRole] ?? translatedRole;
 }
 
 function getInitials(name: string) {
@@ -785,7 +798,7 @@ function TeamMemberCard({
       </div>
       <CardHeader>
         <CardTitle>{entry.name}</CardTitle>
-        <CardDescription>{role}</CardDescription>
+        <CardDescription className="whitespace-pre-line">{role}</CardDescription>
       </CardHeader>
       {entry.href ? (
         <CardFooter className="mt-auto">
