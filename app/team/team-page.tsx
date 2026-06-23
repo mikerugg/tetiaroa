@@ -517,7 +517,7 @@ export function TeamPage({ locale = "en" }: { locale?: TeamLocale }) {
           alt={copy.heroImageAlt}
           fill
           sizes="100vw"
-          className="object-cover"
+          className="translate-x-[6%] scale-[1.14] object-cover"
           priority
         />
         <div
