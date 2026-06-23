@@ -5,8 +5,10 @@ import type { TopToolbarCopy } from "./top-toolbar";
 import type { VrViewerLabels } from "./vr-viewer";
 import {
   ENGLISH_HOME_PATH,
+  ENGLISH_TEAM_PATH,
   FRENCH_HOME_PATH,
   FRENCH_HOME_URL,
+  FRENCH_TEAM_PATH,
 } from "./language-links";
 
 export type HomeLocale = "en" | "fr";
@@ -111,7 +113,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
     toolbar: {
       ariaLabel: "Primary",
       homeHref: ENGLISH_HOME_PATH,
-      firstPrototypeLabel: "First Prototype",
+      teamHref: ENGLISH_TEAM_PATH,
       teamLabel: "Our Team",
       logoLabel: "Our Logo",
       languageHref: FRENCH_HOME_PATH,
@@ -131,7 +133,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           title: "Explore",
           links: [
             { href: ENGLISH_HOME_PATH, label: "Home" },
-            { href: "/team", label: "Our Team" },
+            { href: ENGLISH_TEAM_PATH, label: "Our Team" },
             { href: "/our-logo", label: "Logo meaning" },
             { href: "/impact", label: "Impact Feed" },
           ],
@@ -377,7 +379,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
     toolbar: {
       ariaLabel: "Navigation principale",
       homeHref: FRENCH_HOME_PATH,
-      firstPrototypeLabel: "Prototype",
+      teamHref: FRENCH_TEAM_PATH,
       teamLabel: "L'équipe",
       logoLabel: "Le logo",
       languageHref: ENGLISH_HOME_PATH,
@@ -397,7 +399,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           title: "Explorer",
           links: [
             { href: FRENCH_HOME_PATH, label: "Accueil" },
-            { href: "/team", label: "Notre équipe" },
+            { href: FRENCH_TEAM_PATH, label: "Notre équipe" },
             { href: "/our-logo", label: "Sens du logo" },
             { href: "/impact", label: "Fil d'impact" },
           ],

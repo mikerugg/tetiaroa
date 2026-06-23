@@ -1,0 +1,366 @@
+.page {
+  min-height: 100vh;
+  color: #fff7e8;
+  background: #070604;
+}
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 60px;
+  padding: 0 40px;
+  pointer-events: none;
+}
+
+.brand,
+.navLinks a,
+.motif {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+
+.brand,
+.navLinks a {
+  color: rgba(255, 247, 232, 0.74);
+  text-decoration: none;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.62);
+  pointer-events: auto;
+}
+
+.brand {
+  color: #fff7e8;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  border: 1px solid rgba(255, 247, 232, 0.14);
+  background: rgba(7, 6, 4, 0.38);
+  box-shadow: 0 18px 58px rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(16px);
+  pointer-events: auto;
+}
+
+.navLinks a {
+  display: flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 13px;
+  color: rgba(255, 247, 232, 0.58);
+}
+
+.navLinks a[aria-current="page"] {
+  color: #fff7e8;
+  background: rgba(255, 247, 232, 0.12);
+}
+
+.section {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.image,
+.veil,
+.grain,
+.motionLayer {
+  position: absolute;
+  inset: 0;
+}
+
+.image {
+  z-index: 0;
+  object-fit: cover;
+}
+
+.veil,
+.grain,
+.motionLayer {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.grain {
+  opacity: 0.34;
+  mix-blend-mode: overlay;
+  background:
+    radial-gradient(circle at 11% 22%, rgba(255, 255, 255, 0.2) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 62% 68%, rgba(0, 0, 0, 0.28) 0 1px, transparent 1.8px);
+  background-size: 29px 29px, 41px 41px;
+}
+
+.motionLayer {
+  opacity: 0.72;
+}
+
+.copy {
+  position: relative;
+  z-index: 2;
+  width: min(760px, 88vw);
+  padding: 116px 0 64px 7vw;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.58);
+}
+
+.label {
+  margin: 0 0 20px;
+  color: rgba(255, 247, 232, 0.82);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.copy h1 {
+  margin: 0;
+  max-width: 780px;
+  color: #fff9ef;
+  font-size: clamp(50px, 5.35vw, 92px);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.copy p {
+  margin: 24px 0 0;
+  max-width: 560px;
+  color: rgba(255, 247, 232, 0.85);
+  font-size: clamp(15px, 1.05vw, 18px);
+  line-height: 1.65;
+}
+
+.copy p + p {
+  margin-top: 18px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 17px;
+  margin-top: 34px;
+  color: #fff9ef;
+  font-size: clamp(21px, 1.55vw, 28px);
+  line-height: 1;
+  text-decoration: none;
+}
+
+.cta::before {
+  display: block;
+  width: 52px;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  opacity: 0.72;
+}
+
+.cta span {
+  transition: transform 220ms ease;
+}
+
+.cta:hover span {
+  transform: translateX(6px);
+}
+
+.motif {
+  position: absolute;
+  right: 40px;
+  bottom: 34px;
+  z-index: 2;
+  margin: 0;
+  max-width: 420px;
+  color: rgba(255, 247, 232, 0.48);
+  text-align: right;
+  text-shadow: 0 3px 20px rgba(0, 0, 0, 0.72);
+}
+
+.afterCamera .veil {
+  background:
+    linear-gradient(90deg, rgba(7, 6, 4, 0.98) 0%, rgba(7, 6, 4, 0.82) 24%, rgba(7, 6, 4, 0.34) 49%, rgba(7, 6, 4, 0.06) 78%),
+    radial-gradient(ellipse at 48% 24%, rgba(226, 176, 92, 0.14), transparent 32%),
+    linear-gradient(180deg, rgba(7, 6, 4, 0.08), rgba(7, 6, 4, 0.58));
+}
+
+.afterCamera .motionLayer {
+  background:
+    linear-gradient(105deg, transparent 0%, transparent 22%, rgba(255, 223, 157, 0.09) 30%, rgba(255, 223, 157, 0.02) 45%, transparent 58%),
+    repeating-linear-gradient(90deg, transparent 0 18px, rgba(255, 247, 232, 0.035) 18px 19px, transparent 19px 38px);
+  animation: projectorSweep 8s ease-in-out infinite alternate;
+}
+
+.changedAtoll .veil {
+  background:
+    linear-gradient(90deg, rgba(8, 6, 4, 0.98) 0%, rgba(8, 6, 4, 0.84) 23%, rgba(8, 6, 4, 0.2) 48%, rgba(8, 6, 4, 0.02) 73%),
+    radial-gradient(ellipse at 63% 54%, rgba(59, 174, 165, 0.12), transparent 38%),
+    linear-gradient(180deg, rgba(8, 6, 4, 0.1), rgba(8, 6, 4, 0.48));
+}
+
+.changedAtoll .motionLayer {
+  background:
+    radial-gradient(ellipse at 58% 54%, rgba(110, 229, 214, 0.16), transparent 27%),
+    linear-gradient(115deg, transparent 0%, transparent 44%, rgba(179, 243, 232, 0.08) 45%, transparent 47%);
+  animation: reefPulse 7s ease-in-out infinite alternate;
+}
+
+.promiseWork .veil {
+  background:
+    linear-gradient(90deg, rgba(6, 6, 7, 0.94) 0%, rgba(6, 6, 7, 0.72) 24%, rgba(6, 6, 7, 0.22) 50%, rgba(6, 6, 7, 0.02) 78%),
+    radial-gradient(ellipse at 76% 67%, rgba(232, 169, 83, 0.16), transparent 33%),
+    linear-gradient(180deg, rgba(6, 6, 7, 0.08), rgba(6, 6, 7, 0.48));
+}
+
+.promiseWork .motionLayer {
+  background:
+    radial-gradient(ellipse at 18% 44%, rgba(255, 225, 166, 0.12), transparent 30%),
+    radial-gradient(ellipse at 77% 70%, rgba(255, 185, 83, 0.16), transparent 22%);
+  animation: lanternGlow 5.8s ease-in-out infinite alternate;
+}
+
+@keyframes projectorSweep {
+  from {
+    opacity: 0.48;
+    transform: translateX(-2vw);
+  }
+
+  to {
+    opacity: 0.8;
+    transform: translateX(2vw);
+  }
+}
+
+@keyframes reefPulse {
+  from {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0.86;
+    transform: scale(1.015);
+  }
+}
+
+@keyframes lanternGlow {
+  from {
+    opacity: 0.45;
+  }
+
+  to {
+    opacity: 0.82;
+  }
+}
+
+@media (max-width: 900px) {
+  .copy {
+    width: min(620px, 88vw);
+  }
+
+  .motif {
+    display: none;
+  }
+}
+
+@media (max-width: 680px) {
+  .nav {
+    min-height: 54px;
+    justify-content: center;
+    padding: 8px 16px;
+  }
+
+  .brand {
+    display: none;
+  }
+
+  .navLinks {
+    width: min(100%, 430px);
+  }
+
+  .navLinks a {
+    flex: 1;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 6px;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    text-align: center;
+  }
+
+  .section {
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .copy {
+    width: 100%;
+    padding: 32vh 7vw 7vh;
+  }
+
+  .copy h1 {
+    font-size: clamp(40px, 12.5vw, 60px);
+    line-height: 0.94;
+  }
+
+  .copy p {
+    margin-top: 19px;
+    max-width: none;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .copy p + p {
+    margin-top: 14px;
+  }
+
+  .label {
+    margin-bottom: 13px;
+    font-size: 10px;
+  }
+
+  .cta {
+    margin-top: 24px;
+    font-size: 22px;
+  }
+
+  .cta::before {
+    width: 38px;
+  }
+
+  .afterCamera .image {
+    object-position: 61% center;
+  }
+
+  .changedAtoll .image {
+    object-position: 82% center;
+  }
+
+  .promiseWork .image {
+    object-position: 23% center;
+  }
+
+  .afterCamera .veil,
+  .changedAtoll .veil,
+  .promiseWork .veil {
+    background:
+      linear-gradient(180deg, rgba(7, 6, 4, 0.02) 0%, rgba(7, 6, 4, 0.08) 27%, rgba(7, 6, 4, 0.92) 70%, rgba(7, 6, 4, 0.98) 100%),
+      linear-gradient(90deg, rgba(7, 6, 4, 0.2), rgba(7, 6, 4, 0.04));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motionLayer,
+  .cta span {
+    animation: none;
+    transition: none;
+  }
+}

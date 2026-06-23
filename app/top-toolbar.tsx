@@ -2,12 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { Globe2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { FRENCH_HOME_PATH } from "./language-links";
+import { FRENCH_HOME_PATH, ENGLISH_TEAM_PATH } from "./language-links";
 
 export type TopToolbarCopy = {
   ariaLabel: string;
   homeHref: string;
-  firstPrototypeLabel: string;
+  teamHref: string;
   teamLabel: string;
   logoLabel: string;
   languageHref: string;
@@ -25,7 +25,7 @@ const toolbarButtonClass =
 const defaultCopy: TopToolbarCopy = {
   ariaLabel: "Primary",
   homeHref: "/",
-  firstPrototypeLabel: "First Prototype",
+  teamHref: ENGLISH_TEAM_PATH,
   teamLabel: "Our Team",
   logoLabel: "Our Logo",
   languageHref: FRENCH_HOME_PATH,
@@ -62,17 +62,9 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
           asChild
           variant="outline"
           size="sm"
-          className={`${toolbarButtonClass} max-[760px]:hidden`}
-        >
-          <Link href="/first-prototype">{copy.firstPrototypeLabel}</Link>
-        </Button>
-        <Button
-          asChild
-          variant="outline"
-          size="sm"
           className={toolbarButtonClass}
         >
-          <Link href="/team">{copy.teamLabel}</Link>
+          <Link href={copy.teamHref}>{copy.teamLabel}</Link>
         </Button>
         <Button
           asChild

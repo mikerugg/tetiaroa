@@ -1,7 +1,14 @@
 import Image from "next/image";
+import { Homemade_Apple } from "next/font/google";
 import Link from "next/link";
 
+import { BrandoPromiseNote } from "./brando-promise-note";
 import styles from "./story-pages.module.css";
+
+const handwriting = Homemade_Apple({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 type StoryConcept = {
   slug: "first-sight" | "vow" | "work";
@@ -14,6 +21,9 @@ type StoryConcept = {
   continuation: string;
   cta: string;
   quote?: string;
+  promiseNote?: {
+    lines: string[];
+  };
 };
 
 const concepts: StoryConcept[] = [
@@ -55,6 +65,9 @@ const concepts: StoryConcept[] = [
     continuation:
       "The atoll remains the protagonist. The Society's work keeps asking the question Brando first faced: what does it mean to love a place enough to protect it?",
     cta: "Explore the mission",
+    promiseNote: {
+      lines: ["Tetiaroa", "must be protected", "for the future."],
+    },
   },
 ];
 
@@ -122,6 +135,13 @@ function ArchiveConcept({ concept }: { concept: StoryConcept }) {
           <aside className={`${styles.quote} font-display`} aria-label="Story note">
             {concept.quote}
           </aside>
+        ) : null}
+
+        {concept.promiseNote ? (
+          <BrandoPromiseNote
+            className={`${styles.promiseNote} ${handwriting.className}`}
+            lines={concept.promiseNote.lines}
+          />
         ) : null}
       </section>
     </main>
