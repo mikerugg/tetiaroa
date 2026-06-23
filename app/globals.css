@@ -6,33 +6,32 @@
 
 :root {
   color-scheme: dark;
-  --ink: #07100e;
-  --ink-2: #0c1614;
-  --body: #cfd5d0;
-  --muted: oklch(0.97 0 0);
-  --paper: #f4f1ea;
-  --lagoon: #1f6b6e;
-  --lagoon-2: #2b8f8f;
-  --glow: #8fc9c9;
-  --sand: #d9ceaf;
-  --coral: #e24a2b;
+  --ink: oklch(0.1629 0.0147 179.37);
+  --ink-2: oklch(0.1896 0.0153 180.75);
+  --body: oklch(0.8669 0.0094 150.67);
+  --paper: oklch(0.9585 0.0098 87.47);
+  --lagoon: oklch(0.4842 0.0718 198.89);
+  --lagoon-2: oklch(0.5946 0.0891 195.02);
+  --glow: oklch(0.7963 0.0596 196.02);
+  --sand: oklch(0.8523 0.0433 90.79);
+  --coral: oklch(0.6186 0.1937 33.32);
   --background: var(--ink);
   --foreground: var(--paper);
-  --card: rgb(244 241 234 / 0.045);
+  --card: oklch(0.9585 0.0098 87.47 / 4.5%);
   --card-foreground: var(--paper);
   --popover: var(--ink-2);
   --popover-foreground: var(--paper);
   --primary: var(--glow);
   --primary-foreground: var(--ink);
-  --secondary: rgb(143 201 201 / 0.14);
+  --secondary: oklch(0.7963 0.0596 196.02 / 14%);
   --secondary-foreground: var(--glow);
-  --muted: rgb(244 241 234 / 0.08);
-  --muted-foreground: rgb(207 213 208 / 0.72);
-  --accent: rgb(143 201 201 / 0.16);
+  --muted: oklch(0.9585 0.0098 87.47 / 8%);
+  --muted-foreground: oklch(0.8669 0.0094 150.67 / 72%);
+  --accent: oklch(0.7963 0.0596 196.02 / 16%);
   --accent-foreground: var(--paper);
-  --destructive: #ff8a7a;
-  --border: rgb(244 241 234 / 0.12);
-  --input: rgb(244 241 234 / 0.16);
+  --destructive: oklch(0.7582 0.1448 29.02);
+  --border: oklch(0.9585 0.0098 87.47 / 12%);
+  --input: oklch(0.9585 0.0098 87.47 / 16%);
   --ring: var(--glow);
   --chart-1: var(--glow);
   --chart-2: var(--sand);
@@ -44,9 +43,9 @@
   --sidebar-foreground: var(--paper);
   --sidebar-primary: var(--glow);
   --sidebar-primary-foreground: var(--ink);
-  --sidebar-accent: rgb(244 241 234 / 0.08);
+  --sidebar-accent: oklch(0.9585 0.0098 87.47 / 8%);
   --sidebar-accent-foreground: var(--paper);
-  --sidebar-border: rgb(244 241 234 / 0.12);
+  --sidebar-border: oklch(0.9585 0.0098 87.47 / 12%);
   --sidebar-ring: var(--glow);
 }
 
@@ -59,14 +58,14 @@
 html {
   min-height: 100%;
   scroll-behavior: smooth;
-  background: var(--ink);
+  background: var(--background);
 }
 
 body {
   min-height: 100%;
   margin: 0;
   overflow-x: hidden;
-  background: var(--ink);
+  background: var(--background);
   color: var(--body);
   font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 15px;

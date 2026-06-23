@@ -789,7 +789,7 @@ function TeamMemberCard({
           />
         ) : (
           <div
-            className="flex h-full w-full items-center justify-center bg-secondary text-secondary-foreground"
+            className="flex h-full w-full items-center justify-center bg-popover text-secondary-foreground"
             aria-hidden="true"
           >
             <span className="font-display text-5xl">{initials}</span>
