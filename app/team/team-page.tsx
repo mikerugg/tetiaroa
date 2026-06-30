@@ -110,44 +110,90 @@ type TeamPageCopy = {
 
 export type TeamLocale = HomeLocale;
 
-const leadership: TeamMember[] = [
+const giuliaMouly: TeamMember = {
+  id: "giulia-mouly",
+  name: "Giulia Mouly",
+  role: "Director of Operations at the Bailey Field Station",
+  cohort: "On-island team",
+  image:
+    "https://www.tetiaroasociety.org/sites/default/files/styles/square_400/public/2026-06/Giulia%20Mouly%20Portrait.jpeg.webp?itok=xj3z1wo5",
+  href: "https://www.tetiaroasociety.org/giulia-mouly",
+  summary:
+    "Connects people, place, and purpose through field station operations, hospitality, partnerships, and sustainability.",
+  focus: ["Operations", "Bailey Field Station", "Partnerships"],
+};
+
+const jaynaDevore: TeamMember = {
+  id: "jayna-devore",
+  name: "Dr. Jayna DeVore",
+  role: "Director of Conservation, Science & Education",
+  cohort: "On-island team",
+  image:
+    "https://www.tetiaroasociety.org/sites/default/files/styles/square_400/public/2026-06/Jayna%20and%20bird%20sq_0.jpg.webp?itok=twDvGrfn",
+  href: "https://www.tetiaroasociety.org/dr-jayna-devore",
+  summary: "Bio forthcoming.",
+  focus: ["Leadership", "Conservation", "Science", "Education"],
+};
+
+const executiveTeam: TeamMember[] = [
   person("tj-tate"),
   {
     id: "julien-castel",
     name: "Julien Castel",
     role: "Chief Financial Officer",
     cohort: "On-island team",
+    image:
+      "https://www.tetiaroasociety.org/sites/default/files/styles/square_400/public/2026-06/Julien%20Castel%20Portrait.jpeg.webp?itok=IpW1lfQo",
+    href: "https://www.tetiaroasociety.org/julien-castel",
     summary: "Bio forthcoming.",
     focus: ["Leadership", "Finance"],
   },
-  {
-    id: "jayna-devore",
-    name: "Dr. Jayna Devore",
-    role: "Director of Conservation, Science and Education",
-    cohort: "On-island team",
-    summary: "Bio forthcoming.",
-    focus: ["Leadership", "Conservation", "Science", "Education"],
-  },
-  {
-    id: "giulia-moua",
-    name: "Giulia Moua",
-    role: "Director of Operations, Bailey Field Station",
-    cohort: "On-island team",
-    summary: "Bio forthcoming.",
-    focus: ["Leadership", "Operations", "Bailey Field Station"],
-  },
 ];
-const fieldTeam = people.filter(
-  (entry) => entry.cohort === "On-island team" && entry.id !== "tj-tate",
+const atollOpsExcludedIds = new Set([
+  "tj-tate",
+  "hinanui-robson",
+  "hereiti-lelong",
+  "ngnahina-moua",
+  "tihoni-maire",
+]);
+const atollOpsTeam: TeamMember[] = [
+  giuliaMouly,
+  ...people.filter(
+    (entry) =>
+      entry.cohort === "On-island team" &&
+      !atollOpsExcludedIds.has(entry.id) &&
+      entry.role !== "Nature Guide",
+  ),
+];
+const natureGuides = people.filter(
+  (entry) => entry.cohort === "On-island team" && entry.role === "Nature Guide",
 );
+const scienceConservationTeam: TeamMember[] = [
+  jaynaDevore,
+  person("hinanui-robson"),
+];
+const commsCultureTeam: TeamMember[] = [
+  person("hereiti-lelong"),
+  {
+    ...person("ngnahina-moua"),
+    role: "Education & Cultural Coordinator",
+  },
+  {
+    ...person("tihoni-maire"),
+    role: "Chief Naturalist",
+  },
+  ...natureGuides,
+];
 const boardMembers = people.filter((entry) => entry.cohort === "Board of Directors");
 const scientificAdvisors = people.filter(
   (entry) => entry.cohort === "Scientific Advisory Board",
 );
 
 const teamMembersByGroupId: Record<string, TeamMember[]> = {
-  leadership,
-  "society-team": fieldTeam,
+  "executive-team": executiveTeam,
+  "society-team": atollOpsTeam,
+  "science-conservation-team": scienceConservationTeam,
+  "comms-culture-team": commsCultureTeam,
   board: boardMembers,
   "scientific-advisory-board": scientificAdvisors,
 };
@@ -155,14 +201,17 @@ const teamMembersByGroupId: Record<string, TeamMember[]> = {
 const roleTranslations: Record<string, string> = {
   "Chief Executive Officer": "Direction générale",
   "Chief Financial Officer": "Direction financière",
-  "Director of Conservation, Science and Education":
+  "Director of Conservation, Science & Education":
     "Direction conservation, science et éducation",
-  "Director of Operations, Bailey Field Station":
-    "Direction des opérations, Bailey Field Station",
+  "Director of Operations at the Bailey Field Station":
+    "Direction des opérations de la Bailey Field Station",
+  "Chief Naturalist": "Naturaliste en chef",
   "Scientific Activities Coordinator": "Coordination des activités scientifiques",
   "Head Guide": "Responsable des guides",
   "Ecostation Manager": "Responsable de l'Écostation",
   "Communications Manager": "Responsable des communications",
+  "Education & Cultural Coordinator":
+    "Coordination des programmes éducatifs et culturels",
   "Education and Cultural Programs Coordinator":
     "Coordination des programmes éducatifs et culturels",
   Ranger: "Garde nature",
@@ -175,13 +224,13 @@ const roleTranslations: Record<string, string> = {
 };
 
 const roleDisplayBreaks: Record<string, string> = {
-  "Director of Conservation, Science and Education":
-    "Director of Conservation\nScience and Education",
-  "Director of Operations, Bailey Field Station":
+  "Director of Conservation, Science & Education":
+    "Director of Conservation\nScience & Education",
+  "Director of Operations at the Bailey Field Station":
     "Director of Operations\nBailey Field Station",
   "Direction conservation, science et éducation":
     "Direction conservation\nscience et éducation",
-  "Direction des opérations, Bailey Field Station":
+  "Direction des opérations de la Bailey Field Station":
     "Direction des opérations\nBailey Field Station",
 };
 
@@ -202,12 +251,22 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
     viewProfileLabel: "View profile",
     specialistGroups: [
       {
-        title: "Society Team",
+        title: "Atoll Ops Team",
         icon: BinocularsIcon,
-        copy: "Daily conservation, education, guiding, operations, communications, monitoring, and research support.",
+        copy: "Station readiness, dive operations, field logistics, and the operating rhythm that keeps atoll work moving.",
       },
       {
-        title: "Leadership",
+        title: "Science & Conservation Team",
+        icon: MicroscopeIcon,
+        copy: "Research coordination, monitoring, ranger work, habitat care, and long-running conservation observation.",
+      },
+      {
+        title: "Engagement & Culture Team",
+        icon: HandshakeIcon,
+        copy: "Guiding, education, cultural programs, communications, digital storytelling, and visitor learning.",
+      },
+      {
+        title: "Executive Team",
         icon: CompassIcon,
         copy: "Strategy, staff support, partnerships, and the long-term focus of the Society.",
       },
@@ -234,18 +293,32 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
     ],
     teamGroups: [
       {
-        id: "leadership",
-        title: "Leadership",
+        id: "executive-team",
+        title: "Executive Team",
         icon: CompassIcon,
         summary:
-          "The leadership team sets priorities, supports staff, and keeps the Society focused on work that serves Tetiaroa over the long term.",
+          "The executive team sets priorities, supports staff, and keeps the Society focused on work that serves Tetiaroa over the long term.",
       },
       {
         id: "society-team",
-        title: "Society Team",
+        title: "Atoll Ops Team",
         icon: BinocularsIcon,
         summary:
-          "The Society Team carries the day-to-day work across conservation, education, guest engagement, operations, communications, monitoring, and support for visiting researchers.",
+          "The Atoll Ops Team keeps the field station, dive operations, logistics, and day-to-day atoll support moving.",
+      },
+      {
+        id: "science-conservation-team",
+        title: "Science & Conservation Team",
+        icon: MicroscopeIcon,
+        summary:
+          "The Science & Conservation Team coordinates research, monitors field conditions, supports conservation work, and cares for the living systems of the atoll.",
+      },
+      {
+        id: "comms-culture-team",
+        title: "Engagement & Culture Team",
+        icon: HandshakeIcon,
+        summary:
+          "The Engagement & Culture Team carries the Society's public voice, education programs, cultural interpretation, visitor learning, and digital storytelling.",
       },
       {
         id: "board",
@@ -359,9 +432,19 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
     viewProfileLabel: "Voir le profil",
     specialistGroups: [
       {
-        title: "Équipe de la Society",
+        title: "Atoll Ops Team",
         icon: BinocularsIcon,
-        copy: "Conservation, éducation, guidage, opérations, communications, suivi et soutien à la recherche au quotidien.",
+        copy: "Préparation de la station, opérations de plongée, logistique de terrain et rythme opérationnel de l'atoll.",
+      },
+      {
+        title: "Science & Conservation Team",
+        icon: MicroscopeIcon,
+        copy: "Coordination scientifique, suivi, travail des gardes nature, soin des habitats et observation au long cours.",
+      },
+      {
+        title: "Engagement & Culture Team",
+        icon: HandshakeIcon,
+        copy: "Guidage, éducation, programmes culturels, communications, récit numérique et apprentissage des visiteurs.",
       },
       {
         title: "Direction",
@@ -391,7 +474,7 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
     ],
     teamGroups: [
       {
-        id: "leadership",
+        id: "executive-team",
         title: "Direction",
         icon: CompassIcon,
         summary:
@@ -399,10 +482,24 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
       },
       {
         id: "society-team",
-        title: "Équipe de la Society",
+        title: "Atoll Ops Team",
         icon: BinocularsIcon,
         summary:
-          "L'équipe de la Society mène le travail quotidien : conservation, éducation, accueil des visiteurs, opérations, communications, suivi et soutien aux chercheurs en mission.",
+          "L'Atoll Ops Team garde la station de terrain, les opérations de plongée, la logistique et le soutien quotidien de l'atoll en mouvement.",
+      },
+      {
+        id: "science-conservation-team",
+        title: "Science & Conservation Team",
+        icon: MicroscopeIcon,
+        summary:
+          "La Science & Conservation Team coordonne la recherche, suit les conditions de terrain, soutient la conservation et prend soin des systèmes vivants de l'atoll.",
+      },
+      {
+        id: "comms-culture-team",
+        title: "Engagement & Culture Team",
+        icon: HandshakeIcon,
+        summary:
+          "L'Engagement & Culture Team porte la voix publique de la Society, les programmes éducatifs, l'interprétation culturelle, l'apprentissage des visiteurs et le récit numérique.",
       },
       {
         id: "board",
