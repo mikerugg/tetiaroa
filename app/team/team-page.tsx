@@ -251,6 +251,11 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
     viewProfileLabel: "View profile",
     specialistGroups: [
       {
+        title: "Executive Team",
+        icon: CompassIcon,
+        copy: "Strategy, staff support, partnerships, and the long-term focus of the Society.",
+      },
+      {
         title: "Atoll Ops Team",
         icon: BinocularsIcon,
         copy: "Station readiness, dive operations, field logistics, and the operating rhythm that keeps atoll work moving.",
@@ -266,11 +271,6 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
         copy: "Guiding, education, cultural programs, communications, digital storytelling, and visitor learning.",
       },
       {
-        title: "Executive Team",
-        icon: CompassIcon,
-        copy: "Strategy, staff support, partnerships, and the long-term focus of the Society.",
-      },
-      {
         title: "Board of Directors",
         icon: LandmarkIcon,
         copy: "Mission stewardship, governance, resources, and stability over time.",
@@ -279,16 +279,6 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
         title: "Scientific advisors",
         icon: MicroscopeIcon,
         copy: "Research guidance, stronger methods, field interpretation, and conservation knowledge.",
-      },
-      {
-        title: "Partners",
-        icon: HandshakeIcon,
-        copy: "Research capacity, training, tools, access, and practical support.",
-      },
-      {
-        title: "Donors",
-        icon: CircleDollarSignIcon,
-        copy: "Support for the patient work: field operations, education, monitoring, and research.",
       },
     ],
     teamGroups: [
@@ -432,6 +422,11 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
     viewProfileLabel: "Voir le profil",
     specialistGroups: [
       {
+        title: "Direction",
+        icon: CompassIcon,
+        copy: "Stratégie, soutien à l'équipe, partenariats et cap à long terme de la Society.",
+      },
+      {
         title: "Atoll Ops Team",
         icon: BinocularsIcon,
         copy: "Préparation de la station, opérations de plongée, logistique de terrain et rythme opérationnel de l'atoll.",
@@ -447,11 +442,6 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
         copy: "Guidage, éducation, programmes culturels, communications, récit numérique et apprentissage des visiteurs.",
       },
       {
-        title: "Direction",
-        icon: CompassIcon,
-        copy: "Stratégie, soutien à l'équipe, partenariats et cap à long terme de la Society.",
-      },
-      {
         title: "Conseil d'administration",
         icon: LandmarkIcon,
         copy: "Garde de la mission, gouvernance, ressources et stabilité dans la durée.",
@@ -460,16 +450,6 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
         title: "Conseil scientifique",
         icon: MicroscopeIcon,
         copy: "Conseils scientifiques, méthodes plus solides, lecture du terrain et savoirs de conservation.",
-      },
-      {
-        title: "Partenaires",
-        icon: HandshakeIcon,
-        copy: "Capacités de recherche, formation, outils, accès et soutien concret.",
-      },
-      {
-        title: "Donateurs",
-        icon: CircleDollarSignIcon,
-        copy: "Le travail patient : opérations de terrain, éducation, suivi et recherche.",
       },
     ],
     teamGroups: [

@@ -30,7 +30,14 @@ type Bubble = {
 };
 
 const MAX_DEPTH = 104;
-const BEAM_SECTION_IDS = new Set(["honu-xr", "sharks", "twin", "lanterns"]);
+const BEAM_SECTION_IDS = new Set([
+  "honu-xr",
+  "sharks",
+  "twin",
+  "pillars",
+  "lanterns",
+  "donation-levels",
+]);
 
 function hexToRgb(hex: string): [number, number, number] {
   const value = hex.replace("#", "");
@@ -163,27 +170,33 @@ export function DepthScene({
     };
 
     const apply = () => {
-      const historySection = document.getElementById("history");
+      const isArchiveActive = (sectionId: string) => {
+        const section = document.getElementById(sectionId);
 
-      if (historySection) {
-        const historyRect = historySection.getBoundingClientRect();
-        const historyItems = Array.from(
-          historySection.querySelectorAll(":scope > article"),
+        if (!section) {
+          return false;
+        }
+
+        const sectionRect = section.getBoundingClientRect();
+        const childArticles = Array.from(
+          section.querySelectorAll(":scope > article"),
         );
-        const historyActive =
-          (historyRect.top < window.innerHeight * 0.75 &&
-            historyRect.bottom > window.innerHeight * 0.25) ||
-          historyItems.some((item) => {
+
+        return (
+          (sectionRect.top < window.innerHeight * 0.75 &&
+            sectionRect.bottom > window.innerHeight * 0.25) ||
+          childArticles.some((item) => {
             const itemRect = item.getBoundingClientRect();
 
             return itemRect.top < window.innerHeight && itemRect.bottom > 0;
-          });
-
-        document.documentElement.toggleAttribute(
-          "data-history-active",
-          historyActive,
+          })
         );
-      }
+      };
+
+      document.documentElement.toggleAttribute(
+        "data-history-active",
+        isArchiveActive("history") || isArchiveActive("our-story"),
+      );
 
       const probe = window.scrollY + window.innerHeight * 0.55;
       let index = 0;

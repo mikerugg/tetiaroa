@@ -1,11 +1,13 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
+import { Homemade_Apple } from "next/font/google";
 import { ArrowUpRightIcon, PlayIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -18,10 +20,13 @@ import { VrViewer } from "./vr-viewer";
 import { LanternDonate } from "./lantern-donate";
 import { NightBeatCinema } from "./night-beat-cinema";
 import { ScanPanel } from "./scan-panel";
+import { BrandoPromiseNote } from "./brando-story/brando-promise-note";
 import styles from "./home-experience.module.css";
 import { FrenchVersionPrompt } from "./french-version-prompt";
 import { SiteFooter } from "./site-footer";
 import { TopToolbar } from "./top-toolbar";
+
+const handwriting = Homemade_Apple({ subsets: ["latin"], weight: "400" });
 
 export default function HomeExperience({
   locale = "en",
@@ -320,14 +325,65 @@ export default function HomeExperience({
           </div>
         </section>
 
+        <section className={styles.pillars} id="pillars">
+          <div className={styles.pillarsInner}>
+            <div className={styles.pillarsIntro}>
+              <div className={`${styles.pillarsEyebrow} font-mono`}>
+                {copy.pillars.eyebrow}
+              </div>
+              <h2 className={`${styles.pillarsTitle} font-depth`}>
+                {copy.pillars.title}
+              </h2>
+              <p className={styles.pillarsCopy}>
+                {copy.pillars.copy}
+              </p>
+            </div>
+
+            <div className={styles.pillarCards}>
+              {copy.pillars.items.map((pillar, index) => (
+                <article className={styles.pillarCard} key={pillar.title}>
+                  <div className={`${styles.pillarNumber} font-depth`}>
+                    {String(index + 1).padStart(2, "0")}
+                  </div>
+                  <div className={styles.pillarMedia}>
+                    <Image
+                      src={pillar.image}
+                      alt={pillar.alt}
+                      fill
+                      className={styles.pillarImage}
+                      sizes="(max-width: 960px) 100vw, 260px"
+                    />
+                  </div>
+                  <div className={styles.pillarBody}>
+                    <h3 className={`${styles.pillarTitle} font-depth`}>
+                      {pillar.title}
+                    </h3>
+                    <p>{pillar.copy}</p>
+                    <ul className={styles.pillarAreas}>
+                      {pillar.areas.map((area) => (
+                        <li key={area}>{area}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className={styles.shallows} id="kids">
           <div className={styles.shallowsInner}>
             <div className={`${styles.shallowsEyebrow} font-mono`}>
               {copy.kids.eyebrow}
             </div>
-            <h2 className={`${styles.shallowsTitle} font-display`}>
-              {copy.kids.titleLead} <br /> &mdash;{" "}
-              <em className={styles.wavy}>{copy.kids.titleEmphasis}</em>
+            <h2 className={styles.shallowsTitle}>
+              <span className={`${styles.shallowsTitleLead} ${styles.wavy} font-depth`}>
+                {copy.kids.titleLead}
+              </span>
+              <br />
+              <em className={`${styles.shallowsTitleEmphasis} font-display`}>
+                {copy.kids.titleEmphasis}
+              </em>
             </h2>
             <p className={styles.shallowsCopy}>
               {copy.kids.copy}
@@ -345,7 +401,11 @@ export default function HomeExperience({
                       src={program.image}
                       alt={program.alt}
                       fill
-                      className={styles.mediaImage}
+                      className={cn(
+                        styles.mediaImage,
+                        program.imageFit === "contain" &&
+                          styles.mediaImageContain,
+                      )}
                       sizes="(max-width: 700px) 100vw, 320px"
                     />
                   </div>
@@ -363,6 +423,21 @@ export default function HomeExperience({
                   <CardContent className={styles.kidCardContent}>
                     <p className={styles.kidCopy}>{program.copy}</p>
                   </CardContent>
+                  <CardFooter className={styles.kidFooter}>
+                    <Button
+                      asChild
+                      variant="link"
+                      className={cn(styles.kidAction, "h-auto p-0 font-mono")}
+                    >
+                      <a href={program.href}>
+                        {program.cta}
+                        <ArrowUpRightIcon
+                          data-icon="inline-end"
+                          aria-hidden="true"
+                        />
+                      </a>
+                    </Button>
+                  </CardFooter>
                 </Card>
               ))}
             </div>
@@ -385,6 +460,92 @@ export default function HomeExperience({
               >
                 {copy.kids.bannerCaption}
               </Badge>
+            </div>
+
+            <aside className={styles.logoCallout}>
+              <div className={styles.logoCalloutMark}>
+                <Image
+                  src={copy.kids.logoCallout.image}
+                  alt={copy.kids.logoCallout.alt}
+                  fill
+                  className={styles.logoCalloutMarkImage}
+                  sizes="(max-width: 720px) 180px, 220px"
+                />
+              </div>
+              <div className={styles.logoCalloutCopy}>
+                <div className={`${styles.logoCalloutEyebrow} font-mono`}>
+                  {copy.kids.logoCallout.eyebrow}
+                </div>
+                <h3 className={`${styles.logoCalloutTitle} font-display`}>
+                  {copy.kids.logoCallout.title}
+                </h3>
+                <p>{copy.kids.logoCallout.copy}</p>
+              </div>
+              <Button
+                asChild
+                variant="outline"
+                className={cn(styles.logoCalloutAction, "h-auto font-mono")}
+              >
+                <a href={copy.kids.logoCallout.href}>
+                  {copy.kids.logoCallout.cta}
+                  <ArrowUpRightIcon
+                    data-icon="inline-end"
+                    aria-hidden="true"
+                  />
+                </a>
+              </Button>
+            </aside>
+          </div>
+        </section>
+
+        <section className={styles.ourStory} id="our-story">
+          <div className={styles.ourStoryPlate}>
+            <Image
+              src="/story/history-living-archive.png"
+              alt=""
+              fill
+              className={styles.ourStoryImage}
+              sizes="100vw"
+              aria-hidden="true"
+            />
+            <div className={styles.ourStoryScrim} aria-hidden="true" />
+            <div className={styles.ourStoryTexture} aria-hidden="true" />
+            <div className={styles.ourStoryFrame} aria-hidden="true" />
+
+            <div className={styles.ourStoryInner}>
+              <div className={styles.ourStoryCopy}>
+                <div className={`${styles.ourStoryEyebrow} font-mono`}>
+                  {copy.story.eyebrow}
+                </div>
+                <h2 className={`${styles.ourStoryTitle} font-display`}>
+                  {copy.story.title}
+                </h2>
+                <p className={styles.ourStoryLead}>
+                  {copy.story.lead}
+                </p>
+                <p className={styles.ourStoryBody}>
+                  {copy.story.body}
+                </p>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                  className={cn(styles.ourStoryCta, "h-auto font-mono")}
+                >
+                  <a href={copy.story.ctaHref}>
+                    {copy.story.cta}
+                    <ArrowUpRightIcon
+                      data-icon="inline-end"
+                      aria-hidden="true"
+                    />
+                  </a>
+                </Button>
+              </div>
+
+              <BrandoPromiseNote
+                className={`${styles.ourStoryPromiseNote} ${handwriting.className}`}
+                lines={copy.story.promiseLines}
+              />
             </div>
           </div>
         </section>

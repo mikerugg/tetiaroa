@@ -24,6 +24,17 @@ type KidProgram = {
   copy: string;
   image: string;
   alt: string;
+  href: string;
+  cta: string;
+  imageFit?: "cover" | "contain";
+};
+
+type Pillar = {
+  title: string;
+  copy: string;
+  areas: [string, string, string];
+  image: string;
+  alt: string;
 };
 
 type HomeCopy = {
@@ -77,6 +88,12 @@ type HomeCopy = {
     imageAlt: string;
     readouts: ScanReadout[];
   };
+  pillars: {
+    eyebrow: string;
+    title: string;
+    copy: string;
+    items: [Pillar, Pillar, Pillar];
+  };
   kids: {
     eyebrow: string;
     titleLead: string;
@@ -84,6 +101,24 @@ type HomeCopy = {
     copy: string;
     programs: KidProgram[];
     bannerCaption: string;
+    logoCallout: {
+      eyebrow: string;
+      title: string;
+      copy: string;
+      cta: string;
+      href: string;
+      image: string;
+      alt: string;
+    };
+  };
+  story: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    body: string;
+    cta: string;
+    ctaHref: string;
+    promiseLines: [string, string, string];
   };
   night: {
     eyebrow: string;
@@ -105,6 +140,16 @@ const sharedKidImages = {
     "https://images.unsplash.com/photo-1591025207163-942350e47db2?w=900&q=80&auto=format&fit=crop",
   classroom:
     "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=900&q=80&auto=format&fit=crop",
+  honuRender: "/sub-render.png",
+};
+
+const sharedPillarImages = {
+  research:
+    "https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=1100&q=85&auto=format&fit=crop",
+  education:
+    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1100&q=85&auto=format&fit=crop",
+  community:
+    "https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=1100&q=85&auto=format&fit=crop",
 };
 
 export const homeCopies: Record<HomeLocale, HomeCopy> = {
@@ -210,6 +255,13 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         transmission: "−40 m — scanning. the twin is in sync",
       },
       {
+        id: "pillars",
+        depth: 8,
+        label: "Pillars",
+        color: "#0a4e4c",
+        transmission: "foundation map: three pillars in view",
+      },
+      {
         id: "kids",
         depth: 2,
         label: "Tamari'i",
@@ -217,11 +269,25 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         transmission: "surfacing — warm water ahead",
       },
       {
+        id: "our-story",
+        depth: 0,
+        label: "Our Story",
+        color: "#5a3b21",
+        transmission: "archive open — the promise is still alive",
+      },
+      {
         id: "lanterns",
         depth: 0,
         label: "Connected",
         color: "#04101e",
         transmission: "night ops — the chain starts on this beach",
+      },
+      {
+        id: "donation-levels",
+        depth: 0,
+        label: "Donate",
+        color: "#04101e",
+        transmission: "donation levels — choose how to help",
       },
     ],
     hero: {
@@ -285,39 +351,112 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         { label: "ecosystem signals — synced", at: 0.74 },
       ],
     },
-    kids: {
-      eyebrow: "Education that connects",
-      titleLead: "Tamari'i",
-      titleEmphasis: "little chiefs of the lagoon.",
+    pillars: {
+      eyebrow: "Pillars of Tetiaroa",
+      title: "The work concentrates where an atoll needs care.",
       copy:
-        "Tamari'i means children — and these are science classes you can swim in. Tetiaroa's classrooms have no walls and the field trips have fins.",
-      programs: [
+        "Tetiaroa Society is a conservation foundation built around three connected responsibilities: protect the living system, teach from the place itself, and let local action travel into the wider world.",
+      items: [
         {
-          badge: "Ages 6+",
-          title: "Snorkel school",
+          title: "Research & Conservation",
           copy:
-            "First fins, first reef. Lagoon safety and species spotting before the homework starts.",
-          image: sharedKidImages.snorkel,
-          alt: "Bright coral in shallow water",
+            "Conservation and research move together here: TARP, biosecurity, conservation research, ATTRACT, species monitoring, and the scientific projects that help the atoll make its changes visible.",
+          areas: [
+            "TARP, habitat care, and biosecurity",
+            "ATTRACT and conservation research",
+            "Scientific projects across reef, lagoon, motu, and species",
+          ],
+          image: sharedPillarImages.research,
+          alt: "Coral reef and lagoon habitat used for conservation research",
         },
         {
-          badge: "Nesting season",
-          title: "Junior night patrol",
+          title: "Education & Culture",
           copy:
-            "Kids walk a real nesting beach with the turtle team — torches off, eyes up.",
-          image: sharedKidImages.turtle,
-          alt: "Sea turtle near the surface at night",
+            "School visits, volunteer pathways, and on-site programs connect students and guests to Polynesian knowledge, field science, and the practical steps for learning with Tetiaroa.",
+          areas: [
+            "Local and international school visits",
+            "How to apply, volunteer, and participate",
+            "Photo-led on-site programs and cultural learning",
+          ],
+          image: sharedPillarImages.education,
+          alt: "Students learning outdoors near the ocean",
         },
         {
-          badge: "Every term",
-          title: "Ora Hoa classroom",
+          title: "Community & Global Impact",
           copy:
-            "Ora Hoa — 'friends of life' — brings Polynesian students and Polynesian science to the Ecostation all year long.",
-          image: sharedKidImages.classroom,
-          alt: "Students learning outdoors",
+            "The Society's community is local and international: events, conferences, on-atoll volunteer actions, and global initiatives shaped by Honu, mosquito control, SWAC, and island resilience work.",
+          areas: [
+            "Events, conferences, and community gatherings",
+            "On-atoll volunteer action",
+            "Honu, mosquito control, SWAC, and global impact",
+          ],
+          image: sharedPillarImages.community,
+          alt: "Aerial view of a tropical atoll and lagoon",
         },
       ],
-      bannerCaption: "release day at the sanctuary — the part nobody skips",
+    },
+    kids: {
+      eyebrow: "Education for young stewards",
+      titleLead: "Tamari'i",
+      titleEmphasis: "how kids meet the atoll",
+      copy:
+        "Tamari'i means children. Some meet Tetiaroa with sandy feet, some through a turtle story, and some through a headset in a classroom far away. The goal is the same: turn wonder into care.",
+      programs: [
+        {
+          badge: "AI story lab",
+          title: "Turtle Tales AI",
+          copy:
+            "A kid-safe story world where turtle characters unlock AI-powered picture-book adventures, art prompts, and conservation lessons that feel like play.",
+          image: sharedKidImages.turtle,
+          alt: "Sea turtle swimming near the surface",
+          href: "/turtle-tales",
+          cta: "Open Turtle Tales",
+        },
+        {
+          badge: "On-island visits",
+          title: "Learning activities on Tetiaroa",
+          copy:
+            "For children who visit the atoll: reef observations, junior naturalist prompts, turtle-care moments, and shoreline activities rooted in the real place beneath their feet.",
+          image: sharedKidImages.snorkel,
+          alt: "Bright coral in shallow water",
+          href: "/field-station#education",
+          cta: "See activities",
+        },
+        {
+          badge: "Global classrooms",
+          title: "Education, outreach + VR",
+          copy:
+            "School programs, classroom media, and Honu XR field trips are being built to bring Tetiaroa's lagoon, science, and stewardship to children anywhere on Earth.",
+          image: sharedKidImages.honuRender,
+          alt: "Render of the Honu XR submersible for virtual field trips",
+          href: "#honu-xr",
+          cta: "Explore Honu XR",
+          imageFit: "contain",
+        },
+      ],
+      bannerCaption:
+        "from turtle stories to VR field trips, every path leads back to care",
+      logoCallout: {
+        eyebrow: "For curious eyes",
+        title: "A logo full of island clues",
+        copy:
+          "Waves, birds, shark teeth, fern, braid, spiral, and the eye of light are tucked into the Tetiaroa Society mark. Follow each one to discover what the atoll teaches us.",
+        cta: "Step Inside the Logo",
+        href: "/our-logo",
+        image: "/logos/mark-segments/design-mark.png",
+        alt: "Tetiaroa Society design mark made from Polynesian motifs",
+      },
+    },
+    story: {
+      eyebrow: "Our Story",
+      title: "The Promise That Stayed",
+      lead:
+        "The world knew Marlon Brando as an actor. Tetiaroa knew him differently: as someone who arrived for a film and left with a responsibility he could not set down.",
+      body:
+        "In its lagoon, reef, birds, turtles, and motu, he saw a living world whose beauty could not be separated from its fragility. Tetiaroa Society carries that promise forward through science, conservation, education, and stewardship rooted in the atoll itself.",
+      cta: "Discover our story",
+      ctaHref: "/brando-story/work",
+      promiseLines: ["Tetiaroa", "must be protected", "for the future."],
     },
     night: {
       eyebrow: "We need you",
@@ -482,6 +621,13 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         transmission: "−40 m — scan en cours. le jumeau est synchronisé",
       },
       {
+        id: "pillars",
+        depth: 8,
+        label: "Piliers",
+        color: "#0a4e4c",
+        transmission: "carte de la fondation : trois piliers en vue",
+      },
+      {
         id: "kids",
         depth: 2,
         label: "Tamari'i",
@@ -489,11 +635,25 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         transmission: "remontée — eau chaude devant",
       },
       {
+        id: "our-story",
+        depth: 0,
+        label: "Histoire",
+        color: "#5a3b21",
+        transmission: "archives ouvertes — la promesse reste vivante",
+      },
+      {
         id: "lanterns",
         depth: 0,
         label: "Reliés",
         color: "#04101e",
         transmission: "opérations de nuit — la chaîne commence sur cette plage",
+      },
+      {
+        id: "donation-levels",
+        depth: 0,
+        label: "Donner",
+        color: "#04101e",
+        transmission: "niveaux de don — choisissez comment aider",
       },
     ],
     hero: {
@@ -557,40 +717,112 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         { label: "signaux de l'écosystème — synchronisés", at: 0.74 },
       ],
     },
-    kids: {
-      eyebrow: "Une éducation qui relie",
-      titleLead: "Tamari'i",
-      titleEmphasis: "petits chefs du lagon.",
+    pillars: {
+      eyebrow: "Les piliers de Tetiaroa",
+      title: "Le travail se concentre là où un atoll a besoin de soin.",
       copy:
-        "Tamari'i signifie enfants — et ici, les cours de science se vivent dans l'eau. Les salles de classe de Tetiaroa n'ont pas de murs, et les sorties de terrain ont des palmes.",
+        "Tetiaroa Society est une fondation de conservation construite autour de trois responsabilités liées : protéger le vivant, transmettre depuis le lieu lui-même, et faire voyager l'action locale dans le monde.",
+      items: [
+        {
+          title: "Recherche & Conservation",
+          copy:
+            "La conservation et la recherche avancent ensemble : TARP, biosécurité, recherche de conservation, ATTRACT, suivi des espèces et projets scientifiques qui rendent les changements de l'atoll visibles.",
+          areas: [
+            "TARP, soin des habitats et biosécurité",
+            "ATTRACT et recherche de conservation",
+            "Projets scientifiques sur récif, lagon, motu et espèces",
+          ],
+          image: sharedPillarImages.research,
+          alt: "Récif corallien et habitat lagonaire étudiés pour la conservation",
+        },
+        {
+          title: "Éducation & Culture",
+          copy:
+            "Visites scolaires, parcours bénévoles et programmes sur site relient élèves et visiteurs aux savoirs polynésiens, à la science de terrain et aux façons concrètes d'apprendre avec Tetiaroa.",
+          areas: [
+            "Visites scolaires locales et internationales",
+            "Comment postuler, participer et faire du bénévolat",
+            "Programmes sur site en images et apprentissage culturel",
+          ],
+          image: sharedPillarImages.education,
+          alt: "Élèves apprenant dehors près de l'océan",
+        },
+        {
+          title: "Communauté & Impact mondial",
+          copy:
+            "La communauté de la Society est locale et internationale : événements, conférences, actions bénévoles sur l'atoll et initiatives mondiales liées à Honu, à la lutte anti-moustiques, au SWAC et à la résilience insulaire.",
+          areas: [
+            "Événements, conférences et rencontres communautaires",
+            "Actions bénévoles sur l'atoll",
+            "Honu, lutte anti-moustiques, SWAC et impact mondial",
+          ],
+          image: sharedPillarImages.community,
+          alt: "Vue aérienne d'un atoll tropical et de son lagon",
+        },
+      ],
+    },
+    kids: {
+      eyebrow: "Éducation des jeunes gardiens",
+      titleLead: "Tamari'i",
+      titleEmphasis: "comment les enfants rencontrent l'atoll",
+      copy:
+        "Tamari'i signifie enfants. Certains découvrent Tetiaroa les pieds dans le sable, d'autres par une histoire de tortue, d'autres encore avec un casque dans une classe lointaine. Le but reste le même : transformer l'émerveillement en soin.",
       programs: [
         {
-          badge: "Dès 6 ans",
-          title: "École de snorkeling",
+          badge: "Labo IA",
+          title: "Turtle Tales IA",
           copy:
-            "Premières palmes, premier récif. Sécurité dans le lagon et observation des espèces avant les devoirs.",
+            "Un univers d'histoires adapté aux enfants, où des personnages tortues ouvrent des aventures illustrées par IA, des prompts créatifs et des leçons de conservation qui ressemblent à du jeu.",
+          image: sharedKidImages.turtle,
+          alt: "Tortue marine nageant près de la surface",
+          href: "/turtle-tales",
+          cta: "Ouvrir Turtle Tales",
+        },
+        {
+          badge: "Sur l'atoll",
+          title: "Activités enfants à Tetiaroa",
+          copy:
+            "Pour les enfants qui visitent l'atoll : observations du récif, carnet de jeune naturaliste, moments autour des tortues et activités de rivage ancrées dans le lieu réel.",
           image: sharedKidImages.snorkel,
           alt: "Corail lumineux en eau peu profonde",
+          href: "/field-station#education",
+          cta: "Voir les activités",
         },
         {
-          badge: "Saison de ponte",
-          title: "Patrouille de nuit junior",
+          badge: "Classes du monde",
+          title: "Éducation, médiation + VR",
           copy:
-            "Les enfants marchent sur une vraie plage de ponte avec l'équipe tortues — lampes éteintes, regard levé.",
-          image: sharedKidImages.turtle,
-          alt: "Tortue marine près de la surface la nuit",
-        },
-        {
-          badge: "Chaque trimestre",
-          title: "Classe Ora Hoa",
-          copy:
-            "Ora Hoa — « amis de la vie » — relie toute l'année les élèves polynésiens et la science polynésienne à l'Écostation.",
-          image: sharedKidImages.classroom,
-          alt: "Élèves apprenant dehors",
+            "Programmes scolaires, médias pédagogiques et sorties Honu XR sont conçus pour apporter le lagon, la science et l'intendance de Tetiaroa aux enfants du monde entier.",
+          image: sharedKidImages.honuRender,
+          alt: "Rendu du submersible Honu XR pour les sorties virtuelles",
+          href: "#honu-xr",
+          cta: "Explorer Honu XR",
+          imageFit: "contain",
         },
       ],
       bannerCaption:
-        "jour de relâcher au sanctuaire — le moment que personne ne manque",
+        "des histoires de tortues aux sorties VR, chaque chemin revient au soin",
+      logoCallout: {
+        eyebrow: "Pour les yeux curieux",
+        title: "Un logo rempli d'indices de l'atoll",
+        copy:
+          "Vagues, oiseaux, dents de requin, fougère, tresse, spirale et oeil de lumière se cachent dans le logo de Tetiaroa Society. Suivez-les pour découvrir ce que l'atoll nous raconte.",
+        cta: "Entrez dans le logo",
+        href: "/our-logo",
+        image: "/logos/mark-segments/design-mark.png",
+        alt: "Marque graphique de Tetiaroa Society composée de motifs polynésiens",
+      },
+    },
+    story: {
+      eyebrow: "Notre histoire",
+      title: "La promesse qui demeure",
+      lead:
+        "Le monde connaissait Marlon Brando comme acteur. Tetiaroa l'a connu autrement : comme quelqu'un venu pour un film, puis reparti avec une responsabilité qu'il ne pouvait plus déposer.",
+      body:
+        "Dans son lagon, son récif, ses oiseaux, ses tortues et ses motu, il a vu un monde vivant dont la beauté ne pouvait pas être séparée de la fragilité. Tetiaroa Society porte cette promesse aujourd'hui par la science, la conservation, l'éducation et une intendance enracinée dans l'atoll lui-même.",
+      cta: "Découvrir l'histoire",
+      ctaHref: "/brando-story/work",
+      promiseLines: ["Tetiaroa", "doit être protégé", "pour l'avenir."],
     },
     night: {
       eyebrow: "Nous avons besoin de vous",
