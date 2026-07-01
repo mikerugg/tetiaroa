@@ -353,42 +353,42 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
     },
     pillars: {
       eyebrow: "Pillars of Tetiaroa",
-      title: "The work concentrates where an atoll needs care.",
+      title: "Three responsibilities, one living atoll.",
       copy:
-        "Tetiaroa Society is a conservation foundation built around three connected responsibilities: protect the living system, teach from the place itself, and let local action travel into the wider world.",
+        "Tetiaroa Society protects the life of the atoll, opens it as a place of learning, and helps its lessons travel beyond the reef. The work is practical, place based, and guided by field science, Polynesian knowledge, and long term care.",
       items: [
         {
-          title: "Research & Conservation",
+          title: "Research and Conservation",
           copy:
-            "Conservation and research move together here: TARP, biosecurity, conservation research, ATTRACT, species monitoring, and the scientific projects that help the atoll make its changes visible.",
+            "Science and stewardship meet in the field. Through TARP, biosecurity, ATTRACT, species monitoring, and research across reef, lagoon, motu, and wildlife, the Society helps Tetiaroa show what is changing and what care is needed next.",
           areas: [
             "TARP, habitat care, and biosecurity",
             "ATTRACT and conservation research",
-            "Scientific projects across reef, lagoon, motu, and species",
+            "Reef, lagoon, motu, and species monitoring",
           ],
           image: sharedPillarImages.research,
           alt: "Coral reef and lagoon habitat used for conservation research",
         },
         {
-          title: "Education & Culture",
+          title: "Education and Culture",
           copy:
-            "School visits, volunteer pathways, and on-site programs connect students and guests to Polynesian knowledge, field science, and the practical steps for learning with Tetiaroa.",
+            "Tetiaroa is a classroom with roots. School visits, volunteer pathways, and on-site programs bring students and guests into contact with Polynesian knowledge, field science, and the responsibilities of learning from a living place.",
           areas: [
             "Local and international school visits",
-            "How to apply, volunteer, and participate",
-            "Photo-led on-site programs and cultural learning",
+            "Volunteer, application, and participation pathways",
+            "On-site programs and cultural learning",
           ],
           image: sharedPillarImages.education,
           alt: "Students learning outdoors near the ocean",
         },
         {
-          title: "Community & Global Impact",
+          title: "Community and Global Impact",
           copy:
-            "The Society's community is local and international: events, conferences, on-atoll volunteer actions, and global initiatives shaped by Honu, mosquito control, SWAC, and island resilience work.",
+            "What happens on Tetiaroa carries outward. Events, conferences, volunteer action, Honu, mosquito control, SWAC, and island resilience work connect local care with global questions about how islands endure, adapt, and lead.",
           areas: [
             "Events, conferences, and community gatherings",
             "On-atoll volunteer action",
-            "Honu, mosquito control, SWAC, and global impact",
+            "Honu, mosquito control, SWAC, and island resilience",
           ],
           image: sharedPillarImages.community,
           alt: "Aerial view of a tropical atoll and lagoon",
@@ -719,42 +719,42 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
     },
     pillars: {
       eyebrow: "Les piliers de Tetiaroa",
-      title: "Le travail se concentre là où un atoll a besoin de soin.",
+      title: "Trois responsabilités, un atoll vivant.",
       copy:
-        "Tetiaroa Society est une fondation de conservation construite autour de trois responsabilités liées : protéger le vivant, transmettre depuis le lieu lui-même, et faire voyager l'action locale dans le monde.",
+        "Tetiaroa Society protège la vie de l'atoll, en fait un lieu d'apprentissage, et partage ses enseignements au-delà du récif. Son action est concrète, ancrée dans le lieu, guidée par la science de terrain, les savoirs polynésiens et une attention durable.",
       items: [
         {
-          title: "Recherche & Conservation",
+          title: "Recherche et conservation",
           copy:
-            "La conservation et la recherche avancent ensemble : TARP, biosécurité, recherche de conservation, ATTRACT, suivi des espèces et projets scientifiques qui rendent les changements de l'atoll visibles.",
+            "Ici, la science et la protection avancent ensemble. Avec TARP, la biosécurité, ATTRACT, le suivi des espèces et les recherches menées sur le récif, le lagon, les motu et la faune, la Society aide Tetiaroa à rendre visibles les changements et les soins nécessaires.",
           areas: [
             "TARP, soin des habitats et biosécurité",
-            "ATTRACT et recherche de conservation",
-            "Projets scientifiques sur récif, lagon, motu et espèces",
+            "ATTRACT et recherche en conservation",
+            "Suivi du récif, du lagon, des motu et des espèces",
           ],
           image: sharedPillarImages.research,
           alt: "Récif corallien et habitat lagonaire étudiés pour la conservation",
         },
         {
-          title: "Éducation & Culture",
+          title: "Éducation et culture",
           copy:
-            "Visites scolaires, parcours bénévoles et programmes sur site relient élèves et visiteurs aux savoirs polynésiens, à la science de terrain et aux façons concrètes d'apprendre avec Tetiaroa.",
+            "Tetiaroa est une salle de classe enracinée dans son territoire. Les visites scolaires, les parcours de bénévolat et les programmes sur site relient élèves et visiteurs aux savoirs polynésiens, à la science de terrain et à la responsabilité d'apprendre d'un lieu vivant.",
           areas: [
             "Visites scolaires locales et internationales",
-            "Comment postuler, participer et faire du bénévolat",
-            "Programmes sur site en images et apprentissage culturel",
+            "Parcours pour candidater, participer et devenir bénévole",
+            "Programmes sur site et apprentissage culturel",
           ],
           image: sharedPillarImages.education,
           alt: "Élèves apprenant dehors près de l'océan",
         },
         {
-          title: "Communauté & Impact mondial",
+          title: "Communauté et impact global",
           copy:
-            "La communauté de la Society est locale et internationale : événements, conférences, actions bénévoles sur l'atoll et initiatives mondiales liées à Honu, à la lutte anti-moustiques, au SWAC et à la résilience insulaire.",
+            "Ce qui se construit à Tetiaroa voyage plus loin. Événements, conférences, actions bénévoles, Honu, contrôle des moustiques, SWAC et résilience insulaire relient le soin local aux grands enjeux mondiaux des îles qui s'adaptent, résistent et montrent la voie.",
           areas: [
             "Événements, conférences et rencontres communautaires",
             "Actions bénévoles sur l'atoll",
-            "Honu, lutte anti-moustiques, SWAC et impact mondial",
+            "Honu, contrôle des moustiques, SWAC et résilience insulaire",
           ],
           image: sharedPillarImages.community,
           alt: "Vue aérienne d'un atoll tropical et de son lagon",
