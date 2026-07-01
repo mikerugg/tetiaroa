@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//home/mpr/**)",
+      "Bash(compgen -c)",
+      "Bash(npx -y agent-browser open http://localhost:3298/descent)",
+      "Bash(npx -y agent-browser wait --load networkidle)",
+      "Bash(npx -y agent-browser screenshot /tmp/descent-top.png)"
+    ]
+  }
+}

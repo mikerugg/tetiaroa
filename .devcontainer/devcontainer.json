@@ -18,7 +18,7 @@
     "source=tetiaroa-next-cache,target=${containerWorkspaceFolder}/.next,type=volume",
     "source=tetiaroa-pnpm-store,target=/home/node/.local/share/pnpm/store,type=volume"
   ],
-  "postCreateCommand": "pnpm config set store-dir /home/node/.local/share/pnpm/store && pnpm install --frozen-lockfile --config.confirmModulesPurge=false",
+  "postCreateCommand": "sudo mkdir -p /home/node/.local/share/pnpm/store node_modules .next && sudo chown -R node:node /home/node/.local node_modules .next && pnpm config set store-dir /home/node/.local/share/pnpm/store && pnpm install --frozen-lockfile --config.confirmModulesPurge=false",
   "customizations": {
     "vscode": {
       "extensions": [
