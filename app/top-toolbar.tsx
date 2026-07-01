@@ -13,6 +13,8 @@ export type TopToolbarCopy = {
   impactHref: string;
   impactLabel: string;
   logoLabel: string;
+  storyHref: string;
+  storyLabel: string;
   languageHref: string;
   languageLabel: string;
   languageHrefLang: string;
@@ -23,7 +25,7 @@ export type TopToolbarCopy = {
 };
 
 const toolbarButtonClass =
-  "h-auto rounded-full border-primary/40 bg-background/20 px-3 py-[5px] font-mono text-[11px] uppercase tracking-[0.16em] text-primary hover:bg-primary/10 hover:text-primary max-[420px]:px-2 max-[420px]:text-[10px] max-[420px]:tracking-[0.1em]";
+  "h-auto rounded-full border-glow/40 bg-background/20 px-3 py-[5px] font-mono text-[11px] uppercase tracking-[0.16em] text-ink-light hover:border-glow/60 hover:bg-glow/10 hover:text-ink-light max-[420px]:px-2 max-[420px]:text-[10px] max-[420px]:tracking-[0.1em]";
 
 const defaultCopy: TopToolbarCopy = {
   ariaLabel: "Primary",
@@ -33,6 +35,8 @@ const defaultCopy: TopToolbarCopy = {
   impactHref: "/impact",
   impactLabel: "Impact Feed",
   logoLabel: "Our Logo",
+  storyHref: "/brando-story",
+  storyLabel: "Our Story",
   languageHref: FRENCH_HOME_PATH,
   languageLabel: "FR",
   languageHrefLang: "fr",
@@ -65,9 +69,11 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
       <div className="flex h-full min-w-0 items-center gap-[18px] text-sm text-foreground/85 max-[860px]:gap-2.5 max-[420px]:gap-1.5 max-[860px]:text-[13px]">
         <Button
           asChild
-          variant="outline"
           size="sm"
-          className={toolbarButtonClass}
+          className={cn(
+            toolbarButtonClass,
+            "border-toolbar-impact bg-toolbar-impact font-bold shadow-toolbar-impact hover:border-toolbar-impact-hover hover:bg-toolbar-impact-hover",
+          )}
         >
           <Link href={copy.impactHref}>{copy.impactLabel}</Link>
         </Button>
@@ -91,6 +97,14 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
           asChild
           variant="outline"
           size="sm"
+          className={cn(toolbarButtonClass, "max-[900px]:hidden")}
+        >
+          <Link href={copy.storyHref}>{copy.storyLabel}</Link>
+        </Button>
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
           className={toolbarButtonClass}
         >
           <a
@@ -106,7 +120,7 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
         <Button
           asChild
           size="sm"
-          className="donate-lava h-auto rounded-full px-[18px] py-2 font-semibold text-[var(--ink)] shadow-[0_0_18px_rgba(249,115,22,0.28)] transition-[filter,transform] duration-300 hover:-translate-y-px hover:text-[var(--ink)] hover:brightness-110 max-[420px]:px-2.5"
+          className="donate-lava h-auto rounded-full px-[18px] py-2 font-semibold text-ink-light shadow-toolbar-donate transition-[filter,transform] duration-300 hover:-translate-y-px hover:text-ink-light hover:brightness-110 max-[420px]:px-2.5"
         >
           <Link href={copy.donateHref}>{copy.donateLabel}</Link>
         </Button>
