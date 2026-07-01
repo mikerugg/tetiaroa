@@ -344,6 +344,10 @@
   padding: 0 24px;
 }
 
+.diveInner {
+  margin-top: 5%;
+}
+
 .eyebrow {
   font-size: clamp(15px, 1.4vw, 19px);
   font-weight: 600;
@@ -354,13 +358,24 @@
 }
 
 .heroTitle {
-  margin-top: 0em;
-  font-size: clamp(76px, 11vw, 190px);
+  margin-top: 0;
+  font-size: clamp(57px, 8.25vw, 143px);
   line-height: 0.92;
   text-transform: uppercase;
   letter-spacing: 0.01em;
   color: var(--paper);
   text-shadow: 0 8px 60px rgba(0, 0, 0, 0.35);
+}
+
+.homeHeroTitle {
+  margin-top: clamp(28px, 5vh, 72px);
+}
+
+@media (min-width: 861px) {
+  .homeHeroTitle {
+    margin-top: clamp(160px, 24vh, 360px);
+    font-size: clamp(72px, 10.5vw, 180px);
+  }
 }
 
 .heroBadge {
@@ -420,6 +435,10 @@
   color: rgba(244, 241, 234, 0.92);
 }
 
+.diveInner .heroSub {
+  margin-top: 10px;
+}
+
 .diveCue {
   position: absolute;
   bottom: 30px;
@@ -444,6 +463,121 @@
   animation: bobble 1.6s ease-in-out infinite;
 }
 
+/* ---- current highlight ---- */
+
+.highlight {
+  padding: clamp(76px, 12vh, 140px) 12vw;
+  overflow: hidden;
+  color: var(--paper);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(91, 232, 212, 0.2), transparent 34%),
+    linear-gradient(135deg, rgba(6, 55, 62, 0.94), rgba(4, 23, 34, 0.96));
+}
+
+.highlightInner {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(36px, 6vw, 96px);
+  align-items: center;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.highlightMedia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+}
+
+.highlightFrame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border: 1px solid rgba(244, 241, 234, 0.18);
+  border-radius: 8px;
+  background: rgba(2, 10, 16, 0.3);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+}
+
+.highlightFrame::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(
+    180deg,
+    rgba(2, 10, 16, 0.1),
+    rgba(2, 10, 16, 0.26)
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.highlightImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.highlightCaption {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(91, 232, 212, 0.75);
+}
+
+.highlightCopy {
+  max-width: 680px;
+}
+
+.highlightEyebrow {
+  color: var(--cyan);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.highlightTitle {
+  margin: 14px 0 0;
+  max-width: 11ch;
+  color: var(--paper);
+  font-size: clamp(42px, 5.2vw, 82px);
+  line-height: 0.94;
+  text-transform: uppercase;
+}
+
+.highlightText {
+  margin: 22px 0 0;
+  max-width: 58ch;
+  color: rgba(244, 241, 234, 0.84);
+  font-size: clamp(16px, 1.35vw, 20px);
+  line-height: 1.62;
+}
+
+.highlightAction {
+  margin-top: 28px;
+  border-color: rgba(244, 241, 234, 0.28);
+  border-radius: 999px;
+  color: var(--paper);
+  background: rgba(244, 241, 234, 0.08);
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.highlightAction:hover {
+  border-color: rgba(91, 232, 212, 0.5);
+  background: rgba(91, 232, 212, 0.12);
+  color: var(--paper);
+}
+
 @keyframes bobble {
   0%,
   100% {
@@ -466,7 +600,7 @@
   position: absolute;
   top: 1vh;
   right: 2vw;
-  font-size: clamp(120px, 20vw, 260px);
+  font-size: clamp(90px, 15vw, 195px);
   line-height: 1;
   color: rgba(255, 255, 255, 0.06);
   pointer-events: none;
@@ -498,7 +632,7 @@
 
 .bandTitle {
   margin: 0 0 18px;
-  font-size: clamp(40px, 4.6vw, 68px);
+  font-size: clamp(30px, 3.45vw, 51px);
   line-height: 0.98;
   text-transform: uppercase;
   color: var(--paper);
@@ -943,7 +1077,7 @@
 .pillarsTitle {
   margin: 0;
   color: var(--paper);
-  font-size: clamp(48px, 5.3vw, 84px);
+  font-size: clamp(36px, 3.975vw, 63px);
   line-height: 0.96;
   text-transform: uppercase;
 }
@@ -979,7 +1113,7 @@
 
 .pillarNumber {
   color: rgba(91, 232, 212, 0.64);
-  font-size: clamp(42px, 4vw, 68px);
+  font-size: clamp(32px, 3vw, 51px);
   line-height: 0.9;
 }
 
@@ -1006,7 +1140,7 @@
 .pillarTitle {
   margin: 0;
   color: #fff8eb;
-  font-size: clamp(25px, 2.2vw, 34px);
+  font-size: clamp(19px, 1.65vw, 26px);
   line-height: 1;
   text-transform: uppercase;
 }
@@ -1067,7 +1201,7 @@
   }
 
   .pillarsTitle {
-    font-size: clamp(40px, 12vw, 58px);
+    font-size: clamp(30px, 9vw, 44px);
   }
 
   .pillarCard {
@@ -1084,7 +1218,7 @@
     right: 17px;
     z-index: 2;
     color: rgba(255, 248, 235, 0.72);
-    font-size: 42px;
+    font-size: 32px;
     text-shadow: 0 2px 20px rgba(0, 0, 0, 0.42);
   }
 
@@ -1095,7 +1229,7 @@
 
   .pillarTitle {
     padding-right: 62px;
-    font-size: clamp(24px, 7vw, 32px);
+    font-size: clamp(18px, 5.25vw, 24px);
   }
 
   .pillarAreas li {
@@ -1132,7 +1266,7 @@
 .shallowsTitleLead {
   display: inline-block;
   margin-bottom: 8px;
-  font-size: clamp(52px, 6.2vw, 92px);
+  font-size: clamp(39px, 4.65vw, 69px);
   letter-spacing: 0.035em;
   line-height: 0.98;
   text-transform: uppercase;
@@ -1263,31 +1397,63 @@
 
 .logoCallout {
   display: grid;
-  grid-template-columns: minmax(150px, 220px) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(240px, 380px) minmax(0, 1fr);
   gap: clamp(22px, 3vw, 40px);
   align-items: center;
-  margin-top: 28px;
-  padding: clamp(20px, 3vw, 32px);
+  margin-top: 64px;
+  padding: clamp(6px, 1vw, 12px) clamp(20px, 3vw, 32px) clamp(10px, 1.4vw, 16px);
   border: 1px solid rgba(7, 49, 45, 0.16);
   border-radius: 8px;
+  color: inherit;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(232, 250, 246, 0.72)),
     rgba(255, 255, 255, 0.68);
   box-shadow: 0 20px 54px rgba(7, 49, 45, 0.16);
+  text-decoration: none;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.logoCallout:hover {
+  transform: translateY(-2px);
+  border-color: rgba(31, 107, 110, 0.32);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(228, 250, 245, 0.84)),
+    rgba(255, 255, 255, 0.76);
+  box-shadow: 0 24px 68px rgba(7, 49, 45, 0.2);
+}
+
+.logoCallout:focus-visible {
+  outline: 2px solid #0b5e57;
+  outline-offset: 4px;
+}
+
+.logoCallout :where(div, h3, p, span) {
+  text-shadow: none;
 }
 
 .logoCalloutMark {
   position: relative;
-  min-height: 112px;
+  align-self: center;
+  justify-self: center;
+  width: 100%;
+  min-height: 172px;
   aspect-ratio: 1.9 / 1;
 }
 
 .logoCalloutMarkImage {
   object-fit: contain;
   filter: drop-shadow(0 14px 18px rgba(7, 49, 45, 0.14));
+  transform: translateY(17%);
 }
 
 .logoCalloutCopy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   min-width: 0;
 }
 
@@ -1316,20 +1482,31 @@
 }
 
 .logoCalloutAction {
-  justify-self: end;
-  border-color: rgba(7, 49, 45, 0.28);
-  border-radius: 999px;
-  color: #07312d;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: #0b5e57;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+  transition: color 0.25s ease;
 }
 
-.logoCalloutAction:hover {
-  border-color: rgba(31, 107, 110, 0.48);
-  background: rgba(31, 107, 110, 0.1);
-  color: #07312d;
+.logoCallout:hover .logoCalloutAction {
+  color: #e24a2b;
+}
+
+.logoCalloutActionIcon {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  transition: transform 0.25s ease;
+}
+
+.logoCallout:hover .logoCalloutActionIcon {
+  transform: translate(2px, -2px);
 }
 
 /* ---- our story / living archive ---- */
@@ -1617,7 +1794,7 @@
     top: clamp(72px, 10vh, 104px);
     right: 8vw;
     width: min(280px, 40vw);
-    min-height: 180px;
+    min-height: 164px;
     margin: 0;
     padding: 28px 28px 22px;
     --note-font-size: clamp(20px, 2.5vw, 28px);
@@ -2518,7 +2695,7 @@
 
 .nightTitle {
   margin: 0;
-  font-size: clamp(48px, 6.4vw, 96px);
+  font-size: clamp(36px, 4.8vw, 72px);
   line-height: 0.95;
   text-transform: uppercase;
   color: var(--paper);
@@ -2533,7 +2710,7 @@
 }
 
 .nightTitleLong {
-  font-size: clamp(36px, 5vw, 72px);
+  font-size: clamp(27px, 3.75vw, 54px);
 }
 
 /* ---- beat cinema ---- */
@@ -2746,6 +2923,26 @@
 }
 
 @media (max-width: 960px) {
+  .highlight {
+    padding: 12vh 7vw;
+  }
+
+  .highlightInner {
+    grid-template-columns: 1fr;
+  }
+
+  .highlightMedia {
+    order: 2;
+  }
+
+  .highlightCopy {
+    max-width: 760px;
+  }
+
+  .highlightTitle {
+    max-width: 12ch;
+  }
+
   .bandGrid {
     grid-template-columns: 1fr;
     gap: 36px;
@@ -2774,12 +2971,7 @@
   }
 
   .logoCallout {
-    grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
-  }
-
-  .logoCalloutAction {
-    grid-column: 2;
-    justify-self: start;
+    grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
   }
 
   .historyOptionInner,
@@ -2864,6 +3056,14 @@
 }
 
 @media (max-width: 640px) {
+  .highlight {
+    padding: 10vh 7vw;
+  }
+
+  .highlightTitle {
+    font-size: clamp(36px, 11vw, 52px);
+  }
+
   .band {
     padding: 12vh 7vw;
   }
@@ -2887,16 +3087,11 @@
   .logoCallout {
     grid-template-columns: 1fr;
     gap: 18px;
-    margin-top: 22px;
   }
 
   .logoCalloutMark {
-    width: min(230px, 72vw);
-    min-height: 104px;
-  }
-
-  .logoCalloutAction {
-    grid-column: auto;
+    width: min(360px, 88vw);
+    min-height: 180px;
   }
 
   .history {

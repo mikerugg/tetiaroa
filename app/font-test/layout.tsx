@@ -13,6 +13,8 @@ import {
   EB_Garamond,
   Fira_Code,
   Fjalla_One,
+  Geist,
+  Geist_Mono,
   IBM_Plex_Mono,
   IBM_Plex_Sans,
   Inconsolata,
@@ -177,6 +179,16 @@ const albertSans = Albert_Sans({
   weight: ["400", "500", "600", "700"],
 });
 
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
 const bebas = Bebas_Neue({
   variable: "--font-test-bebas",
   subsets: ["latin"],
@@ -315,6 +327,8 @@ const fontClasses = [
   plusJakarta.variable,
   outfit.variable,
   albertSans.variable,
+  geistSans.variable,
+  geistMono.variable,
   bebas.variable,
   archivoBlack.variable,
   leagueGothic.variable,

@@ -70,7 +70,7 @@ export default function HomeExperience({
               <span className={styles.badgeDot} aria-hidden="true" />
               Now streaming from Teti&#39;aroa
             </div> */}
-            <h1 className={`${styles.heroTitle} font-depth`}>
+            <h1 className={`${styles.heroTitle} ${styles.homeHeroTitle} font-header`}>
               {copy.hero.titleLine1}
               <br />
               <span className={styles.heroTitleAccent}>
@@ -91,6 +91,45 @@ export default function HomeExperience({
           </div>
         </section>
 
+        <section className={styles.highlight} id="highlight">
+          <div className={styles.highlightInner}>
+            <figure className={styles.highlightMedia}>
+              <div className={styles.highlightFrame}>
+                <Image
+                  src="/launch-party.jpg"
+                  alt={copy.highlight.imageAlt}
+                  width={2048}
+                  height={1365}
+                  className={styles.highlightImage}
+                  sizes="(max-width: 860px) 82vw, 460px"
+                />
+              </div>
+              <figcaption className={`${styles.highlightCaption} font-mono`}>
+                {copy.highlight.imageCaption}
+              </figcaption>
+            </figure>
+            <div className={styles.highlightCopy}>
+              <div className={`${styles.highlightEyebrow} font-mono`}>
+                {copy.highlight.eyebrow}
+              </div>
+              <h2 className={`${styles.highlightTitle} font-header`}>
+                {copy.highlight.title}
+              </h2>
+              <p className={styles.highlightText}>{copy.highlight.copy}</p>
+              <Button
+                asChild
+                variant="outline"
+                className={cn(styles.highlightAction, "h-auto font-mono")}
+              >
+                <a href={copy.highlight.href}>
+                  {copy.highlight.cta}
+                  <ArrowUpRightIcon data-icon="inline-end" aria-hidden="true" />
+                </a>
+              </Button>
+            </div>
+          </div>
+        </section>
+
         <section className={styles.hero} id="dive">
           <video
             className={styles.heroVideo}
@@ -106,11 +145,11 @@ export default function HomeExperience({
           </video>
           <div className={styles.heroScrim} aria-hidden="true" />
 
-          <div className={styles.heroInner}>
+          <div className={`${styles.heroInner} ${styles.diveInner}`}>
             <div className={`${styles.eyebrow} font-mono`}>
               {copy.dive.eyebrow}
             </div>
-            <h2 className={`${styles.heroTitle} font-depth`}>
+            <h2 className={`${styles.heroTitle} font-header`}>
               {copy.dive.title}
             </h2>
             <p className={styles.heroSub}>
@@ -125,7 +164,7 @@ export default function HomeExperience({
         </section>
 
         <section className={styles.deep} id="honu-xr">
-          <div className={`${styles.depthWatermark} font-depth`} aria-hidden="true">
+          <div className={`${styles.depthWatermark} font-header`} aria-hidden="true">
             &minus;104
           </div>
           <div className={styles.deepInner}>
@@ -136,7 +175,7 @@ export default function HomeExperience({
                 <br />
                 {copy.honu.kickerLine2}
               </div>
-              <h2 className={`${styles.bandTitle} ${styles.deepTitle} font-depth`}>
+              <h2 className={`${styles.bandTitle} ${styles.deepTitle} font-header`}>
                 {copy.honu.title}
               </h2>
               <p className={`${styles.bandCopy} ${styles.deepCopy}`}>
@@ -190,7 +229,7 @@ export default function HomeExperience({
         </section>
 
         <section className={styles.band} id="turtles">
-          <div className={`${styles.depthWatermark} font-depth`} aria-hidden="true">
+          <div className={`${styles.depthWatermark} font-header`} aria-hidden="true">
             &minus;5
           </div>
           <div className={styles.bandGrid}>
@@ -198,7 +237,7 @@ export default function HomeExperience({
               <div className={`${styles.bandKicker} font-mono`}>
                 {copy.turtles.kicker}
               </div>
-              <h2 className={`${styles.bandTitle} font-depth`}>
+              <h2 className={`${styles.bandTitle} font-header`}>
                 {copy.turtles.title}
               </h2>
               <p className={styles.bandCopy}>
@@ -234,7 +273,7 @@ export default function HomeExperience({
         </section>
 
         <section className={styles.band} id="sharks">
-          <div className={`${styles.depthWatermark} font-depth`} aria-hidden="true">
+          <div className={`${styles.depthWatermark} font-header`} aria-hidden="true">
             &minus;20
           </div>
           <div className={`${styles.bandGrid} ${styles.bandGridFlip}`}>
@@ -242,7 +281,7 @@ export default function HomeExperience({
               <div className={`${styles.bandKicker} font-mono`}>
                 {copy.sharks.kicker}
               </div>
-              <h2 className={`${styles.bandTitle} font-depth`}>
+              <h2 className={`${styles.bandTitle} font-header`}>
                 {copy.sharks.title}
               </h2>
               <p className={styles.bandCopy}>
@@ -278,7 +317,7 @@ export default function HomeExperience({
         </section>
 
         <section className={styles.band} id="twin">
-          <div className={`${styles.depthWatermark} font-depth`} aria-hidden="true">
+          <div className={`${styles.depthWatermark} font-header`} aria-hidden="true">
             &minus;40
           </div>
           <div className={styles.bandGrid}>
@@ -286,7 +325,7 @@ export default function HomeExperience({
               <div className={`${styles.bandKicker} font-mono`}>
                 {copy.twin.kicker}
               </div>
-              <h2 className={`${styles.bandTitle} font-depth`}>
+              <h2 className={`${styles.bandTitle} font-header`}>
                 {copy.twin.title}
               </h2>
               <p className={styles.bandCopy}>
@@ -331,7 +370,7 @@ export default function HomeExperience({
               <div className={`${styles.pillarsEyebrow} font-mono`}>
                 {copy.pillars.eyebrow}
               </div>
-              <h2 className={`${styles.pillarsTitle} font-depth`}>
+              <h2 className={`${styles.pillarsTitle} font-header`}>
                 {copy.pillars.title}
               </h2>
               <p className={styles.pillarsCopy}>
@@ -342,7 +381,7 @@ export default function HomeExperience({
             <div className={styles.pillarCards}>
               {copy.pillars.items.map((pillar, index) => (
                 <article className={styles.pillarCard} key={pillar.title}>
-                  <div className={`${styles.pillarNumber} font-depth`}>
+                  <div className={`${styles.pillarNumber} font-header`}>
                     {String(index + 1).padStart(2, "0")}
                   </div>
                   <div className={styles.pillarMedia}>
@@ -355,7 +394,7 @@ export default function HomeExperience({
                     />
                   </div>
                   <div className={styles.pillarBody}>
-                    <h3 className={`${styles.pillarTitle} font-depth`}>
+                    <h3 className={`${styles.pillarTitle} font-header`}>
                       {pillar.title}
                     </h3>
                     <p>{pillar.copy}</p>
@@ -377,7 +416,7 @@ export default function HomeExperience({
               {copy.kids.eyebrow}
             </div>
             <h2 className={styles.shallowsTitle}>
-              <span className={`${styles.shallowsTitleLead} ${styles.wavy} font-depth`}>
+              <span className={`${styles.shallowsTitleLead} ${styles.wavy} font-header`}>
                 {copy.kids.titleLead}
               </span>
               <br />
@@ -462,38 +501,37 @@ export default function HomeExperience({
               </Badge>
             </div>
 
-            <aside className={styles.logoCallout}>
-              <div className={styles.logoCalloutMark}>
-                <Image
-                  src={copy.kids.logoCallout.image}
-                  alt={copy.kids.logoCallout.alt}
-                  fill
-                  className={styles.logoCalloutMarkImage}
-                  sizes="(max-width: 720px) 180px, 220px"
-                />
-              </div>
-              <div className={styles.logoCalloutCopy}>
-                <div className={`${styles.logoCalloutEyebrow} font-mono`}>
-                  {copy.kids.logoCallout.eyebrow}
-                </div>
-                <h3 className={`${styles.logoCalloutTitle} font-display`}>
-                  {copy.kids.logoCallout.title}
-                </h3>
-                <p>{copy.kids.logoCallout.copy}</p>
-              </div>
-              <Button
-                asChild
-                variant="outline"
-                className={cn(styles.logoCalloutAction, "h-auto font-mono")}
+            <aside>
+              <a
+                className={styles.logoCallout}
+                href={copy.kids.logoCallout.href}
               >
-                <a href={copy.kids.logoCallout.href}>
-                  {copy.kids.logoCallout.cta}
-                  <ArrowUpRightIcon
-                    data-icon="inline-end"
-                    aria-hidden="true"
+                <div className={styles.logoCalloutMark}>
+                  <Image
+                    src={copy.kids.logoCallout.image}
+                    alt={copy.kids.logoCallout.alt}
+                    fill
+                    className={styles.logoCalloutMarkImage}
+                    sizes="(max-width: 720px) 180px, 220px"
                   />
-                </a>
-              </Button>
+                </div>
+                <div className={styles.logoCalloutCopy}>
+                  <div className={`${styles.logoCalloutEyebrow} font-mono`}>
+                    {copy.kids.logoCallout.eyebrow}
+                  </div>
+                  <h3 className={`${styles.logoCalloutTitle} font-display`}>
+                    {copy.kids.logoCallout.title}
+                  </h3>
+                  <p>{copy.kids.logoCallout.copy}</p>
+                  <span className={`${styles.logoCalloutAction} font-mono`}>
+                    {copy.kids.logoCallout.cta}
+                    <ArrowUpRightIcon
+                      className={styles.logoCalloutActionIcon}
+                      aria-hidden="true"
+                    />
+                  </span>
+                </div>
+              </a>
             </aside>
           </div>
         </section>

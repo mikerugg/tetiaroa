@@ -49,6 +49,15 @@ type HomeCopy = {
     titleLine2: string;
     watchCta: string;
   };
+  highlight: {
+    eyebrow: string;
+    title: string;
+    copy: string;
+    cta: string;
+    href: string;
+    imageAlt: string;
+    imageCaption: string;
+  };
   dive: {
     eyebrow: string;
     title: string;
@@ -224,6 +233,13 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         transmission: "0 m — thanks for diving with us",
       },
       {
+        id: "highlight",
+        depth: 0,
+        label: "Highlight",
+        color: "#227f8b",
+        transmission: "surface signal — Honu updates incoming",
+      },
+      {
         id: "dive",
         depth: 0,
         label: "The dive",
@@ -300,10 +316,21 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       titleLine2: "Save the world.",
       watchCta: "Watch the film / 2:14",
     },
+    highlight: {
+      eyebrow: "Highlight",
+      title: "Honu heads to Catalina for testing",
+      copy:
+        "Before Honu can open Teti’aroa’s deep water to students and scientists, it has to prove itself at sea. That work begins off Catalina Island, where the team is preparing for dive tests and a launch party.",
+      cta: "Learn More",
+      href: "#honu-xr",
+      imageAlt:
+        "People seated inside Honu's clear observation dome during launch preparations",
+      imageCaption: "Honu launch preparations",
+    },
     dive: {
-      eyebrow: "Te Hohonu — the deep",
-      title: "Dive deeper.",
-      copy: "One atoll. A hundred metres of story. Scroll to dive.",
+      eyebrow: "Te Mau Tia'i — the guardians",
+      title: "Protect. Educate. Empower.",
+      copy: "One atoll. A thousand metres of story.",
       cue: "dive",
     },
     honu: {
@@ -441,11 +468,11 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       bannerCaption:
         "from turtle stories to VR field trips, every path leads back to care",
       logoCallout: {
-        eyebrow: "For curious eyes",
+        eyebrow: "For curious explorers",
         title: "A logo full of island clues",
         copy:
           "Waves, birds, shark teeth, fern, braid, spiral, and the eye of light are tucked into the Tetiaroa Society mark. Follow each one to discover what the atoll teaches us.",
-        cta: "Step Inside the Logo",
+        cta: "Explore the glyphs",
         href: "/our-logo",
         image: "/logos/mark-segments/design-mark.png",
         alt: "Tetiaroa Society design mark made from Polynesian motifs",
@@ -594,6 +621,13 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         transmission: "0 m — merci d'avoir plongé avec nous",
       },
       {
+        id: "highlight",
+        depth: 0,
+        label: "À la une",
+        color: "#227f8b",
+        transmission: "signal de surface — nouvelles de Honu en approche",
+      },
+      {
         id: "dive",
         depth: 0,
         label: "La plongée",
@@ -670,8 +704,19 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       titleLine2: "Sauver le monde.",
       watchCta: "Regarder le film / 2:14",
     },
+    highlight: {
+      eyebrow: "À la une",
+      title: "Honu se prépare pour Catalina",
+      copy:
+        "L'équipe prépare Honu pour la suite : une rencontre de lancement et une série d'essais de plongée au large de Catalina Island, avant que le submersible serve les programmes d'éducation et de science de Teti'aroa.",
+      cta: "En savoir plus",
+      href: "#honu-xr",
+      imageAlt:
+        "Personnes installées dans le dôme transparent du submersible Honu pendant les préparatifs de lancement",
+      imageCaption: "Préparatifs de lancement de Honu et essais de plongée à Catalina",
+    },
     dive: {
-      eyebrow: "Te Hohonu — les profondeurs",
+      eyebrow: "Te Mau Tia'i — les gardiens",
       title: "Plongez plus loin.",
       copy: "Un atoll. Cent mètres d'histoire. Faites défiler pour plonger.",
       cue: "plonger",
@@ -811,11 +856,11 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       bannerCaption:
         "des histoires de tortues aux sorties VR, chaque chemin revient au soin",
       logoCallout: {
-        eyebrow: "Pour les yeux curieux",
+        eyebrow: "Pour les explorateurs curieux",
         title: "Un logo rempli d'indices de l'atoll",
         copy:
           "Vagues, oiseaux, dents de requin, fougère, tresse, spirale et oeil de lumière se cachent dans le logo de Tetiaroa Society. Suivez-les pour découvrir ce que l'atoll nous raconte.",
-        cta: "Entrez dans le logo",
+        cta: "Explorer les glyphes",
         href: "/our-logo",
         image: "/logos/mark-segments/design-mark.png",
         alt: "Marque graphique de Tetiaroa Society composée de motifs polynésiens",

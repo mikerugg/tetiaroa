@@ -35,10 +35,10 @@ type TypePairProps = {
 
 export const fontOptions = [
   {
-    id: "depth",
-    label: "Anton / font-depth",
-    selectLabel: "Anton",
-    className: "font-depth",
+    id: "header",
+    label: "Bebas Neue / font-header",
+    selectLabel: "Bebas Neue",
+    className: "font-header",
   },
   {
     id: "display",
@@ -361,8 +361,8 @@ export const quickScanRows = [
   {
     id: "hero-headline",
     role: "Hero headline",
-    defaultLeftFontId: "depth",
-    defaultRightFontId: "depth",
+    defaultLeftFontId: "header",
+    defaultRightFontId: "header",
     sample: "Meet Honu. Built to bring the ocean to everyone.",
     sampleClassName:
       "text-[clamp(3rem,6vw,6.8rem)] uppercase leading-[0.9] tracking-[0.01em]",
@@ -396,8 +396,8 @@ export const quickScanRows = [
   {
     id: "depth-watermark",
     role: "Depth watermark",
-    defaultLeftFontId: "depth",
-    defaultRightFontId: "depth",
+    defaultLeftFontId: "header",
+    defaultRightFontId: "header",
     sample: "-104",
     sampleClassName:
       "text-[clamp(5rem,10vw,9rem)] uppercase leading-none text-white/[0.18]",

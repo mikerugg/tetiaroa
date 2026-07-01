@@ -100,8 +100,8 @@
   max-width: 720px;
   margin: 0;
   color: var(--paper);
-  font-family: var(--font-depth), var(--font-display), serif;
-  font-size: clamp(64px, 10vw, 154px);
+  font-family: var(--font-header), var(--font-display), serif;
+  font-size: clamp(48px, 7.5vw, 116px);
   font-weight: 400;
   letter-spacing: 0;
   line-height: 0.88;
@@ -263,8 +263,8 @@
 .motifPanel h2 {
   margin: 0;
   color: var(--paper);
-  font-family: var(--font-depth), var(--font-display), serif;
-  font-size: clamp(42px, 5vw, 78px);
+  font-family: var(--font-header), var(--font-display), serif;
+  font-size: clamp(32px, 3.75vw, 59px);
   font-weight: 400;
   letter-spacing: 0;
   line-height: 0.95;
@@ -415,8 +415,8 @@
 
 .finaleIntro h2 {
   margin: 0;
-  font-family: var(--font-depth), var(--font-display), serif;
-  font-size: clamp(52px, 8vw, 112px);
+  font-family: var(--font-header), var(--font-display), serif;
+  font-size: clamp(39px, 6vw, 84px);
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1;
@@ -584,7 +584,7 @@
   }
 
   .heroInner h1 {
-    font-size: clamp(58px, 18vw, 92px);
+    font-size: clamp(44px, 13.5vw, 69px);
   }
 
   .heroInner p {
@@ -639,7 +639,7 @@
   }
 
   .motifPanel h2 {
-    font-size: clamp(42px, 15vw, 70px);
+    font-size: clamp(32px, 11.25vw, 53px);
   }
 
   .finale {

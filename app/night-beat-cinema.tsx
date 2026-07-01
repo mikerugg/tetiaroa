@@ -153,7 +153,7 @@ export function NightBeatCinema({
       <div className={styles.cinemaStatic}>
         <div className={`${styles.nightEyebrow} font-mono`}>{eyebrow}</div>
         <h2
-          className={`${styles.nightTitle} ${styles.nightTitleLong} font-depth`}
+          className={`${styles.nightTitle} ${styles.nightTitleLong} font-header`}
         >
           {titleLines[0]}
           <br />
@@ -178,7 +178,7 @@ export function NightBeatCinema({
         <div className={styles.cinemaTitleFrame}>
           <div className={`${styles.nightEyebrow} font-mono`}>{eyebrow}</div>
           <h2
-            className={`${styles.nightTitle} ${styles.nightTitleLong} font-depth`}
+            className={`${styles.nightTitle} ${styles.nightTitleLong} font-header`}
           >
             {titleLines[0]}
             <br />

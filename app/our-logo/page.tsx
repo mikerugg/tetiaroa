@@ -60,7 +60,7 @@ export default function MarkPage() {
           </div>
           <div className={styles.footerLinks}>
             <Link href="/">Current homepage</Link>
-            <Link href="/">Te Hohonu</Link>
+            <Link href="/">Te Mau Tia&apos;i</Link>
             <Link href="/impact">Impact Feed</Link>
             <Link href="/turtle-tales">Turtle Tales</Link>
           </div>

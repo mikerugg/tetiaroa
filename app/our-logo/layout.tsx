@@ -1,11 +1,4 @@
 import type { Metadata } from "next";
-import { Anton } from "next/font/google";
-
-const markDisplay = Anton({
-  variable: "--font-depth",
-  subsets: ["latin"],
-  weight: "400",
-});
 
 export const metadata: Metadata = {
   title: "Our Logo Revealed - Tetiaroa Society",
@@ -18,5 +11,5 @@ export default function MarkLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className={markDisplay.variable}>{children}</div>;
+  return children;
 }

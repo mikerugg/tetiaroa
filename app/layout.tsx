@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import {
-  Anton,
+  Bebas_Neue,
   Fraunces,
-  Geist,
-  Geist_Mono,
   Inter,
   JetBrains_Mono,
 } from "next/font/google";
@@ -24,20 +22,10 @@ const mono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
-const depth = Anton({
-  variable: "--font-depth",
+const header = Bebas_Neue({
+  variable: "--font-header",
   subsets: ["latin"],
   weight: "400",
-});
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -54,7 +42,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn(display.variable, mono.variable, depth.variable, geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
+      className={cn(display.variable, mono.variable, header.variable, "font-sans", inter.variable)}
     >
       <body>{children}</body>
     </html>

@@ -100,8 +100,8 @@ textarea {
   font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
 }
 
-.font-depth {
-  font-family: var(--font-depth), var(--font-sans), system-ui, sans-serif;
+.font-header {
+  font-family: var(--font-header), var(--font-sans), system-ui, sans-serif;
 }
 
 .font-geist-sans {

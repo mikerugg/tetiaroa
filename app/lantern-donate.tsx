@@ -86,7 +86,7 @@ export function LanternDonate({
               onClick={() => setSelected(index)}
             >
               <span className={styles.flame} aria-hidden="true" />
-              <span className="font-depth text-4xl leading-none text-[var(--paper)]">
+              <span className="font-header text-[1.6875rem] leading-none text-[var(--paper)]">
                 {tier.custom && customAmount ? `$${customAmount}` : tier.amount}
                 <span className="ml-1 font-mono text-xs tracking-[0.1em] text-muted-foreground">
                   {tier.period}

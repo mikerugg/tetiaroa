@@ -21,7 +21,7 @@ import { homeCopies, type HomeLocale } from "../home-copy";
 import { ENGLISH_TEAM_PATH, FRENCH_TEAM_PATH } from "../language-links";
 import { SiteFooter } from "../site-footer";
 import { TopToolbar } from "../top-toolbar";
-import { people, type Person } from "../people-option-1/people-data";
+import { people, type Person } from "./people-data";
 
 const heroImage =
   "https://www.tetiaroasociety.org/sites/default/files/styles/hero_lg_xtall/public/2026-03/TSTeam2026March.jpg.webp?itok=t8YPphBY";
@@ -270,7 +270,7 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
       },
       {
         id: "scientific-advisory-board",
-        title: "Scientific Advisory Board",
+        title: "Scientific Advisory Council",
         icon: MicroscopeIcon,
         summary:
           "Scientists and other experts advise research priorities, strengthen methods, and help connect field observations to wider conservation knowledge.",
@@ -523,7 +523,7 @@ export function TeamPage({ locale = "en" }: { locale?: TeamLocale }) {
               <p className="max-w-80 font-mono text-xs uppercase leading-6 text-primary">
                 {copy.heroEyebrow}
               </p>
-              <h1 className="mt-0 max-w-6xl font-depth text-5xl uppercase text-foreground sm:text-6xl md:text-8xl lg:text-9xl">
+              <h1 className="mt-0 max-w-6xl font-header text-4xl uppercase text-foreground sm:text-[2.8125rem] md:text-7xl lg:text-8xl">
                 {copy.heroTitle}
               </h1>
             </div>
