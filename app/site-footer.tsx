@@ -45,8 +45,7 @@ const defaultCopy: SiteFooterCopy = {
       title: "Fieldwork",
       links: [
         { href: "/#honu-xr", label: "Honu XR" },
-        { href: "/#turtles", label: "Sea turtle sanctuary" },
-        { href: "/#sharks", label: "Lemon shark nursery" },
+        { href: "/#sanctuary", label: "Turtle and shark sanctuary" },
         { href: "/#twin", label: "Digital twin" },
       ],
     },

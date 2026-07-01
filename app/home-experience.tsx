@@ -17,6 +17,7 @@ import { homeCopies, type HomeLocale } from "./home-copy";
 import { HomepageInitialScrollReset } from "./homepage-client";
 import { DepthScene } from "./depth-scene";
 import { VrViewer } from "./vr-viewer";
+import { SanctuaryVideo } from "./sanctuary-video";
 import { LanternDonate } from "./lantern-donate";
 import { NightBeatCinema } from "./night-beat-cinema";
 import { ScanPanel } from "./scan-panel";
@@ -228,90 +229,45 @@ export default function HomeExperience({
           </div>
         </section>
 
-        <section className={styles.band} id="turtles">
+        <section className={`${styles.band} ${styles.sanctuaryBand}`} id="sanctuary">
           <div className={`${styles.depthWatermark} font-header`} aria-hidden="true">
-            &minus;5
+            &minus;5/20
           </div>
-          <div className={styles.bandGrid}>
-            <div className={styles.bandText}>
-              <div className={`${styles.bandKicker} font-mono`}>
-                {copy.turtles.kicker}
-              </div>
-              <h2 className={`${styles.bandTitle} font-header`}>
-                {copy.turtles.title}
-              </h2>
-              <p className={styles.bandCopy}>
-                {copy.turtles.copy}
-              </p>
-              <Badge
-                variant="outline"
-                className={cn(styles.statChip, "h-auto font-mono")}
-              >
-                {copy.turtles.stat}
-              </Badge>
-            </div>
-            <div className={styles.bandMedia}>
-              <video
+          <div className={styles.sanctuaryGrid}>
+            <div className={`${styles.bandMedia} ${styles.sanctuaryMedia}`}>
+              <SanctuaryVideo
                 className={styles.mediaVideo}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-hidden="true"
-              >
-                <source src="/turtleclip.mp4" type="video/mp4" />
-              </video>
+                clips={[{ src: "/turtleclip.mp4" }, { src: "/lemon-shark.mp4" }]}
+              />
               <Badge
                 variant="secondary"
                 className={cn(styles.mediaCaption, "h-auto font-mono")}
               >
-                {copy.turtles.caption}
+                {copy.sanctuary.caption}
               </Badge>
             </div>
-          </div>
-        </section>
 
-        <section className={styles.band} id="sharks">
-          <div className={`${styles.depthWatermark} font-header`} aria-hidden="true">
-            &minus;20
-          </div>
-          <div className={`${styles.bandGrid} ${styles.bandGridFlip}`}>
-            <div className={styles.bandText}>
+            <div className={styles.sanctuaryText}>
               <div className={`${styles.bandKicker} font-mono`}>
-                {copy.sharks.kicker}
+                {copy.sanctuary.kicker}
               </div>
               <h2 className={`${styles.bandTitle} font-header`}>
-                {copy.sharks.title}
+                {copy.sanctuary.title}
               </h2>
               <p className={styles.bandCopy}>
-                {copy.sharks.copy}
+                {copy.sanctuary.copy}
               </p>
-              <Badge
-                variant="outline"
-                className={cn(styles.statChip, "h-auto font-mono")}
-              >
-                {copy.sharks.stat}
-              </Badge>
-            </div>
-            <div className={styles.bandMedia}>
-              <video
-                className={styles.mediaVideo}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-hidden="true"
-              >
-                <source src="/lemon-shark.mp4" type="video/mp4" />
-              </video>
-              <Badge
-                variant="secondary"
-                className={cn(styles.mediaCaption, "h-auto font-mono")}
-              >
-                {copy.sharks.caption}
-              </Badge>
+              <div className={styles.sanctuaryStats}>
+                {copy.sanctuary.stats.map((stat) => (
+                  <Badge
+                    key={stat}
+                    variant="outline"
+                    className={cn(styles.statChip, "h-auto font-mono")}
+                  >
+                    {stat}
+                  </Badge>
+                ))}
+              </div>
             </div>
           </div>
         </section>

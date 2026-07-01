@@ -596,6 +596,10 @@
   overflow: hidden;
 }
 
+.sanctuaryBand {
+  padding-top: 16vh;
+}
+
 .depthWatermark {
   position: absolute;
   top: 1vh;
@@ -615,10 +619,6 @@
   align-items: center;
   max-width: 1240px;
   margin: 0 auto;
-}
-
-.bandGridFlip > :first-child {
-  order: 2;
 }
 
 .bandKicker {
@@ -659,12 +659,42 @@
   background: rgba(255, 255, 255, 0.06);
 }
 
+.sanctuaryGrid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(40px, 5vw, 88px);
+  align-items: center;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.sanctuaryText {
+  max-width: 56ch;
+}
+
+.sanctuaryStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.sanctuaryStats .statChip {
+  margin-top: 0;
+}
+
 .bandMedia {
   position: relative;
   aspect-ratio: 4 / 4.4;
   border-radius: 22px;
   overflow: hidden;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+}
+
+.bandMedia.sanctuaryMedia {
+  aspect-ratio: 4 / 3.2;
+  border-radius: 18px;
 }
 
 .mediaVideo {
@@ -2948,13 +2978,14 @@
     gap: 36px;
   }
 
-  .bandGridFlip > :first-child {
-    order: 0;
-  }
-
   .bandMedia,
   .scanPanel {
     aspect-ratio: 4 / 3.4;
+  }
+
+  .sanctuaryGrid {
+    grid-template-columns: 1fr;
+    gap: 48px;
   }
 
   .deepHead {
@@ -3066,6 +3097,10 @@
 
   .band {
     padding: 12vh 7vw;
+  }
+
+  .bandMedia.sanctuaryMedia {
+    aspect-ratio: 4 / 3.4;
   }
 
   .cinemaSub {

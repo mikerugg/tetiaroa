@@ -32,7 +32,7 @@ type Bubble = {
 const MAX_DEPTH = 104;
 const BEAM_SECTION_IDS = new Set([
   "honu-xr",
-  "sharks",
+  "sanctuary",
   "twin",
   "pillars",
   "lanterns",

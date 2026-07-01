@@ -75,18 +75,11 @@ type HomeCopy = {
     cta: string;
     viewer: VrViewerLabels;
   };
-  turtles: {
+  sanctuary: {
     kicker: string;
     title: string;
     copy: string;
-    stat: string;
-    caption: string;
-  };
-  sharks: {
-    kicker: string;
-    title: string;
-    copy: string;
-    stat: string;
+    stats: [string, string];
     caption: string;
   };
   twin: {
@@ -200,8 +193,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           title: "Fieldwork",
           links: [
             { href: "/#honu-xr", label: "Honu XR" },
-            { href: "/#turtles", label: "Sea turtle sanctuary" },
-            { href: "/#sharks", label: "Lemon shark nursery" },
+            { href: "/#sanctuary", label: "Turtle and shark sanctuary" },
             { href: "/#twin", label: "Digital twin" },
           ],
         },
@@ -254,18 +246,11 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         transmission: "−104 m — this is my dive. welcome aboard",
       },
       {
-        id: "turtles",
-        depth: 5,
-        label: "Turtles",
-        color: "#0e7e8a",
-        transmission: "−5 m — nursery on the port side",
-      },
-      {
-        id: "sharks",
+        id: "sanctuary",
         depth: 20,
-        label: "Sharks",
-        color: "#0b4e66",
-        transmission: "−20 m — easy… juveniles on the reef edge",
+        label: "Sanctuary",
+        color: "#0b6174",
+        transmission: "−5 to −20 m — nests and nurseries in view",
       },
       {
         id: "twin",
@@ -353,24 +338,16 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         dragHint: "drag to look",
       },
     },
-    turtles: {
-      kicker: "Project 02 — sea turtle sanctuary",
+    sanctuary: {
+      kicker: "Project 02 — sea turtle + lemon shark sanctuary",
       title: "The nursery in the shallows.",
       copy:
-        "Every November, green sea turtles emerge out on the same sand where they hatched. Last season the patrol counted 214 nests — each one mapped, shaded, and kept safe until the hatchlings made it to the sea.",
-      stat: "214 nests / 2025 season",
-      caption: "honu · green sea turtle · −5 m",
-    },
-    sharks: {
-      kicker: "Project 03 — lemon shark nursery",
-      title: "Where the lagoon raises predators.",
-      copy:
-        "Juvenile lemon sharks spend their first years inside the reef's protection. The sanctuary keeps the nursery intact — and with it, the food web that holds the whole atoll together.",
-      stat: "3 km of protected reef edge",
-      caption: "ma'o · lemon shark · −20 m",
+        "Every November, green sea turtles return to the same sand where they hatched. Just offshore, juvenile lemon sharks spend their first years inside the reef's protection. Teti'aroa's sanctuary work holds both beginnings together: nests mapped and guarded through hatching season, reef edge kept intact so the lagoon can keep raising the predators that hold the food web in balance.",
+      stats: ["214 nests / 2025 season", "3 km of protected reef edge"],
+      caption: "honu to ma'o · sanctuary sequence · −5 to −20 m",
     },
     twin: {
-      kicker: "Project 04 — digital twin + biocode",
+      kicker: "Project 03 — digital twin + biocode",
       title: "Foundational Data.",
       copy:
         "Every reef head, every current, every one of 167 species — scanned, sequenced, and rebuilt as a living digital twin. When the real Tetiaroa changes, the twin sees it first.",
@@ -583,12 +560,8 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           links: [
             { href: `${FRENCH_HOME_PATH}#honu-xr`, label: "Honu XR" },
             {
-              href: `${FRENCH_HOME_PATH}#turtles`,
-              label: "Sanctuaire des tortues",
-            },
-            {
-              href: `${FRENCH_HOME_PATH}#sharks`,
-              label: "Nurserie des requins citrons",
+              href: `${FRENCH_HOME_PATH}#sanctuary`,
+              label: "Sanctuaire tortues et requins",
             },
             { href: `${FRENCH_HOME_PATH}#twin`, label: "Jumeau numérique" },
           ],
@@ -642,18 +615,11 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         transmission: "−104 m — voici ma plongée. bienvenue à bord",
       },
       {
-        id: "turtles",
-        depth: 5,
-        label: "Tortues",
-        color: "#0e7e8a",
-        transmission: "−5 m — nurserie sur bâbord",
-      },
-      {
-        id: "sharks",
+        id: "sanctuary",
         depth: 20,
-        label: "Requins",
-        color: "#0b4e66",
-        transmission: "−20 m — doucement… les jeunes sont au bord du récif",
+        label: "Sanctuaire",
+        color: "#0b6174",
+        transmission: "−5 à −20 m — nids et nurseries en vue",
       },
       {
         id: "twin",
@@ -741,24 +707,16 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         dragHint: "faites glisser pour regarder",
       },
     },
-    turtles: {
-      kicker: "Projet 02 — sanctuaire des tortues marines",
+    sanctuary: {
+      kicker: "Projet 02 — sanctuaire tortues marines + requins citrons",
       title: "La nurserie des eaux peu profondes.",
       copy:
-        "Chaque novembre, les tortues vertes reviennent sur le sable même où elles sont nées. La saison dernière, la patrouille a compté 214 nids — chacun cartographié, ombragé et protégé jusqu'à l'arrivée des nouveau-nés à la mer.",
-      stat: "214 nids / saison 2025",
-      caption: "honu · tortue verte · −5 m",
-    },
-    sharks: {
-      kicker: "Projet 03 — nurserie des requins citrons",
-      title: "Là où le lagon élève les prédateurs.",
-      copy:
-        "Les jeunes requins citrons passent leurs premières années à l'abri du récif. Le sanctuaire garde la nurserie intacte — et avec elle, la chaîne du vivant qui tient tout l'atoll ensemble.",
-      stat: "3 km de bord récifal protégé",
-      caption: "ma'o · requin citron · −20 m",
+        "Chaque novembre, les tortues vertes reviennent sur le sable même où elles sont nées. Tout près, les jeunes requins citrons passent leurs premières années à l'abri du récif. Le sanctuaire tient ces deux commencements ensemble : des nids cartographiés et protégés jusqu'à l'arrivée des nouveau-nés à la mer, et un bord récifal gardé intact pour que le lagon continue d'élever les prédateurs qui maintiennent l'équilibre du vivant.",
+      stats: ["214 nids / saison 2025", "3 km de bord récifal protégé"],
+      caption: "honu vers ma'o · séquence du sanctuaire · −5 à −20 m",
     },
     twin: {
-      kicker: "Projet 04 — jumeau numérique + biocode",
+      kicker: "Projet 03 — jumeau numérique + biocode",
       title: "Données fondatrices.",
       copy:
         "Chaque tête de corail, chaque courant, chacune des 167 espèces — scannés, séquencés et reconstruits en jumeau numérique vivant. Quand le vrai Tetiaroa change, le jumeau le voit en premier.",
