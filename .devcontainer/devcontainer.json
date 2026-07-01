@@ -1,0 +1,39 @@
+{
+  "name": "Tetiaroa Next.js",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "remoteUser": "node",
+  "init": true,
+  "workspaceFolder": "/workspaces/tetiaroa",
+  "forwardPorts": [3298],
+  "portsAttributes": {
+    "3298": {
+      "label": "Next.js dev server",
+      "onAutoForward": "notify"
+    }
+  },
+  "mounts": [
+    "source=tetiaroa-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume",
+    "source=tetiaroa-next-cache,target=${containerWorkspaceFolder}/.next,type=volume",
+    "source=tetiaroa-pnpm-store,target=/home/node/.local/share/pnpm/store,type=volume"
+  ],
+  "postCreateCommand": "pnpm config set store-dir /home/node/.local/share/pnpm/store && pnpm install --frozen-lockfile --config.confirmModulesPurge=false",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bradlc.vscode-tailwindcss",
+        "dbaeumer.vscode-eslint"
+      ],
+      "settings": {
+        "eslint.workingDirectories": [
+          {
+            "mode": "auto"
+          }
+        ],
+        "typescript.enablePromptUseWorkspaceTsdk": true,
+        "typescript.tsdk": "node_modules/typescript/lib"
+      }
+    }
+  }
+}

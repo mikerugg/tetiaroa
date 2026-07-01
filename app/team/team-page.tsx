@@ -2,7 +2,6 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 import {
   ArrowRightIcon,
-  BinocularsIcon,
   CircleDollarSignIcon,
   CompassIcon,
   HandshakeIcon,
@@ -149,40 +148,31 @@ const executiveTeam: TeamMember[] = [
     focus: ["Leadership", "Finance"],
   },
 ];
-const atollOpsExcludedIds = new Set([
-  "tj-tate",
-  "hinanui-robson",
-  "hereiti-lelong",
-  "ngnahina-moua",
-  "tihoni-maire",
-]);
-const atollOpsTeam: TeamMember[] = [
-  giuliaMouly,
-  ...people.filter(
-    (entry) =>
-      entry.cohort === "On-island team" &&
-      !atollOpsExcludedIds.has(entry.id) &&
-      entry.role !== "Nature Guide",
-  ),
-];
-const natureGuides = people.filter(
-  (entry) => entry.cohort === "On-island team" && entry.role === "Nature Guide",
-);
-const scienceConservationTeam: TeamMember[] = [
+
+const priorityStaff: TeamMember[] = [
+  ...executiveTeam,
   jaynaDevore,
-  person("hinanui-robson"),
-];
-const commsCultureTeam: TeamMember[] = [
-  person("hereiti-lelong"),
-  {
-    ...person("ngnahina-moua"),
-    role: "Education & Cultural Coordinator",
-  },
+  giuliaMouly,
   {
     ...person("tihoni-maire"),
     role: "Chief Naturalist",
   },
-  ...natureGuides,
+  person("hereiti-lelong"),
+  person("vaitea-izal"),
+  person("romain-clervoy"),
+  person("hinanui-robson"),
+  {
+    ...person("ngnahina-moua"),
+    role: "Education & Cultural Coordinator",
+  },
+];
+const priorityStaffIds = new Set(priorityStaff.map((entry) => entry.id));
+const tetiaroaSocietyTeam: TeamMember[] = [
+  ...priorityStaff,
+  ...people.filter(
+    (entry) =>
+      entry.cohort === "On-island team" && !priorityStaffIds.has(entry.id),
+  ),
 ];
 const boardMembers = people.filter((entry) => entry.cohort === "Board of Directors");
 const scientificAdvisors = people.filter(
@@ -190,10 +180,7 @@ const scientificAdvisors = people.filter(
 );
 
 const teamMembersByGroupId: Record<string, TeamMember[]> = {
-  "executive-team": executiveTeam,
-  "society-team": atollOpsTeam,
-  "science-conservation-team": scienceConservationTeam,
-  "comms-culture-team": commsCultureTeam,
+  "tetiaroa-society-team": tetiaroaSocietyTeam,
   board: boardMembers,
   "scientific-advisory-board": scientificAdvisors,
 };
@@ -251,24 +238,9 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
     viewProfileLabel: "View profile",
     specialistGroups: [
       {
-        title: "Executive Team",
+        title: "Tetiaroa Society Team",
         icon: CompassIcon,
-        copy: "Strategy, staff support, partnerships, and the long-term focus of the Society.",
-      },
-      {
-        title: "Atoll Ops Team",
-        icon: BinocularsIcon,
-        copy: "Station readiness, dive operations, field logistics, and the operating rhythm that keeps atoll work moving.",
-      },
-      {
-        title: "Science & Conservation Team",
-        icon: MicroscopeIcon,
-        copy: "Research coordination, monitoring, ranger work, habitat care, and long-running conservation observation.",
-      },
-      {
-        title: "Engagement & Culture Team",
-        icon: HandshakeIcon,
-        copy: "Guiding, education, cultural programs, communications, digital storytelling, and visitor learning.",
+        copy: "One staff, many kinds of work: leadership, field station operations, conservation, education, guiding, communications, and daily care for the atoll.",
       },
       {
         title: "Board of Directors",
@@ -283,32 +255,11 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
     ],
     teamGroups: [
       {
-        id: "executive-team",
-        title: "Executive Team",
+        id: "tetiaroa-society-team",
+        title: "Tetiaroa Society Team",
         icon: CompassIcon,
         summary:
-          "The executive team sets priorities, supports staff, and keeps the Society focused on work that serves Tetiaroa over the long term.",
-      },
-      {
-        id: "society-team",
-        title: "Atoll Ops Team",
-        icon: BinocularsIcon,
-        summary:
-          "The Atoll Ops Team keeps the field station, dive operations, logistics, and day-to-day atoll support moving.",
-      },
-      {
-        id: "science-conservation-team",
-        title: "Science & Conservation Team",
-        icon: MicroscopeIcon,
-        summary:
-          "The Science & Conservation Team coordinates research, monitors field conditions, supports conservation work, and cares for the living systems of the atoll.",
-      },
-      {
-        id: "comms-culture-team",
-        title: "Engagement & Culture Team",
-        icon: HandshakeIcon,
-        summary:
-          "The Engagement & Culture Team carries the Society's public voice, education programs, cultural interpretation, visitor learning, and digital storytelling.",
+          "The Tetiaroa Society team carries the work as one staff: leadership, field station operations, conservation, education, guiding, communications, and daily care for the atoll.",
       },
       {
         id: "board",
@@ -422,24 +373,9 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
     viewProfileLabel: "Voir le profil",
     specialistGroups: [
       {
-        title: "Direction",
+        title: "Équipe Tetiaroa Society",
         icon: CompassIcon,
-        copy: "Stratégie, soutien à l'équipe, partenariats et cap à long terme de la Society.",
-      },
-      {
-        title: "Atoll Ops Team",
-        icon: BinocularsIcon,
-        copy: "Préparation de la station, opérations de plongée, logistique de terrain et rythme opérationnel de l'atoll.",
-      },
-      {
-        title: "Science & Conservation Team",
-        icon: MicroscopeIcon,
-        copy: "Coordination scientifique, suivi, travail des gardes nature, soin des habitats et observation au long cours.",
-      },
-      {
-        title: "Engagement & Culture Team",
-        icon: HandshakeIcon,
-        copy: "Guidage, éducation, programmes culturels, communications, récit numérique et apprentissage des visiteurs.",
+        copy: "Une seule équipe, plusieurs métiers : direction, opérations de la station, conservation, éducation, guidage, communications et soin quotidien de l'atoll.",
       },
       {
         title: "Conseil d'administration",
@@ -454,32 +390,11 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
     ],
     teamGroups: [
       {
-        id: "executive-team",
-        title: "Direction",
+        id: "tetiaroa-society-team",
+        title: "Équipe Tetiaroa Society",
         icon: CompassIcon,
         summary:
-          "La direction fixe les priorités, soutient l'équipe et garde la Society concentrée sur ce qui sert Teti'aroa dans la durée.",
-      },
-      {
-        id: "society-team",
-        title: "Atoll Ops Team",
-        icon: BinocularsIcon,
-        summary:
-          "L'Atoll Ops Team garde la station de terrain, les opérations de plongée, la logistique et le soutien quotidien de l'atoll en mouvement.",
-      },
-      {
-        id: "science-conservation-team",
-        title: "Science & Conservation Team",
-        icon: MicroscopeIcon,
-        summary:
-          "La Science & Conservation Team coordonne la recherche, suit les conditions de terrain, soutient la conservation et prend soin des systèmes vivants de l'atoll.",
-      },
-      {
-        id: "comms-culture-team",
-        title: "Engagement & Culture Team",
-        icon: HandshakeIcon,
-        summary:
-          "L'Engagement & Culture Team porte la voix publique de la Society, les programmes éducatifs, l'interprétation culturelle, l'apprentissage des visiteurs et le récit numérique.",
+          "L'équipe Tetiaroa Society porte le travail comme une seule équipe : direction, opérations de la station, conservation, éducation, guidage, communications et soin quotidien de l'atoll.",
       },
       {
         id: "board",
@@ -640,7 +555,7 @@ export function TeamPage({ locale = "en" }: { locale?: TeamLocale }) {
         className="bg-background px-5 py-10 text-foreground sm:py-12 md:px-8 lg:px-12"
         style={paperVars}
       >
-        <div className="mx-auto grid max-w-[1600px] gap-8 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-[0.45fr_repeat(6,1fr)]">
+        <div className="mx-auto grid max-w-[1600px] gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <h2 className="font-display text-3xl sm:text-4xl md:text-5xl">
               {copy.specialistsTitle}
