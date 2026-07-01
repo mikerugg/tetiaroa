@@ -40,7 +40,7 @@ const defaultCopy: TopToolbarCopy = {
   impactHref: "/impact",
   impactLabel: "Impact Feed",
   logoLabel: "Our Logo",
-  storyHref: "/brando-story",
+  storyHref: "/brando-story/work",
   storyLabel: "Our Story",
   languageHref: FRENCH_HOME_PATH,
   languageLabel: "FR",

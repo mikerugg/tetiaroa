@@ -225,7 +225,7 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
   en: {
     heroImageAlt: "Tetiaroa Society team gathered at the field station",
     heroEyebrow: "Our team",
-    heroTitle: "The people protecting Teti'aroa.",
+    heroTitle: "The people\nprotecting Teti'aroa.",
     introTitle: "A team rooted in Conservation.",
     introDescription:
       "Tetiaroa Society brings together on-island staff, leadership, board members, scientific advisors, partners, and donors to care for the atoll and share what we learn.",
@@ -360,7 +360,7 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
   fr: {
     heroImageAlt: "Équipe de Tetiaroa Society réunie à la station de terrain",
     heroEyebrow: "Notre équipe",
-    heroTitle: "Les personnes qui veillent sur Teti'aroa.",
+    heroTitle: "Les personnes\nqui veillent sur Teti'aroa.",
     introTitle: "Une équipe enracinée dans la conservation.",
     introDescription:
       "Tetiaroa Society réunit l'équipe sur l'atoll, la direction, le conseil d'administration, des conseillers scientifiques, des partenaires et des donateurs pour prendre soin de l'atoll et partager ce que le terrain nous apprend.",
@@ -523,7 +523,7 @@ export function TeamPage({ locale = "en" }: { locale?: TeamLocale }) {
               <p className="max-w-80 font-mono text-xs uppercase leading-6 text-primary">
                 {copy.heroEyebrow}
               </p>
-              <h1 className="mt-0 max-w-6xl font-header text-4xl uppercase text-foreground sm:text-[2.8125rem] md:text-7xl lg:text-8xl">
+              <h1 className="mt-0 max-w-6xl whitespace-pre-line font-header text-4xl uppercase text-foreground sm:text-[2.8125rem] md:text-7xl lg:text-8xl">
                 {copy.heroTitle}
               </h1>
             </div>
