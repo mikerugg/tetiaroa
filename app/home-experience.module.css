@@ -670,7 +670,12 @@
 }
 
 .sanctuaryText {
+  grid-column: 2;
   max-width: 56ch;
+}
+
+.sanctuaryMedia {
+  grid-column: 1;
 }
 
 .sanctuaryStats {
@@ -2986,6 +2991,11 @@
   .sanctuaryGrid {
     grid-template-columns: 1fr;
     gap: 48px;
+  }
+
+  .sanctuaryText,
+  .sanctuaryMedia {
+    grid-column: auto;
   }
 
   .deepHead {

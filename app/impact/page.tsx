@@ -3,7 +3,7 @@ import { homeCopies } from "../home-copy";
 import { PrimaryRouteDock } from "../primary-route-dock";
 import { SiteFooter } from "../site-footer";
 import { TopToolbar } from "../top-toolbar";
-import { impactProjects } from "./data";
+import { getImpactFeedItems } from "@/lib/sanity/impact";
 import { ImpactFeed } from "./impact-feed";
 
 export const metadata: Metadata = {
@@ -12,7 +12,9 @@ export const metadata: Metadata = {
     "Field notes and project updates from Tetiaroa Society's conservation, research, education, and restoration work.",
 };
 
-export default function ImpactPage() {
+export default async function ImpactPage() {
+  const impactProjects = await getImpactFeedItems();
+
   return (
     <>
       <TopToolbar copy={homeCopies.en.toolbar} />

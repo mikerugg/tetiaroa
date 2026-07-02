@@ -18,7 +18,21 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+        pathname: "/images/**",
+      },
     ],
+  },
+  async redirects() {
+    return [
+      {
+        source: "/programs/research/cool-reef",
+        destination: "/impact/cool-reef",
+        permanent: true,
+      },
+    ];
   },
 };
 

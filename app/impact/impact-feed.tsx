@@ -37,14 +37,14 @@ import { cn } from "@/lib/utils";
 import {
   impactCategories,
   type ImpactCategory,
-  type ImpactProject,
-} from "./data";
+  type ImpactFeedItem,
+} from "@/lib/impact/types";
 
 type CategoryFilter = "All" | ImpactCategory;
 type SortMode = "latest" | "oldest" | "az";
 
 type ImpactFeedProps = {
-  projects: ImpactProject[];
+  projects: ImpactFeedItem[];
 };
 
 const filterOptions = ["All", ...impactCategories] as const;
@@ -65,7 +65,7 @@ function formatDate(value: string) {
   return dateFormatter.format(new Date(`${value}T00:00:00`));
 }
 
-function projectMatchesCategory(project: ImpactProject, category: CategoryFilter) {
+function projectMatchesCategory(project: ImpactFeedItem, category: CategoryFilter) {
   return (
     category === "All" ||
     project.category === category ||
@@ -73,7 +73,7 @@ function projectMatchesCategory(project: ImpactProject, category: CategoryFilter
   );
 }
 
-function sortProjects(projects: ImpactProject[], sortMode: SortMode) {
+function sortProjects(projects: ImpactFeedItem[], sortMode: SortMode) {
   return [...projects].sort((left, right) => {
     if (sortMode === "az") {
       return left.title.localeCompare(right.title);
@@ -113,7 +113,7 @@ export function ImpactFeed({ projects }: ImpactFeedProps) {
 
   const stats = [
     {
-      label: "Active projects",
+      label: "Impact entries",
       value: projects.length.toString(),
       icon: FolderOpenIcon,
     },
@@ -179,7 +179,7 @@ export function ImpactFeed({ projects }: ImpactFeedProps) {
             <CardFooter className="px-5 pb-6">
               <Button asChild variant="link" className="h-auto p-0 font-mono">
                 <a href="#feed">
-                  View all projects
+                  View all entries
                   <ArrowUpRightIcon data-icon="inline-end" aria-hidden="true" />
                 </a>
               </Button>
@@ -199,14 +199,14 @@ export function ImpactFeed({ projects }: ImpactFeedProps) {
               size="sm"
               spacing={2}
               className="flex w-full flex-wrap justify-start gap-2"
-              aria-label="Filter projects by category"
+              aria-label="Filter impact entries by category"
             >
               {filterOptions.map((option) => (
                 <ToggleGroupItem
                   key={option}
                   value={option}
                   className="h-10 rounded-sm px-3 font-mono text-[11px] uppercase tracking-[0.12em] sm:px-4"
-                  aria-label={`Show ${option} projects`}
+                  aria-label={`Show ${option} impact entries`}
                 >
                   {option}
                 </ToggleGroupItem>
@@ -223,7 +223,7 @@ export function ImpactFeed({ projects }: ImpactFeedProps) {
               >
                 <SelectTrigger
                   className="h-10 min-w-36 rounded-sm font-mono text-xs uppercase tracking-[0.12em]"
-                  aria-label="Sort projects"
+                  aria-label="Sort impact entries"
                 >
                   <SelectValue placeholder="Latest" />
                 </SelectTrigger>
@@ -250,10 +250,10 @@ export function ImpactFeed({ projects }: ImpactFeedProps) {
                   id="feed-heading"
                   className="font-display text-3xl font-normal"
                 >
-                  Field notes and project updates
+                  Field notes, projects, and updates
                 </CardTitle>
                 <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-                  {visibleProjects.length} of {projects.length} projects
+                  {visibleProjects.length} of {projects.length} entries
                 </p>
               </div>
             </CardHeader>
@@ -301,7 +301,7 @@ function ProjectRow({
   project,
   priority,
 }: {
-  project: ImpactProject;
+  project: ImpactFeedItem;
   priority: boolean;
 }) {
   return (
@@ -313,7 +313,7 @@ function ProjectRow({
           fill
           className={cn(
             "object-cover",
-            project.image.endsWith(".png") && "object-contain p-8",
+            project.image.includes(".png") && "object-contain p-8",
           )}
           priority={priority}
           sizes="(max-width: 768px) calc(100vw - 32px), (max-width: 1200px) 40vw, 470px"
@@ -324,6 +324,9 @@ function ProjectRow({
         <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em]">
           <Badge variant="secondary" className="h-auto font-mono">
             {project.category}
+          </Badge>
+          <Badge variant="outline" className="h-auto font-mono">
+            {project.entryType}
           </Badge>
           <span className="text-muted-foreground" aria-hidden="true">
             /
