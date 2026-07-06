@@ -745,7 +745,7 @@ function TeamMemberCard({
 
   return (
     <Card size="sm" className="flex h-full flex-col overflow-hidden rounded-md">
-      <div className="relative aspect-[4/3] bg-muted">
+      <div className="relative aspect-square bg-muted">
         {entry.image ? (
           <Image
             src={entry.image}
