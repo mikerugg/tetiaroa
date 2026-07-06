@@ -57,12 +57,7 @@ type TeamGroup = {
   title: string;
   icon: LucideIcon;
   summary: string;
-  members: TeamMember[];
-};
-
-type TeamMember = Omit<Person, "image" | "href"> & {
-  image?: string;
-  href?: string;
+  members: Person[];
 };
 
 type TeamGroupCopy = Omit<TeamGroup, "members">;
@@ -109,77 +104,60 @@ type TeamPageCopy = {
 
 export type TeamLocale = HomeLocale;
 
-const giuliaMouly: TeamMember = {
-  id: "giulia-mouly",
-  name: "Giulia Mouly",
-  role: "Director of Operations at the Bailey Field Station",
-  cohort: "On-island team",
-  image:
-    "https://www.tetiaroasociety.org/sites/default/files/styles/square_400/public/2026-06/Giulia%20Mouly%20Portrait.jpeg.webp?itok=xj3z1wo5",
-  href: "https://www.tetiaroasociety.org/giulia-mouly",
-  summary:
-    "Connects people, place, and purpose through field station operations, hospitality, partnerships, and sustainability.",
-  focus: ["Operations", "Bailey Field Station", "Partnerships"],
-};
-
-const jaynaDevore: TeamMember = {
-  id: "jayna-devore",
-  name: "Dr. Jayna DeVore",
-  role: "Director of Conservation, Science & Education",
-  cohort: "On-island team",
-  image:
-    "https://www.tetiaroasociety.org/sites/default/files/styles/square_400/public/2026-06/Jayna%20and%20bird%20sq_0.jpg.webp?itok=twDvGrfn",
-  href: "https://www.tetiaroasociety.org/dr-jayna-devore",
-  summary: "Bio forthcoming.",
-  focus: ["Leadership", "Conservation", "Science", "Education"],
-};
-
-const executiveTeam: TeamMember[] = [
-  person("tj-tate"),
-  {
-    id: "julien-castel",
-    name: "Julien Castel",
-    role: "Chief Financial Officer",
-    cohort: "On-island team",
-    image:
-      "https://www.tetiaroasociety.org/sites/default/files/styles/square_400/public/2026-06/Julien%20Castel%20Portrait.jpeg.webp?itok=IpW1lfQo",
-    href: "https://www.tetiaroasociety.org/julien-castel",
-    summary: "Bio forthcoming.",
-    focus: ["Leadership", "Finance"],
-  },
+const priorityStaffOrder = [
+  "tj-tate",
+  "julien-castel",
+  "jayna-devore",
+  "giulia-mouly",
+  "tihoni-maire",
+  "hereiti-lelong",
+  "vaitea-izal",
+  "romain-clervoy",
+  "hinanui-robson",
+  "ngnahina-moua",
 ];
 
-const priorityStaff: TeamMember[] = [
-  ...executiveTeam,
-  jaynaDevore,
-  giuliaMouly,
-  {
-    ...person("tihoni-maire"),
-    role: "Chief Naturalist",
-  },
-  person("hereiti-lelong"),
-  person("vaitea-izal"),
-  person("romain-clervoy"),
-  person("hinanui-robson"),
-  {
-    ...person("ngnahina-moua"),
-    role: "Education & Cultural Coordinator",
-  },
-];
+const priorityStaff = priorityStaffOrder.map(person);
 const priorityStaffIds = new Set(priorityStaff.map((entry) => entry.id));
-const tetiaroaSocietyTeam: TeamMember[] = [
+const tetiaroaSocietyTeam = [
   ...priorityStaff,
   ...people.filter(
     (entry) =>
       entry.cohort === "On-island team" && !priorityStaffIds.has(entry.id),
   ),
 ];
-const boardMembers = people.filter((entry) => entry.cohort === "Board of Directors");
+const boardMemberOrder = [
+  "richard-bailey",
+  "susan-neisloss",
+  "david-seeley",
+  "stan-rowland",
+];
+
+const boardMembers = people
+  .filter((entry) => entry.cohort === "Board of Directors")
+  .sort((a, b) => {
+    const aIndex = boardMemberOrder.indexOf(a.id);
+    const bIndex = boardMemberOrder.indexOf(b.id);
+
+    if (aIndex === -1 && bIndex === -1) {
+      return 0;
+    }
+
+    if (aIndex === -1) {
+      return 1;
+    }
+
+    if (bIndex === -1) {
+      return -1;
+    }
+
+    return aIndex - bIndex;
+  });
 const scientificAdvisors = people.filter(
   (entry) => entry.cohort === "Scientific Advisory Board",
 );
 
-const teamMembersByGroupId: Record<string, TeamMember[]> = {
+const teamMembersByGroupId: Record<string, Person[]> = {
   "tetiaroa-society-team": tetiaroaSocietyTeam,
   board: boardMembers,
   "scientific-advisory-board": scientificAdvisors,
@@ -190,21 +168,22 @@ const roleTranslations: Record<string, string> = {
   "Chief Financial Officer": "Direction financière",
   "Director of Conservation, Science & Education":
     "Direction conservation, science et éducation",
-  "Director of Operations at the Bailey Field Station":
-    "Direction des opérations de la Bailey Field Station",
+  "Director of Operations": "Direction des opérations",
   "Chief Naturalist": "Naturaliste en chef",
-  "Scientific Activities Coordinator": "Coordination des activités scientifiques",
-  "Head Guide": "Responsable des guides",
-  "Ecostation Manager": "Responsable de l'Écostation",
+  "Science and Conservation Coordinator":
+    "Coordination science et conservation",
+  "Bailey Field Station Manager": "Responsable de la Bailey Field Station",
   "Communications Manager": "Responsable des communications",
   "Education & Cultural Coordinator":
     "Coordination des programmes éducatifs et culturels",
-  "Education and Cultural Programs Coordinator":
-    "Coordination des programmes éducatifs et culturels",
   Ranger: "Garde nature",
-  "Nature Guide": "Guide nature",
+  Naturalist: "Naturaliste",
   "Dive Operations Manager": "Responsable des opérations de plongée",
   "Web Designer/Developer": "Design et développement web",
+  "Board Chairman": "Président du conseil d'administration",
+  "Vice Chair": "Vice-présidente du conseil d'administration",
+  Treasurer: "Trésorier",
+  Secretary: "Secrétaire",
   "Board Member": "Membre du conseil d'administration",
   "Scientific Advisor": "Membre du conseil scientifique",
   "Scientific Advisor Emeritus": "Membre émérite du conseil scientifique",
@@ -213,12 +192,8 @@ const roleTranslations: Record<string, string> = {
 const roleDisplayBreaks: Record<string, string> = {
   "Director of Conservation, Science & Education":
     "Director of Conservation\nScience & Education",
-  "Director of Operations at the Bailey Field Station":
-    "Director of Operations\nBailey Field Station",
   "Direction conservation, science et éducation":
     "Direction conservation\nscience et éducation",
-  "Direction des opérations de la Bailey Field Station":
-    "Direction des opérations\nBailey Field Station",
 };
 
 const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
@@ -248,7 +223,7 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
         copy: "Mission stewardship, governance, resources, and stability over time.",
       },
       {
-        title: "Scientific advisors",
+        title: "Scientific Advisors",
         icon: MicroscopeIcon,
         copy: "Research guidance, stronger methods, field interpretation, and conservation knowledge.",
       },
@@ -762,7 +737,7 @@ function TeamMemberCard({
   role,
   viewProfileLabel,
 }: {
-  person: TeamMember;
+  person: Person;
   role: string;
   viewProfileLabel: string;
 }) {

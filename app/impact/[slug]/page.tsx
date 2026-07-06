@@ -276,7 +276,7 @@ export default async function ImpactEntryPage({ params }: ImpactEntryPageProps) 
               <Button asChild variant="link" className="mb-8 h-auto w-fit p-0 font-mono">
                 <Link href="/impact">
                   <ArrowLeftIcon data-icon="inline-start" aria-hidden="true" />
-                  Back to impact
+                  Back to Impact Feed
                 </Link>
               </Button>
               <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em]">

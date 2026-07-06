@@ -19,11 +19,10 @@ export default function ImpactEntryNotFound() {
         <Button asChild variant="outline" className="w-fit">
           <Link href="/impact">
             <ArrowLeftIcon data-icon="inline-start" aria-hidden="true" />
-            Back to impact
+            Back to Impact Feed
           </Link>
         </Button>
       </div>
     </main>
   );
 }
-

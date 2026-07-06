@@ -304,74 +304,83 @@ function ProjectRow({
   project: ImpactFeedItem;
   priority: boolean;
 }) {
+  const titleId = `impact-entry-${project.slug}`;
+
   return (
-    <article className="grid border-b border-border last:border-b-0 md:grid-cols-[minmax(260px,40%)_minmax(0,1fr)]">
-      <div className="relative min-h-60 overflow-hidden bg-muted md:min-h-56">
-        <Image
-          src={project.image}
-          alt={project.alt}
-          fill
-          className={cn(
-            "object-cover",
-            project.image.includes(".png") && "object-contain p-8",
-          )}
-          priority={priority}
-          sizes="(max-width: 768px) calc(100vw - 32px), (max-width: 1200px) 40vw, 470px"
-        />
-      </div>
-
-      <div className="flex min-w-0 flex-col px-5 py-5 sm:px-6">
-        <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em]">
-          <Badge variant="secondary" className="h-auto font-mono">
-            {project.category}
-          </Badge>
-          <Badge variant="outline" className="h-auto font-mono">
-            {project.entryType}
-          </Badge>
-          <span className="text-muted-foreground" aria-hidden="true">
-            /
-          </span>
-          <time className="text-muted-foreground" dateTime={project.latestUpdate}>
-            {formatDate(project.latestUpdate)}
-          </time>
+    <article className="border-b border-border last:border-b-0">
+      <Link
+        href={project.href}
+        aria-labelledby={titleId}
+        className="group grid outline-none transition-colors hover:bg-muted/30 focus-visible:ring-3 focus-visible:ring-ring/50 md:grid-cols-[minmax(260px,40%)_minmax(0,1fr)]"
+      >
+        <div className="relative min-h-60 overflow-hidden bg-muted md:min-h-56">
+          <Image
+            src={project.image}
+            alt={project.alt}
+            fill
+            className={cn(
+              "object-cover transition-transform duration-500 group-hover:scale-[1.03]",
+              project.image.includes(".png") &&
+                "object-contain p-8 group-hover:scale-100",
+            )}
+            priority={priority}
+            sizes="(max-width: 768px) calc(100vw - 32px), (max-width: 1200px) 40vw, 470px"
+          />
         </div>
 
-        <h2 className="mt-4 max-w-3xl font-display text-3xl leading-tight text-foreground sm:text-4xl">
-          {project.title}
-        </h2>
-        <p className="mt-3 max-w-3xl text-[15px] leading-7 text-muted-foreground">
-          {project.summary}
-        </p>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {project.tags.map((tag) => (
-            <Badge key={tag} variant="outline" className="h-auto">
-              {tag}
+        <div className="flex min-w-0 flex-col px-5 py-5 sm:px-6">
+          <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em]">
+            <Badge variant="secondary" className="h-auto font-mono">
+              {project.category}
             </Badge>
-          ))}
-        </div>
-
-        <div className="mt-6 flex flex-col gap-4 sm:mt-auto sm:flex-row sm:items-end sm:justify-between sm:pt-6">
-          <div>
-            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-              {project.status}
-            </p>
-            <p className="mt-1 text-sm text-foreground/82">
-              {project.metric} / {project.location}
-            </p>
+            <Badge variant="outline" className="h-auto font-mono">
+              {project.entryType}
+            </Badge>
+            <span className="text-muted-foreground" aria-hidden="true">
+              /
+            </span>
+            <time
+              className="text-muted-foreground"
+              dateTime={project.latestUpdate}
+            >
+              {formatDate(project.latestUpdate)}
+            </time>
           </div>
-          <Button
-            asChild
-            variant="link"
-            className="h-auto justify-start p-0 font-mono"
+
+          <h2
+            id={titleId}
+            className="mt-4 max-w-3xl font-display text-3xl leading-tight text-foreground transition-colors group-hover:text-primary sm:text-4xl"
           >
-            <Link href={project.href}>
+            {project.title}
+          </h2>
+          <p className="mt-3 max-w-3xl text-[15px] leading-7 text-muted-foreground">
+            {project.summary}
+          </p>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            {project.tags.map((tag) => (
+              <Badge key={tag} variant="outline" className="h-auto">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+
+          <div className="mt-6 flex flex-col gap-4 sm:mt-auto sm:flex-row sm:items-end sm:justify-between sm:pt-6">
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+                {project.status}
+              </p>
+              <p className="mt-1 text-sm text-foreground/82">
+                {project.metric} / {project.location}
+              </p>
+            </div>
+            <span className="inline-flex h-auto justify-start gap-1.5 p-0 font-mono text-sm font-medium text-primary underline-offset-4 group-hover:underline">
               {project.actionLabel}
               <ArrowUpRightIcon data-icon="inline-end" aria-hidden="true" />
-            </Link>
-          </Button>
+            </span>
+          </div>
         </div>
-      </div>
+      </Link>
     </article>
   );
 }
