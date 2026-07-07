@@ -10,12 +10,31 @@ export const impactCategories = [
   "Biosecurity",
   "Wildlife",
   "Culture",
+  "People",
+  "Partners",
+  "Reports",
+  "Nature Guide",
+  "News",
 ] as const;
 
-export const impactEntryTypes = ["Project", "Article", "News", "Report"] as const;
+export const impactEntryTypes = [
+  "Project",
+  "Article",
+  "News",
+  "Report",
+  "Profile",
+  "Partner",
+  "Newsletter",
+  "Guide",
+  "Video",
+  "Project Update",
+] as const;
+
+export const impactLanguages = ["en", "fr"] as const;
 
 export type ImpactCategory = (typeof impactCategories)[number];
 export type ImpactEntryType = (typeof impactEntryTypes)[number];
+export type ImpactLanguage = (typeof impactLanguages)[number];
 
 export type ImpactBodyBlock =
   | PortableTextBlock
@@ -39,6 +58,8 @@ export type ImpactContentEntry = {
   id: string;
   title: string;
   slug: string;
+  language: ImpactLanguage;
+  translationKey?: string;
   entryType: ImpactEntryType;
   summary: string;
   category: ImpactCategory;
@@ -58,6 +79,8 @@ export type ImpactContentEntry = {
   affiliation?: string;
   relatedEntries?: ImpactRelatedEntry[];
   legacyNodeId?: number;
+  legacyVid?: number;
+  legacyBundle?: string;
   legacyPath?: string;
   seoTitle?: string;
   seoDescription?: string;
@@ -67,6 +90,7 @@ export type ImpactFeedItem = {
   id: string;
   title: string;
   slug: string;
+  language: ImpactLanguage;
   entryType: ImpactEntryType;
   summary: string;
   category: ImpactCategory;
@@ -82,11 +106,26 @@ export type ImpactFeedItem = {
   actionLabel: string;
 };
 
+function getImpactHref(entry: ImpactContentEntry) {
+  return entry.language === "fr"
+    ? `/fr/impact/${entry.slug}`
+    : `/impact/${entry.slug}`;
+}
+
+function getImpactActionLabel(entry: ImpactContentEntry) {
+  if (entry.language === "fr") {
+    return entry.entryType === "Project" ? "Ouvrir le projet" : "Lire";
+  }
+
+  return entry.entryType === "Project" ? "Open project" : "Read entry";
+}
+
 export function toImpactFeedItem(entry: ImpactContentEntry): ImpactFeedItem {
   return {
     id: entry.id,
     title: entry.title,
     slug: entry.slug,
+    language: entry.language,
     entryType: entry.entryType,
     summary: entry.summary,
     category: entry.category,
@@ -98,8 +137,7 @@ export function toImpactFeedItem(entry: ImpactContentEntry): ImpactFeedItem {
     alt: entry.heroImageAlt,
     metric: entry.metric,
     tags: entry.tags,
-    href: `/impact/${entry.slug}`,
-    actionLabel: entry.entryType === "Project" ? "Open project" : "Read entry",
+    href: getImpactHref(entry),
+    actionLabel: getImpactActionLabel(entry),
   };
 }
-

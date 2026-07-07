@@ -20,6 +20,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { Separator } from "@/components/ui/separator";
 import {
   Select,
@@ -38,6 +44,7 @@ import {
   impactCategories,
   type ImpactCategory,
   type ImpactFeedItem,
+  type ImpactLanguage,
 } from "@/lib/impact/types";
 
 type CategoryFilter = "All" | ImpactCategory;
@@ -45,24 +52,103 @@ type SortMode = "latest" | "oldest" | "az";
 
 type ImpactFeedProps = {
   projects: ImpactFeedItem[];
+  locale?: ImpactLanguage;
 };
 
 const filterOptions = ["All", ...impactCategories] as const;
 
-const sortLabels: Record<SortMode, string> = {
-  latest: "Latest",
-  oldest: "Oldest",
-  az: "A-Z",
+const feedCopy: Record<
+  ImpactLanguage,
+  {
+    title: string;
+    intro: string;
+    sideTitle: string;
+    viewAll: string;
+    feedHeading: string;
+    countSeparator: string;
+    entriesLabel: string;
+    allFilter: string;
+    filterAria: string;
+    showCategory: (category: string) => string;
+    sortBy: string;
+    sortAria: string;
+    sortLabels: Record<SortMode, string>;
+    emptyTitle: string;
+    emptyDescription: string;
+    stats: {
+      entries: string;
+      updatedThisYear: string;
+      categories: string;
+      countries: string;
+    };
+  }
+> = {
+  en: {
+    title: "Impact Feed",
+    intro:
+      "Follow the work as it changes: reef surveys, classroom days, biosecurity checks, and the patient recovery of an atoll.",
+    sideTitle: "Tetiaroa's Impact",
+    viewAll: "View all entries",
+    feedHeading: "Field notes, projects, and updates",
+    countSeparator: "of",
+    entriesLabel: "entries",
+    allFilter: "All",
+    filterAria: "Filter impact entries by category",
+    showCategory: (category) => `Show ${category} impact entries`,
+    sortBy: "Sort by",
+    sortAria: "Sort impact entries",
+    sortLabels: {
+      latest: "Latest",
+      oldest: "Oldest",
+      az: "A-Z",
+    },
+    emptyTitle: "No entries found",
+    emptyDescription:
+      "Try another category or sort mode. New archive entries will appear here after migration.",
+    stats: {
+      entries: "Impact entries",
+      updatedThisYear: "Updated this year",
+      categories: "Categories connected",
+      countries: "Countries connected",
+    },
+  },
+  fr: {
+    title: "Fil d'impact",
+    intro:
+      "Suivez le travail au fil de son évolution : suivis récifaux, journées de classe, vigilance bio-sécurité et restauration patiente de l'atoll.",
+    sideTitle: "L'impact de Tetiaroa",
+    viewAll: "Voir toutes les entrées",
+    feedHeading: "Notes de terrain, projets et actualités",
+    countSeparator: "sur",
+    entriesLabel: "entrées",
+    allFilter: "Tous",
+    filterAria: "Filtrer les entrées d'impact par catégorie",
+    showCategory: (category) => `Afficher les entrées ${category}`,
+    sortBy: "Trier par",
+    sortAria: "Trier les entrées d'impact",
+    sortLabels: {
+      latest: "Plus récent",
+      oldest: "Plus ancien",
+      az: "A-Z",
+    },
+    emptyTitle: "Aucune entrée trouvée",
+    emptyDescription:
+      "Essayez une autre catégorie. Les entrées migrées apparaîtront ici après l'import.",
+    stats: {
+      entries: "Entrées d'impact",
+      updatedThisYear: "Mises à jour cette année",
+      categories: "Catégories reliées",
+      countries: "Pays reliés",
+    },
+  },
 };
 
-const dateFormatter = new Intl.DateTimeFormat("en", {
-  month: "short",
-  day: "numeric",
-  year: "numeric",
-});
-
-function formatDate(value: string) {
-  return dateFormatter.format(new Date(`${value}T00:00:00`));
+function formatDate(value: string, locale: ImpactLanguage) {
+  return new Intl.DateTimeFormat(locale, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(`${value}T00:00:00`));
 }
 
 function projectMatchesCategory(project: ImpactFeedItem, category: CategoryFilter) {
@@ -86,9 +172,10 @@ function sortProjects(projects: ImpactFeedItem[], sortMode: SortMode) {
   });
 }
 
-export function ImpactFeed({ projects }: ImpactFeedProps) {
+export function ImpactFeed({ projects, locale = "en" }: ImpactFeedProps) {
   const [category, setCategory] = useState<CategoryFilter>("All");
   const [sortMode, setSortMode] = useState<SortMode>("latest");
+  const copy = feedCopy[locale];
 
   const visibleProjects = useMemo(() => {
     return sortProjects(
@@ -113,22 +200,22 @@ export function ImpactFeed({ projects }: ImpactFeedProps) {
 
   const stats = [
     {
-      label: "Impact entries",
+      label: copy.stats.entries,
       value: projects.length.toString(),
       icon: FolderOpenIcon,
     },
     {
-      label: "Updated this year",
+      label: copy.stats.updatedThisYear,
       value: updatedThisYear.toString(),
       icon: CalendarDaysIcon,
     },
     {
-      label: "Categories connected",
+      label: copy.stats.categories,
       value: connectedCategories.toString(),
       icon: Layers3Icon,
     },
     {
-      label: "Countries connected",
+      label: copy.stats.countries,
       value: "18",
       icon: Globe2Icon,
     },
@@ -151,11 +238,10 @@ export function ImpactFeed({ projects }: ImpactFeedProps) {
         />
         <div className="relative mx-auto flex min-h-[calc(360px-3.5rem)] max-w-[1540px] flex-col justify-end px-5 py-10 sm:px-8 md:min-h-[calc(360px-4rem)] md:px-9 lg:px-10">
           <h1 className="max-w-4xl font-display text-5xl leading-none text-foreground sm:text-6xl md:text-7xl">
-            Impact Feed
+            {copy.title}
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-foreground/86 sm:text-lg">
-            Follow the work as it changes: reef surveys, classroom days,
-            biosecurity checks, and the patient recovery of an atoll.
+            {copy.intro}
           </p>
         </div>
       </section>
@@ -165,7 +251,7 @@ export function ImpactFeed({ projects }: ImpactFeedProps) {
           <Card className="rounded-md border-border bg-card/80 py-0 shadow-2xl backdrop-blur-md">
             <CardHeader className="px-5 py-5">
               <CardTitle className="font-display text-3xl font-normal">
-                Atoll work
+                {copy.sideTitle}
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-0 px-5 pb-5">
@@ -179,7 +265,7 @@ export function ImpactFeed({ projects }: ImpactFeedProps) {
             <CardFooter className="px-5 pb-6">
               <Button asChild variant="link" className="h-auto p-0 font-mono">
                 <a href="#feed">
-                  View all entries
+                  {copy.viewAll}
                   <ArrowUpRightIcon data-icon="inline-end" aria-hidden="true" />
                 </a>
               </Button>
@@ -199,23 +285,25 @@ export function ImpactFeed({ projects }: ImpactFeedProps) {
               size="sm"
               spacing={2}
               className="flex w-full flex-wrap justify-start gap-2"
-              aria-label="Filter impact entries by category"
+              aria-label={copy.filterAria}
             >
               {filterOptions.map((option) => (
                 <ToggleGroupItem
                   key={option}
                   value={option}
                   className="h-10 rounded-sm px-3 font-mono text-[11px] uppercase tracking-[0.12em] sm:px-4"
-                  aria-label={`Show ${option} impact entries`}
+                  aria-label={copy.showCategory(
+                    option === "All" ? copy.allFilter : option,
+                  )}
                 >
-                  {option}
+                  {option === "All" ? copy.allFilter : option}
                 </ToggleGroupItem>
               ))}
             </ToggleGroup>
 
             <div className="flex shrink-0 items-center gap-3">
               <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-                Sort by
+                {copy.sortBy}
               </span>
               <Select
                 value={sortMode}
@@ -223,15 +311,15 @@ export function ImpactFeed({ projects }: ImpactFeedProps) {
               >
                 <SelectTrigger
                   className="h-10 min-w-36 rounded-sm font-mono text-xs uppercase tracking-[0.12em]"
-                  aria-label="Sort impact entries"
+                  aria-label={copy.sortAria}
                 >
-                  <SelectValue placeholder="Latest" />
+                  <SelectValue placeholder={copy.sortLabels.latest} />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   <SelectGroup>
-                    {(Object.keys(sortLabels) as SortMode[]).map((value) => (
+                    {(Object.keys(copy.sortLabels) as SortMode[]).map((value) => (
                       <SelectItem key={value} value={value}>
-                        {sortLabels[value]}
+                        {copy.sortLabels[value]}
                       </SelectItem>
                     ))}
                   </SelectGroup>
@@ -250,21 +338,32 @@ export function ImpactFeed({ projects }: ImpactFeedProps) {
                   id="feed-heading"
                   className="font-display text-3xl font-normal"
                 >
-                  Field notes, projects, and updates
+                  {copy.feedHeading}
                 </CardTitle>
                 <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-                  {visibleProjects.length} of {projects.length} entries
+                  {visibleProjects.length} {copy.countSeparator} {projects.length}{" "}
+                  {copy.entriesLabel}
                 </p>
               </div>
             </CardHeader>
             <CardContent className="flex flex-col gap-0 px-0 py-0">
-              {visibleProjects.map((project, index) => (
-                <ProjectRow
-                  key={project.id}
-                  project={project}
-                  priority={index < 2}
-                />
-              ))}
+              {visibleProjects.length ? (
+                visibleProjects.map((project, index) => (
+                  <ProjectRow
+                    key={project.id}
+                    project={project}
+                    priority={index < 2}
+                    locale={locale}
+                  />
+                ))
+              ) : (
+                <Empty className="min-h-72 rounded-none border-0">
+                  <EmptyHeader>
+                    <EmptyTitle>{copy.emptyTitle}</EmptyTitle>
+                    <EmptyDescription>{copy.emptyDescription}</EmptyDescription>
+                  </EmptyHeader>
+                </Empty>
+              )}
             </CardContent>
           </Card>
         </section>
@@ -300,9 +399,11 @@ function StatRow({
 function ProjectRow({
   project,
   priority,
+  locale,
 }: {
   project: ImpactFeedItem;
   priority: boolean;
+  locale: ImpactLanguage;
 }) {
   const titleId = `impact-entry-${project.slug}`;
 
@@ -343,7 +444,7 @@ function ProjectRow({
               className="text-muted-foreground"
               dateTime={project.latestUpdate}
             >
-              {formatDate(project.latestUpdate)}
+              {formatDate(project.latestUpdate, locale)}
             </time>
           </div>
 
@@ -367,10 +468,7 @@ function ProjectRow({
 
           <div className="mt-6 flex flex-col gap-4 sm:mt-auto sm:flex-row sm:items-end sm:justify-between sm:pt-6">
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-                {project.status}
-              </p>
-              <p className="mt-1 text-sm text-foreground/82">
+              <p className="text-sm text-foreground/82">
                 {project.metric} / {project.location}
               </p>
             </div>

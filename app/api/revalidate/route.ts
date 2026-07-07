@@ -4,6 +4,7 @@ import { parseBody } from "next-sanity/webhook";
 
 type SanityWebhookBody = {
   _type?: string;
+  language?: string;
   slug?: {
     current?: string;
   };
@@ -30,12 +31,14 @@ export async function POST(req: NextRequest) {
 
   revalidateTag("impact", "max");
   revalidatePath("/impact");
+  revalidatePath("/fr/impact");
 
   const slug = body?.slug?.current;
 
   if (slug) {
     revalidateTag(`impact:${slug}`, "max");
     revalidatePath(`/impact/${slug}`);
+    revalidatePath(`/fr/impact/${slug}`);
   }
 
   return Response.json({

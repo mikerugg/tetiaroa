@@ -12,6 +12,7 @@ import {
   type ImpactEntryType,
   type ImpactFeedItem,
   type ImpactGalleryImage,
+  type ImpactLanguage,
   type ImpactRelatedEntry,
   toImpactFeedItem,
 } from "@/lib/impact/types";
@@ -20,6 +21,7 @@ import { hasSanityConfig, hasSanityToken } from "./env";
 import {
   impactEntriesQuery,
   impactEntryBySlugQuery,
+  impactEntryByLegacyPathQuery,
   impactSlugsQuery,
 } from "./queries";
 
@@ -37,6 +39,8 @@ type SanityImpactEntry = {
   _id: string;
   title?: string | null;
   slug?: string | null;
+  language?: string | null;
+  translationKey?: string | null;
   entryType?: string | null;
   summary?: string | null;
   category?: string | null;
@@ -63,9 +67,16 @@ type SanityImpactEntry = {
     entryType?: string | null;
   }> | null;
   legacyNodeId?: number | null;
+  legacyVid?: number | null;
+  legacyBundle?: string | null;
   legacyPath?: string | null;
   seoTitle?: string | null;
   seoDescription?: string | null;
+};
+
+type SanityLegacyPathMatch = {
+  slug?: string | null;
+  language?: string | null;
 };
 
 const defaultHeroImage =
@@ -87,12 +98,30 @@ function normalizeDate(value: string | null | undefined, fallback: string) {
   return (value ?? fallback).slice(0, 10);
 }
 
+function normalizeCategoryValue(
+  value: string | null | undefined,
+): ImpactCategory | null {
+  if (value === "Documents") {
+    return "Reports";
+  }
+
+  return categorySet.has(value ?? "") ? (value as ImpactCategory) : null;
+}
+
 function normalizeCategory(value: string | null | undefined): ImpactCategory {
-  return categorySet.has(value ?? "") ? (value as ImpactCategory) : "Research";
+  return normalizeCategoryValue(value) ?? "Research";
 }
 
 function normalizeEntryType(value: string | null | undefined): ImpactEntryType {
+  if (value === "Document") {
+    return "Report";
+  }
+
   return entryTypeSet.has(value ?? "") ? (value as ImpactEntryType) : "Article";
+}
+
+function normalizeLanguage(value: string | null | undefined): ImpactLanguage {
+  return value === "fr" ? "fr" : "en";
 }
 
 function normalizeSecondaryCategories(
@@ -100,7 +129,8 @@ function normalizeSecondaryCategories(
   primary: ImpactCategory,
 ) {
   return (values ?? [])
-    .filter((value): value is ImpactCategory => categorySet.has(value))
+    .map(normalizeCategoryValue)
+    .filter((value): value is ImpactCategory => Boolean(value))
     .filter((value) => value !== primary);
 }
 
@@ -148,13 +178,84 @@ function normalizeTeam(team: SanityImpactEntry["team"]) {
   });
 }
 
+function normalizeTagComparison(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[\W_]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+const structuralTagKeys = new Set(
+  [...impactEntryTypes, "Document", "Documents", "Reports"].map((tag) =>
+    normalizeTagComparison(tag),
+  ),
+);
+
 function normalizeTags(entry: SanityImpactEntry) {
   const topicTags = (entry.topics ?? []).flatMap((topic) =>
     topic.title ? [topic.title] : [],
   );
-  const tags = [...(entry.tags ?? []), ...topicTags];
+  const tags = [...(entry.tags ?? []), ...topicTags].map((tag) => {
+    if (entry.entryType === "Profile") {
+      switch (tag.toLowerCase()) {
+        case "board-member":
+        case "board member":
+        case "board":
+          return "Board Member";
+        case "staff":
+        case "management":
+          return "Staff";
+        default:
+          return tag;
+      }
+    }
 
-  return [...new Set(tags)].filter(Boolean);
+    return tag;
+  });
+  const isStaffProfile =
+    entry.entryType === "Profile" &&
+    tags.some((tag) => tag.toLowerCase() === "staff");
+  const affiliationKey = normalizeTagComparison(entry.affiliation ?? "");
+  const visibleTags = tags.filter((tag) => {
+    const tagKey = normalizeTagComparison(tag);
+
+    if (structuralTagKeys.has(tagKey)) {
+      return false;
+    }
+
+    if (!isStaffProfile || !affiliationKey) {
+      return true;
+    }
+
+    return tagKey !== affiliationKey;
+  });
+
+  return [...new Set(visibleTags)].filter(Boolean);
+}
+
+function normalizeMetric(
+  metric: string | null | undefined,
+  entryType: string | null | undefined,
+) {
+  switch (metric) {
+    case "Legacy research project":
+      return "Research project";
+    case "Legacy project update":
+      return "Project update";
+    case "Legacy document":
+      return "Report";
+    case "Legacy newsletter":
+      return "Newsletter";
+    case "Legacy profile":
+      return "Profile";
+    case "Legacy partner":
+      return "Partner";
+    case "Legacy archive":
+      return "From the Archive";
+    default:
+      return metric ?? entryType ?? "Impact entry";
+  }
 }
 
 function normalizeSanityEntry(entry: SanityImpactEntry): ImpactContentEntry | null {
@@ -170,6 +271,8 @@ function normalizeSanityEntry(entry: SanityImpactEntry): ImpactContentEntry | nu
     id: entry._id,
     title: entry.title,
     slug: entry.slug,
+    language: normalizeLanguage(entry.language),
+    translationKey: entry.translationKey ?? undefined,
     entryType: normalizeEntryType(entry.entryType),
     summary: entry.summary ?? "",
     category,
@@ -183,7 +286,7 @@ function normalizeSanityEntry(entry: SanityImpactEntry): ImpactContentEntry | nu
     location: entry.location ?? "Tetiaroa",
     heroImage: entry.heroImage ?? defaultHeroImage,
     heroImageAlt: entry.heroImageAlt ?? entry.title,
-    metric: entry.metric ?? entry.entryType ?? "Impact entry",
+    metric: normalizeMetric(entry.metric, entry.entryType),
     tags: normalizeTags(entry),
     body: entry.body ?? [],
     gallery: normalizeGallery(entry.gallery),
@@ -192,6 +295,8 @@ function normalizeSanityEntry(entry: SanityImpactEntry): ImpactContentEntry | nu
     affiliation: entry.affiliation ?? undefined,
     relatedEntries: normalizeRelatedEntries(entry.relatedEntries),
     legacyNodeId: entry.legacyNodeId ?? undefined,
+    legacyVid: entry.legacyVid ?? undefined,
+    legacyBundle: entry.legacyBundle ?? undefined,
     legacyPath: entry.legacyPath ?? undefined,
     seoTitle: entry.seoTitle ?? undefined,
     seoDescription: entry.seoDescription ?? undefined,
@@ -216,9 +321,15 @@ async function fetchSanityData<T>(
 }
 
 export async function getImpactEntries(): Promise<ImpactContentEntry[]> {
+  return getImpactEntriesByLanguage("en");
+}
+
+export async function getImpactEntriesByLanguage(
+  language: ImpactLanguage = "en",
+): Promise<ImpactContentEntry[]> {
   const entries = await fetchSanityData<SanityImpactEntry[]>(
     impactEntriesQuery,
-    {},
+    { language },
     ["impact"],
   ).catch((error) => {
     console.warn("Unable to fetch Sanity impact entries.", error);
@@ -226,7 +337,7 @@ export async function getImpactEntries(): Promise<ImpactContentEntry[]> {
   });
 
   if (!entries) {
-    return fallbackImpactEntries;
+    return language === "en" ? fallbackImpactEntries : [];
   }
 
   return entries.flatMap((entry) => {
@@ -236,14 +347,23 @@ export async function getImpactEntries(): Promise<ImpactContentEntry[]> {
 }
 
 export async function getImpactFeedItems(): Promise<ImpactFeedItem[]> {
-  const entries = await getImpactEntries();
+  return getImpactFeedItemsByLanguage("en");
+}
+
+export async function getImpactFeedItemsByLanguage(
+  language: ImpactLanguage = "en",
+): Promise<ImpactFeedItem[]> {
+  const entries = await getImpactEntriesByLanguage(language);
   return entries.map(toImpactFeedItem);
 }
 
-export async function getImpactEntryBySlug(slug: string) {
+export async function getImpactEntryBySlug(
+  slug: string,
+  language: ImpactLanguage = "en",
+) {
   const entry = await fetchSanityData<SanityImpactEntry | null>(
     impactEntryBySlugQuery,
-    { slug },
+    { slug, language },
     ["impact", `impact:${slug}`],
   ).catch((error) => {
     console.warn(`Unable to fetch Sanity impact entry "${slug}".`, error);
@@ -252,13 +372,13 @@ export async function getImpactEntryBySlug(slug: string) {
 
   const normalized = entry ? normalizeSanityEntry(entry) : null;
 
-  return normalized ?? getFallbackImpactEntryBySlug(slug);
+  return normalized ?? (language === "en" ? getFallbackImpactEntryBySlug(slug) : null);
 }
 
-export async function getImpactSlugs() {
+export async function getImpactSlugs(language: ImpactLanguage = "en") {
   const slugs = await fetchSanityData<Array<{ slug?: string | null }>>(
     impactSlugsQuery,
-    {},
+    { language },
     ["impact"],
   ).catch((error) => {
     console.warn("Unable to fetch Sanity impact slugs.", error);
@@ -266,14 +386,50 @@ export async function getImpactSlugs() {
   });
 
   if (!slugs) {
-    return fallbackImpactEntries.map((entry) => entry.slug);
+    return language === "en" ? fallbackImpactEntries.map((entry) => entry.slug) : [];
   }
 
   return [
     ...new Set([
       ...slugs.flatMap((entry) => (entry.slug ? [entry.slug] : [])),
-      ...fallbackImpactEntries.map((entry) => entry.slug),
+      ...(language === "en" ? fallbackImpactEntries.map((entry) => entry.slug) : []),
     ]),
   ];
 }
 
+export async function getImpactEntryByLegacyPath(legacyPath: string) {
+  const normalizedPath = legacyPath.startsWith("/") ? legacyPath : `/${legacyPath}`;
+  const match = await fetchSanityData<SanityLegacyPathMatch | null>(
+    impactEntryByLegacyPathQuery,
+    { legacyPath: normalizedPath },
+    ["impact", `legacy:${normalizedPath}`],
+  ).catch((error) => {
+    console.warn(`Unable to fetch Sanity legacy path "${normalizedPath}".`, error);
+    return null;
+  });
+
+  if (match?.slug) {
+    const language = normalizeLanguage(match.language);
+
+    return {
+      slug: match.slug,
+      language,
+      href: language === "fr" ? `/fr/impact/${match.slug}` : `/impact/${match.slug}`,
+    };
+  }
+
+  const fallback = fallbackImpactEntries.find(
+    (entry) => entry.legacyPath === normalizedPath,
+  );
+
+  return fallback
+    ? {
+        slug: fallback.slug,
+        language: fallback.language,
+        href:
+          fallback.language === "fr"
+            ? `/fr/impact/${fallback.slug}`
+            : `/impact/${fallback.slug}`,
+      }
+    : null;
+}

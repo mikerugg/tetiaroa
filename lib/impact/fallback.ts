@@ -41,6 +41,8 @@ const coolReefEntry: ImpactContentEntry = {
   id: "cool-reef",
   title: "Cool Reef: A temperature-controlled environment for coral development",
   slug: "cool-reef",
+  language: "en",
+  translationKey: "drupal-node-765",
   entryType: "Project",
   summary:
     "A research project testing shade and localized cooling as ways to protect coral fragments through hotter lagoon conditions.",
@@ -99,6 +101,8 @@ const coolReefEntry: ImpactContentEntry = {
   ],
   affiliation: "CRIOBE",
   legacyNodeId: 765,
+  legacyVid: 1410,
+  legacyBundle: "casup_project",
   legacyPath: "/programs/research/cool-reef",
   seoDescription:
     "Cool Reef tested shade and localized cooling as tools for coral development on Tetiaroa.",
@@ -255,6 +259,7 @@ function seedToEntry(seed: FallbackSeed): ImpactContentEntry {
     id: seed.id,
     title: seed.title,
     slug: seed.id,
+    language: "en",
     entryType: "Project",
     summary: seed.summary,
     category: seed.category,
@@ -281,4 +286,3 @@ export const fallbackImpactFeedItems = fallbackImpactEntries.map(toImpactFeedIte
 export function getFallbackImpactEntryBySlug(slug: string) {
   return fallbackImpactEntries.find((entry) => entry.slug === slug) ?? null;
 }
-

@@ -2,6 +2,7 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 import {
   impactCategories,
   impactEntryTypes,
+  impactLanguages,
 } from "../../../lib/impact/types";
 
 const categoryOptions = impactCategories.map((category) => ({
@@ -34,6 +35,29 @@ export const impactEntry = defineType({
       group: "content",
       options: { source: "title", maxLength: 120 },
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "language",
+      title: "Language",
+      type: "string",
+      group: "content",
+      options: {
+        list: impactLanguages.map((language) => ({
+          title: language === "fr" ? "French" : "English",
+          value: language,
+        })),
+        layout: "radio",
+      },
+      initialValue: "en",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "translationKey",
+      title: "Translation key",
+      type: "string",
+      group: "content",
+      description:
+        "Shared stable key used to connect English and French versions.",
     }),
     defineField({
       name: "entryType",
@@ -251,6 +275,18 @@ export const impactEntry = defineType({
       group: "legacy",
     }),
     defineField({
+      name: "legacyVid",
+      title: "Legacy Drupal revision ID",
+      type: "number",
+      group: "legacy",
+    }),
+    defineField({
+      name: "legacyBundle",
+      title: "Legacy Drupal bundle",
+      type: "string",
+      group: "legacy",
+    }),
+    defineField({
       name: "legacyPath",
       title: "Legacy path",
       type: "string",
@@ -274,9 +310,21 @@ export const impactEntry = defineType({
   preview: {
     select: {
       title: "title",
-      subtitle: "entryType",
+      entryType: "entryType",
+      language: "language",
       media: "heroImage",
+    },
+    prepare(selection: {
+      title?: string;
+      entryType?: string;
+      language?: string;
+    }) {
+      const { title, entryType, language } = selection;
+
+      return {
+        title,
+        subtitle: [language?.toUpperCase(), entryType].filter(Boolean).join(" / "),
+      };
     },
   },
 });
-

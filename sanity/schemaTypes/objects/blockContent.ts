@@ -154,9 +154,14 @@ export const blockContent = defineType({
           title: "URL",
           type: "url",
           validation: (rule) =>
-            rule.required().uri({
+            rule.uri({
               scheme: ["http", "https"],
             }),
+        }),
+        defineField({
+          name: "file",
+          title: "Uploaded file",
+          type: "file",
         }),
       ],
       preview: {
@@ -168,4 +173,3 @@ export const blockContent = defineType({
     }),
   ],
 });
-

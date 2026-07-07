@@ -6,7 +6,8 @@
     "dev": "next dev --port 3298",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "migrate:drupal-impact": "node scripts/migrate-drupal-impact.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^6.2.0",

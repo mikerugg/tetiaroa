@@ -4,20 +4,22 @@ function getPreviewSecret() {
   return process.env.SANITY_PREVIEW_SECRET ?? process.env.DRAFT_SECRET;
 }
 
-function getRedirectPath(value: string | null) {
+function getRedirectPath(value: string | null, language: string | null) {
+  const impactRoot = language === "fr" ? "/fr/impact" : "/impact";
+
   if (!value) {
-    return "/impact";
+    return impactRoot;
   }
 
   if (value.startsWith("http") || value.startsWith("//")) {
-    return "/impact";
+    return impactRoot;
   }
 
   if (value.startsWith("/")) {
     return value;
   }
 
-  return `/impact/${value}`;
+  return `${impactRoot}/${value}`;
 }
 
 export async function GET(req: Request) {
@@ -32,6 +34,10 @@ export async function GET(req: Request) {
   const draft = await draftMode();
   draft.enable();
 
-  return Response.redirect(new URL(getRedirectPath(searchParams.get("slug")), req.url));
+  return Response.redirect(
+    new URL(
+      getRedirectPath(searchParams.get("slug"), searchParams.get("language")),
+      req.url,
+    ),
+  );
 }
-

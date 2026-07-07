@@ -42,4 +42,3 @@ export function getSanityClient({ draft = false } = {}) {
 
   return publicClient;
 }
-

@@ -4,8 +4,10 @@ import type { SiteFooterCopy } from "./site-footer";
 import type { TopToolbarCopy } from "./top-toolbar";
 import type { VrViewerLabels } from "./vr-viewer";
 import {
+  ENGLISH_IMPACT_PATH,
   ENGLISH_HOME_PATH,
   ENGLISH_TEAM_PATH,
+  FRENCH_IMPACT_PATH,
   FRENCH_HOME_PATH,
   FRENCH_HOME_URL,
   FRENCH_TEAM_PATH,
@@ -162,7 +164,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       homeHref: ENGLISH_HOME_PATH,
       teamHref: ENGLISH_TEAM_PATH,
       teamLabel: "Our Team",
-      impactHref: "/impact",
+      impactHref: ENGLISH_IMPACT_PATH,
       impactLabel: "Impact Feed",
       logoLabel: "Our Logo",
       storyHref: "/brando-story/work",
@@ -186,7 +188,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             { href: ENGLISH_HOME_PATH, label: "Home" },
             { href: ENGLISH_TEAM_PATH, label: "Our Team" },
             { href: "/our-logo", label: "Logo meaning" },
-            { href: "/impact", label: "Impact Feed" },
+            { href: ENGLISH_IMPACT_PATH, label: "Impact Feed" },
           ],
         },
         {
@@ -528,7 +530,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       homeHref: FRENCH_HOME_PATH,
       teamHref: FRENCH_TEAM_PATH,
       teamLabel: "L'équipe",
-      impactHref: "/impact",
+      impactHref: FRENCH_IMPACT_PATH,
       impactLabel: "Fil d'impact",
       logoLabel: "Le logo",
       storyHref: "/brando-story/work",
@@ -552,7 +554,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             { href: FRENCH_HOME_PATH, label: "Accueil" },
             { href: FRENCH_TEAM_PATH, label: "Notre équipe" },
             { href: "/our-logo", label: "Sens du logo" },
-            { href: "/impact", label: "Fil d'impact" },
+            { href: FRENCH_IMPACT_PATH, label: "Fil d'impact" },
           ],
         },
         {

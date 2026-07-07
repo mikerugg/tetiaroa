@@ -404,9 +404,9 @@ export default function Home() {
               <a href="#giving" className={styles.primaryButton}>
                 Become a member -&gt;
               </a>
-              <a href="/turtle-tales" className={styles.ghostButton}>
+              <Link href="/turtle-tales" className={styles.ghostButton}>
                 Meet our Turtle Tales
-              </a>
+              </Link>
               <span className={styles.textButton}>Read the 2025 annual report -&gt;</span>
             </div>
 

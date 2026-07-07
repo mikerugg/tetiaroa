@@ -2,28 +2,28 @@ import type { Metadata } from "next";
 import {
   generateImpactEntryMetadata,
   ImpactEntryPageContent,
-} from "../impact-entry-page";
+} from "@/app/impact/impact-entry-page";
 import { getImpactSlugs } from "@/lib/sanity/impact";
 
-type ImpactEntryRouteProps = {
+type FrenchImpactEntryRouteProps = {
   params: Promise<{ slug: string }>;
 };
 
 export async function generateStaticParams() {
-  const slugs = await getImpactSlugs("en");
+  const slugs = await getImpactSlugs("fr");
   return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
   params,
-}: ImpactEntryRouteProps): Promise<Metadata> {
+}: FrenchImpactEntryRouteProps): Promise<Metadata> {
   const { slug } = await params;
-  return generateImpactEntryMetadata(slug, "en");
+  return generateImpactEntryMetadata(slug, "fr");
 }
 
-export default async function ImpactEntryPage({
+export default async function FrenchImpactEntryPage({
   params,
-}: ImpactEntryRouteProps) {
+}: FrenchImpactEntryRouteProps) {
   const { slug } = await params;
-  return <ImpactEntryPageContent slug={slug} locale="en" />;
+  return <ImpactEntryPageContent slug={slug} locale="fr" />;
 }
