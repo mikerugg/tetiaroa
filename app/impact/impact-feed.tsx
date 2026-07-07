@@ -1,22 +1,20 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowUpRightIcon,
-  CalendarDaysIcon,
-  FolderOpenIcon,
-  Globe2Icon,
-  Layers3Icon,
+  FishIcon,
+  HandshakeIcon,
+  MicroscopeIcon,
+  WavesIcon,
   type LucideIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -26,7 +24,6 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { Separator } from "@/components/ui/separator";
 import {
   Select,
   SelectContent,
@@ -46,12 +43,14 @@ import {
   type ImpactFeedItem,
   type ImpactLanguage,
 } from "@/lib/impact/types";
+import type { ImpactStats } from "@/lib/impact/stats";
 
 type CategoryFilter = "All" | ImpactCategory;
 type SortMode = "latest" | "oldest" | "az";
 
 type ImpactFeedProps = {
   projects: ImpactFeedItem[];
+  stats: ImpactStats;
   locale?: ImpactLanguage;
 };
 
@@ -61,9 +60,6 @@ const feedCopy: Record<
   ImpactLanguage,
   {
     title: string;
-    intro: string;
-    sideTitle: string;
-    viewAll: string;
     feedHeading: string;
     countSeparator: string;
     entriesLabel: string;
@@ -76,19 +72,25 @@ const feedCopy: Record<
     emptyTitle: string;
     emptyDescription: string;
     stats: {
-      entries: string;
-      updatedThisYear: string;
-      categories: string;
-      countries: string;
+      heading: string;
+      primary: {
+        years: { label: string; description: (since: number) => string };
+        projects: { label: string; description: string };
+        species: { label: string; description: string };
+        partners: { label: string; description: string };
+      };
+      secondary: {
+        entries: string;
+        updatedThisYear: string;
+        profiles: string;
+        reports: string;
+        films: string;
+      };
     };
   }
 > = {
   en: {
     title: "Impact Feed",
-    intro:
-      "Follow the work as it changes: reef surveys, classroom days, biosecurity checks, and the patient recovery of an atoll.",
-    sideTitle: "Tetiaroa's Impact",
-    viewAll: "View all entries",
     feedHeading: "Field notes, projects, and updates",
     countSeparator: "of",
     entriesLabel: "entries",
@@ -106,18 +108,36 @@ const feedCopy: Record<
     emptyDescription:
       "Try another category or sort mode. New archive entries will appear here after migration.",
     stats: {
-      entries: "Impact entries",
-      updatedThisYear: "Updated this year",
-      categories: "Categories connected",
-      countries: "Countries connected",
+      heading: "Tetiaroa Society's Impact",
+      primary: {
+        years: {
+          label: "Years of fieldwork",
+          description: (since) => `Continuous science on the atoll since ${since}`,
+        },
+        projects: {
+          label: "Research projects",
+          description: "From coral nurseries to seabird recovery",
+        },
+        species: {
+          label: "Species & habitats",
+          description: "Documented in a living guide to the atoll",
+        },
+        partners: {
+          label: "Partner institutions",
+          description: "Universities, labs, and NGOs worldwide",
+        },
+      },
+      secondary: {
+        entries: "Impact entries",
+        updatedThisYear: "Updated this year",
+        profiles: "People profiled",
+        reports: "Published reports",
+        films: "Films & videos",
+      },
     },
   },
   fr: {
     title: "Fil d'impact",
-    intro:
-      "Suivez le travail au fil de son évolution : suivis récifaux, journées de classe, vigilance bio-sécurité et restauration patiente de l'atoll.",
-    sideTitle: "L'impact de Tetiaroa",
-    viewAll: "Voir toutes les entrées",
     feedHeading: "Notes de terrain, projets et actualités",
     countSeparator: "sur",
     entriesLabel: "entrées",
@@ -135,10 +155,33 @@ const feedCopy: Record<
     emptyDescription:
       "Essayez une autre catégorie. Les entrées migrées apparaîtront ici après l'import.",
     stats: {
-      entries: "Entrées d'impact",
-      updatedThisYear: "Mises à jour cette année",
-      categories: "Catégories reliées",
-      countries: "Pays reliés",
+      heading: "L'impact de Tetiaroa Society",
+      primary: {
+        years: {
+          label: "Années de terrain",
+          description: (since) =>
+            `Une présence scientifique continue depuis ${since}`,
+        },
+        projects: {
+          label: "Projets de recherche",
+          description: "Des pépinières de corail au retour des oiseaux marins",
+        },
+        species: {
+          label: "Espèces et habitats",
+          description: "Documentés dans un guide vivant de l'atoll",
+        },
+        partners: {
+          label: "Institutions partenaires",
+          description: "Universités, laboratoires et ONG du monde entier",
+        },
+      },
+      secondary: {
+        entries: "Entrées d'impact",
+        updatedThisYear: "Mises à jour cette année",
+        profiles: "Portraits publiés",
+        reports: "Rapports publiés",
+        films: "Films et vidéos",
+      },
     },
   },
 };
@@ -172,7 +215,7 @@ function sortProjects(projects: ImpactFeedItem[], sortMode: SortMode) {
   });
 }
 
-export function ImpactFeed({ projects, locale = "en" }: ImpactFeedProps) {
+export function ImpactFeed({ projects, stats, locale = "en" }: ImpactFeedProps) {
   const [category, setCategory] = useState<CategoryFilter>("All");
   const [sortMode, setSortMode] = useState<SortMode>("latest");
   const copy = feedCopy[locale];
@@ -184,46 +227,55 @@ export function ImpactFeed({ projects, locale = "en" }: ImpactFeedProps) {
     );
   }, [category, projects, sortMode]);
 
-  const updatedThisYear = useMemo(() => {
-    return projects.filter((project) => project.latestUpdate.startsWith("2026"))
-      .length;
-  }, [projects]);
+  const primaryStats = [
+    {
+      value: stats.yearsOfFieldwork,
+      label: copy.stats.primary.years.label,
+      description: copy.stats.primary.years.description(stats.fieldworkSince),
+      icon: WavesIcon,
+    },
+    {
+      value: stats.researchProjects,
+      label: copy.stats.primary.projects.label,
+      description: copy.stats.primary.projects.description,
+      icon: MicroscopeIcon,
+    },
+    {
+      value: stats.speciesDocumented,
+      label: copy.stats.primary.species.label,
+      description: copy.stats.primary.species.description,
+      icon: FishIcon,
+    },
+    {
+      value: stats.partnerInstitutions,
+      label: copy.stats.primary.partners.label,
+      description: copy.stats.primary.partners.description,
+      icon: HandshakeIcon,
+      suffix: "+",
+    },
+  ] satisfies Array<{
+    value: number;
+    label: string;
+    description: string;
+    icon: LucideIcon;
+    suffix?: string;
+  }>;
 
-  const connectedCategories = useMemo(() => {
-    return new Set(
-      projects.flatMap((project) => [
-        project.category,
-        ...project.secondaryCategories,
-      ]),
-    ).size;
-  }, [projects]);
-
-  const stats = [
-    {
-      label: copy.stats.entries,
-      value: projects.length.toString(),
-      icon: FolderOpenIcon,
-    },
-    {
-      label: copy.stats.updatedThisYear,
-      value: updatedThisYear.toString(),
-      icon: CalendarDaysIcon,
-    },
-    {
-      label: copy.stats.categories,
-      value: connectedCategories.toString(),
-      icon: Layers3Icon,
-    },
-    {
-      label: copy.stats.countries,
-      value: "18",
-      icon: Globe2Icon,
-    },
-  ] satisfies Array<{ label: string; value: string; icon: LucideIcon }>;
+  const secondaryStats: Array<{
+    value: number;
+    label: string;
+    suffix?: string;
+  }> = [
+    { value: stats.totalEntries, label: copy.stats.secondary.entries },
+    { value: stats.updatedThisYear, label: copy.stats.secondary.updatedThisYear },
+    { value: stats.peopleProfiled, label: copy.stats.secondary.profiles },
+    { value: stats.publishedReports, label: copy.stats.secondary.reports },
+    { value: stats.films, label: copy.stats.secondary.films, suffix: "+" },
+  ];
 
   return (
     <div className="relative overflow-hidden bg-background text-foreground">
-      <section className="relative isolate min-h-[360px] overflow-hidden border-b border-border pt-14 md:pt-16">
+      <section className="relative isolate overflow-hidden border-b border-border pt-14 md:pt-16">
         <Image
           src="https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=2400&q=85&auto=format&fit=crop"
           alt=""
@@ -236,43 +288,64 @@ export function ImpactFeed({ projects, locale = "en" }: ImpactFeedProps) {
           aria-hidden="true"
           className="absolute inset-0 bg-[linear-gradient(180deg,rgb(7_16_14/.40)_0%,rgb(7_16_14/.72)_74%,var(--background)_100%),linear-gradient(90deg,var(--background)_0%,rgb(7_16_14/.58)_45%,rgb(7_16_14/.22)_100%)]"
         />
-        <div className="relative mx-auto flex min-h-[calc(360px-3.5rem)] max-w-[1540px] flex-col justify-end px-5 py-10 sm:px-8 md:min-h-[calc(360px-4rem)] md:px-9 lg:px-10">
+        <div className="relative mx-auto max-w-[1540px] px-5 py-10 sm:px-8 md:px-9 lg:px-10">
           <h1 className="max-w-4xl font-display text-5xl leading-none text-foreground sm:text-6xl md:text-7xl">
             {copy.title}
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-8 text-foreground/86 sm:text-lg">
-            {copy.intro}
-          </p>
         </div>
       </section>
 
-      <main className="mx-auto grid max-w-[1540px] gap-7 px-4 py-6 sm:px-6 md:px-8 lg:grid-cols-[300px_minmax(0,1fr)] lg:px-10">
-        <aside className="lg:sticky lg:top-24 lg:self-start">
-          <Card className="rounded-md border-border bg-card/80 py-0 shadow-2xl backdrop-blur-md">
-            <CardHeader className="px-5 py-5">
-              <CardTitle className="font-display text-3xl font-normal">
-                {copy.sideTitle}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-0 px-5 pb-5">
-              {stats.map((stat, index) => (
-                <div key={stat.label}>
-                  {index > 0 ? <Separator className="my-5" /> : null}
-                  <StatRow {...stat} />
-                </div>
-              ))}
-            </CardContent>
-            <CardFooter className="px-5 pb-6">
-              <Button asChild variant="link" className="h-auto p-0 font-mono">
-                <a href="#feed">
-                  {copy.viewAll}
-                  <ArrowUpRightIcon data-icon="inline-end" aria-hidden="true" />
-                </a>
-              </Button>
-            </CardFooter>
-          </Card>
-        </aside>
+      <section
+        aria-label={copy.stats.heading}
+        className="border-b border-border bg-card/70 backdrop-blur-md"
+      >
+        <div className="mx-auto max-w-[1540px] px-5 py-8 sm:px-8 md:px-9 lg:px-10 lg:py-10">
+          <h2 className="font-display text-3xl font-normal leading-tight">
+            {copy.stats.heading}
+          </h2>
 
+          <div className="mt-7 grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
+            {primaryStats.map((stat, index) => (
+              <div
+                key={stat.label}
+                className="flex flex-col gap-3 lg:border-l lg:border-border lg:px-8 lg:first:border-l-0 lg:first:pl-0 lg:last:pr-0"
+              >
+                <div className="grid size-11 place-items-center rounded-sm bg-secondary text-secondary-foreground">
+                  <stat.icon aria-hidden="true" />
+                </div>
+                <div className="font-display text-5xl leading-none text-foreground xl:text-6xl">
+                  <CountUpValue
+                    value={stat.value}
+                    suffix={stat.suffix}
+                    delay={index * 120}
+                  />
+                </div>
+                <div className="font-mono text-[11px] uppercase tracking-[0.16em] text-foreground/90">
+                  {stat.label}
+                </div>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  {stat.description}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 flex flex-wrap items-baseline gap-x-9 gap-y-4 border-t border-border pt-6">
+            {secondaryStats.map((stat) => (
+              <div key={stat.label} className="flex items-baseline gap-2.5">
+                <span className="font-display text-2xl leading-none text-foreground">
+                  <CountUpValue value={stat.value} suffix={stat.suffix} />
+                </span>
+                <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                  {stat.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <main className="mx-auto max-w-[1540px] px-4 py-6 sm:px-6 md:px-8 lg:px-10">
         <section className="min-w-0" aria-labelledby="feed-heading">
           <div className="flex flex-col gap-4 border-border pb-4 min-[1120px]:flex-row min-[1120px]:items-center min-[1120px]:justify-between">
             <ToggleGroup
@@ -372,27 +445,79 @@ export function ImpactFeed({ projects, locale = "en" }: ImpactFeedProps) {
   );
 }
 
-function StatRow({
-  label,
+const COUNT_UP_DURATION_MS = 1400;
+
+function CountUpValue({
   value,
-  icon: Icon,
+  suffix,
+  delay = 0,
 }: {
-  label: string;
-  value: string;
-  icon: LucideIcon;
+  value: number;
+  suffix?: string;
+  delay?: number;
 }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [display, setDisplay] = useState(value);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (
+      !node ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
+    let frame = 0;
+    let timeout = 0;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting || hasAnimated.current) {
+          return;
+        }
+
+        hasAnimated.current = true;
+        observer.disconnect();
+
+        timeout = window.setTimeout(() => {
+          const start = performance.now();
+
+          const tick = (now: number) => {
+            const progress = Math.min(
+              (now - start) / COUNT_UP_DURATION_MS,
+              1,
+            );
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setDisplay(Math.round(eased * value));
+
+            if (progress < 1) {
+              frame = requestAnimationFrame(tick);
+            }
+          };
+
+          setDisplay(0);
+          frame = requestAnimationFrame(tick);
+        }, delay);
+      },
+      { threshold: 0.5 },
+    );
+
+    observer.observe(node);
+
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(timeout);
+      cancelAnimationFrame(frame);
+    };
+  }, [delay, value]);
+
   return (
-    <div className="grid grid-cols-[44px_1fr] items-center gap-4">
-      <div className="grid size-11 place-items-center rounded-sm bg-secondary text-secondary-foreground">
-        <Icon aria-hidden="true" />
-      </div>
-      <div>
-        <div className="font-display text-4xl leading-none text-foreground">
-          {value}
-        </div>
-        <div className="mt-1 text-sm text-muted-foreground">{label}</div>
-      </div>
-    </div>
+    <span ref={ref}>
+      {display}
+      {suffix}
+    </span>
   );
 }
 
