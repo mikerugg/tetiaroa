@@ -13,6 +13,7 @@ import {
   impactRouteCopy,
 } from "@/app/impact/impact-route-copy";
 import { getImpactEntriesByLanguage } from "@/lib/sanity/impact";
+import { parseImpactFilters } from "@/lib/impact/filters";
 import { computeImpactStats } from "@/lib/impact/stats";
 import { toImpactFeedItem } from "@/lib/impact/types";
 
@@ -30,16 +31,26 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function FrenchImpactPage() {
+export default async function FrenchImpactPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const entries = await getImpactEntriesByLanguage("fr");
   const impactProjects = entries.map(toImpactFeedItem);
   const stats = computeImpactStats(entries);
+  const initialFilters = parseImpactFilters(await searchParams);
 
   return (
     <>
       <TopToolbar copy={getImpactToolbarCopy("fr")} />
       <PrimaryRouteDock active="impact" locale="fr" />
-      <ImpactFeed projects={impactProjects} stats={stats} locale="fr" />
+      <ImpactFeed
+        projects={impactProjects}
+        stats={stats}
+        initialFilters={initialFilters}
+        locale="fr"
+      />
       <SiteFooter copy={homeCopies.fr.footer} />
     </>
   );

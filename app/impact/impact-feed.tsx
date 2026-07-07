@@ -8,10 +8,14 @@ import {
   FishIcon,
   HandshakeIcon,
   MicroscopeIcon,
+  SearchIcon,
   WavesIcon,
+  XIcon,
   type LucideIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -38,23 +42,27 @@ import {
 } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 import {
-  impactCategories,
-  type ImpactCategory,
+  type ImpactEntryType,
   type ImpactFeedItem,
   type ImpactLanguage,
 } from "@/lib/impact/types";
 import type { ImpactStats } from "@/lib/impact/stats";
-
-type CategoryFilter = "All" | ImpactCategory;
-type SortMode = "latest" | "oldest" | "az";
+import {
+  formatOrder,
+  topicDefinitions,
+  type FormatFilter,
+  type ImpactFeedFilters,
+  type SortMode,
+  type TopicFilter,
+  type TopicValue,
+} from "@/lib/impact/filters";
 
 type ImpactFeedProps = {
   projects: ImpactFeedItem[];
   stats: ImpactStats;
+  initialFilters: ImpactFeedFilters;
   locale?: ImpactLanguage;
 };
-
-const filterOptions = ["All", ...impactCategories] as const;
 
 const feedCopy: Record<
   ImpactLanguage,
@@ -65,8 +73,14 @@ const feedCopy: Record<
     entriesLabel: string;
     allFilter: string;
     filterAria: string;
-    showCategory: (category: string) => string;
-    sortBy: string;
+    showTopic: (topic: string) => string;
+    topics: Record<TopicValue, string>;
+    formats: Record<ImpactEntryType, string>;
+    allFormats: string;
+    formatAria: string;
+    searchPlaceholder: string;
+    searchAria: string;
+    clearFilters: string;
     sortAria: string;
     sortLabels: Record<SortMode, string>;
     emptyTitle: string;
@@ -91,13 +105,36 @@ const feedCopy: Record<
 > = {
   en: {
     title: "Impact Feed",
-    feedHeading: "Field notes, projects, and updates",
+    feedHeading: "The Impact Feed",
     countSeparator: "of",
     entriesLabel: "entries",
     allFilter: "All",
-    filterAria: "Filter impact entries by category",
-    showCategory: (category) => `Show ${category} impact entries`,
-    sortBy: "Sort by",
+    filterAria: "Filter impact entries by topic",
+    showTopic: (topic) => `Show ${topic} impact entries`,
+    topics: {
+      conservation: "Conservation",
+      research: "Research",
+      wildlife: "Wildlife",
+      education: "Education",
+      "global-impact": "Global impact",
+    },
+    formats: {
+      Project: "Projects",
+      Guide: "Nature guides",
+      Profile: "Profiles",
+      Newsletter: "Newsletters",
+      Video: "Films & videos",
+      Report: "Reports",
+      News: "News",
+      Partner: "Partners",
+      Article: "Articles",
+      "Project Update": "Project updates",
+    },
+    allFormats: "All formats",
+    formatAria: "Filter impact entries by format",
+    searchPlaceholder: "Search the archive",
+    searchAria: "Search impact entries",
+    clearFilters: "Clear filters",
     sortAria: "Sort impact entries",
     sortLabels: {
       latest: "Latest",
@@ -106,7 +143,7 @@ const feedCopy: Record<
     },
     emptyTitle: "No entries found",
     emptyDescription:
-      "Try another category or sort mode. New archive entries will appear here after migration.",
+      "No entries match this combination. Try a different search or filter.",
     stats: {
       heading: "Tetiaroa Society's Impact",
       primary: {
@@ -138,13 +175,36 @@ const feedCopy: Record<
   },
   fr: {
     title: "Fil d'impact",
-    feedHeading: "Notes de terrain, projets et actualités",
+    feedHeading: "Le fil d'impact",
     countSeparator: "sur",
     entriesLabel: "entrées",
     allFilter: "Tous",
-    filterAria: "Filtrer les entrées d'impact par catégorie",
-    showCategory: (category) => `Afficher les entrées ${category}`,
-    sortBy: "Trier par",
+    filterAria: "Filtrer les entrées d'impact par thème",
+    showTopic: (topic) => `Afficher les entrées ${topic}`,
+    topics: {
+      conservation: "Conservation",
+      research: "Recherche",
+      wildlife: "Faune",
+      education: "Éducation",
+      "global-impact": "Impact global",
+    },
+    formats: {
+      Project: "Projets",
+      Guide: "Guides nature",
+      Profile: "Portraits",
+      Newsletter: "Newsletters",
+      Video: "Films et vidéos",
+      Report: "Rapports",
+      News: "Actualités",
+      Partner: "Partenaires",
+      Article: "Articles",
+      "Project Update": "Suivis de projet",
+    },
+    allFormats: "Tous les formats",
+    formatAria: "Filtrer les entrées d'impact par format",
+    searchPlaceholder: "Rechercher dans les archives",
+    searchAria: "Rechercher des entrées d'impact",
+    clearFilters: "Effacer les filtres",
     sortAria: "Trier les entrées d'impact",
     sortLabels: {
       latest: "Plus récent",
@@ -153,7 +213,7 @@ const feedCopy: Record<
     },
     emptyTitle: "Aucune entrée trouvée",
     emptyDescription:
-      "Essayez une autre catégorie. Les entrées migrées apparaîtront ici après l'import.",
+      "Aucune entrée ne correspond à cette combinaison. Essayez une autre recherche ou un autre filtre.",
     stats: {
       heading: "L'impact de Tetiaroa Society",
       primary: {
@@ -194,12 +254,41 @@ function formatDate(value: string, locale: ImpactLanguage) {
   }).format(new Date(`${value}T00:00:00`));
 }
 
-function projectMatchesCategory(project: ImpactFeedItem, category: CategoryFilter) {
-  return (
-    category === "All" ||
-    project.category === category ||
-    project.secondaryCategories.includes(category)
+function projectMatchesTopic(project: ImpactFeedItem, topic: TopicFilter) {
+  if (topic === "all") {
+    return true;
+  }
+
+  const definition = topicDefinitions.find((entry) => entry.value === topic);
+
+  return Boolean(
+    definition?.categories.some(
+      (category) =>
+        project.category === category ||
+        project.secondaryCategories.includes(category),
+    ),
   );
+}
+
+function projectMatchesFormat(project: ImpactFeedItem, format: FormatFilter) {
+  return format === "all" || project.entryType === format;
+}
+
+function projectMatchesQuery(project: ImpactFeedItem, normalizedQuery: string) {
+  if (!normalizedQuery) {
+    return true;
+  }
+
+  return [
+    project.title,
+    project.summary,
+    project.location,
+    project.metric,
+    ...project.tags,
+  ]
+    .join(" ")
+    .toLowerCase()
+    .includes(normalizedQuery);
 }
 
 function sortProjects(projects: ImpactFeedItem[], sortMode: SortMode) {
@@ -215,17 +304,91 @@ function sortProjects(projects: ImpactFeedItem[], sortMode: SortMode) {
   });
 }
 
-export function ImpactFeed({ projects, stats, locale = "en" }: ImpactFeedProps) {
-  const [category, setCategory] = useState<CategoryFilter>("All");
-  const [sortMode, setSortMode] = useState<SortMode>("latest");
+export function ImpactFeed({
+  projects,
+  stats,
+  initialFilters,
+  locale = "en",
+}: ImpactFeedProps) {
+  const [topic, setTopic] = useState<TopicFilter>(initialFilters.topic);
+  const [format, setFormat] = useState<FormatFilter>(initialFilters.format);
+  const [query, setQuery] = useState(initialFilters.query);
+  const [sortMode, setSortMode] = useState<SortMode>(initialFilters.sort);
   const copy = feedCopy[locale];
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const setOrDelete = (key: string, value: string | null) => {
+      if (value) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    };
+
+    setOrDelete("topic", topic === "all" ? null : topic);
+    setOrDelete("format", format === "all" ? null : format);
+    setOrDelete("q", query.trim() || null);
+    setOrDelete("sort", sortMode === "latest" ? null : sortMode);
+
+    const search = params.toString();
+    window.history.replaceState(
+      null,
+      "",
+      `${window.location.pathname}${search ? `?${search}` : ""}`,
+    );
+  }, [topic, format, query, sortMode]);
+
+  const topicOptions = useMemo(() => {
+    return topicDefinitions
+      .map((definition) => ({
+        value: definition.value,
+        label: copy.topics[definition.value],
+        count: projects.filter((project) =>
+          projectMatchesTopic(project, definition.value),
+        ).length,
+      }))
+      .filter((option) => option.count > 0);
+  }, [copy.topics, projects]);
+
+  const formatOptions = useMemo(() => {
+    const scopedProjects = projects.filter((project) =>
+      projectMatchesTopic(project, topic),
+    );
+
+    return formatOrder
+      .map((entryType) => ({
+        value: entryType,
+        label: copy.formats[entryType],
+        count: scopedProjects.filter(
+          (project) => project.entryType === entryType,
+        ).length,
+      }))
+      .filter((option) => option.count > 0);
+  }, [copy.formats, projects, topic]);
+
   const visibleProjects = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+
     return sortProjects(
-      projects.filter((project) => projectMatchesCategory(project, category)),
+      projects.filter(
+        (project) =>
+          projectMatchesTopic(project, topic) &&
+          projectMatchesFormat(project, format) &&
+          projectMatchesQuery(project, normalizedQuery),
+      ),
       sortMode,
     );
-  }, [category, projects, sortMode]);
+  }, [format, projects, query, sortMode, topic]);
+
+  const hasActiveFilters =
+    topic !== "all" || format !== "all" || query.trim().length > 0;
+
+  const clearFilters = () => {
+    setTopic("all");
+    setFormat("all");
+    setQuery("");
+  };
 
   const primaryStats = [
     {
@@ -347,57 +510,126 @@ export function ImpactFeed({ projects, stats, locale = "en" }: ImpactFeedProps) 
 
       <main className="mx-auto max-w-[1540px] px-4 py-6 sm:px-6 md:px-8 lg:px-10">
         <section className="min-w-0" aria-labelledby="feed-heading">
-          <div className="flex flex-col gap-4 border-border pb-4 min-[1120px]:flex-row min-[1120px]:items-center min-[1120px]:justify-between">
-            <ToggleGroup
-              type="single"
-              value={category}
-              onValueChange={(value) => {
-                setCategory((value || "All") as CategoryFilter);
-              }}
-              variant="outline"
-              size="sm"
-              spacing={2}
-              className="flex w-full flex-wrap justify-start gap-2"
-              aria-label={copy.filterAria}
-            >
-              {filterOptions.map((option) => (
-                <ToggleGroupItem
-                  key={option}
-                  value={option}
-                  className="h-10 rounded-sm px-3 font-mono text-[11px] uppercase tracking-[0.12em] sm:px-4"
-                  aria-label={copy.showCategory(
-                    option === "All" ? copy.allFilter : option,
-                  )}
-                >
-                  {option === "All" ? copy.allFilter : option}
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
+          <div className="flex flex-col gap-4 pb-4">
+            <div className="relative w-full md:max-w-md">
+              <SearchIcon
+                className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <Input
+                type="search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder={copy.searchPlaceholder}
+                aria-label={copy.searchAria}
+                className="h-10 rounded-sm pl-9 font-mono text-xs"
+              />
+            </div>
 
-            <div className="flex shrink-0 items-center gap-3">
-              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-                {copy.sortBy}
-              </span>
-              <Select
-                value={sortMode}
-                onValueChange={(value) => setSortMode(value as SortMode)}
+            <div className="flex flex-col gap-3 min-[1240px]:flex-row min-[1240px]:items-center min-[1240px]:justify-between">
+              <ToggleGroup
+                type="single"
+                value={topic}
+                onValueChange={(value) => {
+                  const nextTopic = (value || "all") as TopicFilter;
+                  setTopic(nextTopic);
+
+                  if (
+                    format !== "all" &&
+                    !projects.some(
+                      (project) =>
+                        project.entryType === format &&
+                        projectMatchesTopic(project, nextTopic),
+                    )
+                  ) {
+                    setFormat("all");
+                  }
+                }}
+                variant="outline"
+                size="sm"
+                spacing={2}
+                className="flex flex-wrap justify-start gap-2"
+                aria-label={copy.filterAria}
               >
-                <SelectTrigger
-                  className="h-10 min-w-36 rounded-sm font-mono text-xs uppercase tracking-[0.12em]"
-                  aria-label={copy.sortAria}
+                <ToggleGroupItem
+                  value="all"
+                  className="h-10 rounded-sm px-3 font-mono text-[11px] uppercase tracking-[0.12em] sm:px-4"
+                  aria-label={copy.showTopic(copy.allFilter)}
                 >
-                  <SelectValue placeholder={copy.sortLabels.latest} />
-                </SelectTrigger>
-                <SelectContent position="popper">
-                  <SelectGroup>
-                    {(Object.keys(copy.sortLabels) as SortMode[]).map((value) => (
-                      <SelectItem key={value} value={value}>
-                        {copy.sortLabels[value]}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+                  {copy.allFilter}
+                </ToggleGroupItem>
+                {topicOptions.map((option) => (
+                  <ToggleGroupItem
+                    key={option.value}
+                    value={option.value}
+                    className="h-10 rounded-sm px-3 font-mono text-[11px] uppercase tracking-[0.12em] sm:px-4"
+                    aria-label={copy.showTopic(option.label)}
+                  >
+                    {option.label}
+                    <span className="text-muted-foreground">{option.count}</span>
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+
+              <div className="flex shrink-0 flex-wrap items-center gap-3">
+                {hasActiveFilters ? (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-10 rounded-sm font-mono text-[11px] uppercase tracking-[0.12em]"
+                    onClick={clearFilters}
+                  >
+                    <XIcon data-icon="inline-start" aria-hidden="true" />
+                    {copy.clearFilters}
+                  </Button>
+                ) : null}
+                <Select
+                  value={format}
+                  onValueChange={(value) => setFormat(value as FormatFilter)}
+                >
+                  <SelectTrigger
+                    className="h-10 min-w-44 rounded-sm font-mono text-xs uppercase tracking-[0.12em]"
+                    aria-label={copy.formatAria}
+                  >
+                    <SelectValue placeholder={copy.allFormats} />
+                  </SelectTrigger>
+                  <SelectContent position="popper">
+                    <SelectGroup>
+                      <SelectItem value="all">{copy.allFormats}</SelectItem>
+                      {formatOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                          <span className="text-muted-foreground">
+                            {option.count}
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <Select
+                  value={sortMode}
+                  onValueChange={(value) => setSortMode(value as SortMode)}
+                >
+                  <SelectTrigger
+                    className="h-10 min-w-36 rounded-sm font-mono text-xs uppercase tracking-[0.12em]"
+                    aria-label={copy.sortAria}
+                  >
+                    <SelectValue placeholder={copy.sortLabels.latest} />
+                  </SelectTrigger>
+                  <SelectContent position="popper">
+                    <SelectGroup>
+                      {(Object.keys(copy.sortLabels) as SortMode[]).map(
+                        (value) => (
+                          <SelectItem key={value} value={value}>
+                            {copy.sortLabels[value]}
+                          </SelectItem>
+                        ),
+                      )}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 

@@ -12,6 +12,7 @@ import { PrimaryRouteDock } from "../primary-route-dock";
 import { SiteFooter } from "../site-footer";
 import { TopToolbar } from "../top-toolbar";
 import { getImpactEntriesByLanguage } from "@/lib/sanity/impact";
+import { parseImpactFilters } from "@/lib/impact/filters";
 import { computeImpactStats } from "@/lib/impact/stats";
 import { toImpactFeedItem } from "@/lib/impact/types";
 import { ImpactFeed } from "./impact-feed";
@@ -30,16 +31,26 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function ImpactPage() {
+export default async function ImpactPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const entries = await getImpactEntriesByLanguage("en");
   const impactProjects = entries.map(toImpactFeedItem);
   const stats = computeImpactStats(entries);
+  const initialFilters = parseImpactFilters(await searchParams);
 
   return (
     <>
       <TopToolbar copy={getImpactToolbarCopy("en")} />
       <PrimaryRouteDock active="impact" />
-      <ImpactFeed projects={impactProjects} stats={stats} locale="en" />
+      <ImpactFeed
+        projects={impactProjects}
+        stats={stats}
+        initialFilters={initialFilters}
+        locale="en"
+      />
       <SiteFooter copy={homeCopies.en.footer} />
     </>
   );
