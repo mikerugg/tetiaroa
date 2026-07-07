@@ -89,6 +89,18 @@ export const fontOptions = [
     className: "font-test-dm-serif italic",
   },
   {
+    id: "dm-serif-text",
+    label: "DM Serif Text / text serif",
+    selectLabel: "DM Serif Text",
+    className: "font-test-dm-serif-text",
+  },
+  {
+    id: "dm-serif-text-italic",
+    label: "DM Serif Text italic / text serif",
+    selectLabel: "DM Serif Text italic",
+    className: "font-test-dm-serif-text italic",
+  },
+  {
     id: "libre-baskerville",
     label: "Libre Baskerville / book serif",
     selectLabel: "Libre Baskerville",
@@ -416,7 +428,7 @@ export const quickScanRows = [
     role: "Editorial story line",
     defaultLeftFontId: "display-italic",
     defaultRightFontId: "display-italic",
-    sample: "A classroom can put on a headset and go on a VR field trip to Tetiaroa.",
+    sample: "A classroom can put on a headset and go on a VR field trip to Tetiaroa. FIELD TRIP. f ff fff ",
     sampleClassName: "max-w-2xl text-2xl leading-snug sm:text-3xl",
   },
 ] as const satisfies readonly QuickScanRow[];

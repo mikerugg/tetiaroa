@@ -10,6 +10,7 @@ import {
   Crimson_Pro,
   DM_Mono,
   DM_Serif_Display,
+  DM_Serif_Text,
   EB_Garamond,
   Fira_Code,
   Fjalla_One,
@@ -58,6 +59,13 @@ const playfair = Playfair_Display({
 
 const dmSerif = DM_Serif_Display({
   variable: "--font-test-dm-serif",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  weight: "400",
+});
+
+const dmSerifText = DM_Serif_Text({
+  variable: "--font-test-dm-serif-text",
   subsets: ["latin"],
   style: ["normal", "italic"],
   weight: "400",
@@ -310,6 +318,7 @@ const fontClasses = [
   cormorant.variable,
   playfair.variable,
   dmSerif.variable,
+  dmSerifText.variable,
   libreBaskerville.variable,
   sourceSerif.variable,
   instrumentSerif.variable,

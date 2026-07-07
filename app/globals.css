@@ -124,6 +124,10 @@ textarea {
   font-family: var(--font-test-dm-serif), Georgia, serif;
 }
 
+.font-test-dm-serif-text {
+  font-family: var(--font-test-dm-serif-text), Georgia, serif;
+}
+
 .font-test-libre-baskerville {
   font-family: var(--font-test-libre-baskerville), Georgia, serif;
 }

@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
 import {
   Bebas_Neue,
-  Fraunces,
+  DM_Serif_Display,
   Inter,
   JetBrains_Mono,
 } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const display = Fraunces({
+const display = DM_Serif_Display({
   variable: "--font-display",
   subsets: ["latin"],
   style: ["normal", "italic"],
-  weight: ["400", "500", "600"],
+  weight: "400",
 });
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
