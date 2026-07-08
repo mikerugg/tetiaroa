@@ -92,6 +92,10 @@ type HomeCopy = {
     imageAlt: string;
     readouts: ScanReadout[];
   };
+  impactFeedCta: {
+    label: string;
+    href: string;
+  };
   pillars: {
     eyebrow: string;
     title: string;
@@ -360,6 +364,10 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         { label: "species DNA — cataloged", at: 0.52 },
         { label: "ecosystem signals — synced", at: 0.74 },
       ],
+    },
+    impactFeedCta: {
+      label: "See All Our Projects on the Impact Feed",
+      href: ENGLISH_IMPACT_PATH,
     },
     pillars: {
       eyebrow: "Pillars of Tetiaroa",
@@ -729,6 +737,10 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         { label: "ADN des espèces — catalogué", at: 0.52 },
         { label: "signaux de l'écosystème — synchronisés", at: 0.74 },
       ],
+    },
+    impactFeedCta: {
+      label: "Voir tous nos projets dans le fil d'impact",
+      href: FRENCH_IMPACT_PATH,
     },
     pillars: {
       eyebrow: "Les piliers de Tetiaroa",

@@ -272,7 +272,7 @@ export default function HomeExperience({
           </div>
         </section>
 
-        <section className={styles.band} id="twin">
+        <section className={`${styles.band} ${styles.twinBand}`} id="twin">
           <div className={`${styles.depthWatermark} font-header`} aria-hidden="true">
             &minus;40
           </div>
@@ -317,6 +317,23 @@ export default function HomeExperience({
                 ))}
               </div>
             </ScanPanel>
+          </div>
+
+          <div className={styles.impactFeedCtaWrap}>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className={cn(styles.impactFeedCta, "h-auto font-mono")}
+            >
+              <a href={copy.impactFeedCta.href}>
+                {copy.impactFeedCta.label}
+                <ArrowUpRightIcon
+                  data-icon="inline-end"
+                  aria-hidden="true"
+                />
+              </a>
+            </Button>
           </div>
         </section>
 

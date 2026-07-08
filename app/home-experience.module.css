@@ -813,6 +813,49 @@
   );
 }
 
+/* ---- impact feed cta ---- */
+
+.twinBand {
+  padding-bottom: 8vh;
+}
+
+.impactFeedCtaWrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 1240px;
+  margin: clamp(70px, 10vh, 130px) auto 0;
+}
+
+.impactFeedCta {
+  border: 1px solid rgba(91, 232, 212, 0.34);
+  border-radius: 999px;
+  padding: 16px 30px;
+  color: var(--cyan);
+  background: rgba(2, 10, 16, 0.3);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: none;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  text-align: center;
+  white-space: normal;
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.impactFeedCta:hover {
+  border-color: rgba(91, 232, 212, 0.7);
+  color: var(--cyan);
+  background: rgba(91, 232, 212, 0.08);
+  box-shadow: 0 0 34px rgba(91, 232, 212, 0.16);
+}
+
 /* ---- Honu XR / the deep ---- */
 
 .deep {
@@ -3107,6 +3150,15 @@
 
   .band {
     padding: 12vh 7vw;
+  }
+
+  .impactFeedCtaWrap {
+    margin-top: 34px;
+  }
+
+  .impactFeedCta {
+    padding: 14px 22px;
+    font-size: 11px;
   }
 
   .bandMedia.sanctuaryMedia {
