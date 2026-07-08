@@ -43,14 +43,24 @@ const defaultLabels: LanternDonateLabels = {
 export function LanternDonate({
   tiers,
   labels = defaultLabels,
+  initialAmount = null,
+  onDonate,
 }: {
   tiers: LanternTier[];
   labels?: LanternDonateLabels;
+  initialAmount?: number | null;
+  onDonate?: (amount: number) => void;
 }) {
-  const [selected, setSelected] = useState<number | null>(null);
-  const [customAmount, setCustomAmount] = useState("");
+  const initialSelection = getInitialSelection(tiers, initialAmount);
+  const [selected, setSelected] = useState<number | null>(
+    initialSelection.selected,
+  );
+  const [customAmount, setCustomAmount] = useState(
+    initialSelection.customAmount,
+  );
 
   const selectedTier = selected === null ? null : tiers[selected];
+  const selectedAmount = getSelectedAmount(selectedTier, customAmount);
   const buttonLabel = (() => {
     if (!selectedTier) {
       return labels.emptySelection;
@@ -64,6 +74,14 @@ export function LanternDonate({
 
     return `${labels.lightPrefix} — ${selectedTier.amount}${selectedTier.period}`;
   })();
+
+  function handleConfirm() {
+    if (selectedAmount === null) {
+      return;
+    }
+
+    onDonate?.(selectedAmount);
+  }
 
   return (
     <div
@@ -141,6 +159,7 @@ export function LanternDonate({
         <Button
           type="button"
           className="donate-lava h-auto rounded-full px-[30px] py-4 text-[15px] font-bold text-[var(--ink)] shadow-[0_0_18px_rgba(249,115,22,0.28)] transition-[filter,opacity,transform] duration-300 enabled:hover:-translate-y-0.5 enabled:hover:brightness-110 disabled:opacity-[0.45]"
+          onClick={handleConfirm}
           disabled={
             selected === null || (selectedTier?.custom && customAmount === "")
           }
@@ -160,4 +179,43 @@ export function LanternDonate({
       </div>
     </div>
   );
+}
+
+function getInitialSelection(
+  tiers: LanternTier[],
+  initialAmount: number | null,
+) {
+  if (!initialAmount) {
+    return { selected: null, customAmount: "" };
+  }
+
+  const matchingTierIndex = tiers.findIndex(
+    (tier) => !tier.custom && parseDonationAmount(tier.amount) === initialAmount,
+  );
+
+  if (matchingTierIndex !== -1) {
+    return { selected: matchingTierIndex, customAmount: "" };
+  }
+
+  const customTierIndex = tiers.findIndex((tier) => tier.custom);
+
+  if (customTierIndex === -1) {
+    return { selected: null, customAmount: "" };
+  }
+
+  return { selected: customTierIndex, customAmount: String(initialAmount) };
+}
+
+function getSelectedAmount(tier: LanternTier | null, customAmount: string) {
+  if (!tier) {
+    return null;
+  }
+
+  return parseDonationAmount(tier.custom ? customAmount : tier.amount);
+}
+
+function parseDonationAmount(value: string) {
+  const amount = Number.parseInt(value.replace(/[^0-9]/g, ""), 10);
+
+  return Number.isFinite(amount) && amount > 0 ? amount : null;
 }

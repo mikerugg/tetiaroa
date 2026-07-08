@@ -3,10 +3,17 @@ import Link from "next/link";
 import { Globe2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { FRENCH_HOME_PATH, ENGLISH_TEAM_PATH } from "./language-links";
+import { TopToolbarMobileMenu } from "./top-toolbar-mobile-menu";
+import {
+  ENGLISH_DONATE_PATH,
+  ENGLISH_TEAM_PATH,
+  FRENCH_HOME_PATH,
+} from "./language-links";
 
 export type TopToolbarCopy = {
   ariaLabel: string;
+  menuLabel: string;
+  menuTitle: string;
   homeHref: string;
   teamHref: string;
   teamLabel: string;
@@ -32,8 +39,13 @@ const toolbarOutlineButtonClass = cn(
   "!border-glow hover:-translate-y-px hover:!border-glow hover:shadow-[0_6px_18px_rgb(0_0_0_/_0.28)]",
 );
 
+const toolbarIconButtonClass =
+  "size-11 rounded-full border-glow/40 bg-background/20 text-ink-light hover:border-glow/60 hover:bg-glow/10 hover:text-ink-light";
+
 const defaultCopy: TopToolbarCopy = {
   ariaLabel: "Primary",
+  menuLabel: "Open navigation menu",
+  menuTitle: "Navigation menu",
   homeHref: "/",
   teamHref: ENGLISH_TEAM_PATH,
   teamLabel: "Our Team",
@@ -47,7 +59,7 @@ const defaultCopy: TopToolbarCopy = {
   languageHrefLang: "fr",
   languageLang: "fr",
   languageAriaLabel: "Lire en français",
-  donateHref: "/#donation-levels",
+  donateHref: ENGLISH_DONATE_PATH,
   donateLabel: "Donate",
 };
 
@@ -71,7 +83,7 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
         />
       </Link>
 
-      <div className="flex h-full min-w-0 items-center gap-[18px] text-sm text-foreground/85 max-[860px]:gap-2.5 max-[420px]:gap-1.5 max-[860px]:text-[13px]">
+      <div className="hidden h-full min-w-0 items-center gap-[18px] text-sm text-foreground/85 min-[761px]:flex max-[860px]:gap-2.5 max-[420px]:gap-1.5 max-[860px]:text-[13px]">
         <Button
           asChild
           size="sm"
@@ -129,6 +141,36 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
         >
           <Link href={copy.donateHref}>{copy.donateLabel}</Link>
         </Button>
+      </div>
+
+      <div className="flex h-full items-center gap-2 min-[761px]:hidden max-[360px]:gap-1.5">
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className={cn(toolbarOutlineButtonClass, "min-h-11 px-2.5")}
+        >
+          <a
+            href={copy.languageHref}
+            hrefLang={copy.languageHrefLang}
+            lang={copy.languageLang}
+            aria-label={copy.languageAriaLabel}
+          >
+            <Globe2Icon data-icon="inline-start" aria-hidden="true" />
+            {copy.languageLabel}
+          </a>
+        </Button>
+        <Button
+          asChild
+          size="sm"
+          className="donate-lava h-auto min-h-11 rounded-full px-3 py-2 font-semibold text-ink-light shadow-toolbar-donate transition-[filter,box-shadow,transform] duration-300 hover:-translate-y-px hover:text-ink-light hover:brightness-110 hover:shadow-[0_6px_18px_rgb(0_0_0_/_0.28)] max-[360px]:px-2.5"
+        >
+          <Link href={copy.donateHref}>{copy.donateLabel}</Link>
+        </Button>
+        <TopToolbarMobileMenu
+          copy={copy}
+          triggerClassName={toolbarIconButtonClass}
+        />
       </div>
     </nav>
   );

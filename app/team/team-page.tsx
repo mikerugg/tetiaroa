@@ -19,7 +19,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { homeCopies, type HomeLocale } from "../home-copy";
-import { ENGLISH_TEAM_PATH, FRENCH_TEAM_PATH } from "../language-links";
+import {
+  ENGLISH_DONATE_PATH,
+  ENGLISH_TEAM_PATH,
+  FRENCH_DONATE_PATH,
+  FRENCH_TEAM_PATH,
+} from "../language-links";
 import { SiteFooter } from "../site-footer";
 import { TopToolbar } from "../top-toolbar";
 import { people, type Person } from "./people-data";
@@ -328,7 +333,7 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
           "People, foundations, nonprofits, and businesses funding conservation, research, education, and daily care.",
         logo: "Donors",
         logoDetail: "People + institutions",
-        href: "https://www.tetiaroasociety.org/donate",
+        href: ENGLISH_DONATE_PATH,
         actionLabel: "Donate",
       },
     ],
@@ -463,7 +468,7 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
           "Personnes, fondations, associations et entreprises qui financent conservation, recherche, éducation et soin quotidien.",
         logo: "Donateurs",
         logoDetail: "Personnes + institutions",
-        href: "https://www.tetiaroasociety.org/donate",
+        href: FRENCH_DONATE_PATH,
         actionLabel: "Donner",
       },
     ],

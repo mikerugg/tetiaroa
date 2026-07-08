@@ -18,7 +18,7 @@ import { HomepageInitialScrollReset } from "./homepage-client";
 import { DepthScene } from "./depth-scene";
 import { VrViewer } from "./vr-viewer";
 import { SanctuaryVideo } from "./sanctuary-video";
-import { LanternDonate } from "./lantern-donate";
+import { HomeLanternDonate } from "./home-lantern-donate";
 import { NightBeatCinema } from "./night-beat-cinema";
 import { ScanPanel } from "./scan-panel";
 import { BrandoPromiseNote } from "./brando-story/brando-promise-note";
@@ -576,9 +576,10 @@ export default function HomeExperience({
               </strong>
             </p>
 
-            <LanternDonate
+            <HomeLanternDonate
               tiers={copy.lantern.tiers}
               labels={copy.lantern.labels}
+              locale={copy.locale}
             />
           </div>
         </section>

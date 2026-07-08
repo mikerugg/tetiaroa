@@ -1,7 +1,9 @@
 import Link from "next/link";
 import {
+  ENGLISH_DONATE_PATH,
   ENGLISH_HOME_PATH,
   ENGLISH_IMPACT_PATH,
+  FRENCH_DONATE_PATH,
   FRENCH_HOME_PATH,
   FRENCH_IMPACT_PATH,
 } from "./language-links";
@@ -22,13 +24,13 @@ const dockItems: Record<
     { id: "home", label: "Home", href: ENGLISH_HOME_PATH },
     { id: "impact", label: "Impact Feed", href: ENGLISH_IMPACT_PATH },
     { id: "turtle-tales", label: "Turtle Tales", href: "/turtle-tales" },
-    { id: "donate", label: "Donate", href: `${ENGLISH_HOME_PATH}#join` },
+    { id: "donate", label: "Donate", href: ENGLISH_DONATE_PATH },
   ],
   fr: [
     { id: "home", label: "Accueil", href: FRENCH_HOME_PATH },
     { id: "impact", label: "Impact", href: FRENCH_IMPACT_PATH },
     { id: "turtle-tales", label: "Tortues", href: "/turtle-tales" },
-    { id: "donate", label: "Donner", href: `${FRENCH_HOME_PATH}#join` },
+    { id: "donate", label: "Donner", href: FRENCH_DONATE_PATH },
   ],
 };
 

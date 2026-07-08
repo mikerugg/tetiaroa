@@ -4,12 +4,15 @@ import type { SiteFooterCopy } from "./site-footer";
 import type { TopToolbarCopy } from "./top-toolbar";
 import type { VrViewerLabels } from "./vr-viewer";
 import {
+  ENGLISH_CONTACT_PATH,
+  ENGLISH_DONATE_PATH,
   ENGLISH_IMPACT_PATH,
   ENGLISH_HOME_PATH,
   ENGLISH_TEAM_PATH,
+  FRENCH_CONTACT_PATH,
+  FRENCH_DONATE_PATH,
   FRENCH_IMPACT_PATH,
   FRENCH_HOME_PATH,
-  FRENCH_HOME_URL,
   FRENCH_TEAM_PATH,
 } from "./language-links";
 
@@ -165,6 +168,8 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
     locale: "en",
     toolbar: {
       ariaLabel: "Primary",
+      menuLabel: "Open navigation menu",
+      menuTitle: "Navigation menu",
       homeHref: ENGLISH_HOME_PATH,
       teamHref: ENGLISH_TEAM_PATH,
       teamLabel: "Our Team",
@@ -178,26 +183,25 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       languageHrefLang: "fr",
       languageLang: "fr",
       languageAriaLabel: "Lire en français",
-      donateHref: `${ENGLISH_HOME_PATH}#donation-levels`,
+      donateHref: ENGLISH_DONATE_PATH,
       donateLabel: "Donate",
     },
     footer: {
       homeHref: ENGLISH_HOME_PATH,
-      description:
-        "Teti'aroa is not a backdrop. We protect the atoll through field science, island stewardship, and education rooted in place.",
       columns: [
         {
           title: "Explore",
           links: [
             { href: ENGLISH_HOME_PATH, label: "Home" },
             { href: ENGLISH_TEAM_PATH, label: "Our Team" },
-            { href: "/our-logo", label: "Logo meaning" },
-            { href: ENGLISH_IMPACT_PATH, label: "Impact Feed" },
+            { href: "/our-logo", label: "Our Logo" },
+            { href: "/brando-story/work", label: "Our Story" },
           ],
         },
         {
-          title: "Fieldwork",
+          title: "Projects",
           links: [
+            { href: ENGLISH_IMPACT_PATH, label: "Impact Feed" },
             { href: "/#honu-xr", label: "Honu XR" },
             { href: "/#sanctuary", label: "Turtle and shark sanctuary" },
             { href: "/#twin", label: "Digital twin" },
@@ -208,16 +212,45 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           links: [
             { href: "/turtle-tales", label: "Turtle Tales" },
             { href: "/field-station", label: "Field Station" },
-            { href: "https://www.tetiaroasociety.org/", label: "Official site" },
-            { href: "https://www.tetiaroasociety.org/donate", label: "Donate" },
+            {
+              href: ENGLISH_CONTACT_PATH,
+              label: "Contact us",
+            },
           ],
         },
       ],
-      ctaEyebrow: "Back the fieldwork",
+      ctaEyebrow: "Back The Work",
       ctaCopy:
-        "Your gift becomes turtle patrols, reef monitoring, student lessons, and the unglamorous daily care an atoll needs.",
-      ctaHref: "https://www.tetiaroasociety.org/donate",
+        "Your gift becomes patrols, monitoring, lessons, and the daily care the atoll needs.",
+      ctaHref: ENGLISH_DONATE_PATH,
       ctaLabel: "Fund the work",
+      socials: [
+        {
+          platform: "contact",
+          href: ENGLISH_CONTACT_PATH,
+          label: "Contact us",
+        },
+        {
+          platform: "facebook",
+          href: "https://www.facebook.com/tetiaroasociety",
+          label: "Facebook",
+        },
+        {
+          platform: "instagram",
+          href: "https://www.instagram.com/tetiaroasociety",
+          label: "Instagram",
+        },
+        {
+          platform: "linkedin",
+          href: "https://www.linkedin.com/company/tetiaroa-society/",
+          label: "LinkedIn",
+        },
+        {
+          platform: "youtube",
+          href: "https://www.youtube.com/channel/UCPGkXEFTswBQft-8LUcvmCw",
+          label: "YouTube",
+        },
+      ],
       legal: "Tetiaroa Society / EIN 45-1080688",
       place: "Society Islands / French Polynesia",
     },
@@ -535,6 +568,8 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
     locale: "fr",
     toolbar: {
       ariaLabel: "Navigation principale",
+      menuLabel: "Ouvrir le menu de navigation",
+      menuTitle: "Menu de navigation",
       homeHref: FRENCH_HOME_PATH,
       teamHref: FRENCH_TEAM_PATH,
       teamLabel: "L'équipe",
@@ -548,26 +583,25 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       languageHrefLang: "en",
       languageLang: "en",
       languageAriaLabel: "Read in English",
-      donateHref: `${FRENCH_HOME_PATH}#donation-levels`,
+      donateHref: FRENCH_DONATE_PATH,
       donateLabel: "Donner",
     },
     footer: {
       homeHref: FRENCH_HOME_PATH,
-      description:
-        "Teti'aroa n'est pas un décor. Nous protégeons l'atoll par la science de terrain, le soin quotidien de l'île et une éducation ancrée dans ce lieu.",
       columns: [
         {
           title: "Explorer",
           links: [
             { href: FRENCH_HOME_PATH, label: "Accueil" },
             { href: FRENCH_TEAM_PATH, label: "Notre équipe" },
-            { href: "/our-logo", label: "Sens du logo" },
-            { href: FRENCH_IMPACT_PATH, label: "Fil d'impact" },
+            { href: "/our-logo", label: "Le logo" },
+            { href: "/brando-story/work", label: "Notre histoire" },
           ],
         },
         {
-          title: "Terrain",
+          title: "Projets",
           links: [
+            { href: FRENCH_IMPACT_PATH, label: "Fil d'impact" },
             { href: `${FRENCH_HOME_PATH}#honu-xr`, label: "Honu XR" },
             {
               href: `${FRENCH_HOME_PATH}#sanctuary`,
@@ -581,16 +615,45 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           links: [
             { href: "/turtle-tales", label: "Turtle Tales" },
             { href: "/field-station", label: "Field Station" },
-            { href: FRENCH_HOME_URL, label: "Site officiel" },
-            { href: "https://www.tetiaroasociety.org/donate", label: "Donner" },
+            {
+              href: FRENCH_CONTACT_PATH,
+              label: "Nous contacter",
+            },
           ],
         },
       ],
       ctaEyebrow: "Soutenir le terrain",
       ctaCopy:
         "Votre don devient des patrouilles tortues, du suivi récifal, des leçons pour les élèves et le soin discret dont un atoll a besoin chaque jour.",
-      ctaHref: "https://www.tetiaroasociety.org/donate",
+      ctaHref: FRENCH_DONATE_PATH,
       ctaLabel: "Financer le travail",
+      socials: [
+        {
+          platform: "contact",
+          href: FRENCH_CONTACT_PATH,
+          label: "Nous contacter",
+        },
+        {
+          platform: "facebook",
+          href: "https://www.facebook.com/tetiaroasociety",
+          label: "Facebook",
+        },
+        {
+          platform: "instagram",
+          href: "https://www.instagram.com/tetiaroasociety",
+          label: "Instagram",
+        },
+        {
+          platform: "linkedin",
+          href: "https://www.linkedin.com/company/tetiaroa-society/",
+          label: "LinkedIn",
+        },
+        {
+          platform: "youtube",
+          href: "https://www.youtube.com/channel/UCPGkXEFTswBQft-8LUcvmCw",
+          label: "YouTube",
+        },
+      ],
       legal: "Tetiaroa Society / EIN 45-1080688",
       place: "Îles de la Société / Polynésie française",
     },

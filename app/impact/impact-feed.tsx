@@ -508,7 +508,7 @@ export function ImpactFeed({
         </div>
       </section>
 
-      <main className="mx-auto max-w-[1540px] px-4 py-6 sm:px-6 md:px-8 lg:px-10">
+      <main className="mx-auto max-w-[1540px] px-4 pb-28 pt-6 sm:px-6 md:px-8 md:pb-6 lg:px-10">
         <section className="min-w-0" aria-labelledby="feed-heading">
           <div className="flex flex-col gap-4 pb-4">
             <div className="relative w-full md:max-w-md">
@@ -522,7 +522,7 @@ export function ImpactFeed({
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder={copy.searchPlaceholder}
                 aria-label={copy.searchAria}
-                className="h-10 rounded-sm pl-9 font-mono text-xs"
+                className="h-11 rounded-sm pl-9 font-mono text-xs"
               />
             </div>
 
@@ -553,7 +553,7 @@ export function ImpactFeed({
               >
                 <ToggleGroupItem
                   value="all"
-                  className="h-10 rounded-sm px-3 font-mono text-[11px] uppercase tracking-[0.12em] sm:px-4"
+                  className="h-11 rounded-sm px-3 font-mono text-[11px] uppercase tracking-[0.12em] sm:px-4"
                   aria-label={copy.showTopic(copy.allFilter)}
                 >
                   {copy.allFilter}
@@ -562,7 +562,7 @@ export function ImpactFeed({
                   <ToggleGroupItem
                     key={option.value}
                     value={option.value}
-                    className="h-10 rounded-sm px-3 font-mono text-[11px] uppercase tracking-[0.12em] sm:px-4"
+                    className="h-11 rounded-sm px-3 font-mono text-[11px] uppercase tracking-[0.12em] sm:px-4"
                     aria-label={copy.showTopic(option.label)}
                   >
                     {option.label}
@@ -576,7 +576,7 @@ export function ImpactFeed({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-10 rounded-sm font-mono text-[11px] uppercase tracking-[0.12em]"
+                    className="h-11 rounded-sm font-mono text-[11px] uppercase tracking-[0.12em]"
                     onClick={clearFilters}
                   >
                     <XIcon data-icon="inline-start" aria-hidden="true" />
@@ -588,7 +588,7 @@ export function ImpactFeed({
                   onValueChange={(value) => setFormat(value as FormatFilter)}
                 >
                   <SelectTrigger
-                    className="h-10 min-w-44 rounded-sm font-mono text-xs uppercase tracking-[0.12em]"
+                    className="min-h-11 min-w-44 rounded-sm font-mono text-xs uppercase tracking-[0.12em]"
                     aria-label={copy.formatAria}
                   >
                     <SelectValue placeholder={copy.allFormats} />
@@ -612,7 +612,7 @@ export function ImpactFeed({
                   onValueChange={(value) => setSortMode(value as SortMode)}
                 >
                   <SelectTrigger
-                    className="h-10 min-w-36 rounded-sm font-mono text-xs uppercase tracking-[0.12em]"
+                    className="min-h-11 min-w-36 rounded-sm font-mono text-xs uppercase tracking-[0.12em]"
                     aria-label={copy.sortAria}
                   >
                     <SelectValue placeholder={copy.sortLabels.latest} />
