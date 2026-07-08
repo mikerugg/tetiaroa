@@ -240,7 +240,7 @@ const teamPageCopies: Record<TeamLocale, TeamPageCopy> = {
         title: "Tetiaroa Society Team",
         icon: CompassIcon,
         summary:
-          "The Tetiaroa Society team carries the work as one staff: leadership, field station operations, conservation, education, guiding, communications, and daily care for the atoll.",
+          "We are incredibly grateful for and humbled by the dedication and expertise of our team members who have chosen to join us on this journey.",
       },
       {
         id: "board",
