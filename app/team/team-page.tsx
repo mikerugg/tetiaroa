@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   ArrowRightIcon,
   CircleDollarSignIcon,
@@ -627,6 +628,22 @@ function getRoleLabel(role: string, locale: TeamLocale) {
   return roleDisplayBreaks[translatedRole] ?? translatedRole;
 }
 
+function getImpactProfileHref(href: string, locale: TeamLocale) {
+  const pathname = getProfilePathname(href);
+  const profilePath = `/${pathname.replace(/^\/+|\/+$/g, "")}`;
+  const impactPath = locale === "fr" ? "/fr/impact" : "/impact";
+
+  return `${impactPath}${profilePath}`;
+}
+
+function getProfilePathname(href: string) {
+  try {
+    return new URL(href).pathname;
+  } catch {
+    return href;
+  }
+}
+
 function getInitials(name: string) {
   const cleanName = name.replace(/^Dr\.?\s+/i, "");
   const initials = cleanName
@@ -669,6 +686,7 @@ function TeamGroupSection({
           <TeamMemberCard
             key={entry.id}
             person={entry}
+            profileHref={getImpactProfileHref(entry.href, locale)}
             role={getRoleLabel(entry.role, locale)}
             viewProfileLabel={viewProfileLabel}
           />
@@ -734,17 +752,21 @@ function SupportProfileCard({ profile }: { profile: SupportProfile }) {
 
 function TeamMemberCard({
   person: entry,
+  profileHref,
   role,
   viewProfileLabel,
 }: {
   person: Person;
+  profileHref: string;
   role: string;
   viewProfileLabel: string;
 }) {
   const initials = getInitials(entry.name);
-
-  return (
-    <Card size="sm" className="flex h-full flex-col overflow-hidden rounded-md">
+  const card = (
+    <Card
+      size="sm"
+      className="flex h-full flex-col overflow-hidden rounded-md transition-colors group-hover:border-primary/50"
+    >
       <div className="relative aspect-square bg-muted">
         {entry.image ? (
           <Image
@@ -769,14 +791,25 @@ function TeamMemberCard({
       </CardHeader>
       {entry.href ? (
         <CardFooter className="mt-auto">
-          <Button asChild variant="link" size="sm" className="px-0">
-            <a href={entry.href}>
-              {viewProfileLabel}
-              <ArrowRightIcon data-icon="inline-end" />
-            </a>
-          </Button>
+          <span className="inline-flex items-center gap-1 text-sm font-medium text-primary underline-offset-4 transition-colors group-hover:underline">
+            {viewProfileLabel}
+            <ArrowRightIcon className="size-4" aria-hidden="true" />
+          </span>
         </CardFooter>
       ) : null}
     </Card>
+  );
+
+  if (!entry.href) {
+    return card;
+  }
+
+  return (
+    <Link
+      href={profileHref}
+      className="group block h-full rounded-md outline-none transition-transform focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px"
+    >
+      {card}
+    </Link>
   );
 }

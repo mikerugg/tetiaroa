@@ -1,23 +1,27 @@
 #!/usr/bin/env node
 
-import { createReadStream, existsSync, readFileSync } from "node:fs";
+import {
+  createReadStream,
+  existsSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+} from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { createClient } from "@sanity/client";
 
 const rootDir = process.cwd();
-const legacyDir = path.join(rootDir, "tetiaroa-old");
-const sqlPath = path.join(
-  legacyDir,
-  "tetiaroa_dev_2026-06-05T17-48-47_UTC_database.sql",
-);
-const filesDir = path.join(legacyDir, "files_dev");
 const cacheDir = path.join(rootDir, ".migration-cache");
 const assetCachePath = path.join(cacheDir, "drupal-impact-assets.json");
 
 loadLocalEnvFile(path.join(rootDir, ".env.local"));
 loadLocalEnvFile(path.join(rootDir, ".env"));
+
+const legacySource = resolveLegacySource();
+const sqlPath = legacySource.sqlPath;
+const filesDir = legacySource.filesDir;
 
 const args = new Set(process.argv.slice(2));
 const isWrite = args.has("--write") || args.has("--import");
@@ -47,6 +51,7 @@ const publishedBundles = new Set([
   "organisms",
   "partner",
   "plain_page",
+  "project_updates",
   "simple_page",
   "ts_people",
   "video_series_landing",
@@ -262,6 +267,91 @@ function normalizeEnvValue(value) {
   return trimmed;
 }
 
+function resolveLegacySource() {
+  const envSqlPath = process.env.DRUPAL_IMPACT_SQL_PATH ?? process.env.DRUPAL_SQL_PATH;
+  const envFilesDir =
+    process.env.DRUPAL_IMPACT_FILES_DIR ?? process.env.DRUPAL_FILES_DIR;
+
+  if (envSqlPath || envFilesDir) {
+    if (!envSqlPath || !envFilesDir) {
+      throw new Error(
+        "Set both DRUPAL_IMPACT_SQL_PATH and DRUPAL_IMPACT_FILES_DIR when overriding the Drupal source.",
+      );
+    }
+
+    const resolvedSqlPath = path.resolve(rootDir, envSqlPath);
+    const resolvedFilesDir = path.resolve(rootDir, envFilesDir);
+
+    return {
+      legacyDir: path.dirname(resolvedSqlPath),
+      sqlPath: resolvedSqlPath,
+      filesDir: resolvedFilesDir,
+    };
+  }
+
+  const candidates = [
+    {
+      legacyDir: path.join(rootDir, ".tetiaroa_old"),
+      sqlDirs: [path.join(rootDir, ".tetiaroa_old", "db")],
+      fileDirs: [
+        path.join(rootDir, ".tetiaroa_old", "files_live"),
+        path.join(rootDir, ".tetiaroa_old", "files_dev"),
+      ],
+    },
+    {
+      legacyDir: path.join(rootDir, "tetiaroa-old"),
+      sqlDirs: [path.join(rootDir, "tetiaroa-old", "db"), path.join(rootDir, "tetiaroa-old")],
+      fileDirs: [
+        path.join(rootDir, "tetiaroa-old", "files_live"),
+        path.join(rootDir, "tetiaroa-old", "files_dev"),
+      ],
+    },
+  ];
+
+  for (const candidate of candidates) {
+    const resolvedSqlPath = findNewestSql(candidate.sqlDirs);
+    const resolvedFilesDir = candidate.fileDirs.find((fileDir) => existsSync(fileDir));
+
+    if (resolvedSqlPath && resolvedFilesDir) {
+      return {
+        legacyDir: candidate.legacyDir,
+        sqlPath: resolvedSqlPath,
+        filesDir: resolvedFilesDir,
+      };
+    }
+  }
+
+  throw new Error(
+    "Unable to find a Drupal backup. Expected .tetiaroa_old/db/*.sql with .tetiaroa_old/files_live, or tetiaroa-old with files_dev.",
+  );
+}
+
+function findNewestSql(sqlDirs) {
+  const sqlFiles = [];
+
+  for (const sqlDir of sqlDirs) {
+    if (!existsSync(sqlDir)) {
+      continue;
+    }
+
+    for (const entry of readdirSync(sqlDir)) {
+      if (!entry.endsWith(".sql")) {
+        continue;
+      }
+
+      const filePath = path.join(sqlDir, entry);
+      const stats = statSync(filePath);
+
+      if (stats.isFile()) {
+        sqlFiles.push({ filePath, mtimeMs: stats.mtimeMs });
+      }
+    }
+  }
+
+  sqlFiles.sort((left, right) => right.mtimeMs - left.mtimeMs);
+  return sqlFiles[0]?.filePath ?? "";
+}
+
 let tables;
 let indexes;
 let assetResolver;
@@ -314,6 +404,7 @@ async function main() {
 
   if (!isDryRun) {
     await deleteLegacyDottedMigrationDocuments();
+    await deleteStaleMigrationDocuments(documents);
     await writeDocuments(documents);
     await assetResolver.saveCache();
   }
@@ -1890,16 +1981,57 @@ function isImageFile(fileRow) {
 
 function localPathFromFileRow(fileRow) {
   const uri = stringValue(fileRow.uri);
+  let localPath;
 
   if (uri.startsWith("public://")) {
-    return path.join(filesDir, uri.slice("public://".length));
+    localPath = path.join(filesDir, uri.slice("public://".length));
+    return resolveLocalPath(localPath);
   }
 
   if (uri.startsWith("private://")) {
-    return path.join(filesDir, "private", uri.slice("private://".length));
+    localPath = path.join(filesDir, "private", uri.slice("private://".length));
+    return resolveLocalPath(localPath);
   }
 
-  return path.join(filesDir, stringValue(fileRow.filename));
+  localPath = path.join(filesDir, stringValue(fileRow.filename));
+  return resolveLocalPath(localPath);
+}
+
+function resolveLocalPath(filePath) {
+  if (existsSync(filePath)) {
+    return filePath;
+  }
+
+  const directory = path.dirname(filePath);
+  const basename = path.basename(filePath);
+  const candidates = [
+    path.join(directory, basename.normalize("NFC")),
+    path.join(directory, basename.normalize("NFD")),
+    path.join(directory, basename.replace(/\?/g, "_")),
+    path.join(directory, basename.normalize("NFC").replace(/\?/g, "_")),
+    path.join(directory, basename.normalize("NFD").replace(/\?/g, "_")),
+  ];
+
+  for (const candidate of candidates) {
+    if (existsSync(candidate)) {
+      return candidate;
+    }
+  }
+
+  if (!existsSync(directory)) {
+    return filePath;
+  }
+
+  const normalizedBasename = normalizeFilesystemName(basename);
+  const matchingEntry = readdirSync(directory).find(
+    (entry) => normalizeFilesystemName(entry) === normalizedBasename,
+  );
+
+  return matchingEntry ? path.join(directory, matchingEntry) : filePath;
+}
+
+function normalizeFilesystemName(value) {
+  return value.normalize("NFC").replace(/\?/g, "_");
 }
 
 function unixToIso(value) {
@@ -2058,6 +2190,39 @@ async function deleteLegacyDottedMigrationDocuments() {
   }
 }
 
+async function deleteStaleMigrationDocuments(documents) {
+  const currentIds = new Set(documents.map((doc) => doc._id));
+  const migratedIds = await client
+    .withConfig({ perspective: "raw" })
+    .fetch(`*[_type == "impactEntry"]._id`);
+  const staleIds = migratedIds.filter(
+    (id) =>
+      (id.startsWith("impactEntry-drupal-") ||
+        id.startsWith("drafts.impactEntry-drupal-")) &&
+      !currentIds.has(id),
+  );
+
+  if (!staleIds.length) {
+    return;
+  }
+
+  const batchSize = 100;
+
+  for (let index = 0; index < staleIds.length; index += batchSize) {
+    const batch = staleIds.slice(index, index + batchSize);
+    let transaction = client.transaction();
+
+    for (const id of batch) {
+      transaction = transaction.delete(id);
+    }
+
+    await transaction.commit();
+    console.log(
+      `Deleted ${Math.min(index + batch.length, staleIds.length)} / ${staleIds.length} stale migration documents`,
+    );
+  }
+}
+
 async function mapWithConcurrency(items, concurrency, mapper) {
   const results = new Array(items.length);
   let nextIndex = 0;
@@ -2090,11 +2255,12 @@ async function mapWithConcurrency(items, concurrency, mapper) {
 
 function printReport(documents) {
   console.log(`Drupal impact migration ${report.mode}`);
+  console.log(`Source SQL: ${path.relative(rootDir, sqlPath)}`);
+  console.log(`Source files: ${path.relative(rootDir, filesDir)}`);
   console.log(`Documents built: ${report.documentsBuilt}`);
   console.log(
     `Included published: ${report.included.published}; draft project updates: ${report.included.drafts}; skipped rows: ${report.skipped}`,
   );
-  console.log(`Expected broad archive: about 457 English + 423 French published, 34 drafts.`);
   console.log("");
   printMap("Included by bundle/language", report.includedByBundleLanguage);
   printMap("Skipped by bundle/language", report.skippedByBundleLanguage, 40);

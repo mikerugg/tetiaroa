@@ -15,10 +15,8 @@ export type Person = {
   featured?: boolean;
 };
 
-const site = "https://www.tetiaroasociety.org";
-
 const teamImage = (id: string) => `/team/${id}.webp`;
-const profile = (path: string) => `${site}${path}`;
+const profile = (path: string) => path;
 
 const staffSummary =
   "Keeps the daily work of the atoll moving across conservation, education, visitor learning, and field operations.";
