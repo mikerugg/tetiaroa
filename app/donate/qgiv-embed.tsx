@@ -9,8 +9,8 @@ const QGIV_EMBED_BASE_URL =
 const QGIV_EMBED_SCRIPT =
   "https://secure.qgiv.com/resources/core/js/embed.js";
 const INITIAL_EMBED_HEIGHT = 1000;
-const DESKTOP_EXPANDED_EMBED_HEIGHT = 1250;
-const MOBILE_EXPANDED_EMBED_HEIGHT = 1500;
+const DESKTOP_EXPANDED_EMBED_HEIGHT = 1350;
+const MOBILE_EXPANDED_EMBED_HEIGHT = 1600;
 
 type QgivWindow = Window &
   typeof globalThis & {
