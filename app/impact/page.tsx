@@ -8,7 +8,6 @@ import {
   getImpactToolbarCopy,
   impactRouteCopy,
 } from "./impact-route-copy";
-import { PrimaryRouteDock } from "../primary-route-dock";
 import { SiteFooter } from "../site-footer";
 import { TopToolbar } from "../top-toolbar";
 import { getImpactEntriesByLanguage } from "@/lib/sanity/impact";
@@ -44,7 +43,6 @@ export default async function ImpactPage({
   return (
     <>
       <TopToolbar copy={getImpactToolbarCopy("en")} />
-      <PrimaryRouteDock active="impact" />
       <ImpactFeed
         projects={impactProjects}
         stats={stats}

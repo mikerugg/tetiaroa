@@ -4,7 +4,6 @@ import {
   ENGLISH_IMPACT_URL,
   FRENCH_IMPACT_URL,
 } from "@/app/language-links";
-import { PrimaryRouteDock } from "@/app/primary-route-dock";
 import { SiteFooter } from "@/app/site-footer";
 import { TopToolbar } from "@/app/top-toolbar";
 import { ImpactFeed } from "@/app/impact/impact-feed";
@@ -44,7 +43,6 @@ export default async function FrenchImpactPage({
   return (
     <>
       <TopToolbar copy={getImpactToolbarCopy("fr")} />
-      <PrimaryRouteDock active="impact" locale="fr" />
       <ImpactFeed
         projects={impactProjects}
         stats={stats}

@@ -467,26 +467,26 @@ export function ImpactFeed({
             {copy.stats.heading}
           </h2>
 
-          <div className="mt-7 grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
+          <div className="mt-7 grid grid-cols-2 gap-x-5 gap-y-7 sm:gap-7 lg:grid-cols-4 lg:gap-0">
             {primaryStats.map((stat, index) => (
               <div
                 key={stat.label}
-                className="flex flex-col gap-3 lg:border-l lg:border-border lg:px-8 lg:first:border-l-0 lg:first:pl-0 lg:last:pr-0"
+                className="flex min-w-0 flex-col gap-2.5 sm:gap-3 lg:border-l lg:border-border lg:px-8 lg:first:border-l-0 lg:first:pl-0 lg:last:pr-0"
               >
-                <div className="grid size-11 place-items-center rounded-sm bg-secondary text-secondary-foreground">
+                <div className="grid size-10 place-items-center rounded-sm bg-secondary text-secondary-foreground sm:size-11">
                   <stat.icon aria-hidden="true" />
                 </div>
-                <div className="font-display text-5xl leading-none text-foreground xl:text-6xl">
+                <div className="font-display text-4xl leading-none text-foreground sm:text-5xl xl:text-6xl">
                   <CountUpValue
                     value={stat.value}
                     suffix={stat.suffix}
                     delay={index * 120}
                   />
                 </div>
-                <div className="font-mono text-[11px] uppercase tracking-[0.16em] text-foreground/90">
+                <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-foreground/90 sm:text-[11px] sm:tracking-[0.16em]">
                   {stat.label}
                 </div>
-                <p className="text-sm leading-6 text-muted-foreground">
+                <p className="text-sm leading-6 text-muted-foreground max-[420px]:text-[13px] max-[420px]:leading-5">
                   {stat.description}
                 </p>
               </div>
@@ -508,7 +508,7 @@ export function ImpactFeed({
         </div>
       </section>
 
-      <main className="mx-auto max-w-[1540px] px-4 pb-28 pt-6 sm:px-6 md:px-8 md:pb-6 lg:px-10">
+      <main className="mx-auto max-w-[1540px] px-4 py-6 sm:px-6 md:px-8 lg:px-10">
         <section className="min-w-0" aria-labelledby="feed-heading">
           <div className="flex flex-col gap-4 pb-4">
             <div className="relative w-full md:max-w-md">
