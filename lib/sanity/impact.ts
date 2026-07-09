@@ -22,7 +22,7 @@ import {
   impactEntriesQuery,
   impactEntryBySlugQuery,
   impactEntryByLegacyPathQuery,
-  impactSlugsQuery,
+  impactSitemapEntriesQuery,
 } from "./queries";
 
 type SanityReferenceLabel = {
@@ -77,6 +77,20 @@ type SanityImpactEntry = {
 type SanityLegacyPathMatch = {
   slug?: string | null;
   language?: string | null;
+};
+
+type SanityImpactSitemapEntry = {
+  slug?: string | null;
+  language?: string | null;
+  publishedAt?: string | null;
+  updatedAt?: string | null;
+  _updatedAt?: string | null;
+};
+
+export type ImpactSitemapEntry = {
+  slug: string;
+  language: ImpactLanguage;
+  lastModified: string;
 };
 
 const defaultHeroImage =
@@ -303,6 +317,35 @@ function normalizeSanityEntry(entry: SanityImpactEntry): ImpactContentEntry | nu
   };
 }
 
+function normalizeSitemapEntry(
+  entry: SanityImpactSitemapEntry,
+): ImpactSitemapEntry | null {
+  if (!entry.slug) {
+    return null;
+  }
+
+  const lastModified = normalizeDate(
+    entry.updatedAt ?? entry._updatedAt ?? entry.publishedAt,
+    "1970-01-01",
+  );
+
+  return {
+    slug: entry.slug,
+    language: normalizeLanguage(entry.language),
+    lastModified,
+  };
+}
+
+function getFallbackSitemapEntries(language: ImpactLanguage) {
+  return language === "en"
+    ? fallbackImpactEntries.map((entry) => ({
+        slug: entry.slug,
+        language: entry.language,
+        lastModified: entry.latestUpdate,
+      }))
+    : [];
+}
+
 async function fetchSanityData<T>(
   query: string,
   params: Record<string, string> = {},
@@ -375,26 +418,40 @@ export async function getImpactEntryBySlug(
   return normalized ?? (language === "en" ? getFallbackImpactEntryBySlug(slug) : null);
 }
 
-export async function getImpactSlugs(language: ImpactLanguage = "en") {
-  const slugs = await fetchSanityData<Array<{ slug?: string | null }>>(
-    impactSlugsQuery,
+export async function getImpactSitemapEntries(
+  language: ImpactLanguage = "en",
+): Promise<ImpactSitemapEntry[]> {
+  const fallbackEntries = getFallbackSitemapEntries(language);
+  const entries = await fetchSanityData<SanityImpactSitemapEntry[]>(
+    impactSitemapEntriesQuery,
     { language },
     ["impact"],
   ).catch((error) => {
-    console.warn("Unable to fetch Sanity impact slugs.", error);
+    console.warn("Unable to fetch Sanity impact sitemap entries.", error);
     return null;
   });
 
-  if (!slugs) {
-    return language === "en" ? fallbackImpactEntries.map((entry) => entry.slug) : [];
+  if (!entries) {
+    return fallbackEntries;
   }
 
-  return [
-    ...new Set([
-      ...slugs.flatMap((entry) => (entry.slug ? [entry.slug] : [])),
-      ...(language === "en" ? fallbackImpactEntries.map((entry) => entry.slug) : []),
-    ]),
-  ];
+  const sitemapEntries = entries.flatMap((entry) => {
+    const normalized = normalizeSitemapEntry(entry);
+    return normalized ? [normalized] : [];
+  });
+  const entryMap = new Map(
+    sitemapEntries.map((entry) => [`${entry.language}:${entry.slug}`, entry]),
+  );
+
+  for (const fallbackEntry of fallbackEntries) {
+    const key = `${fallbackEntry.language}:${fallbackEntry.slug}`;
+
+    if (!entryMap.has(key)) {
+      entryMap.set(key, fallbackEntry);
+    }
+  }
+
+  return [...entryMap.values()];
 }
 
 export async function getImpactEntryByLegacyPath(legacyPath: string) {

@@ -4,17 +4,11 @@ import {
   getImpactEntrySource,
   ImpactEntryPageContent,
 } from "../impact-entry-page";
-import { getImpactSlugs } from "@/lib/sanity/impact";
 
 type ImpactEntryRouteProps = {
   params: Promise<{ slug: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
-
-export async function generateStaticParams() {
-  const slugs = await getImpactSlugs("en");
-  return slugs.map((slug) => ({ slug }));
-}
 
 export async function generateMetadata({
   params,

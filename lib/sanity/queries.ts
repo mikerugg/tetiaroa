@@ -71,13 +71,17 @@ export const impactEntryBySlugQuery = defineQuery(`
   }
 `);
 
-export const impactSlugsQuery = defineQuery(`
+export const impactSitemapEntriesQuery = defineQuery(`
   *[
     _type == "impactEntry" &&
     defined(slug.current) &&
     coalesce(language, "en") == $language
   ] {
-    "slug": slug.current
+    "slug": slug.current,
+    "language": coalesce(language, "en"),
+    publishedAt,
+    updatedAt,
+    _updatedAt
   }
 `);
 
