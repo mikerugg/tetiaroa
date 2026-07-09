@@ -26,6 +26,7 @@ export const impactRouteCopy: Record<
     description: string;
     entryFallbackTitle: string;
     backLabel: string;
+    teamBackLabel: string;
     publishedLabel: string;
     updatedLabel: string;
     locationLabel: string;
@@ -46,6 +47,7 @@ export const impactRouteCopy: Record<
       "Field notes and project updates from Tetiaroa Society's conservation, research, education, and restoration work.",
     entryFallbackTitle: "Impact Entry / Tetiaroa Society",
     backLabel: "Back to Impact Feed",
+    teamBackLabel: "Back to Team page",
     publishedLabel: "Published",
     updatedLabel: "Updated",
     locationLabel: "Location",
@@ -65,6 +67,7 @@ export const impactRouteCopy: Record<
       "Notes de terrain, projets et actualités de Tetiaroa Society autour de la conservation, de la recherche, de l'éducation et de la restauration.",
     entryFallbackTitle: "Entrée d'impact / Tetiaroa Society",
     backLabel: "Retour au fil d'impact",
+    teamBackLabel: "Retour à la page Équipe",
     publishedLabel: "Publié",
     updatedLabel: "Mis à jour",
     locationLabel: "Lieu",

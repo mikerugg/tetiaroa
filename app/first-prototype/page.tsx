@@ -6,7 +6,6 @@ import {
   HomepageInitialScrollReset,
   HomepageNavState,
 } from "../homepage-client";
-import { PrimaryRouteDock } from "../primary-route-dock";
 import styles from "../page.module.css";
 import { TetiaroaMark } from "../tetiaroa-mark";
 
@@ -266,8 +265,6 @@ export default function Home() {
             </a>
           </div>
         </nav>
-
-        <PrimaryRouteDock active="home" />
 
         <section className={styles.hero} id="hero">
           <video

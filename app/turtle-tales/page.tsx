@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
-import { PrimaryRouteDock } from "../primary-route-dock";
 import styles from "./page.module.css";
 import {
   activationSteps,
@@ -46,8 +45,6 @@ export default function TurtleTalesPage() {
           Shop Hatchlings
         </a>
       </header>
-
-      <PrimaryRouteDock active="turtle-tales" />
 
       <main className={styles.main}>
         <section className={styles.hero}>

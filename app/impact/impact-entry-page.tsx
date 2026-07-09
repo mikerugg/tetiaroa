@@ -19,9 +19,10 @@ import { Separator } from "@/components/ui/separator";
 import { homeCopies } from "@/app/home-copy";
 import {
   ENGLISH_IMPACT_PATH,
+  ENGLISH_TEAM_PATH,
   FRENCH_IMPACT_PATH,
+  FRENCH_TEAM_PATH,
 } from "@/app/language-links";
-import { PrimaryRouteDock } from "@/app/primary-route-dock";
 import { SiteFooter } from "@/app/site-footer";
 import { TopToolbar } from "@/app/top-toolbar";
 import type {
@@ -39,6 +40,21 @@ import {
 type ImpactEntryPageContentProps = {
   slug: string;
   locale: ImpactLocale;
+  entrySource?: ImpactEntrySource;
+};
+
+export type ImpactEntrySource = "team";
+
+type ImpactEntryInfoCardProps = {
+  entry: ImpactContentEntry;
+  copy: (typeof impactRouteCopy)[ImpactLocale];
+  sidebarDate: {
+    label: string;
+    value: string;
+    dateTime: string;
+  };
+  affiliationLabel: string;
+  showLocation: boolean;
 };
 
 const dateFormatters: Record<ImpactLanguage, Intl.DateTimeFormat> = {
@@ -56,6 +72,15 @@ const dateFormatters: Record<ImpactLanguage, Intl.DateTimeFormat> = {
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.tetiaroasociety.org";
+
+export function getImpactEntrySource(
+  searchParams: Record<string, string | string[] | undefined>,
+): ImpactEntrySource | undefined {
+  const from = searchParams.from;
+  const source = Array.isArray(from) ? from[0] : from;
+
+  return source === "team" ? source : undefined;
+}
 
 function formatDate(value: string, locale: ImpactLanguage) {
   return dateFormatters[locale].format(new Date(`${value}T00:00:00`));
@@ -96,6 +121,78 @@ function getSidebarDate(
     value: formatDate(entry.latestUpdate, locale),
     dateTime: entry.latestUpdate,
   };
+}
+
+function ImpactEntryInfoCard({
+  entry,
+  copy,
+  sidebarDate,
+  affiliationLabel,
+  showLocation,
+}: ImpactEntryInfoCardProps) {
+  return (
+    <div className="rounded-md border border-border bg-card/80 p-5 shadow-2xl backdrop-blur-md">
+      <dl className="flex flex-col gap-5">
+        <div className="grid grid-cols-[32px_1fr] gap-3">
+          <CalendarDaysIcon aria-hidden="true" />
+          <div>
+            <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+              {sidebarDate.label}
+            </dt>
+            <dd className="mt-1 text-sm text-foreground">
+              <time dateTime={sidebarDate.dateTime}>{sidebarDate.value}</time>
+            </dd>
+          </div>
+        </div>
+        {showLocation ? (
+          <>
+            <Separator />
+            <div className="grid grid-cols-[32px_1fr] gap-3">
+              <MapPinIcon aria-hidden="true" />
+              <div>
+                <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                  {copy.locationLabel}
+                </dt>
+                <dd className="mt-1 text-sm text-foreground">
+                  {entry.location}
+                </dd>
+              </div>
+            </div>
+          </>
+        ) : null}
+        {entry.affiliation ? (
+          <>
+            <Separator />
+            <div>
+              <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                {affiliationLabel}
+              </dt>
+              <dd className="mt-1 text-sm text-foreground">
+                {entry.affiliation}
+              </dd>
+            </div>
+          </>
+        ) : null}
+        {entry.tags.length ? (
+          <>
+            <Separator />
+            <div>
+              <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                {copy.tagsLabel}
+              </dt>
+              <dd className="mt-2 flex flex-wrap gap-2">
+                {entry.tags.map((tag) => (
+                  <Badge key={tag} variant="outline" className="h-auto">
+                    {tag}
+                  </Badge>
+                ))}
+              </dd>
+            </div>
+          </>
+        ) : null}
+      </dl>
+    </div>
+  );
 }
 
 function getAbsoluteUrl(value: string) {
@@ -614,6 +711,7 @@ export async function generateImpactEntryMetadata(
 export async function ImpactEntryPageContent({
   slug,
   locale,
+  entrySource,
 }: ImpactEntryPageContentProps) {
   const copy = impactRouteCopy[locale];
   const entry = await getImpactEntryBySlug(slug, locale);
@@ -622,7 +720,15 @@ export async function ImpactEntryPageContent({
     notFound();
   }
 
-  const backHref = locale === "fr" ? FRENCH_IMPACT_PATH : ENGLISH_IMPACT_PATH;
+  const impactBackHref =
+    locale === "fr" ? FRENCH_IMPACT_PATH : ENGLISH_IMPACT_PATH;
+  const teamBackHref = locale === "fr" ? FRENCH_TEAM_PATH : ENGLISH_TEAM_PATH;
+  const shouldBackLinkToTeam =
+    entrySource === "team" && entry.entryType === "Profile";
+  const backLink = {
+    href: shouldBackLinkToTeam ? teamBackHref : impactBackHref,
+    label: shouldBackLinkToTeam ? copy.teamBackLabel : copy.backLabel,
+  };
   const portableTextComponents = getPortableTextComponents(copy);
   const body = normalizeImpactBody(entry.body);
   const heroSupportText = getHeroSupportText(entry, body);
@@ -634,7 +740,6 @@ export async function ImpactEntryPageContent({
   return (
     <>
       <TopToolbar copy={getImpactToolbarCopy(locale)} />
-      <PrimaryRouteDock active="impact" locale={locale} />
       <main className="bg-background text-foreground">
         <article>
           <section className="relative isolate overflow-hidden border-b border-border pt-14 md:pt-16">
@@ -649,9 +754,9 @@ export async function ImpactEntryPageContent({
                   variant="link"
                   className="mb-8 h-auto w-fit p-0 font-mono"
                 >
-                  <Link href={backHref}>
+                  <Link href={backLink.href}>
                     <ArrowLeftIcon data-icon="inline-start" aria-hidden="true" />
-                    {copy.backLabel}
+                    {backLink.label}
                   </Link>
                 </Button>
                 <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em]">
@@ -693,74 +798,14 @@ export async function ImpactEntryPageContent({
           </section>
 
           <section className="mx-auto grid max-w-[1540px] gap-8 px-5 py-8 sm:px-8 md:px-9 lg:grid-cols-[300px_minmax(0,1fr)] lg:px-10">
-            <aside className="lg:sticky lg:top-24 lg:self-start">
-              <div className="rounded-md border border-border bg-card/80 p-5 shadow-2xl backdrop-blur-md">
-                <dl className="flex flex-col gap-5">
-                  <div className="grid grid-cols-[32px_1fr] gap-3">
-                    <CalendarDaysIcon aria-hidden="true" />
-                    <div>
-                      <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                        {sidebarDate.label}
-                      </dt>
-                      <dd className="mt-1 text-sm text-foreground">
-                        <time dateTime={sidebarDate.dateTime}>
-                          {sidebarDate.value}
-                        </time>
-                      </dd>
-                    </div>
-                  </div>
-                  {showLocation ? (
-                    <>
-                      <Separator />
-                      <div className="grid grid-cols-[32px_1fr] gap-3">
-                        <MapPinIcon aria-hidden="true" />
-                        <div>
-                          <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                            {copy.locationLabel}
-                          </dt>
-                          <dd className="mt-1 text-sm text-foreground">
-                            {entry.location}
-                          </dd>
-                        </div>
-                      </div>
-                    </>
-                  ) : null}
-                  {entry.affiliation ? (
-                    <>
-                      <Separator />
-                      <div>
-                        <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                          {affiliationLabel}
-                        </dt>
-                        <dd className="mt-1 text-sm text-foreground">
-                          {entry.affiliation}
-                        </dd>
-                      </div>
-                    </>
-                  ) : null}
-                  {entry.tags.length ? (
-                    <>
-                      <Separator />
-                      <div>
-                        <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                          {copy.tagsLabel}
-                        </dt>
-                        <dd className="mt-2 flex flex-wrap gap-2">
-                          {entry.tags.map((tag) => (
-                            <Badge
-                              key={tag}
-                              variant="outline"
-                              className="h-auto"
-                            >
-                              {tag}
-                            </Badge>
-                          ))}
-                        </dd>
-                      </div>
-                    </>
-                  ) : null}
-                </dl>
-              </div>
+            <aside className="hidden lg:sticky lg:top-24 lg:block lg:self-start">
+              <ImpactEntryInfoCard
+                entry={entry}
+                copy={copy}
+                sidebarDate={sidebarDate}
+                affiliationLabel={affiliationLabel}
+                showLocation={showLocation}
+              />
             </aside>
 
             <div className="min-w-0">
@@ -776,6 +821,16 @@ export async function ImpactEntryPageContent({
                   </p>
                 )}
               </div>
+
+              <aside className="mt-8 lg:hidden">
+                <ImpactEntryInfoCard
+                  entry={entry}
+                  copy={copy}
+                  sidebarDate={sidebarDate}
+                  affiliationLabel={affiliationLabel}
+                  showLocation={showLocation}
+                />
+              </aside>
 
               {entry.gallery?.length ? (
                 <section className="mt-14" aria-labelledby="gallery-heading">

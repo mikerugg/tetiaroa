@@ -638,7 +638,7 @@ function getImpactProfileHref(href: string, locale: TeamLocale) {
   const profilePath = `/${pathname.replace(/^\/+|\/+$/g, "")}`;
   const impactPath = locale === "fr" ? "/fr/impact" : "/impact";
 
-  return `${impactPath}${profilePath}`;
+  return `${impactPath}${profilePath}?from=team`;
 }
 
 function getProfilePathname(href: string) {
