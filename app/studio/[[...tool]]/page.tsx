@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 
-const sanityLoginUrl = "https://www.sanity.io/login";
+const hostedStudioUrl = "https://tetiaroa.sanity.studio/";
 
 export default async function StudioPage() {
   if (process.env.NODE_ENV !== "development") {
-    redirect(sanityLoginUrl);
+    redirect(hostedStudioUrl);
   }
 
   const StudioDevPage = (await import("@/app/studio/studio-dev")).default;

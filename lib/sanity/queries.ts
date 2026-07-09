@@ -25,7 +25,9 @@ const impactEntryProjection = `
     _type == "image" => {
       ...,
       "url": asset->url,
-      "alt": coalesce(alt, asset->altText, "")
+      "alt": coalesce(alt, asset->altText, ""),
+      "width": asset->metadata.dimensions.width,
+      "height": asset->metadata.dimensions.height
     },
     _type == "documentLink" => {
       ...,

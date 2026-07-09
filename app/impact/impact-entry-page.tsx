@@ -204,6 +204,46 @@ function getString(value: Record<string, unknown>, key: string) {
   return typeof maybeValue === "string" ? maybeValue : "";
 }
 
+function getNumber(value: Record<string, unknown>, key: string) {
+  const maybeValue = value[key];
+
+  if (typeof maybeValue === "number" && Number.isFinite(maybeValue)) {
+    return maybeValue > 0 ? Math.round(maybeValue) : undefined;
+  }
+
+  if (typeof maybeValue === "string") {
+    const parsedValue = Number(maybeValue);
+
+    return Number.isFinite(parsedValue) && parsedValue > 0
+      ? Math.round(parsedValue)
+      : undefined;
+  }
+
+  return undefined;
+}
+
+function getImageDimensions(value: Record<string, unknown>, url: string) {
+  const width = getNumber(value, "width");
+  const height = getNumber(value, "height");
+
+  if (width && height) {
+    return { width, height };
+  }
+
+  const sanityAssetMatch = url.match(
+    /-(\d+)x(\d+)\.[a-z0-9]+(?:[?#].*)?$/i,
+  );
+
+  if (!sanityAssetMatch) {
+    return { width: 1200, height: 750 };
+  }
+
+  return {
+    width: Number(sanityAssetMatch[1]),
+    height: Number(sanityAssetMatch[2]),
+  };
+}
+
 type VideoEmbed =
   | {
       kind: "iframe";
@@ -531,19 +571,20 @@ function getPortableTextComponents(
           return null;
         }
 
+        const dimensions = getImageDimensions(record, url);
+
         return (
-          <figure className="my-10 flex flex-col gap-3">
-            <div className="relative aspect-[16/10] overflow-hidden rounded-md bg-muted">
-              <Image
-                src={url}
-                alt={alt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) calc(100vw - 40px), 960px"
-              />
-            </div>
+          <figure className="my-10 flex flex-col items-center gap-3">
+            <Image
+              src={url}
+              alt={alt}
+              width={dimensions.width}
+              height={dimensions.height}
+              className="h-auto max-w-full rounded-md bg-muted object-contain"
+              sizes="(max-width: 768px) calc(100vw - 40px), 896px"
+            />
             {caption ? (
-              <figcaption className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
+              <figcaption className="text-center font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
                 {caption}
               </figcaption>
             ) : null}
@@ -613,8 +654,8 @@ function getPortableTextComponents(
 
         if (video?.kind === "iframe") {
           return (
-            <figure className="my-10 flex flex-col gap-3">
-              <div className="overflow-hidden rounded-md border border-border bg-muted">
+            <figure className="my-10 flex flex-col items-center gap-3">
+              <div className="w-full max-w-3xl overflow-hidden rounded-md border border-border bg-muted">
                 <iframe
                   className="aspect-video w-full"
                   src={video.src}
@@ -625,7 +666,7 @@ function getPortableTextComponents(
                 />
               </div>
               {caption ? (
-                <figcaption className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                <figcaption className="text-center font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
                   {caption}
                 </figcaption>
               ) : null}
@@ -635,16 +676,16 @@ function getPortableTextComponents(
 
         if (video?.kind === "file") {
           return (
-            <figure className="my-10 flex flex-col gap-3">
+            <figure className="my-10 flex flex-col items-center gap-3">
               <video
-                className="aspect-video w-full rounded-md border border-border bg-muted"
+                className="aspect-video w-full max-w-3xl rounded-md border border-border bg-muted"
                 controls
                 preload="metadata"
               >
                 <source src={video.src} type={video.mimeType} />
               </video>
               {caption ? (
-                <figcaption className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                <figcaption className="text-center font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
                   {caption}
                 </figcaption>
               ) : null}
@@ -653,7 +694,7 @@ function getPortableTextComponents(
         }
 
         return (
-          <figure className="my-10 flex flex-col gap-3">
+          <figure className="my-10 flex flex-col items-center gap-3">
             <div className="rounded-md border border-border bg-muted p-5">
               <Button asChild variant="outline">
                 <a href={url}>
@@ -664,7 +705,7 @@ function getPortableTextComponents(
               </Button>
             </div>
             {caption ? (
-              <figcaption className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
+              <figcaption className="text-center font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
                 {caption}
               </figcaption>
             ) : null}
