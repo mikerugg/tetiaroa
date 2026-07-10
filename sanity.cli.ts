@@ -7,6 +7,6 @@ export default defineCliConfig({
     dataset: sanityDataset,
   },
   deployment: {
-    appId: "yzeis32ltibk30tt2dvnlgwj",
+    appId: "eokgaxbdkpmk0bqk3xvinpyg",
   },
 });
