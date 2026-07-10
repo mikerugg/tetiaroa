@@ -18,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { submitContactForm } from "./actions";
 import type { ContactFormCopy, ContactLocale } from "./contact-route-copy";
 import {
+  contactFieldMaxLengths,
   initialContactFormState,
   type ContactFieldErrors,
   type ContactFieldName,
@@ -164,6 +165,7 @@ function ContactInputField({
         type={type}
         autoComplete={autoComplete}
         placeholder={copy.fields[field].placeholder}
+        maxLength={contactFieldMaxLengths[field]}
         aria-invalid={isInvalid}
       />
       <FieldError errors={errors} />
@@ -190,6 +192,7 @@ function ContactMessageField({
         id={fieldIds.message}
         name="message"
         placeholder={copy.fields.message.placeholder}
+        maxLength={contactFieldMaxLengths.message}
         aria-invalid={isInvalid}
         className="min-h-36 resize-y"
       />

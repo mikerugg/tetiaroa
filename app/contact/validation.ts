@@ -28,11 +28,15 @@ export type ContactFormState = {
 
 export type ContactValidationMessages = {
   nameRequired: string;
+  nameTooLong: string;
   emailRequired: string;
   emailInvalid: string;
+  emailTooLong: string;
   subjectRequired: string;
+  subjectTooLong: string;
   messageRequired: string;
   messageTooShort: string;
+  messageTooLong: string;
 };
 
 export type ContactFieldValues = Record<ContactFieldName, string>;
@@ -50,6 +54,13 @@ export const initialContactFormState: ContactFormState = {
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const minimumMessageLength = 10;
+
+export const contactFieldMaxLengths: Record<ContactFieldName, number> = {
+  name: 100,
+  email: 254,
+  subject: 200,
+  message: 10_000,
+};
 
 function getFormString(formData: FormData, name: ContactFieldName) {
   const value = formData.get(name);
@@ -79,22 +90,30 @@ export function validateContactFields(
 
   if (!values.name) {
     addFieldError(fieldErrors, "name", messages.nameRequired);
+  } else if (values.name.length > contactFieldMaxLengths.name) {
+    addFieldError(fieldErrors, "name", messages.nameTooLong);
   }
 
   if (!values.email) {
     addFieldError(fieldErrors, "email", messages.emailRequired);
+  } else if (values.email.length > contactFieldMaxLengths.email) {
+    addFieldError(fieldErrors, "email", messages.emailTooLong);
   } else if (!emailPattern.test(values.email)) {
     addFieldError(fieldErrors, "email", messages.emailInvalid);
   }
 
   if (!values.subject) {
     addFieldError(fieldErrors, "subject", messages.subjectRequired);
+  } else if (values.subject.length > contactFieldMaxLengths.subject) {
+    addFieldError(fieldErrors, "subject", messages.subjectTooLong);
   }
 
   if (!values.message) {
     addFieldError(fieldErrors, "message", messages.messageRequired);
   } else if (values.message.length < minimumMessageLength) {
     addFieldError(fieldErrors, "message", messages.messageTooShort);
+  } else if (values.message.length > contactFieldMaxLengths.message) {
+    addFieldError(fieldErrors, "message", messages.messageTooLong);
   }
 
   return {

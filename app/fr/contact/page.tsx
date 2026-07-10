@@ -9,6 +9,8 @@ import { contactRouteCopy } from "../../contact/contact-route-copy";
 
 const copy = contactRouteCopy.fr;
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: copy.metadataTitle,
   description: copy.metadataDescription,

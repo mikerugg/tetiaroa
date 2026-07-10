@@ -6,12 +6,14 @@
     "dev": "next dev --port 3298",
     "build": "next build",
     "start": "next start",
+    "test": "node --experimental-strip-types --test app/contact/*.test.mjs",
     "lint": "eslint",
     "migrate:drupal-impact": "node scripts/migrate-drupal-impact.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^6.2.0",
     "@sanity/client": "^7.23.0",
+    "@vercel/functions": "^3.7.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.21.0",

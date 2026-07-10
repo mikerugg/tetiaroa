@@ -8,6 +8,7 @@ import {
   type ContactFormCopy,
 } from "./contact-route-copy";
 import { sendContactMessage } from "./mailer";
+import { isContactSubmissionAllowed } from "./rate-limit";
 import { verifyRenderToken } from "./timing-token";
 import { verifyTurnstileToken } from "./turnstile";
 import {
@@ -49,10 +50,10 @@ function getTrimmedFormValue(formData: FormData, name: string) {
 
 async function getRemoteIp() {
   const incomingHeaders = await headers();
-  const cloudflareIp = incomingHeaders.get("cf-connecting-ip")?.trim();
+  const vercelIp = incomingHeaders.get("x-vercel-forwarded-for")?.trim();
 
-  if (cloudflareIp) {
-    return cloudflareIp;
+  if (vercelIp) {
+    return vercelIp.split(",").at(0)?.trim();
   }
 
   return incomingHeaders
@@ -92,9 +93,17 @@ export async function submitContactForm(
     };
   }
 
+  const remoteIp = await getRemoteIp();
+
+  if (!(await isContactSubmissionAllowed(remoteIp))) {
+    console.warn("Contact form submission rate limit exceeded.");
+
+    return errorState(copy);
+  }
+
   const turnstileOk = await verifyTurnstileToken(
     formData.get("cf-turnstile-response"),
-    await getRemoteIp(),
+    remoteIp,
   );
 
   if (!turnstileOk) {
