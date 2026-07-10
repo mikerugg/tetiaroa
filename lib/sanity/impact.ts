@@ -297,7 +297,7 @@ function normalizeSanityEntry(entry: SanityImpactEntry): ImpactContentEntry | nu
     publishedAt,
     latestUpdate,
     status: entry.status ?? "Published",
-    location: entry.location ?? "Tetiaroa",
+    location: entry.location ?? "Teti'aroa",
     heroImage: entry.heroImage ?? defaultHeroImage,
     heroImageAlt: entry.heroImageAlt ?? entry.title,
     metric: normalizeMetric(entry.metric, entry.entryType),
