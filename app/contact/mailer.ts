@@ -29,14 +29,31 @@ function escapeHtml(value: string) {
 }
 
 function buildHtmlMessage({ name, email, subject, message }: ContactFieldValues) {
+  const safeName = escapeHtml(name);
+  const safeEmail = escapeHtml(email);
+  const safeSubject = escapeHtml(subject);
+  const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
+
   return [
-    "<p>New contact message from tetiaroasociety.org</p>",
-    "<dl>",
-    `<dt>Name</dt><dd>${escapeHtml(name)}</dd>`,
-    `<dt>Email</dt><dd>${escapeHtml(email)}</dd>`,
-    `<dt>Subject</dt><dd>${escapeHtml(subject)}</dd>`,
-    "</dl>",
-    `<p>${escapeHtml(message).replace(/\n/g, "<br>")}</p>`,
+    '<div style="margin:0;background-color:#f4f6f5;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;color:#1f2925;">',
+    '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto;max-width:640px;background-color:#ffffff;border:1px solid #dfe5e2;border-radius:12px;">',
+    "<tr><td style=\"padding:32px 32px 24px;border-bottom:1px solid #e7ebe9;\">",
+    '<p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#537065;">Tetiaroa Society</p>',
+    '<h1 style="margin:0;font-size:26px;line-height:1.25;font-weight:600;color:#16241f;">New Contact Form Submission</h1>',
+    "</td></tr>",
+    '<tr><td style="padding:28px 32px;">',
+    '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">',
+    `<tr><td style="width:96px;padding:0 16px 16px 0;vertical-align:top;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#6b7b75;">Name</td><td style="padding:0 0 16px;font-size:16px;line-height:1.5;color:#1f2925;">${safeName}</td></tr>`,
+    `<tr><td style="width:96px;padding:0 16px 16px 0;vertical-align:top;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#6b7b75;">Email</td><td style="padding:0 0 16px;font-size:16px;line-height:1.5;"><a href="mailto:${safeEmail}" style="color:#176b52;text-decoration:underline;">${safeEmail}</a></td></tr>`,
+    `<tr><td style="width:96px;padding:0 16px 0 0;vertical-align:top;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#6b7b75;">Subject</td><td style="padding:0;font-size:16px;line-height:1.5;color:#1f2925;">${safeSubject}</td></tr>`,
+    "</table>",
+    '<div style="margin-top:28px;padding:22px 24px;background-color:#f4f7f5;border-left:4px solid #2f7d65;border-radius:4px;">',
+    '<p style="margin:0 0 10px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#537065;">Message</p>',
+    `<div style="font-size:16px;line-height:1.65;color:#1f2925;">${safeMessage}</div>`,
+    "</div>",
+    "</td></tr>",
+    "</table>",
+    "</div>",
   ].join("");
 }
 
@@ -106,7 +123,7 @@ export async function sendContactMessage(values: ContactFieldValues) {
       },
       body: JSON.stringify({
         message: {
-          subject: `Tetiaroa Society contact: ${values.subject}`,
+          subject: `Tetiaroa Society Contact Form: ${values.subject}`,
           body: {
             contentType: "HTML",
             content: buildHtmlMessage(values),
