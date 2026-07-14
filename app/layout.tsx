@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 const display = Fraunces({
   variable: "--font-display",
   subsets: ["latin"],
-  style: ["normal", "italic"],
+  style: "italic",
   weight: "variable",
 });
 
