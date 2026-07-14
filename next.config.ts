@@ -1,18 +1,6 @@
 import type { NextConfig } from "next";
 
-const isProductionBuild = process.env.NODE_ENV === "production";
-
 const nextConfig: NextConfig = {
-  ...(isProductionBuild
-    ? {
-        turbopack: {
-          resolveAlias: {
-            "@/app/studio/studio-dev":
-              "./app/studio/studio-dev.production.tsx",
-          },
-        },
-      }
-    : {}),
   images: {
     remotePatterns: [
       {
