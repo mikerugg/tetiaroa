@@ -9,6 +9,7 @@ import {
 
 let publicClient: SanityClient | null = null;
 let draftClient: SanityClient | null = null;
+let writeClient: SanityClient | null = null;
 
 export function getSanityClient({ draft = false } = {}) {
   if (!hasSanityConfig()) {
@@ -41,4 +42,27 @@ export function getSanityClient({ draft = false } = {}) {
   }
 
   return publicClient;
+}
+
+export function getSanityWriteClient() {
+  if (!hasSanityConfig()) {
+    throw new Error("Sanity project id and dataset are not configured.");
+  }
+
+  if (!hasSanityToken()) {
+    throw new Error("SANITY_API_TOKEN is required to delete retired HTML assets.");
+  }
+
+  if (!writeClient) {
+    writeClient = createClient({
+      projectId: sanityProjectId,
+      dataset: sanityDataset,
+      apiVersion: sanityApiVersion,
+      useCdn: false,
+      perspective: "published",
+      token: process.env.SANITY_API_TOKEN,
+    });
+  }
+
+  return writeClient;
 }

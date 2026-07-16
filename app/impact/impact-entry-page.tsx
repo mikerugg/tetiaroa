@@ -30,12 +30,14 @@ import type {
   ImpactContentEntry,
   ImpactLanguage,
 } from "@/lib/impact/types";
+import { cn } from "@/lib/utils";
 import { getImpactEntryBySlug } from "@/lib/sanity/impact";
 import {
   getImpactToolbarCopy,
   impactRouteCopy,
   type ImpactLocale,
 } from "./impact-route-copy";
+import { ImpactHtmlPackage } from "./impact-html-package";
 
 type ImpactEntryPageContentProps = {
   slug: string;
@@ -732,10 +734,24 @@ export async function generateImpactEntryMetadata(
     };
   }
 
+  const alternatePath = entry.alternateSlug
+    ? locale === "fr"
+      ? `${ENGLISH_IMPACT_PATH}/${entry.alternateSlug}`
+      : `${FRENCH_IMPACT_PATH}/${entry.alternateSlug}`
+    : undefined;
+  const languageAlternates = alternatePath
+    ? locale === "fr"
+      ? { en: getAbsoluteUrl(alternatePath), fr: getAbsoluteUrl(path) }
+      : { en: getAbsoluteUrl(path), fr: getAbsoluteUrl(alternatePath) }
+    : undefined;
+
   return {
     title: `${entry.seoTitle ?? entry.title} / Tetiaroa Society`,
     description: entry.seoDescription ?? entry.summary,
-    alternates: { canonical: getAbsoluteUrl(path) },
+    alternates: {
+      canonical: getAbsoluteUrl(path),
+      ...(languageAlternates ? { languages: languageAlternates } : {}),
+    },
     openGraph: {
       title: entry.seoTitle ?? entry.title,
       description: entry.seoDescription ?? entry.summary,
@@ -780,7 +796,7 @@ export async function ImpactEntryPageContent({
 
   return (
     <>
-      <TopToolbar copy={getImpactToolbarCopy(locale)} />
+      <TopToolbar copy={getImpactToolbarCopy(locale, entry.alternateSlug)} />
       <main className="bg-background text-foreground">
         <article>
           <section className="relative isolate overflow-hidden border-b border-border pt-14 md:pt-16">
@@ -850,8 +866,20 @@ export async function ImpactEntryPageContent({
             </aside>
 
             <div className="min-w-0">
-              <div className="mx-auto flex max-w-4xl flex-col gap-6">
-                {body.length ? (
+              <div
+                className={cn(
+                  "flex flex-col gap-6",
+                  entry.htmlPackage ? "w-full" : "mx-auto max-w-4xl",
+                )}
+              >
+                {entry.htmlPackage ? (
+                  <ImpactHtmlPackage
+                    html={entry.htmlPackage.html}
+                    title={`${entry.title} — ${
+                      locale === "fr" ? "contenu enrichi" : "rich content"
+                    }`}
+                  />
+                ) : body.length ? (
                   <PortableText
                     value={body}
                     components={portableTextComponents}

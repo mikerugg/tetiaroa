@@ -48,6 +48,14 @@ export type ImpactGalleryImage = {
   height?: number;
 };
 
+export type ImpactHtmlPackage = {
+  html: string;
+  originalFilename?: string;
+  importedAt?: string;
+  imageCount: number;
+  warnings: string[];
+};
+
 export type ImpactRelatedEntry = {
   title: string;
   slug: string;
@@ -60,6 +68,7 @@ export type ImpactContentEntry = {
   slug: string;
   language: ImpactLanguage;
   translationKey?: string;
+  alternateSlug?: string;
   entryType: ImpactEntryType;
   summary: string;
   category: ImpactCategory;
@@ -73,6 +82,7 @@ export type ImpactContentEntry = {
   metric: string;
   tags: string[];
   body: ImpactBodyBlock[];
+  htmlPackage?: ImpactHtmlPackage;
   gallery?: ImpactGalleryImage[];
   projectDates?: string;
   team?: string[];

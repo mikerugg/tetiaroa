@@ -12,6 +12,7 @@ import {
   type ImpactEntryType,
   type ImpactFeedItem,
   type ImpactGalleryImage,
+  type ImpactHtmlPackage,
   type ImpactLanguage,
   type ImpactRelatedEntry,
   toImpactFeedItem,
@@ -41,6 +42,7 @@ type SanityImpactEntry = {
   slug?: string | null;
   language?: string | null;
   translationKey?: string | null;
+  alternateSlug?: string | null;
   entryType?: string | null;
   summary?: string | null;
   category?: string | null;
@@ -56,6 +58,7 @@ type SanityImpactEntry = {
   affiliation?: string | null;
   tags?: string[] | null;
   body?: ImpactBodyBlock[] | null;
+  htmlPackage?: (Partial<ImpactHtmlPackage> & { removed?: boolean }) | null;
   gallery?: Array<Partial<ImpactGalleryImage>> | null;
   program?: SanityReferenceLabel | null;
   topics?: SanityReferenceLabel[] | null;
@@ -182,6 +185,22 @@ function normalizeGallery(gallery: SanityImpactEntry["gallery"]) {
   });
 }
 
+function normalizeHtmlPackage(
+  htmlPackage: SanityImpactEntry["htmlPackage"],
+): ImpactHtmlPackage | undefined {
+  if (!htmlPackage?.html || htmlPackage.removed) {
+    return undefined;
+  }
+
+  return {
+    html: htmlPackage.html,
+    originalFilename: htmlPackage.originalFilename,
+    importedAt: htmlPackage.importedAt,
+    imageCount: htmlPackage.imageCount ?? 0,
+    warnings: htmlPackage.warnings ?? [],
+  };
+}
+
 function normalizeTeam(team: SanityImpactEntry["team"]) {
   return (team ?? []).flatMap((person) => {
     if (!person.name) {
@@ -287,6 +306,7 @@ function normalizeSanityEntry(entry: SanityImpactEntry): ImpactContentEntry | nu
     slug: entry.slug,
     language: normalizeLanguage(entry.language),
     translationKey: entry.translationKey ?? undefined,
+    alternateSlug: entry.alternateSlug ?? undefined,
     entryType: normalizeEntryType(entry.entryType),
     summary: entry.summary ?? "",
     category,
@@ -303,6 +323,7 @@ function normalizeSanityEntry(entry: SanityImpactEntry): ImpactContentEntry | nu
     metric: normalizeMetric(entry.metric, entry.entryType),
     tags: normalizeTags(entry),
     body: entry.body ?? [],
+    htmlPackage: normalizeHtmlPackage(entry.htmlPackage),
     gallery: normalizeGallery(entry.gallery),
     projectDates: entry.projectDates ?? undefined,
     team: normalizeTeam(entry.team),

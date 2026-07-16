@@ -2,13 +2,17 @@ import type { MetadataRoute } from "next";
 import {
   ENGLISH_CONTACT_PATH,
   ENGLISH_DONATE_PATH,
+  ENGLISH_EMAIL_LIST_PATH,
   ENGLISH_HOME_PATH,
   ENGLISH_IMPACT_PATH,
+  ENGLISH_PRIVACY_PATH,
   ENGLISH_TEAM_PATH,
   FRENCH_CONTACT_PATH,
   FRENCH_DONATE_PATH,
+  FRENCH_EMAIL_LIST_PATH,
   FRENCH_HOME_PATH,
   FRENCH_IMPACT_PATH,
+  FRENCH_PRIVACY_PATH,
   FRENCH_TEAM_PATH,
 } from "./language-links";
 import { getImpactSitemapEntries } from "@/lib/sanity/impact";
@@ -27,6 +31,10 @@ const staticRoutes = [
   { path: FRENCH_TEAM_PATH, priority: 0.7 },
   { path: ENGLISH_CONTACT_PATH, priority: 0.7 },
   { path: FRENCH_CONTACT_PATH, priority: 0.6 },
+  { path: ENGLISH_EMAIL_LIST_PATH, priority: 0.7 },
+  { path: FRENCH_EMAIL_LIST_PATH, priority: 0.6 },
+  { path: ENGLISH_PRIVACY_PATH, priority: 0.4 },
+  { path: FRENCH_PRIVACY_PATH, priority: 0.4 },
   { path: ENGLISH_DONATE_PATH, priority: 0.7 },
   { path: FRENCH_DONATE_PATH, priority: 0.6 },
   { path: "/our-logo", priority: 0.6 },

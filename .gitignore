@@ -15,6 +15,7 @@
 /downloads
 /.tetiaroa_old
 /.migration-cache
+/.migration-backups
 
 # next.js
 /.next/

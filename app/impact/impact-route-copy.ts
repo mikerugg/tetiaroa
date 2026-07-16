@@ -7,11 +7,22 @@ import type { TopToolbarCopy } from "../top-toolbar";
 
 export type ImpactLocale = HomeLocale;
 
-export function getImpactToolbarCopy(locale: ImpactLocale): TopToolbarCopy {
+export function getImpactToolbarCopy(
+  locale: ImpactLocale,
+  alternateSlug?: string,
+): TopToolbarCopy {
+  const languageHref = alternateSlug
+    ? locale === "fr"
+      ? `${ENGLISH_IMPACT_PATH}/${alternateSlug}`
+      : `${FRENCH_IMPACT_PATH}/${alternateSlug}`
+    : locale === "fr"
+      ? ENGLISH_IMPACT_PATH
+      : FRENCH_IMPACT_PATH;
+
   return {
     ...homeCopies[locale].toolbar,
     impactHref: locale === "fr" ? FRENCH_IMPACT_PATH : ENGLISH_IMPACT_PATH,
-    languageHref: locale === "fr" ? ENGLISH_IMPACT_PATH : FRENCH_IMPACT_PATH,
+    languageHref,
     languageLabel: locale === "fr" ? "EN" : "FR",
     languageHrefLang: locale === "fr" ? "en" : "fr",
     languageLang: locale === "fr" ? "en" : "fr",

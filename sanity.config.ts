@@ -2,6 +2,7 @@ import { visionTool } from "@sanity/vision";
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { sanityDataset, sanityProjectId } from "./lib/sanity/env";
+import { ImpactEntryPreviewAction } from "./sanity/components/impactEntryPreviewAction";
 import { schemaTypes } from "./sanity/schemaTypes";
 
 export default defineConfig({
@@ -14,5 +15,10 @@ export default defineConfig({
   schema: {
     types: schemaTypes,
   },
+  document: {
+    actions: (previousActions, context) =>
+      context.schemaType === "impactEntry"
+        ? [...previousActions, ImpactEntryPreviewAction]
+        : previousActions,
+  },
 });
-

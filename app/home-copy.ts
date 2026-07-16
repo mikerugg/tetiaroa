@@ -6,11 +6,13 @@ import type { VrViewerLabels } from "./vr-viewer";
 import {
   ENGLISH_CONTACT_PATH,
   ENGLISH_DONATE_PATH,
+  ENGLISH_EMAIL_LIST_PATH,
   ENGLISH_IMPACT_PATH,
   ENGLISH_HOME_PATH,
   ENGLISH_TEAM_PATH,
   FRENCH_CONTACT_PATH,
   FRENCH_DONATE_PATH,
+  FRENCH_EMAIL_LIST_PATH,
   FRENCH_IMPACT_PATH,
   FRENCH_HOME_PATH,
   FRENCH_TEAM_PATH,
@@ -212,6 +214,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           links: [
             { href: "/turtle-tales", label: "Turtle Tales" },
             { href: "/field-station", label: "Field Station" },
+            { href: ENGLISH_EMAIL_LIST_PATH, label: "Email list" },
             {
               href: ENGLISH_CONTACT_PATH,
               label: "Contact us",
@@ -615,6 +618,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           links: [
             { href: "/turtle-tales", label: "Turtle Tales" },
             { href: "/field-station", label: "Field Station" },
+            { href: FRENCH_EMAIL_LIST_PATH, label: "Liste de diffusion" },
             {
               href: FRENCH_CONTACT_PATH,
               label: "Nous contacter",

@@ -2,8 +2,8 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 import {
   impactCategories,
   impactEntryTypes,
-  impactLanguages,
 } from "../../../lib/impact/types";
+import { MailchimpHtmlExportInput } from "../../components/mailchimpHtmlExportInput";
 
 const categoryOptions = impactCategories.map((category) => ({
   title: category,
@@ -15,55 +15,44 @@ export const impactEntry = defineType({
   title: "Impact Entry",
   type: "document",
   groups: [
-    { name: "content", title: "Content", default: true },
-    { name: "classification", title: "Classification" },
+    { name: "english", title: "English", default: true },
+    { name: "french", title: "French" },
+    { name: "mailchimp", title: "Mailchimp" },
+    { name: "shared", title: "Shared" },
     { name: "legacy", title: "Legacy" },
-    { name: "seo", title: "SEO" },
   ],
+  initialValue: {
+    entryType: "Article",
+    english: { _type: "impactEntryLocale" },
+    french: { _type: "impactEntryLocale" },
+  },
   fields: [
     defineField({
-      name: "title",
-      title: "Title",
-      type: "string",
-      group: "content",
+      name: "english",
+      title: "English content",
+      type: "impactEntryLocale",
+      group: "english",
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: "slug",
-      title: "Slug",
-      type: "slug",
-      group: "content",
-      options: { source: "title", maxLength: 120 },
+      name: "french",
+      title: "French content",
+      type: "impactEntryLocale",
+      group: "french",
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: "language",
-      title: "Language",
+      name: "mailchimpExport",
+      title: "Bilingual Mailchimp HTML",
       type: "string",
-      group: "content",
-      options: {
-        list: impactLanguages.map((language) => ({
-          title: language === "fr" ? "French" : "English",
-          value: language,
-        })),
-        layout: "radio",
-      },
-      initialValue: "en",
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "translationKey",
-      title: "Translation key",
-      type: "string",
-      group: "content",
-      description:
-        "Shared stable key used to connect English and French versions.",
+      group: "mailchimp",
+      components: { input: MailchimpHtmlExportInput },
     }),
     defineField({
       name: "entryType",
       title: "Entry type",
       type: "string",
-      group: "classification",
+      group: "shared",
       options: {
         list: impactEntryTypes.map((type) => ({ title: type, value: type })),
         layout: "radio",
@@ -72,65 +61,10 @@ export const impactEntry = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: "summary",
-      title: "Summary",
-      type: "text",
-      rows: 3,
-      group: "content",
-      validation: (rule) => rule.required().max(260),
-    }),
-    defineField({
-      name: "heroImage",
-      title: "Hero image",
-      type: "image",
-      group: "content",
-      options: { hotspot: true },
-      fields: [
-        defineField({
-          name: "alt",
-          title: "Alt text",
-          type: "string",
-          validation: (rule) => rule.required(),
-        }),
-      ],
-    }),
-    defineField({
-      name: "publishedAt",
-      title: "Published at",
-      type: "datetime",
-      group: "content",
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "updatedAt",
-      title: "Latest update",
-      type: "datetime",
-      group: "content",
-    }),
-    defineField({
-      name: "status",
-      title: "Status",
-      type: "string",
-      group: "classification",
-    }),
-    defineField({
-      name: "location",
-      title: "Location",
-      type: "string",
-      group: "classification",
-    }),
-    defineField({
-      name: "metric",
-      title: "Feed metric",
-      type: "string",
-      group: "classification",
-      description: "Short proof point shown on the impact feed card.",
-    }),
-    defineField({
       name: "category",
       title: "Primary category",
       type: "string",
-      group: "classification",
+      group: "shared",
       options: {
         list: categoryOptions,
         layout: "dropdown",
@@ -141,7 +75,7 @@ export const impactEntry = defineType({
       name: "secondaryCategories",
       title: "Secondary categories",
       type: "array",
-      group: "classification",
+      group: "shared",
       of: [
         defineArrayMember({
           type: "string",
@@ -151,25 +85,30 @@ export const impactEntry = defineType({
       options: { layout: "tags" },
     }),
     defineField({
-      name: "tags",
-      title: "Feed tags",
-      type: "array",
-      group: "classification",
-      of: [defineArrayMember({ type: "string" })],
-      options: { layout: "tags" },
+      name: "publishedAt",
+      title: "Published at",
+      type: "datetime",
+      group: "shared",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "updatedAt",
+      title: "Latest update",
+      type: "datetime",
+      group: "shared",
     }),
     defineField({
       name: "program",
       title: "Program",
       type: "reference",
-      group: "classification",
+      group: "shared",
       to: [{ type: "program" }],
     }),
     defineField({
       name: "topics",
       title: "Topics",
       type: "array",
-      group: "classification",
+      group: "shared",
       of: [
         defineArrayMember({
           type: "reference",
@@ -178,59 +117,10 @@ export const impactEntry = defineType({
       ],
     }),
     defineField({
-      name: "body",
-      title: "Body",
-      type: "blockContent",
-      group: "content",
-    }),
-    defineField({
-      name: "gallery",
-      title: "Gallery",
-      type: "array",
-      group: "content",
-      of: [
-        defineArrayMember({
-          type: "object",
-          fields: [
-            defineField({
-              name: "image",
-              title: "Image",
-              type: "image",
-              options: { hotspot: true },
-              validation: (rule) => rule.required(),
-            }),
-            defineField({
-              name: "alt",
-              title: "Alt text",
-              type: "string",
-              validation: (rule) => rule.required(),
-            }),
-            defineField({
-              name: "caption",
-              title: "Caption",
-              type: "string",
-            }),
-          ],
-          preview: {
-            select: {
-              title: "caption",
-              media: "image",
-            },
-          },
-        }),
-      ],
-    }),
-    defineField({
-      name: "projectDates",
-      title: "Project dates",
-      type: "string",
-      group: "classification",
-    }),
-    defineField({
       name: "team",
       title: "Team",
       type: "array",
-      group: "classification",
+      group: "shared",
       of: [
         defineArrayMember({
           type: "reference",
@@ -242,7 +132,7 @@ export const impactEntry = defineType({
       name: "organizations",
       title: "Organizations",
       type: "array",
-      group: "classification",
+      group: "shared",
       of: [
         defineArrayMember({
           type: "reference",
@@ -251,16 +141,10 @@ export const impactEntry = defineType({
       ],
     }),
     defineField({
-      name: "affiliation",
-      title: "Affiliation",
-      type: "string",
-      group: "classification",
-    }),
-    defineField({
       name: "relatedEntries",
       title: "Related entries",
       type: "array",
-      group: "content",
+      group: "shared",
       of: [
         defineArrayMember({
           type: "reference",
@@ -269,14 +153,17 @@ export const impactEntry = defineType({
       ],
     }),
     defineField({
-      name: "legacyNodeId",
-      title: "Legacy Drupal node ID",
-      type: "number",
+      name: "translationKey",
+      title: "Legacy translation key",
+      type: "string",
       group: "legacy",
+      readOnly: true,
+      hidden: ({ value }) => !value,
+      description: "Retained as migration provenance for older entries.",
     }),
     defineField({
-      name: "legacyVid",
-      title: "Legacy Drupal revision ID",
+      name: "legacyNodeId",
+      title: "Legacy Drupal node ID",
       type: "number",
       group: "legacy",
     }),
@@ -286,44 +173,34 @@ export const impactEntry = defineType({
       type: "string",
       group: "legacy",
     }),
-    defineField({
-      name: "legacyPath",
-      title: "Legacy path",
-      type: "string",
-      group: "legacy",
-    }),
-    defineField({
-      name: "seoTitle",
-      title: "SEO title",
-      type: "string",
-      group: "seo",
-    }),
-    defineField({
-      name: "seoDescription",
-      title: "SEO description",
-      type: "text",
-      rows: 3,
-      group: "seo",
-      validation: (rule) => rule.max(160),
-    }),
   ],
   preview: {
     select: {
-      title: "title",
+      englishTitle: "english.title",
+      frenchTitle: "french.title",
+      legacyTitle: "title",
       entryType: "entryType",
-      language: "language",
-      media: "heroImage",
+      englishMedia: "english.heroImage",
+      frenchMedia: "french.heroImage",
+      legacyMedia: "heroImage",
     },
-    prepare(selection: {
-      title?: string;
-      entryType?: string;
-      language?: string;
-    }) {
-      const { title, entryType, language } = selection;
+    prepare(selection) {
+      const title =
+        selection.englishTitle ?? selection.frenchTitle ?? selection.legacyTitle;
+      const languages = [
+        selection.englishTitle ? "EN" : "",
+        selection.frenchTitle ? "FR" : "",
+      ].filter(Boolean);
 
       return {
-        title,
-        subtitle: [language?.toUpperCase(), entryType].filter(Boolean).join(" / "),
+        title: title ?? "Untitled impact entry",
+        subtitle: [languages.join(" + "), selection.entryType]
+          .filter(Boolean)
+          .join(" / "),
+        media:
+          selection.englishMedia ??
+          selection.frenchMedia ??
+          selection.legacyMedia,
       };
     },
   },

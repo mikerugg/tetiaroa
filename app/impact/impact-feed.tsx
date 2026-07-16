@@ -271,7 +271,11 @@ function projectMatchesTopic(project: ImpactFeedItem, topic: TopicFilter) {
 }
 
 function projectMatchesFormat(project: ImpactFeedItem, format: FormatFilter) {
-  return format === "all" || project.entryType === format;
+  if (format === "all") {
+    return project.entryType !== "Profile";
+  }
+
+  return project.entryType === format;
 }
 
 function projectMatchesQuery(project: ImpactFeedItem, normalizedQuery: string) {
