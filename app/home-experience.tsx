@@ -26,15 +26,31 @@ import styles from "./home-experience.module.css";
 import { FrenchVersionPrompt } from "./french-version-prompt";
 import { SiteFooter } from "./site-footer";
 import { TopToolbar } from "./top-toolbar";
+import { HomeHighlightCarousel } from "./home-highlight-carousel";
+import type { HomepageHighlight } from "@/lib/impact/homepage-highlight";
 
 const handwriting = Homemade_Apple({ subsets: ["latin"], weight: "400" });
 
 export default function HomeExperience({
   locale = "en",
+  highlights = [],
 }: {
   locale?: HomeLocale;
+  highlights?: HomepageHighlight[];
 }) {
   const copy = homeCopies[locale];
+  const homepageHighlights = highlights.length
+    ? highlights
+    : [
+        {
+          id: `fallback-${locale}`,
+          title: copy.highlight.title,
+          summary: copy.highlight.copy,
+          image: copy.highlight.image,
+          imageAlt: copy.highlight.imageAlt,
+          href: copy.highlight.href,
+        },
+      ];
 
   return (
     <>
@@ -92,44 +108,10 @@ export default function HomeExperience({
           </div>
         </section>
 
-        <section className={styles.highlight} id="highlight">
-          <div className={styles.highlightInner}>
-            <figure className={styles.highlightMedia}>
-              <div className={styles.highlightFrame}>
-                <Image
-                  src="/launch-party.jpg"
-                  alt={copy.highlight.imageAlt}
-                  width={2048}
-                  height={1365}
-                  className={styles.highlightImage}
-                  sizes="(max-width: 860px) 82vw, 460px"
-                />
-              </div>
-              <figcaption className={`${styles.highlightCaption} font-mono`}>
-                {copy.highlight.imageCaption}
-              </figcaption>
-            </figure>
-            <div className={styles.highlightCopy}>
-              <div className={`${styles.highlightEyebrow} font-mono`}>
-                {copy.highlight.eyebrow}
-              </div>
-              <h2 className={`${styles.highlightTitle} font-header`}>
-                {copy.highlight.title}
-              </h2>
-              <p className={styles.highlightText}>{copy.highlight.copy}</p>
-              <Button
-                asChild
-                variant="outline"
-                className={cn(styles.highlightAction, "h-auto font-mono")}
-              >
-                <a href={copy.highlight.href}>
-                  {copy.highlight.cta}
-                  <ArrowUpRightIcon data-icon="inline-end" aria-hidden="true" />
-                </a>
-              </Button>
-            </div>
-          </div>
-        </section>
+        <HomeHighlightCarousel
+          highlights={homepageHighlights}
+          labels={copy.highlight}
+        />
 
         <section className={styles.hero} id="dive">
           <video

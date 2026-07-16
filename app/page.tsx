@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import HomeExperience from "./home-experience";
 import { ENGLISH_HOME_URL, FRENCH_HOME_URL } from "./language-links";
+import { getHomepageHighlights } from "@/lib/sanity/impact";
 
 export const metadata: Metadata = {
   alternates: {
@@ -12,6 +13,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
-  return <HomeExperience />;
+export default async function Home() {
+  const highlights = await getHomepageHighlights("en");
+
+  return <HomeExperience highlights={highlights} />;
 }

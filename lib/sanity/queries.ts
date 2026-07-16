@@ -184,6 +184,76 @@ export const impactEntriesQuery = defineQuery(`
   }
 `);
 
+export const homepageHighlightsQuery = defineQuery(`
+  *[
+    _type == "impactEntry" &&
+    "highlight" in topics[]->slug.current &&
+    (
+      defined(english.slug.current) ||
+      defined(french.slug.current) ||
+      defined(slug.current)
+    )
+  ]
+  | order(
+      coalesce(updatedAt, publishedAt) desc,
+      coalesce(english.title, french.title, title) asc
+    ) {
+    _id,
+    "english": {
+      "title": coalesce(
+        english.title,
+        select(coalesce(language, "en") == "en" => title)
+      ),
+      "slug": coalesce(
+        english.slug.current,
+        select(coalesce(language, "en") == "en" => slug.current)
+      ),
+      "summary": coalesce(
+        english.summary,
+        select(coalesce(language, "en") == "en" => summary)
+      ),
+      "heroImage": coalesce(
+        english.heroImage.asset->url,
+        select(coalesce(language, "en") == "en" => heroImage.asset->url)
+      ),
+      "heroImageAlt": coalesce(
+        english.heroImage.alt,
+        english.heroImage.asset->altText,
+        select(coalesce(language, "en") == "en" => heroImage.alt),
+        select(coalesce(language, "en") == "en" => heroImage.asset->altText),
+        english.title,
+        select(coalesce(language, "en") == "en" => title)
+      )
+    },
+    "french": {
+      "title": coalesce(
+        french.title,
+        select(language == "fr" => title)
+      ),
+      "slug": coalesce(
+        french.slug.current,
+        select(language == "fr" => slug.current)
+      ),
+      "summary": coalesce(
+        french.summary,
+        select(language == "fr" => summary)
+      ),
+      "heroImage": coalesce(
+        french.heroImage.asset->url,
+        select(language == "fr" => heroImage.asset->url)
+      ),
+      "heroImageAlt": coalesce(
+        french.heroImage.alt,
+        french.heroImage.asset->altText,
+        select(language == "fr" => heroImage.alt),
+        select(language == "fr" => heroImage.asset->altText),
+        french.title,
+        select(language == "fr" => title)
+      )
+    }
+  }
+`);
+
 export const impactEntryBySlugQuery = defineQuery(`
   *[
     _type == "impactEntry" &&

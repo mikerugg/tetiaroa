@@ -339,13 +339,15 @@ function ImpactEntryPreview({
   const [language, setLanguage] = useState<"en" | "fr">(
     availableLanguages[0] ?? "en",
   );
-  const [entry, setEntry] = useState<PreviewImpactEntry | null>();
-  const [error, setError] = useState("");
+  const [result, setResult] = useState<{
+    documentId: string;
+    language: "en" | "fr";
+    entry: PreviewImpactEntry | null;
+    error: string;
+  }>();
 
   useEffect(() => {
     const controller = new AbortController();
-    setEntry(undefined);
-    setError("");
 
     void client
       .fetch<PreviewImpactEntry | null>(
@@ -353,21 +355,32 @@ function ImpactEntryPreview({
         { id: documentId, language },
         { perspective: "raw", signal: controller.signal },
       )
-      .then(setEntry)
+      .then((entry) => {
+        setResult({ documentId, language, entry, error: "" });
+      })
       .catch((caughtError: unknown) => {
         if (controller.signal.aborted) {
           return;
         }
 
-        setError(
-          caughtError instanceof Error
-            ? caughtError.message
-            : "The entry preview could not be loaded.",
-        );
+        setResult({
+          documentId,
+          language,
+          entry: null,
+          error:
+            caughtError instanceof Error
+              ? caughtError.message
+              : "The entry preview could not be loaded.",
+        });
       });
 
     return () => controller.abort();
   }, [client, documentId, language]);
+
+  const isCurrentResult =
+    result?.documentId === documentId && result.language === language;
+  const entry = isCurrentResult ? result.entry : undefined;
+  const error = isCurrentResult ? result.error : "";
 
   if (error) {
     return (

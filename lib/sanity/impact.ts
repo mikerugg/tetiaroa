@@ -17,9 +17,15 @@ import {
   type ImpactRelatedEntry,
   toImpactFeedItem,
 } from "@/lib/impact/types";
+import {
+  buildHomepageHighlights,
+  type HomepageHighlight,
+  type HomepageHighlightSource,
+} from "@/lib/impact/homepage-highlight";
 import { getSanityClient } from "./client";
 import { hasSanityConfig, hasSanityToken } from "./env";
 import {
+  homepageHighlightsQuery,
   impactEntriesQuery,
   impactEntryBySlugQuery,
   impactEntryByLegacyPathQuery,
@@ -386,6 +392,21 @@ async function fetchSanityData<T>(
 
 export async function getImpactEntries(): Promise<ImpactContentEntry[]> {
   return getImpactEntriesByLanguage("en");
+}
+
+export async function getHomepageHighlights(
+  language: ImpactLanguage = "en",
+): Promise<HomepageHighlight[]> {
+  const entries = await fetchSanityData<HomepageHighlightSource[]>(
+    homepageHighlightsQuery,
+    {},
+    ["impact", "homepage-highlight"],
+  ).catch((error) => {
+    console.warn("Unable to fetch Sanity homepage highlights.", error);
+    return null;
+  });
+
+  return entries ? buildHomepageHighlights(entries, language) : [];
 }
 
 export async function getImpactEntriesByLanguage(

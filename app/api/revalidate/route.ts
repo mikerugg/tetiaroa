@@ -179,6 +179,9 @@ export async function POST(req: NextRequest) {
   }
 
   revalidateTag("impact", "max");
+  revalidateTag("homepage-highlight", "max");
+  revalidatePath("/");
+  revalidatePath("/fr");
   revalidatePath("/impact");
   revalidatePath("/fr/impact");
 

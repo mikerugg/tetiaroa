@@ -6,7 +6,7 @@
     "dev": "next dev --port 3298",
     "build": "next build",
     "start": "next start",
-    "test": "node --experimental-strip-types --test app/contact/*.test.mjs app/email-list/*.test.mjs sanity/components/*.test.mjs sanity/schemaTypes/objects/*.test.mjs scripts/*.test.mjs",
+    "test": "node --experimental-strip-types --test app/contact/*.test.mjs app/email-list/*.test.mjs lib/impact/*.test.mjs sanity/components/*.test.mjs sanity/schemaTypes/objects/*.test.mjs scripts/*.test.mjs",
     "lint": "eslint",
     "migrate:drupal-impact": "node scripts/migrate-drupal-impact.mjs",
     "migrate:impact-localization": "node scripts/migrate-impact-localization.mjs"
@@ -18,6 +18,8 @@
     "@vercel/functions": "^3.7.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
     "fflate": "^0.8.3",
     "lucide-react": "^1.21.0",
     "next": "16.2.9",

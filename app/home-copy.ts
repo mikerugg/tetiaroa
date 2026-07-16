@@ -62,8 +62,14 @@ type HomeCopy = {
     copy: string;
     cta: string;
     href: string;
+    image: string;
     imageAlt: string;
-    imageCaption: string;
+    carouselLabel: string;
+    previousLabel: string;
+    nextLabel: string;
+    pauseLabel: string;
+    playLabel: string;
+    ofLabel: string;
   };
   dive: {
     eyebrow: string;
@@ -350,9 +356,15 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         "Before Honu can open Teti’aroa’s deep water to students and scientists, it has to prove itself at sea. That work begins off Catalina Island, where the team is preparing for dive tests and a launch party.",
       cta: "Learn More",
       href: "#honu-xr",
+      image: "/launch-party.jpg",
       imageAlt:
         "People seated inside Honu's clear observation dome during launch preparations",
-      imageCaption: "Honu launch preparations",
+      carouselLabel: "Featured impact stories",
+      previousLabel: "Previous story",
+      nextLabel: "Next story",
+      pauseLabel: "Pause automatic rotation",
+      playLabel: "Resume automatic rotation",
+      ofLabel: "of",
     },
     dive: {
       eyebrow: "Te Mau Tia'i — the guardians",
@@ -754,9 +766,15 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         "L'équipe prépare Honu pour la suite : une rencontre de lancement et une série d'essais de plongée au large de Catalina Island, avant que le submersible serve les programmes d'éducation et de science de Teti'aroa.",
       cta: "En savoir plus",
       href: "#honu-xr",
+      image: "/launch-party.jpg",
       imageAlt:
         "Personnes installées dans le dôme transparent du submersible Honu pendant les préparatifs de lancement",
-      imageCaption: "Préparatifs de lancement de Honu et essais de plongée à Catalina",
+      carouselLabel: "Histoires d’impact à la une",
+      previousLabel: "Histoire précédente",
+      nextLabel: "Histoire suivante",
+      pauseLabel: "Mettre le défilement automatique en pause",
+      playLabel: "Reprendre le défilement automatique",
+      ofLabel: "sur",
     },
     dive: {
       eyebrow: "Te Mau Tia'i — les gardiens",
