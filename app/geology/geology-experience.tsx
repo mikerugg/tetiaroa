@@ -95,10 +95,7 @@ export function GeologyExperience({ locale }: GeologyExperienceProps) {
           </div>
         </section>
 
-        <TahitiFlexure
-          copy={copy.flexure}
-          reconstructionLabel={copy.legend.reconstruction}
-        />
+        <TahitiFlexure copy={copy.flexure} />
         <SeaLevelMachine copy={copy.seaLevel} />
         <ModernAtollMap copy={copy.map} />
 

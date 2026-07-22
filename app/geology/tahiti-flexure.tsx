@@ -3,35 +3,30 @@
 import { useState } from "react";
 import { InfoIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { GeologyCopy } from "./geology-content";
 import styles from "./geology.module.css";
 
 type TahitiFlexureProps = {
   copy: GeologyCopy["flexure"];
-  reconstructionLabel: string;
 };
 
-export function TahitiFlexure({ copy, reconstructionLabel }: TahitiFlexureProps) {
+const flexureToggleItemClass =
+  "border-background/20 text-background hover:bg-background/15 hover:text-background data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:hover:bg-background data-[state=on]:hover:text-foreground";
+
+export function TahitiFlexure({ copy }: TahitiFlexureProps) {
   const [loaded, setLoaded] = useState(true);
 
   return (
     <section className="bg-foreground px-4 py-24 text-background sm:px-6 lg:px-10 lg:py-32">
       <div className="mx-auto grid max-w-[1500px] gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
         <div className="flex flex-col items-start gap-6">
-          <Badge variant="outline" className="h-auto border-background/20 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-background">
-            {reconstructionLabel}
-          </Badge>
           <p className="font-mono text-xs uppercase tracking-[0.22em] text-background/55">
             {copy.eyebrow}
           </p>
           <h2 className="max-w-xl font-header text-5xl leading-[0.9] text-background sm:text-7xl lg:text-8xl">
             {copy.title}
           </h2>
-          <p className="max-w-xl text-base leading-7 text-background/70 sm:text-lg">
-            {copy.intro}
-          </p>
 
           <div className="flex flex-col gap-3">
             <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-background/55">
@@ -49,18 +44,15 @@ export function TahitiFlexure({ copy, reconstructionLabel }: TahitiFlexureProps)
               }}
               aria-label={copy.controlLabel}
             >
-              <ToggleGroupItem value="unloaded" className="border-background/20 text-background data-[state=on]:bg-background data-[state=on]:text-foreground">
+              <ToggleGroupItem value="unloaded" className={flexureToggleItemClass}>
                 {copy.unloadedLabel}
               </ToggleGroupItem>
-              <ToggleGroupItem value="loaded" className="border-background/20 text-background data-[state=on]:bg-background data-[state=on]:text-foreground">
+              <ToggleGroupItem value="loaded" className={flexureToggleItemClass}>
                 {copy.loadedLabel}
               </ToggleGroupItem>
             </ToggleGroup>
           </div>
 
-          <p className="max-w-xl text-sm leading-6 text-background/65" aria-live="polite">
-            {loaded ? copy.descriptionLoaded : copy.descriptionUnloaded}
-          </p>
         </div>
 
         <div className="flex flex-col gap-6">
@@ -95,12 +87,11 @@ export function TahitiFlexure({ copy, reconstructionLabel }: TahitiFlexureProps)
               </g>
 
               <g className={styles.tetiaroaIsland}>
-                <path d="M208 364 C233 352 255 326 275 287 C296 326 318 350 347 363 C300 371 254 372 208 364 Z" fill="#334742" />
-                <path d="M190 355 C210 343 231 342 250 355 M303 355 C320 344 340 344 361 357" fill="none" stroke="#d6f0ac" strokeWidth="8" strokeLinecap="round" />
+                <path d="M180 364 C215 320 240 225 264 154 C267 144 271 138 275 138 C280 138 284 144 287 154 C312 225 340 320 372 363 C309 372 244 372 180 364 Z" fill="#334742" />
               </g>
 
               <g className={styles.flexureLabels}>
-                <text className={styles.tetiaroaLabel} x="274" y="260" textAnchor="middle">{copy.tetiaroa}</text>
+                <text className={styles.tetiaroaLabel} x="274" y="125" textAnchor="middle">{copy.tetiaroa}</text>
                 <text x="733" y="72" textAnchor="middle">{copy.tahiti}</text>
                 <text className={styles.moatLabel} x="475" y="425" textAnchor="middle">{copy.moat}</text>
                 <text x="128" y="505">{copy.oceanicPlate}</text>
@@ -117,8 +108,12 @@ export function TahitiFlexure({ copy, reconstructionLabel }: TahitiFlexureProps)
             <AlertTitle className="font-mono text-[10px] uppercase tracking-[0.16em]">
               {copy.boundaryLabel}
             </AlertTitle>
-            <AlertDescription className="text-background/65">
-              {copy.caveat}
+            <AlertDescription
+              className="text-background/65"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {loaded ? copy.descriptionLoaded : copy.descriptionUnloaded}
             </AlertDescription>
           </Alert>
         </div>

@@ -85,7 +85,6 @@ export type GeologyCopy = {
   flexure: {
     eyebrow: string;
     title: string;
-    intro: string;
     unloadedLabel: string;
     loadedLabel: string;
     controlLabel: string;
@@ -96,7 +95,6 @@ export type GeologyCopy = {
     oceanicPlate: string;
     descriptionUnloaded: string;
     descriptionLoaded: string;
-    caveat: string;
   };
   seaLevel: {
     eyebrow: string;
@@ -452,12 +450,10 @@ export const geologyCopies: Record<GeologyLocale, GeologyCopy> = {
     flexure: {
       eyebrow: "Test the Tahiti hypothesis",
       title: "Compare the plate with and without Tahiti's full weight.",
-      intro:
-        "This diagram compares two simplified plate shapes. Turn Tahiti's full volcanic load off and on to see how its weight creates a broad depression around the island. The comparison shows a physical process, not Tetiaroa's measured depth through time.",
       unloadedLabel: "Without full load",
       loadedLabel: "With full load",
-      controlLabel: "Compare the modelled plate shape",
-      boundaryLabel: "What this model can show",
+      controlLabel: "Click to switch",
+      boundaryLabel: "What this model shows",
       tahiti: "Tahiti",
       tetiaroa: "Tetiaroa",
       moat: "Flexural moat",
@@ -466,8 +462,6 @@ export const geologyCopies: Record<GeologyLocale, GeologyCopy> = {
         "Without Tahiti's full volcanic load, the comparison shows the oceanic plate nearly level.",
       descriptionLoaded:
         "With Tahiti's full volcanic load, the plate bends into a broad depression called a flexural moat. Tetiaroa lies inside that modelled depression.",
-      caveat:
-        "Geophysical measurements support regional flexure beneath the Society Islands. Because Tetiaroa's volcanic foundation is submerged and undated, this diagram cannot tell us exactly how far or when Tetiaroa moved downward.",
     },
     seaLevel: {
       eyebrow: "Four sea-level snapshots",
@@ -659,8 +653,6 @@ export const geologyCopies: Record<GeologyLocale, GeologyCopy> = {
     flexure: {
       eyebrow: "Tester l'hypothèse de Tahiti",
       title: "Comparez la plaque avec et sans le poids complet de Tahiti.",
-      intro:
-        "Ce schéma compare deux formes simplifiées de la plaque. Retirez puis ajoutez la charge volcanique complète de Tahiti pour voir comment son poids crée une vaste dépression autour de l'île. Cette comparaison illustre un processus physique ; elle ne mesure pas la profondeur de Tetiaroa au fil du temps.",
       unloadedLabel: "Sans la pleine charge",
       loadedLabel: "Avec la pleine charge",
       controlLabel: "Comparer la forme modélisée de la plaque",
@@ -673,8 +665,6 @@ export const geologyCopies: Record<GeologyLocale, GeologyCopy> = {
         "Sans la charge volcanique complète de Tahiti, la comparaison montre une plaque océanique presque horizontale.",
       descriptionLoaded:
         "Avec la charge volcanique complète de Tahiti, la plaque se courbe en une vaste dépression appelée fosse flexurale. Tetiaroa se trouve dans cette dépression modélisée.",
-      caveat:
-        "Les mesures géophysiques confirment la flexion régionale sous les îles de la Société. La fondation volcanique de Tetiaroa étant immergée et non datée, ce schéma ne peut indiquer ni la date ni l'ampleur exacte de son enfoncement.",
     },
     seaLevel: {
       eyebrow: "Quatre niveaux marins",

@@ -537,7 +537,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       eyebrow: "Our Story",
       title: "The Promise That Stayed",
       lead:
-        "The world knew Marlon Brando as an actor. Tetiaroa knew him differently: as someone who arrived for a film and left with a responsibility he could not set down.",
+        "The world knew Marlon Brando as an actor. Tetiaroa knew him differently: as someone who arrived for a film and left with a responsibility he could not leave behind.",
       body:
         "In its lagoon, reef, birds, turtles, and motu, he saw a living world whose beauty could not be separated from its fragility. Tetiaroa Society carries that promise forward through science, conservation, education, and stewardship rooted in the atoll itself.",
       cta: "Discover our story",
