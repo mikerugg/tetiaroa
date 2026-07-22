@@ -48,6 +48,11 @@ export function TopToolbarMobileMenu({
       label: copy.storyLabel,
       className: menuOutlineLinkClass,
     },
+    {
+      href: copy.atollHref,
+      label: copy.atollLabel,
+      className: menuOutlineLinkClass,
+    },
   ];
   const languageLabel =
     copy.languageLabel === "FR" ? "Français" : copy.languageLabel;

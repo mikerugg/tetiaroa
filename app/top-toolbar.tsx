@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { TopToolbarMobileMenu } from "./top-toolbar-mobile-menu";
 import {
   ENGLISH_DONATE_PATH,
+  ENGLISH_GEOLOGY_PATH,
   ENGLISH_TEAM_PATH,
   FRENCH_HOME_PATH,
 } from "./language-links";
@@ -22,6 +23,8 @@ export type TopToolbarCopy = {
   logoLabel: string;
   storyHref: string;
   storyLabel: string;
+  atollHref: string;
+  atollLabel: string;
   languageHref: string;
   languageLabel: string;
   languageHrefLang: string;
@@ -54,6 +57,8 @@ const defaultCopy: TopToolbarCopy = {
   logoLabel: "Our Logo",
   storyHref: "/brando-story/work",
   storyLabel: "Our Story",
+  atollHref: ENGLISH_GEOLOGY_PATH,
+  atollLabel: "Our Atoll",
   languageHref: FRENCH_HOME_PATH,
   languageLabel: "FR",
   languageHrefLang: "fr",
@@ -117,6 +122,14 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
           className={cn(toolbarOutlineButtonClass, "max-[900px]:hidden")}
         >
           <Link href={copy.storyHref}>{copy.storyLabel}</Link>
+        </Button>
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className={cn(toolbarOutlineButtonClass, "max-[900px]:hidden")}
+        >
+          <Link href={copy.atollHref}>{copy.atollLabel}</Link>
         </Button>
         <Button
           asChild
