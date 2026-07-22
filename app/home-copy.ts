@@ -192,7 +192,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       impactHref: ENGLISH_IMPACT_PATH,
       impactLabel: "Impact Feed",
       logoLabel: "Our Logo",
-      storyHref: "/brando-story/work",
+      storyHref: "/our-story",
       storyLabel: "Our Story",
       atollHref: ENGLISH_GEOLOGY_PATH,
       atollLabel: "Our Atoll",
@@ -213,7 +213,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             { href: ENGLISH_HOME_PATH, label: "Home" },
             { href: ENGLISH_TEAM_PATH, label: "Our Team" },
             { href: "/our-logo", label: "Our Logo" },
-            { href: "/brando-story/work", label: "Our Story" },
+            { href: "/our-story", label: "Our Story" },
           ],
         },
         {
@@ -541,7 +541,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       body:
         "In its lagoon, reef, birds, turtles, and motu, he saw a living world whose beauty could not be separated from its fragility. Tetiaroa Society carries that promise forward through science, conservation, education, and stewardship rooted in the atoll itself.",
       cta: "Discover our story",
-      ctaHref: "/brando-story/work",
+      ctaHref: "/our-story",
       promiseLines: ["Tetiaroa", "must be protected", "for the future."],
     },
     night: {
@@ -611,7 +611,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       impactHref: FRENCH_IMPACT_PATH,
       impactLabel: "Fil d'impact",
       logoLabel: "Le logo",
-      storyHref: "/brando-story/work",
+      storyHref: "/our-story",
       storyLabel: "Notre histoire",
       atollHref: FRENCH_GEOLOGY_PATH,
       atollLabel: "Notre atoll",
@@ -632,7 +632,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             { href: FRENCH_HOME_PATH, label: "Accueil" },
             { href: FRENCH_TEAM_PATH, label: "Notre équipe" },
             { href: "/our-logo", label: "Le logo" },
-            { href: "/brando-story/work", label: "Notre histoire" },
+            { href: "/our-story", label: "Notre histoire" },
           ],
         },
         {
@@ -963,7 +963,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       body:
         "Dans son lagon, son récif, ses oiseaux, ses tortues et ses motu, il a vu un monde vivant dont la beauté ne pouvait pas être séparée de la fragilité. Tetiaroa Society porte cette promesse aujourd'hui par la science, la conservation, l'éducation et une intendance enracinée dans l'atoll lui-même.",
       cta: "Découvrir l'histoire",
-      ctaHref: "/brando-story/work",
+      ctaHref: "/our-story",
       promiseLines: ["Tetiaroa", "doit être protégé", "pour l'avenir."],
     },
     night: {

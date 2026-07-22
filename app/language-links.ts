@@ -14,6 +14,7 @@ export const ENGLISH_PRIVACY_PATH = "/privacy";
 export const FRENCH_PRIVACY_PATH = "/fr/privacy";
 export const ENGLISH_GEOLOGY_PATH = "/island/geology";
 export const FRENCH_GEOLOGY_PATH = "/fr/ile/geologie";
+export const ENGLISH_OUR_STORY_PATH = "/our-story";
 
 export const ENGLISH_HOME_URL = "https://www.tetiaroasociety.org/";
 export const FRENCH_HOME_URL = "https://www.tetiaroasociety.org/fr";
@@ -35,3 +36,5 @@ export const ENGLISH_GEOLOGY_URL =
   "https://www.tetiaroasociety.org/island/geology";
 export const FRENCH_GEOLOGY_URL =
   "https://www.tetiaroasociety.org/fr/ile/geologie";
+export const ENGLISH_OUR_STORY_URL =
+  "https://www.tetiaroasociety.org/our-story";

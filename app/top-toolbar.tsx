@@ -55,7 +55,7 @@ const defaultCopy: TopToolbarCopy = {
   impactHref: "/impact",
   impactLabel: "Impact Feed",
   logoLabel: "Our Logo",
-  storyHref: "/brando-story/work",
+  storyHref: "/our-story",
   storyLabel: "Our Story",
   atollHref: ENGLISH_GEOLOGY_PATH,
   atollLabel: "Our Atoll",

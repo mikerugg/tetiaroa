@@ -101,7 +101,7 @@ const defaultCopy: SiteFooterCopy = {
         { href: "/", label: "Home" },
         { href: "/team", label: "Our Team" },
         { href: "/our-logo", label: "Our Logo" },
-        { href: "/brando-story/work", label: "Our Story" },
+        { href: "/our-story", label: "Our Story" },
       ],
     },
     {
