@@ -1,0 +1,666 @@
+.page {
+  --geo-lagoon: #59e8dc;
+  --geo-ocean: #0d6680;
+  --geo-coral: #dc9b6b;
+  --geo-limestone: #e6d7a6;
+  min-height: 100vh;
+  overflow: clip;
+  background: var(--background);
+}
+
+.hero {
+  position: relative;
+  display: grid;
+  min-height: 100svh;
+  isolation: isolate;
+  overflow: hidden;
+  background: #07141d;
+}
+
+.heroVideo,
+.heroPosterFallback,
+.heroScrim,
+.heroContour {
+  position: absolute;
+  inset: 0;
+}
+
+.heroPosterFallback {
+  z-index: 0;
+  background: url("/geology/atoll-foundation-poster.webp") center / cover no-repeat;
+}
+
+.heroVideo {
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroScrim {
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(3, 12, 17, 0.94) 0%, rgba(3, 12, 17, 0.72) 42%, rgba(3, 12, 17, 0.08) 78%),
+    linear-gradient(180deg, rgba(3, 12, 17, 0.68) 0%, transparent 27%, transparent 64%, rgba(3, 12, 17, 0.82) 100%);
+}
+
+.heroContour {
+  z-index: 2;
+  opacity: 0.24;
+  background-image:
+    radial-gradient(ellipse at 78% 56%, transparent 0 8%, rgba(89, 232, 220, 0.18) 8.2% 8.4%, transparent 8.6% 15%, rgba(89, 232, 220, 0.12) 15.2% 15.4%, transparent 15.6% 24%, rgba(89, 232, 220, 0.08) 24.2% 24.4%, transparent 24.6%),
+    repeating-linear-gradient(118deg, transparent 0 47px, rgba(255, 255, 255, 0.025) 48px, transparent 49px);
+  pointer-events: none;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 3;
+  align-self: end;
+  width: min(1280px, 100%);
+  padding: 9rem 6vw 10vh;
+}
+
+.heroCoordinates {
+  position: absolute;
+  top: 5.5rem;
+  right: 4vw;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  text-align: right;
+}
+
+.heroCoordinates p {
+  margin: 0;
+}
+
+.heroPlayback {
+  position: absolute;
+  right: 4vw;
+  bottom: 4vh;
+  z-index: 4;
+  height: auto;
+  border-color: rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  padding: 0.65rem 0.9rem;
+  color: var(--paper);
+  background: rgba(3, 12, 17, 0.36);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+}
+
+.heroPlayback:hover {
+  color: var(--paper);
+  background: rgba(3, 12, 17, 0.62);
+}
+
+.scrollyGrid {
+  display: grid;
+  gap: clamp(3rem, 7vw, 8rem);
+  margin-top: 5rem;
+}
+
+.stickyVisual {
+  min-width: 0;
+}
+
+.crossSectionFigure {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  background: #081b29;
+  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.28);
+}
+
+.crossSection {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.crossSectionCaption {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  min-height: 4.75rem;
+  padding: 1rem 1.15rem 1.15rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.72);
+  background: rgba(2, 14, 22, 0.86);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.crossSectionCaption span:first-child {
+  color: var(--geo-lagoon);
+}
+
+.geologyScene {
+  opacity: 0;
+  transition: opacity 620ms ease;
+}
+
+.crossSectionFigure[data-stage="0"] .sceneHotspot,
+.crossSectionFigure[data-stage="1"] .sceneDrift,
+.crossSectionFigure[data-stage="2"] .sceneReef,
+.crossSectionFigure[data-stage="3"] .sceneFlexure,
+.crossSectionFigure[data-stage="4"] .sceneMotu,
+.crossSectionFigure[data-stage="5"] .sceneLowstand,
+.crossSectionFigure[data-stage="6"] .sceneLagoon {
+  opacity: 1;
+}
+
+.sceneWaterLine {
+  fill: none;
+  stroke: rgba(205, 255, 247, 0.94);
+  stroke-width: 5;
+}
+
+.sceneMotionArrows path,
+.sceneStormArrows path,
+.sceneLoadArrow,
+.sceneFlexureLine,
+.sceneCoralGrowth,
+.sceneLivingReef,
+.sceneTerrainEdge,
+.sceneKarstArch,
+.sceneRain path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sceneMotionArrows path {
+  stroke: #d7fff7;
+  stroke-width: 6;
+}
+
+.sceneLivingReef {
+  stroke: #d9f59e;
+  stroke-width: 13;
+}
+
+.sceneCoralGrowth {
+  stroke: #d9f59e;
+  stroke-width: 9;
+}
+
+.sceneFlexureLine {
+  stroke: #e4b063;
+  stroke-width: 7;
+}
+
+.sceneLoadArrow {
+  stroke: #ffd06a;
+  stroke-width: 7;
+}
+
+.scenePlaceLabel {
+  fill: #f4ecd5;
+  font-family: var(--font-mono), monospace;
+  font-size: 15px;
+  letter-spacing: 0.18em;
+}
+
+.sceneMotuLand {
+  fill: #d8c27f;
+  stroke: #b7dc82;
+  stroke-width: 6;
+  stroke-linejoin: round;
+}
+
+.sceneStormArrows path {
+  stroke: #d7fff7;
+  stroke-width: 6;
+}
+
+.sceneTerrainEdge {
+  stroke: #f1e9c5;
+  stroke-width: 11;
+}
+
+.sceneKarstVoid {
+  fill: #16252c;
+  stroke: #bca675;
+  stroke-width: 6;
+}
+
+.sceneKarstArch {
+  stroke: #bca675;
+  stroke-width: 9;
+}
+
+.sceneRain path {
+  stroke: #80dcd4;
+  stroke-width: 6;
+  opacity: 0.78;
+}
+
+.sceneLagoonSediment {
+  fill: #c9b079;
+  stroke: #e1ce9b;
+  stroke-width: 4;
+}
+
+.sceneSubmergedVoid {
+  fill: rgba(22, 37, 44, 0.62);
+  stroke: rgba(188, 166, 117, 0.52);
+  stroke-width: 6;
+}
+
+.stageControls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.stageControls p {
+  margin: 0;
+}
+
+.storySteps {
+  display: flex;
+  flex-direction: column;
+}
+
+.storyStep {
+  min-height: 84vh;
+  padding: 12vh 0;
+  border-top: 1px solid var(--border);
+  opacity: 0.43;
+  transform: translateY(2rem);
+  transition:
+    opacity 500ms ease,
+    transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.storyStep:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.storyStepActive {
+  opacity: 1;
+  transform: none;
+}
+
+.fieldNoteSection {
+  display: grid;
+  min-height: 78svh;
+  background: var(--background);
+}
+
+.fieldNoteImage {
+  position: relative;
+  min-height: 62svh;
+  overflow: hidden;
+}
+
+.fieldNoteImageWash {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 56%, var(--background) 100%),
+    linear-gradient(180deg, transparent 60%, rgba(7, 22, 24, 0.55) 100%);
+}
+
+.flexureFigure {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.25rem;
+  background: #081b29;
+  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.22);
+}
+
+.flexureFigure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.flexurePlate,
+.flexurePlateLine,
+.tahitiLoad,
+.tetiaroaIsland,
+.tetiaroaLabel,
+.loadArrow,
+.moatLabel {
+  transition:
+    d 700ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 500ms ease,
+    transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.flexureFigure[data-loaded="true"] .tetiaroaIsland,
+.flexureFigure[data-loaded="true"] .tetiaroaLabel {
+  transform: translateY(3.25rem);
+}
+
+.flexurePlateLine {
+  fill: none;
+  stroke: #f2dea4;
+  stroke-width: 5;
+}
+
+.flexureLabels text,
+.seaLabels text {
+  fill: rgba(255, 255, 255, 0.76);
+  font-family: var(--font-mono), monospace;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.flexureFigure[data-loaded="false"] .moatLabel {
+  opacity: 0;
+}
+
+.loadArrow path {
+  fill: none;
+  stroke: #f5bd69;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.seaLevelPanel {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  background: var(--card);
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.22);
+}
+
+.seaLevelPanel figure {
+  margin: 0;
+}
+
+.seaLevelDiagram {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.seaWater,
+.seaWaterLine,
+.karstVoids,
+.earlyLagoon,
+.karstTerrain,
+.modernSediment,
+.warmAtollMotu,
+.warmLagoonSediment,
+.returningCoral,
+.modernLagoon {
+  transition:
+    y 700ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    height 700ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    d 700ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 500ms ease;
+}
+
+.terrainEdge {
+  fill: none;
+  stroke: #f1e9c5;
+  stroke-width: 12;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.modernSediment path {
+  fill: #c9b079;
+  stroke: #e1ce9b;
+  stroke-width: 4;
+}
+
+.warmLagoonSediment path {
+  fill: none;
+  stroke: #e1ce9b;
+  stroke-width: 18;
+  stroke-linecap: round;
+}
+
+.warmAtollMotu path,
+.modernMotu {
+  fill: #d5c184;
+  stroke: #b7dc82;
+  stroke-width: 7;
+  stroke-linejoin: round;
+}
+
+.returningCoral path,
+.modernLagoon path {
+  fill: none;
+  stroke: #d9f59e;
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.modernLagoon .modernMotu {
+  fill: #d5c184;
+  stroke: #b7dc82;
+  stroke-width: 7;
+}
+
+.modernLagoon .modernReefCap {
+  fill: rgba(193, 232, 139, 0.42);
+  stroke: #d9f59e;
+  stroke-width: 7;
+}
+
+@media (min-width: 64rem) {
+  .seaLevelPanel {
+    display: flex;
+    max-height: 80vh;
+    flex-direction: column;
+  }
+
+  .seaLevelPanel figure {
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+
+  .seaLevelDiagram {
+    height: 100%;
+    max-height: 100%;
+  }
+}
+
+.seaWaterLine {
+  fill: none;
+  stroke: rgba(214, 255, 249, 0.95);
+  stroke-width: 5;
+}
+
+.karstVoids ellipse {
+  fill: #283034;
+  stroke: #bca675;
+  stroke-width: 6;
+}
+
+.karstVoids path {
+  fill: none;
+  stroke: #bca675;
+  stroke-width: 9;
+  stroke-linecap: round;
+}
+
+.mapStage {
+  position: relative;
+  min-height: min(72svh, 820px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.25rem;
+  background: #062238;
+  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.28);
+}
+
+.mapImage {
+  object-fit: contain;
+  padding: 2rem;
+}
+
+.mapWash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 34%, rgba(4, 18, 29, 0.16) 66%, rgba(4, 18, 29, 0.72) 100%),
+    linear-gradient(180deg, rgba(4, 18, 29, 0.12), transparent 24%, transparent 72%, rgba(4, 18, 29, 0.5));
+  pointer-events: none;
+}
+
+.mapInstructions {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  max-width: calc(100% - 2rem);
+  margin: 0;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.72);
+  background: rgba(3, 17, 28, 0.64);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+}
+
+.mapHotspot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.38);
+}
+
+.mapHotspot:hover,
+.mapHotspot:focus-visible {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.closingSection {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #07141d;
+}
+
+.closingScrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(3, 13, 19, 0.6), rgba(3, 13, 19, 0.82)),
+    radial-gradient(circle at 50% 44%, transparent, rgba(3, 13, 19, 0.56) 78%);
+}
+
+@media (min-width: 768px) {
+  .fieldNoteSection {
+    grid-template-columns: 1.15fr 0.85fr;
+  }
+
+  .fieldNoteImage {
+    min-height: 78svh;
+  }
+}
+
+@media (min-width: 1024px) {
+  .scrollyGrid {
+    grid-template-columns: minmax(0, 1.18fr) minmax(360px, 0.82fr);
+  }
+
+  .stickyVisual {
+    position: sticky;
+    top: 5.5rem;
+    align-self: start;
+  }
+}
+
+@media (max-width: 767px) {
+  .heroContent {
+    padding: 8rem 1.25rem 8rem;
+  }
+
+  .heroCoordinates {
+    top: 4.5rem;
+    right: 1.25rem;
+  }
+
+  .heroPlayback {
+    right: 1.25rem;
+    bottom: 1.25rem;
+    max-width: calc(100% - 2.5rem);
+  }
+
+  .heroScrim {
+    background:
+      linear-gradient(180deg, rgba(3, 12, 17, 0.72) 0%, rgba(3, 12, 17, 0.22) 34%, rgba(3, 12, 17, 0.86) 100%),
+      linear-gradient(90deg, rgba(3, 12, 17, 0.72), transparent 88%);
+  }
+
+  .storyStep {
+    min-height: auto;
+    padding: 5rem 0;
+    opacity: 1;
+    transform: none;
+  }
+
+  .mapStage {
+    min-height: 68svh;
+  }
+
+  .mapImage {
+    padding: 2.75rem 0.5rem 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroVideo {
+    display: none;
+  }
+
+  .geologyScene,
+  .volcanicFoundation,
+  .hotspot,
+  .eruption,
+  .driftArrows,
+  .erodedPeak,
+  .reefRing,
+  .motu,
+  .karst,
+  .lagoonRelief,
+  .flexureCue,
+  .storyStep,
+  .flexurePlate,
+  .flexurePlateLine,
+  .tahitiLoad,
+  .tetiaroaIsland,
+  .tetiaroaLabel,
+  .loadArrow,
+  .moatLabel,
+  .seaWater,
+  .seaWaterLine,
+  .karstVoids,
+  .earlyLagoon,
+  .karstTerrain,
+  .modernSediment,
+  .warmAtollMotu,
+  .warmLagoonSediment,
+  .returningCoral,
+  .modernLagoon,
+  .mapHotspot {
+    transition: none;
+  }
+
+  .storyStep {
+    opacity: 1;
+    transform: none;
+  }
+}

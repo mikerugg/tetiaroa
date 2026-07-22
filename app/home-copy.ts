@@ -36,12 +36,14 @@ type KidProgram = {
   imageFit?: "cover" | "contain";
 };
 
-type Pillar = {
+export type Pillar = {
   title: string;
   copy: string;
   areas: [string, string, string];
   image: string;
   alt: string;
+  href: string;
+  cta: string;
 };
 
 type HomeCopy = {
@@ -111,6 +113,10 @@ type HomeCopy = {
     eyebrow: string;
     title: string;
     copy: string;
+    layoutLabel: string;
+    horizontalLabel: string;
+    verticalLabel: string;
+    storylineLabel: string;
     items: [Pillar, Pillar, Pillar];
   };
   kids: {
@@ -166,7 +172,7 @@ const sharedPillarImages = {
   research:
     "https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=1100&q=85&auto=format&fit=crop",
   education:
-    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1100&q=85&auto=format&fit=crop",
+    "https://www.tetiaroasociety.org/sites/default/files/2021-02/IMG_6446sm.jpg",
   community:
     "https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=1100&q=85&auto=format&fit=crop",
 };
@@ -419,14 +425,18 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
     },
     pillars: {
       eyebrow: "Pillars of Tetiaroa",
-      title: "Three responsibilities, one living atoll.",
+      title: "Three responsibilities, one atoll.",
       copy:
-        "Tetiaroa Society protects the life of the atoll, opens it as a place of learning, and helps its lessons travel beyond the reef. The work is practical, place based, and guided by field science, Polynesian knowledge, and long term care.",
+        "Research shows us what is changing, education turns that knowledge into care, and global collaboration carries what works beyond the reef, so each pillar strengthens the other two.",
+      layoutLabel: "Card layout",
+      horizontalLabel: "Horizontal",
+      verticalLabel: "Vertical",
+      storylineLabel: "Storyline",
       items: [
         {
           title: "Research and Conservation",
           copy:
-            "Science and stewardship meet in the field. Through TARP, biosecurity, ATTRACT, species monitoring, and research across reef, lagoon, motu, and wildlife, the Society helps Tetiaroa show what is changing and what care is needed next.",
+            "Measure the atoll, change one condition, and measure again, so every conservation action teaches us what to do next.",
           areas: [
             "TARP, habitat care, and biosecurity",
             "ATTRACT and conservation research",
@@ -434,11 +444,13 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           ],
           image: sharedPillarImages.research,
           alt: "Coral reef and lagoon habitat used for conservation research",
+          href: "/pillars/research-conservation",
+          cta: "Explore research and conservation",
         },
         {
           title: "Education and Culture",
           copy:
-            "Tetiaroa is a classroom with roots. School visits, volunteer pathways, and on-site programs bring students and guests into contact with Polynesian knowledge, field science, and the responsibilities of learning from a living place.",
+            "A student follows a question from field science into Polynesian knowledge and cultural history, and the island itself becomes the teacher.",
           areas: [
             "Local and international school visits",
             "Volunteer, application, and participation pathways",
@@ -446,11 +458,13 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           ],
           image: sharedPillarImages.education,
           alt: "Students learning outdoors near the ocean",
+          href: "/pillars/education-culture",
+          cta: "Explore education and culture",
         },
         {
           title: "Community and Global Impact",
           copy:
-            "What happens on Tetiaroa carries outward. Events, conferences, volunteer action, Honu, mosquito control, SWAC, and island resilience work connect local care with global questions about how islands endure, adapt, and lead.",
+            "Test an idea against island reality, change what fails, and share what works so the next community does not start from zero.",
           areas: [
             "Events, conferences, and community gatherings",
             "On-atoll volunteer action",
@@ -458,6 +472,8 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           ],
           image: sharedPillarImages.community,
           alt: "Aerial view of a tropical atoll and lagoon",
+          href: "/pillars/community-global-impact",
+          cta: "Explore community and global impact",
         },
       ],
     },
@@ -829,14 +845,18 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
     },
     pillars: {
       eyebrow: "Les piliers de Tetiaroa",
-      title: "Trois responsabilités, un atoll vivant.",
+      title: "Trois responsabilités, un seul atoll.",
       copy:
-        "Tetiaroa Society protège la vie de l'atoll, en fait un lieu d'apprentissage, et partage ses enseignements au-delà du récif. Son action est concrète, ancrée dans le lieu, guidée par la science de terrain, les savoirs polynésiens et une attention durable.",
+        "La recherche révèle les changements, l’éducation transforme ce savoir en soin, et la collaboration porte les solutions au-delà du récif, alors chaque pilier renforce les deux autres.",
+      layoutLabel: "Disposition des cartes",
+      horizontalLabel: "Horizontale",
+      verticalLabel: "Verticale",
+      storylineLabel: "Récit",
       items: [
         {
           title: "Recherche et conservation",
           copy:
-            "Ici, la science et la protection avancent ensemble. Avec TARP, la biosécurité, ATTRACT, le suivi des espèces et les recherches menées sur le récif, le lagon, les motu et la faune, la Society aide Tetiaroa à rendre visibles les changements et les soins nécessaires.",
+            "Mesurer l’atoll, changer une condition, puis mesurer de nouveau, afin que chaque action de conservation nous apprenne quoi faire ensuite.",
           areas: [
             "TARP, soin des habitats et biosécurité",
             "ATTRACT et recherche en conservation",
@@ -844,11 +864,13 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           ],
           image: sharedPillarImages.research,
           alt: "Récif corallien et habitat lagonaire étudiés pour la conservation",
+          href: "/fr/pillars/research-conservation",
+          cta: "Découvrir la recherche et la conservation",
         },
         {
           title: "Éducation et culture",
           copy:
-            "Tetiaroa est une salle de classe enracinée dans son territoire. Les visites scolaires, les parcours de bénévolat et les programmes sur site relient élèves et visiteurs aux savoirs polynésiens, à la science de terrain et à la responsabilité d'apprendre d'un lieu vivant.",
+            "Un élève suit une question de la science de terrain aux savoirs polynésiens et à l’histoire culturelle, et l’île elle-même devient le professeur.",
           areas: [
             "Visites scolaires locales et internationales",
             "Parcours pour candidater, participer et devenir bénévole",
@@ -856,11 +878,13 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           ],
           image: sharedPillarImages.education,
           alt: "Élèves apprenant dehors près de l'océan",
+          href: "/fr/pillars/education-culture",
+          cta: "Découvrir l’éducation et la culture",
         },
         {
           title: "Communauté et impact global",
           copy:
-            "Ce qui se construit à Tetiaroa voyage plus loin. Événements, conférences, actions bénévoles, Honu, contrôle des moustiques, SWAC et résilience insulaire relient le soin local aux grands enjeux mondiaux des îles qui s'adaptent, résistent et montrent la voie.",
+            "Confronter une idée à la réalité insulaire, changer ce qui échoue et partager ce qui fonctionne pour que la communauté suivante ne reparte pas de zéro.",
           areas: [
             "Événements, conférences et rencontres communautaires",
             "Actions bénévoles sur l'atoll",
@@ -868,6 +892,8 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           ],
           image: sharedPillarImages.community,
           alt: "Vue aérienne d'un atoll tropical et de son lagon",
+          href: "/fr/pillars/community-global-impact",
+          cta: "Découvrir la communauté et l’impact global",
         },
       ],
     },

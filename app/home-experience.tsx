@@ -1,7 +1,10 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import { Homemade_Apple } from "next/font/google";
-import { ArrowUpRightIcon, PlayIcon } from "lucide-react";
+import {
+  ArrowUpRightIcon,
+  PlayIcon,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +30,7 @@ import { FrenchVersionPrompt } from "./french-version-prompt";
 import { SiteFooter } from "./site-footer";
 import { TopToolbar } from "./top-toolbar";
 import { HomeHighlightCarousel } from "./home-highlight-carousel";
+import { HomePillarCards } from "./home-pillar-cards";
 import type { HomepageHighlight } from "@/lib/impact/homepage-highlight";
 
 const handwriting = Homemade_Apple({ subsets: ["latin"], weight: "400" });
@@ -320,48 +324,17 @@ export default function HomeExperience({
         </section>
 
         <section className={styles.pillars} id="pillars">
-          <div className={styles.pillarsInner}>
-            <div className={styles.pillarsIntro}>
-              <div className={`${styles.pillarsEyebrow} font-mono`}>
-                {copy.pillars.eyebrow}
-              </div>
-              <h2 className={`${styles.pillarsTitle} font-header`}>
-                {copy.pillars.title}
-              </h2>
-              <p className={styles.pillarsCopy}>
-                {copy.pillars.copy}
-              </p>
-            </div>
-
-            <div className={styles.pillarCards}>
-              {copy.pillars.items.map((pillar, index) => (
-                <article className={styles.pillarCard} key={pillar.title}>
-                  <div className={`${styles.pillarNumber} font-header`}>
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
-                  <div className={styles.pillarMedia}>
-                    <Image
-                      src={pillar.image}
-                      alt={pillar.alt}
-                      fill
-                      className={styles.pillarImage}
-                      sizes="(max-width: 960px) 100vw, 260px"
-                    />
-                  </div>
-                  <div className={styles.pillarBody}>
-                    <h3 className={`${styles.pillarTitle} font-header`}>
-                      {pillar.title}
-                    </h3>
-                    <p>{pillar.copy}</p>
-                    <ul className={styles.pillarAreas}>
-                      {pillar.areas.map((area) => (
-                        <li key={area}>{area}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </article>
-              ))}
-            </div>
+          <div className="relative mx-auto max-w-[1380px] xl:pr-32">
+            <HomePillarCards
+              copy={copy.pillars.copy}
+              eyebrow={copy.pillars.eyebrow}
+              horizontalLabel={copy.pillars.horizontalLabel}
+              items={copy.pillars.items}
+              layoutLabel={copy.pillars.layoutLabel}
+              storylineLabel={copy.pillars.storylineLabel}
+              title={copy.pillars.title}
+              verticalLabel={copy.pillars.verticalLabel}
+            />
           </div>
         </section>
 

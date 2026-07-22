@@ -3,6 +3,7 @@ import {
   ENGLISH_CONTACT_PATH,
   ENGLISH_DONATE_PATH,
   ENGLISH_EMAIL_LIST_PATH,
+  ENGLISH_GEOLOGY_PATH,
   ENGLISH_HOME_PATH,
   ENGLISH_IMPACT_PATH,
   ENGLISH_PRIVACY_PATH,
@@ -10,17 +11,24 @@ import {
   FRENCH_CONTACT_PATH,
   FRENCH_DONATE_PATH,
   FRENCH_EMAIL_LIST_PATH,
+  FRENCH_GEOLOGY_PATH,
   FRENCH_HOME_PATH,
   FRENCH_IMPACT_PATH,
   FRENCH_PRIVACY_PATH,
   FRENCH_TEAM_PATH,
 } from "./language-links";
 import { getImpactSitemapEntries } from "@/lib/sanity/impact";
+import { getPillarPath, pillarSlugs } from "./pillars/pillar-content";
 
 export const revalidate = 3600;
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.tetiaroasociety.org";
+
+const pillarRoutes = pillarSlugs.flatMap((slug) => [
+  { path: getPillarPath("en", slug), priority: 0.8 },
+  { path: getPillarPath("fr", slug), priority: 0.7 },
+]);
 
 const staticRoutes = [
   { path: ENGLISH_HOME_PATH, priority: 1 },
@@ -37,6 +45,8 @@ const staticRoutes = [
   { path: FRENCH_PRIVACY_PATH, priority: 0.4 },
   { path: ENGLISH_DONATE_PATH, priority: 0.7 },
   { path: FRENCH_DONATE_PATH, priority: 0.6 },
+  { path: ENGLISH_GEOLOGY_PATH, priority: 0.8 },
+  { path: FRENCH_GEOLOGY_PATH, priority: 0.7 },
   { path: "/our-logo", priority: 0.6 },
   { path: "/brando-story", priority: 0.6 },
   { path: "/brando-story/first-sight", priority: 0.5 },
@@ -44,6 +54,7 @@ const staticRoutes = [
   { path: "/brando-story/work", priority: 0.6 },
   { path: "/field-station", priority: 0.6 },
   { path: "/turtle-tales", priority: 0.6 },
+  ...pillarRoutes,
 ] satisfies Array<{ path: string; priority: number }>;
 
 function absoluteUrl(path: string) {

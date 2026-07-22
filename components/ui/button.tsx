@@ -14,6 +14,10 @@ const buttonVariants = cva(
           "border-border bg-background shadow-xs hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
+        impact:
+          "border-toolbar-impact bg-toolbar-impact text-ink-light! shadow-toolbar-impact hover:border-ink-light/70 hover:bg-toolbar-impact-hover hover:text-ink-light!",
+        donate:
+          "donate-lava text-ink-light! shadow-toolbar-donate transition-[filter,box-shadow,transform] duration-300 hover:-translate-y-px hover:text-ink-light! hover:brightness-110 hover:shadow-[0_6px_18px_rgb(0_0_0_/_0.28)]",
         ghost:
           "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground",
         destructive:

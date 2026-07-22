@@ -136,8 +136,9 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
         </Button>
         <Button
           asChild
+          variant="donate"
           size="sm"
-          className="donate-lava h-auto rounded-full px-[18px] py-2 font-semibold text-ink-light shadow-toolbar-donate transition-[filter,box-shadow,transform] duration-300 hover:-translate-y-px hover:text-ink-light hover:brightness-110 hover:shadow-[0_6px_18px_rgb(0_0_0_/_0.28)] max-[420px]:px-2.5"
+          className="h-auto rounded-full px-[18px] py-2 font-semibold max-[420px]:px-2.5"
         >
           <Link href={copy.donateHref}>{copy.donateLabel}</Link>
         </Button>
@@ -162,8 +163,9 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
         </Button>
         <Button
           asChild
+          variant="donate"
           size="sm"
-          className="donate-lava h-auto min-h-11 rounded-full px-3 py-2 font-semibold text-ink-light shadow-toolbar-donate transition-[filter,box-shadow,transform] duration-300 hover:-translate-y-px hover:text-ink-light hover:brightness-110 hover:shadow-[0_6px_18px_rgb(0_0_0_/_0.28)] max-[360px]:px-2.5"
+          className="h-auto min-h-11 rounded-full px-3 py-2 font-semibold max-[360px]:px-2.5"
         >
           <Link href={copy.donateHref}>{copy.donateLabel}</Link>
         </Button>
