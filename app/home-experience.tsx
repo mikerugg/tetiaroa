@@ -17,12 +17,12 @@ import {
 import { cn } from "@/lib/utils";
 import { DocumentLanguage } from "./document-language";
 import { homeCopies, type HomeLocale } from "./home-copy";
+import { ENGLISH_DONATE_PATH, FRENCH_DONATE_PATH } from "./language-links";
 import { HomepageInitialScrollReset } from "./homepage-client";
 import { DepthScene } from "./depth-scene";
 import { VrViewer } from "./vr-viewer";
 import { SanctuaryVideo } from "./sanctuary-video";
-import { HomeLanternDonate } from "./home-lantern-donate";
-import { NightBeatCinema } from "./night-beat-cinema";
+import { LanternExperience } from "./lantern-experience";
 import { ScanPanel } from "./scan-panel";
 import { BrandoPromiseNote } from "./brando-story/brando-promise-note";
 import styles from "./home-experience.module.css";
@@ -516,27 +516,15 @@ export default function HomeExperience({
           </div>
         </section>
 
-        <section className={styles.night} id="lanterns">
-          <div className={styles.stars} aria-hidden="true" />
-          <div className={styles.nightInner}>
-            <NightBeatCinema
-              lines={copy.night.beatLines}
-              eyebrow={copy.night.eyebrow}
-              titleLines={copy.night.titleLines}
-            />
-            <p className={`${styles.nightClose} font-display`}>
-              {copy.night.closeLead}{" "}
-              <strong className={styles.nightYours}>
-                {copy.night.closeStrong}
-              </strong>
-            </p>
-
-            <HomeLanternDonate
-              tiers={copy.lantern.tiers}
-              labels={copy.lantern.labels}
-              locale={copy.locale}
-            />
-          </div>
+        <section id="lanterns">
+          <LanternExperience
+            night={copy.night}
+            tiers={copy.lantern.tiers}
+            labels={copy.lantern.labels}
+            donatePath={
+              copy.locale === "fr" ? FRENCH_DONATE_PATH : ENGLISH_DONATE_PATH
+            }
+          />
         </section>
 
         <SiteFooter copy={copy.footer} />

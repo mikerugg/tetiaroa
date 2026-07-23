@@ -1,0 +1,38 @@
+/* Animation-only rules for the lantern-release donate row.
+   Layout, color, and spacing live in Tailwind utilities on the component. */
+
+.lantern {
+  animation: lantern-bob var(--bob-dur, 7s) ease-in-out infinite;
+  animation-delay: var(--bob-delay, 0s);
+  transform-origin: 50% 0;
+}
+
+@keyframes lantern-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-0.7deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(0.7deg);
+  }
+}
+
+.flame {
+  transform-origin: 50% 100%;
+  animation: lantern-flame 3.6s ease-in-out infinite;
+  animation-delay: var(--bob-delay, 0s);
+}
+
+/* a slow, gentle sway — a candle breathing, not a flicker */
+@keyframes lantern-flame {
+  0%,
+  100% {
+    transform: scaleY(1) scaleX(1) rotate(-0.8deg);
+  }
+  33% {
+    transform: scaleY(1.05) scaleX(0.98) rotate(0.8deg);
+  }
+  66% {
+    transform: scaleY(0.98) scaleX(1.02) rotate(-0.3deg);
+  }
+}
