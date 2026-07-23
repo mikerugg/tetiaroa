@@ -1,6 +1,5 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import { Homemade_Apple } from "next/font/google";
 import {
   ArrowUpRightIcon,
   PlayIcon,
@@ -24,16 +23,14 @@ import { VrViewer } from "./vr-viewer";
 import { SanctuaryVideo } from "./sanctuary-video";
 import { LanternExperience } from "./lantern-experience";
 import { ScanPanel } from "./scan-panel";
-import { BrandoPromiseNote } from "./brando-story/brando-promise-note";
 import styles from "./home-experience.module.css";
 import { FrenchVersionPrompt } from "./french-version-prompt";
 import { SiteFooter } from "./site-footer";
 import { TopToolbar } from "./top-toolbar";
 import { HomeHighlightCarousel } from "./home-highlight-carousel";
 import { HomePillarCards } from "./home-pillar-cards";
+import { HomeStoryHandoff } from "./home-story-handoff";
 import type { HomepageHighlight } from "@/lib/impact/homepage-highlight";
-
-const handwriting = Homemade_Apple({ subsets: ["latin"], weight: "400" });
 
 export default function HomeExperience({
   locale = "en",
@@ -464,57 +461,7 @@ export default function HomeExperience({
           </div>
         </section>
 
-        <section className={styles.ourStory} id="our-story">
-          <div className={styles.ourStoryPlate}>
-            <Image
-              src="/story/history-living-archive.png"
-              alt=""
-              fill
-              className={styles.ourStoryImage}
-              sizes="100vw"
-              aria-hidden="true"
-            />
-            <div className={styles.ourStoryScrim} aria-hidden="true" />
-            <div className={styles.ourStoryTexture} aria-hidden="true" />
-            <div className={styles.ourStoryFrame} aria-hidden="true" />
-
-            <div className={styles.ourStoryInner}>
-              <div className={styles.ourStoryCopy}>
-                <div className={`${styles.ourStoryEyebrow} font-mono`}>
-                  {copy.story.eyebrow}
-                </div>
-                <h2 className={`${styles.ourStoryTitle} font-display`}>
-                  {copy.story.title}
-                </h2>
-                <p className={styles.ourStoryLead}>
-                  {copy.story.lead}
-                </p>
-                <p className={styles.ourStoryBody}>
-                  {copy.story.body}
-                </p>
-                <Button
-                  asChild
-                  variant="outline"
-                  size="lg"
-                  className={cn(styles.ourStoryCta, "h-auto font-mono")}
-                >
-                  <a href={copy.story.ctaHref}>
-                    {copy.story.cta}
-                    <ArrowUpRightIcon
-                      data-icon="inline-end"
-                      aria-hidden="true"
-                    />
-                  </a>
-                </Button>
-              </div>
-
-              <BrandoPromiseNote
-                className={`${styles.ourStoryPromiseNote} ${handwriting.className}`}
-                lines={copy.story.promiseLines}
-              />
-            </div>
-          </div>
-        </section>
+        <HomeStoryHandoff copy={copy.story} />
 
         <section id="lanterns">
           <LanternExperience

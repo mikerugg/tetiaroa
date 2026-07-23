@@ -170,34 +170,6 @@ export function DepthScene({
     };
 
     const apply = () => {
-      const isArchiveActive = (sectionId: string) => {
-        const section = document.getElementById(sectionId);
-
-        if (!section) {
-          return false;
-        }
-
-        const sectionRect = section.getBoundingClientRect();
-        const childArticles = Array.from(
-          section.querySelectorAll(":scope > article"),
-        );
-
-        return (
-          (sectionRect.top < window.innerHeight * 0.75 &&
-            sectionRect.bottom > window.innerHeight * 0.25) ||
-          childArticles.some((item) => {
-            const itemRect = item.getBoundingClientRect();
-
-            return itemRect.top < window.innerHeight && itemRect.bottom > 0;
-          })
-        );
-      };
-
-      document.documentElement.toggleAttribute(
-        "data-history-active",
-        isArchiveActive("history") || isArchiveActive("our-story"),
-      );
-
       const probe = window.scrollY + window.innerHeight * 0.55;
       let index = 0;
 
@@ -460,7 +432,6 @@ export function DepthScene({
       window.removeEventListener("scroll", onScroll);
       document.documentElement.style.removeProperty("--depth01");
       delete document.documentElement.dataset.depthStop;
-      document.documentElement.removeAttribute("data-history-active");
     };
   }, [stops]);
 

@@ -2,9 +2,9 @@
 
 import type { PropsWithChildren } from "react";
 import { useEffect, useRef } from "react";
-import styles from "./concepts.module.css";
+import styles from "./home-story-handoff.module.css";
 
-export function HandoffScrollScene({ children }: PropsWithChildren) {
+export function HomeStoryHandoffScroll({ children }: PropsWithChildren) {
   const sectionRef = useRef<HTMLElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
 
@@ -31,14 +31,16 @@ export function HandoffScrollScene({ children }: PropsWithChildren) {
         1,
         Math.max(0, (progress - 0.08) / (0.84 - 0.08)),
       );
-      const reveal = `${(revealProgress * 100).toFixed(3)}%`;
       const seamOpacity = Math.min(
         revealProgress * 8,
         (1 - revealProgress) * 8,
         1,
       );
 
-      scene.style.setProperty("--reveal-progress", reveal);
+      scene.style.setProperty(
+        "--reveal-progress",
+        `${(revealProgress * 100).toFixed(3)}%`,
+      );
       scene.style.setProperty("--seam-opacity", seamOpacity.toFixed(3));
     };
 
@@ -78,11 +80,11 @@ export function HandoffScrollScene({ children }: PropsWithChildren) {
   return (
     <section
       ref={sectionRef}
-      id="handoff"
-      className={styles.handoffScrollTrack}
-      aria-labelledby="handoff-title"
+      id="our-story"
+      className={styles.scrollTrack}
+      aria-labelledby="home-story-title"
     >
-      <div ref={sceneRef} className={styles.handoffPinnedScene}>
+      <div ref={sceneRef} className={styles.pinnedScene}>
         {children}
       </div>
     </section>

@@ -48,7 +48,7 @@ export type Pillar = {
   cta: string;
 };
 
-type HomeCopy = {
+export type HomeCopy = {
   locale: HomeLocale;
   toolbar: TopToolbarCopy;
   footer: SiteFooterCopy;
@@ -139,13 +139,15 @@ type HomeCopy = {
     };
   };
   story: {
-    eyebrow: string;
+    sectionLabel: string;
     title: string;
-    lead: string;
+    titleAccent: string;
     body: string;
     cta: string;
     ctaHref: string;
-    promiseLines: [string, string, string];
+    timelineStart: string;
+    timelineEnd: string;
+    transitionDescription: string;
   };
   night: {
     eyebrow: string;
@@ -534,15 +536,17 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       },
     },
     story: {
-      eyebrow: "Our Story",
-      title: "The Promise That Stayed",
-      lead:
-        "The world knew Marlon Brando as an actor. Tetiaroa knew him differently: as someone who arrived for a film and left with a responsibility he could not leave behind.",
+      sectionLabel: "Our story",
+      title: "An idea changes hands.",
+      titleAccent: "The Tetiaroa Society helps keep his promise.",
       body:
-        "In its lagoon, reef, birds, turtles, and motu, he saw a living world whose beauty could not be separated from its fragility. Tetiaroa Society carries that promise forward through science, conservation, education, and stewardship rooted in the atoll itself.",
-      cta: "Discover our story",
+        "Marlon Brando sought to create a living lab that would protect the island, and in turn, all vulnerable island communities. Tetiaroa Society uses fieldwork, research, education, and technology to advance this mission.",
+      cta: "Learn more about our story",
       ctaHref: "/our-story",
-      promiseLines: ["Tetiaroa", "must be protected", "for the future."],
+      timelineStart: "1961",
+      timelineEnd: "now",
+      transitionDescription:
+        "As you scroll, an archival view of Tetiaroa gives way to present-day fieldwork on the atoll.",
     },
     night: {
       eyebrow: "We need you",
@@ -956,15 +960,17 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       },
     },
     story: {
-      eyebrow: "Notre histoire",
-      title: "La promesse qui demeure",
-      lead:
-        "Le monde connaissait Marlon Brando comme acteur. Tetiaroa l'a connu autrement : comme quelqu'un venu pour un film, puis reparti avec une responsabilité qu'il ne pouvait plus déposer.",
+      sectionLabel: "Notre histoire",
+      title: "Une idée change de mains.",
+      titleAccent: "L'île en demeure la mesure.",
       body:
-        "Dans son lagon, son récif, ses oiseaux, ses tortues et ses motu, il a vu un monde vivant dont la beauté ne pouvait pas être séparée de la fragilité. Tetiaroa Society porte cette promesse aujourd'hui par la science, la conservation, l'éducation et une intendance enracinée dans l'atoll lui-même.",
-      cta: "Découvrir l'histoire",
+        "Brando a formulé une proposition écologique. La Société n'a hérité d'aucune réponse toute faite, seulement d'une épreuve : transformer l'espoir en travail de terrain, en savoir, en éducation et en décisions qui renforcent Tetiaroa.",
+      cta: "Voir ce que la promesse est devenue",
       ctaHref: "/our-story",
-      promiseLines: ["Tetiaroa", "doit être protégé", "pour l'avenir."],
+      timelineStart: "1961",
+      timelineEnd: "aujourd'hui",
+      transitionDescription:
+        "Au fil du défilement, une vue d'archive de Tetiaroa cède la place au travail de terrain mené aujourd'hui sur l'atoll.",
     },
     night: {
       eyebrow: "Nous avons besoin de vous",

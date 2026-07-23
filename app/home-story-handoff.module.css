@@ -1,0 +1,58 @@
+.scrollTrack {
+  height: 260svh;
+  scroll-margin-top: 4rem;
+  background: var(--background);
+}
+
+.pinnedScene {
+  --reveal-progress: 0%;
+  --seam-opacity: 0;
+  position: sticky;
+  top: 3.5rem;
+  isolation: isolate;
+  height: 80svh;
+  overflow: hidden;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.past {
+  filter: sepia(0.42) saturate(0.72) contrast(1.03);
+}
+
+.present {
+  clip-path: inset(0 calc(100% - var(--reveal-progress)) 0 0);
+  will-change: clip-path;
+}
+
+.seam {
+  left: var(--reveal-progress);
+  opacity: var(--seam-opacity);
+  transform: translateX(-50%);
+  will-change: left, opacity;
+}
+
+@media (min-width: 768px) {
+  .pinnedScene {
+    top: 4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrollTrack {
+    height: auto;
+  }
+
+  .pinnedScene {
+    position: relative;
+    top: auto;
+  }
+
+  .present {
+    clip-path: inset(0);
+  }
+
+  .seam {
+    display: none;
+  }
+}
