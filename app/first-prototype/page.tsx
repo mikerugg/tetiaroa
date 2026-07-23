@@ -179,7 +179,7 @@ const givingLevels: GivingLevel[] = [
   {
     amount: "-",
     period: "other",
-    description: "Pick an amount, or fund a program directly.",
+    description: "Pick an amount that suits you.",
     label: "Choose your own ->",
   },
 ];

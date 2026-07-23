@@ -588,7 +588,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           amount: "$—",
           period: "/mo",
           name: "Your own",
-          description: "Pick an amount, or fund a program directly.",
+          description: "Pick an amount that suits you.",
           custom: true,
         },
       ],
@@ -1013,8 +1013,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           amount: "$—",
           period: "/mois",
           name: "À votre rythme",
-          description:
-            "Choisissez un montant, ou financez directement un programme.",
+          description: "Choisissez un montant qui vous convient.",
           custom: true,
         },
       ],

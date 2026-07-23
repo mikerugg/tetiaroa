@@ -52,7 +52,7 @@ export function HomePillarCards({
   storylineLabel,
   title,
 }: HomePillarCardsProps) {
-  const [layout, setLayout] = useState<PillarLayout>("vertical");
+  const [layout, setLayout] = useState<PillarLayout>("storyline");
 
   function handleLayoutChange(value: string) {
     if (
