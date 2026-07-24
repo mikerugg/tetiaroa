@@ -30,6 +30,7 @@ import { TopToolbar } from "./top-toolbar";
 import { HomeHighlightCarousel } from "./home-highlight-carousel";
 import { HomePillarCards } from "./home-pillar-cards";
 import { HomeStoryHandoff } from "./home-story-handoff";
+import { HomepageViewportFrame } from "./homepage-viewport-frame";
 import type { HomepageHighlight } from "@/lib/impact/homepage-highlight";
 
 export default function HomeExperience({
@@ -57,7 +58,7 @@ export default function HomeExperience({
     <>
       <DocumentLanguage lang={copy.locale} />
       <HomepageInitialScrollReset />
-      <div className={styles.page}>
+      <HomepageViewportFrame className={styles.page}>
         <DepthScene stops={copy.depthStops} ariaLabel={copy.depthAriaLabel} />
         <TopToolbar copy={copy.toolbar} />
         {copy.locale === "en" ? <FrenchVersionPrompt /> : null}
@@ -475,7 +476,7 @@ export default function HomeExperience({
         </section>
 
         <SiteFooter copy={copy.footer} />
-      </div>
+      </HomepageViewportFrame>
     </>
   );
 }

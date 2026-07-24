@@ -30,7 +30,7 @@ export function shouldRefreshStableViewport(
   );
 }
 
-export function measureSafeViewportHeight() {
+function measureViewportHeight(unit: "100lvh" | "100svh") {
   const probe = document.createElement("div");
 
   probe.style.position = "fixed";
@@ -42,8 +42,8 @@ export function measureSafeViewportHeight() {
   probe.style.pointerEvents = "none";
   probe.style.visibility = "hidden";
 
-  if (CSS.supports("height", "100svh")) {
-    probe.style.height = "100svh";
+  if (CSS.supports("height", unit)) {
+    probe.style.height = unit;
   }
 
   document.body.append(probe);
@@ -51,4 +51,12 @@ export function measureSafeViewportHeight() {
   probe.remove();
 
   return height || document.documentElement.clientHeight || window.innerHeight;
+}
+
+export function measureSafeViewportHeight() {
+  return measureViewportHeight("100svh");
+}
+
+export function measureStageViewportHeight() {
+  return measureViewportHeight("100lvh");
 }

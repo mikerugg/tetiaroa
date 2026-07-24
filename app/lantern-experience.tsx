@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import type { LanternDonateLabels, LanternTier } from "./lantern-donate";
 import {
   captureViewportLayout,
+  measureStageViewportHeight,
   shouldRefreshStableViewport,
 } from "./stable-viewport";
 import styles from "./lantern-experience.module.css";
@@ -369,7 +370,7 @@ function LanternCinema({ night }: { night: LanternCopy }) {
       wrap.style.removeProperty("--lantern-stage-height");
       wrap.style.removeProperty("--lantern-track-height");
 
-      const stageHeight = stage.getBoundingClientRect().height;
+      const stageHeight = measureStageViewportHeight();
 
       wrap.style.setProperty("--lantern-stage-height", `${stageHeight}px`);
       wrap.style.setProperty(

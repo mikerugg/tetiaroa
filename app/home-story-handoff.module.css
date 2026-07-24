@@ -1,6 +1,8 @@
 .scrollTrack {
   --story-pin-top: var(--site-header-height, 3.5rem);
-  --story-scroll-distance: 180vh;
+  --story-scroll-distance: calc(
+    var(--viewport-height-unit, 1vh) * 180
+  );
   height: calc(
     var(--viewport-stage-height, 100vh) - var(--story-pin-top) +
       var(--story-scroll-distance)
@@ -26,12 +28,6 @@
     var(--viewport-safe-height, 100vh) - var(--story-pin-top) -
       env(safe-area-inset-bottom, 0px)
   );
-}
-
-@supports (height: 100svh) {
-  .scrollTrack {
-    --story-scroll-distance: 180svh;
-  }
 }
 
 .past {
