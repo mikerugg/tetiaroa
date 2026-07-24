@@ -167,6 +167,19 @@ export function HomeHighlightCarousel({
                     {highlight.imageAlt}
                   </figcaption>
                 </figure>
+                <Button
+                  asChild
+                  variant="outline"
+                  className={cn(
+                    styles.highlightAction,
+                    "hidden h-auto font-mono max-[640px]:order-3 max-[640px]:mt-1.5 max-[640px]:inline-flex max-[640px]:justify-self-center",
+                  )}
+                >
+                  <a href={highlight.href}>
+                    {labels.cta}
+                    <ArrowUpRightIcon data-icon="inline-end" aria-hidden="true" />
+                  </a>
+                </Button>
                 <div className={styles.highlightCopy}>
                   <div className={`${styles.highlightEyebrow} font-mono`}>
                     {labels.eyebrow}
@@ -178,7 +191,10 @@ export function HomeHighlightCarousel({
                   <Button
                     asChild
                     variant="outline"
-                    className={cn(styles.highlightAction, "h-auto font-mono")}
+                    className={cn(
+                      styles.highlightAction,
+                      "h-auto font-mono max-[640px]:hidden",
+                    )}
                   >
                     <a href={highlight.href}>
                       {labels.cta}

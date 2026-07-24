@@ -2983,8 +2983,18 @@
     padding: 10vh 7vw;
   }
 
+  .highlightCopy {
+    margin-inline: auto;
+    text-align: center;
+  }
+
   .highlightTitle {
+    margin-inline: auto;
     font-size: clamp(36px, 11vw, 52px);
+  }
+
+  .highlightText {
+    margin-inline: auto;
   }
 
   .band {

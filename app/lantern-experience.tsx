@@ -633,10 +633,10 @@ function LanternRelease({
     if (!selectedTier) return labels.emptySelection;
     if (selectedTier.custom) {
       return custom
-        ? `${labels.lightPrefix} — ${labels.currencySymbol}${custom}${selectedTier.period}`
+        ? `${labels.lightPrefix} — ${labels.currencySymbol}${custom}`
         : labels.customAmountRequired;
     }
-    return `${labels.lightPrefix} — ${selectedTier.amount}${selectedTier.period}`;
+    return `${labels.lightPrefix} — ${selectedTier.amount}`;
   })();
 
   return (
@@ -653,7 +653,7 @@ function LanternRelease({
       <div className="mx-auto max-w-[1180px]">
         <p className="font-display text-center text-[clamp(1.5rem,3vw,2.4rem)] leading-[1.3] text-[color:var(--paper)]">
           {night.closeLead}{" "}
-          <strong className="font-normal not-italic text-[color:var(--flame)]">
+          <strong className="font-normal not-italic text-[color:var(--flame)] max-[640px]:block">
             {night.closeStrong}
           </strong>
         </p>
@@ -737,9 +737,6 @@ function LanternRelease({
                   </span>
                   <span className="font-header pb-4 text-[1.55rem] leading-none text-[color:var(--paper)]">
                     {tier.custom && custom ? `$${custom}` : tier.amount}
-                    <span className="ml-0.5 font-mono text-[10px] tracking-[0.1em] text-[color:rgba(220,235,255,0.55)]">
-                      {tier.period}
-                    </span>
                   </span>
                 </button>
 
@@ -779,9 +776,6 @@ function LanternRelease({
                 className="w-[110px] font-mono text-[15px]"
                 onChange={(e) => setCustom(e.target.value.replace(/[^0-9]/g, ""))}
               />
-              <span className="text-xs text-[color:rgba(220,235,255,0.5)]">
-                {selectedTier.period}
-              </span>
             </Field>
           </FieldGroup>
         ) : null}
