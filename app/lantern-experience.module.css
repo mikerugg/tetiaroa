@@ -1,5 +1,40 @@
-/* Animation-only rules for the lantern-release donate row.
-   Layout, color, and spacing live in Tailwind utilities on the component. */
+/* Complex viewport and animation rules for the lantern story and release row.
+   Ordinary layout, color, and spacing live in Tailwind utilities. */
+
+.cinemaTrack {
+  position: relative;
+  height: 520vh;
+  overflow: clip;
+}
+
+.cinemaStage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.cinemaSafeFrame {
+  position: absolute;
+  top: var(--site-header-height, 0px);
+  right: 0;
+  left: 0;
+  height: calc(
+    var(--viewport-safe-height, 100vh) -
+      var(--site-header-height, 0px) -
+      env(safe-area-inset-bottom, 0px)
+  );
+}
+
+@supports (height: 100lvh) {
+  .cinemaTrack {
+    height: 520lvh;
+  }
+
+  .cinemaStage {
+    height: var(--viewport-stage-height, 100lvh);
+  }
+}
 
 .lantern {
   animation: lantern-bob var(--bob-dur, 7s) ease-in-out infinite;

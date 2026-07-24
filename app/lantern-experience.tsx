@@ -313,6 +313,7 @@ export function LanternExperience({
 
 function LanternCinema({ night }: { night: LanternCopy }) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
+  const stageRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const titleRef = useRef<HTMLDivElement | null>(null);
   const capRef = useRef<HTMLParagraphElement | null>(null);
@@ -325,8 +326,9 @@ function LanternCinema({ night }: { night: LanternCopy }) {
 
   useEffect(() => {
     const wrap = wrapRef.current;
+    const stage = stageRef.current;
     const canvas = canvasRef.current;
-    if (!wrap || !canvas) return;
+    if (!wrap || !stage || !canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -352,27 +354,59 @@ function LanternCinema({ night }: { night: LanternCopy }) {
     let w = 0;
     let h = 0;
     let raf = 0;
+    let layoutFrame = 0;
     let last = performance.now();
     let progress = 0;
+    let trackTop = 0;
+    let scrollSpan = 1;
 
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
+    const resizeCanvas = () => {
+      const rect = stage.getBoundingClientRect();
+      const nextWidth = Math.round(rect.width);
+      const nextHeight = Math.round(rect.height);
+
+      if (nextWidth === w && nextHeight === h) {
+        return;
+      }
+
       w = rect.width;
       h = rect.height;
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
-    resize();
-    window.addEventListener("resize", resize);
+
+    const measureGeometry = () => {
+      trackTop = wrap.getBoundingClientRect().top + window.scrollY;
+      scrollSpan = Math.max(wrap.offsetHeight - stage.offsetHeight, 1);
+    };
 
     const onScroll = () => {
-      const rect = wrap.getBoundingClientRect();
-      const span = rect.height - window.innerHeight;
-      progress = clamp01(span > 0 ? -rect.top / span : 0);
+      progress = clamp01((window.scrollY - trackTop) / scrollSpan);
     };
+
+    const onLayoutChange = () => {
+      if (layoutFrame) {
+        return;
+      }
+
+      layoutFrame = requestAnimationFrame(() => {
+        layoutFrame = 0;
+        resizeCanvas();
+        measureGeometry();
+        onScroll();
+      });
+    };
+
+    resizeCanvas();
+    measureGeometry();
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
+
+    const resizeObserver = new ResizeObserver(onLayoutChange);
+    resizeObserver.observe(wrap);
+    resizeObserver.observe(stage);
+    resizeObserver.observe(document.body);
 
     const frame = (now: number) => {
       const dt = Math.min(64, now - last);
@@ -538,38 +572,44 @@ function LanternCinema({ night }: { night: LanternCopy }) {
 
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
+      cancelAnimationFrame(layoutFrame);
+      resizeObserver.disconnect();
       window.removeEventListener("scroll", onScroll);
     };
   }, [beats]);
 
   return (
-    <div ref={wrapRef} className="relative h-[520vh] overflow-clip">
-      <div className="sticky top-0 h-screen overflow-hidden">
+    <div ref={wrapRef} className={styles.cinemaTrack}>
+      <div ref={stageRef} className={styles.cinemaStage}>
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
 
-        <div
-          ref={titleRef}
-          className="pointer-events-none absolute inset-x-0 top-[24%] px-6 text-center"
-        >
-          <div className="font-mono text-[11px] uppercase tracking-[0.34em] text-[color:var(--flame)]">
-            {night.eyebrow}
+        <div className={styles.cinemaSafeFrame}>
+          <div
+            ref={titleRef}
+            className="pointer-events-none absolute inset-x-0 top-[24%] px-6 text-center"
+          >
+            <div className="font-mono text-[11px] uppercase tracking-[0.34em] text-[color:var(--flame)]">
+              {night.eyebrow}
+            </div>
+            <h3 className="font-header mx-auto mt-4 max-w-[14ch] text-[clamp(2.2rem,5.4vw,4.6rem)] uppercase leading-[0.92] text-[color:var(--paper)]">
+              {night.titleLines[0]}
+              <br />
+              {night.titleLines[1]}
+            </h3>
+            <div className="font-mono mx-auto mt-6 w-fit text-[11px] uppercase tracking-[0.28em] text-[color:rgba(220,235,255,0.5)]">
+              scroll to release it
+            </div>
           </div>
-          <h3 className="font-header mx-auto mt-4 max-w-[14ch] text-[clamp(2.2rem,5.4vw,4.6rem)] uppercase leading-[0.92] text-[color:var(--paper)]">
-            {night.titleLines[0]}
-            <br />
-            {night.titleLines[1]}
-          </h3>
-          <div className="font-mono mx-auto mt-6 w-fit text-[11px] uppercase tracking-[0.28em] text-[color:rgba(220,235,255,0.5)]">
-            scroll to release it
-          </div>
-        </div>
 
-        <p
-          ref={capRef}
-          className="font-display pointer-events-none absolute inset-x-0 bottom-[14vh] mx-auto max-w-[40ch] px-6 text-center text-[clamp(1.15rem,2.4vw,1.9rem)] italic leading-[1.4] text-[color:var(--paper)]"
-          style={{ opacity: 0, textShadow: "0 2px 30px rgba(0,0,0,0.7)" }}
-        />
+          <p
+            ref={capRef}
+            className="font-display pointer-events-none absolute inset-x-0 bottom-[14%] mx-auto max-w-[40ch] px-6 text-center text-[clamp(1.15rem,2.4vw,1.9rem)] italic leading-[1.4] text-[color:var(--paper)]"
+            style={{
+              opacity: 0,
+              textShadow: "0 2px 30px rgba(0,0,0,0.7)",
+            }}
+          />
+        </div>
 
         <ul className="sr-only">
           {beats.map((line) => (
@@ -640,7 +680,11 @@ function LanternRelease({
   })();
 
   return (
-    <section className="relative overflow-hidden px-6 pb-28 pt-16 sm:px-12">
+    <section
+      id="donation-levels"
+      aria-labelledby="donation-levels-heading"
+      className="relative scroll-mt-14 overflow-hidden px-6 pb-28 pt-16 sm:px-12 md:scroll-mt-16"
+    >
       {/* horizon glow behind the release */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-40"
@@ -651,12 +695,15 @@ function LanternRelease({
       />
 
       <div className="mx-auto max-w-[1180px]">
-        <p className="font-display text-center text-[clamp(1.5rem,3vw,2.4rem)] leading-[1.3] text-[color:var(--paper)]">
+        <h2
+          id="donation-levels-heading"
+          className="font-display text-center text-[clamp(1.5rem,3vw,2.4rem)] leading-[1.3] text-[color:var(--paper)]"
+        >
           {night.closeLead}{" "}
           <strong className="font-normal not-italic text-[color:var(--flame)] max-[640px]:block">
             {night.closeStrong}
           </strong>
-        </p>
+        </h2>
 
         <div
           className="mt-14 grid grid-cols-4 gap-6 max-[960px]:grid-cols-2 max-[560px]:grid-cols-1"
@@ -746,9 +793,6 @@ function LanternRelease({
                 >
                   {tier.name}
                 </Badge>
-                <p className="mt-2 max-w-[24ch] text-[13px] leading-[1.5] text-[color:rgba(220,235,255,0.6)]">
-                  {tier.description}
-                </p>
               </div>
             );
           })}

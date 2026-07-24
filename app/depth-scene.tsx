@@ -30,6 +30,10 @@ type Bubble = {
 };
 
 const MAX_DEPTH = 104;
+const SUB_HIDDEN_RANGE = {
+  startId: "our-story",
+  endId: "donation-levels",
+} as const;
 const BEAM_SECTION_IDS = new Set([
   "honu-xr",
   "sanctuary",
@@ -126,6 +130,10 @@ export function DepthScene({
     let firstApply = true;
     let commsTimer = 0;
     let gapTargetId: string | null = null;
+    let viewportHeight = 1;
+    let subHiddenStart = Number.POSITIVE_INFINITY;
+    let subHiddenEnd = Number.NEGATIVE_INFINITY;
+    let subNarrativeHidden = false;
 
     const measure = () => {
       anchors = stops.map((stop) => {
@@ -140,10 +148,23 @@ export function DepthScene({
         return (
           rect.top +
           window.scrollY +
-          Math.min(rect.height * 0.35, window.innerHeight * 0.5)
+          Math.min(rect.height * 0.35, viewportHeight * 0.5)
         );
       });
 
+      const startSection = document.getElementById(SUB_HIDDEN_RANGE.startId);
+      const endSection = document.getElementById(SUB_HIDDEN_RANGE.endId);
+
+      if (startSection && endSection) {
+        const startRect = startSection.getBoundingClientRect();
+        const endRect = endSection.getBoundingClientRect();
+
+        subHiddenStart = startRect.top + window.scrollY;
+        subHiddenEnd = endRect.top + window.scrollY;
+      } else {
+        subHiddenStart = Number.POSITIVE_INFINITY;
+        subHiddenEnd = Number.NEGATIVE_INFINITY;
+      }
     };
 
     const showTransmission = (text: string | undefined) => {
@@ -169,9 +190,27 @@ export function DepthScene({
       comms.classList.remove(styles.commsShow);
     };
 
+    const updateCompanionVisibility = (probe: number) => {
+      const shouldHide = probe >= subHiddenStart && probe < subHiddenEnd;
+
+      if (shouldHide === subNarrativeHidden) {
+        return;
+      }
+
+      subNarrativeHidden = shouldHide;
+      sub.classList.toggle(styles.subNarrativeHidden, shouldHide);
+
+      if (shouldHide) {
+        gapTargetId = null;
+        hideTransmission();
+      }
+    };
+
     const apply = () => {
-      const probe = window.scrollY + window.innerHeight * 0.55;
+      const probe = window.scrollY + viewportHeight * 0.55;
       let index = 0;
+
+      updateCompanionVisibility(probe);
 
       while (index < anchors.length - 2 && probe > anchors[index + 1]) {
         index += 1;
@@ -241,8 +280,21 @@ export function DepthScene({
     };
 
     const sizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const rect = canvas.getBoundingClientRect();
+      const nextWidth = Math.max(1, Math.round(rect.width));
+      const nextHeight = Math.max(1, Math.round(rect.height));
+
+      if (
+        canvas.width === nextWidth &&
+        canvas.height === nextHeight &&
+        viewportHeight === nextHeight
+      ) {
+        return;
+      }
+
+      canvas.width = nextWidth;
+      canvas.height = nextHeight;
+      viewportHeight = nextHeight;
       particles = Array.from({ length: 70 }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -342,7 +394,11 @@ export function DepthScene({
 
         if (bubbleVisibility > 0.05) {
           // Thruster wash off the sub's tail while the dive is moving.
-          if (Math.abs(smoothVel) > 6 && Math.random() < 0.225) {
+          if (
+            !subNarrativeHidden &&
+            Math.abs(smoothVel) > 6 &&
+            Math.random() < 0.225
+          ) {
             const rect = sub.getBoundingClientRect();
 
             if (rect.width > 0) {
@@ -388,12 +444,6 @@ export function DepthScene({
       frame = requestAnimationFrame(tick);
     };
 
-    const onResize = () => {
-      measure();
-      sizeCanvas();
-      apply();
-    };
-
     const onScroll = () => {
       if (reducedMotion && !scrollQueued) {
         scrollQueued = true;
@@ -404,11 +454,10 @@ export function DepthScene({
       }
     };
 
-    measure();
     sizeCanvas();
+    measure();
     apply();
 
-    window.addEventListener("resize", onResize);
     window.addEventListener("scroll", onScroll, { passive: true });
 
     if (reducedMotion) {
@@ -418,17 +467,25 @@ export function DepthScene({
     }
 
     // Media loading shifts section offsets after mount.
-    const observer = new ResizeObserver(() => {
+    const layoutObserver = new ResizeObserver(() => {
       measure();
+      apply();
     });
 
-    observer.observe(document.body);
+    const canvasObserver = new ResizeObserver(() => {
+      sizeCanvas();
+      measure();
+      apply();
+    });
+
+    layoutObserver.observe(document.body);
+    canvasObserver.observe(canvas);
 
     return () => {
       cancelAnimationFrame(frame);
       window.clearTimeout(commsTimer);
-      observer.disconnect();
-      window.removeEventListener("resize", onResize);
+      layoutObserver.disconnect();
+      canvasObserver.disconnect();
       window.removeEventListener("scroll", onScroll);
       document.documentElement.style.removeProperty("--depth01");
       delete document.documentElement.dataset.depthStop;

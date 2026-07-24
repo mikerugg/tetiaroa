@@ -1,6 +1,11 @@
 .scrollTrack {
-  height: 260svh;
-  scroll-margin-top: 4rem;
+  --story-pin-top: var(--site-header-height, 3.5rem);
+  --story-scroll-distance: 180vh;
+  height: calc(
+    var(--viewport-stage-height, 100vh) - var(--story-pin-top) +
+      var(--story-scroll-distance)
+  );
+  scroll-margin-top: var(--story-pin-top);
   background: var(--background);
 }
 
@@ -8,12 +13,25 @@
   --reveal-progress: 0%;
   --seam-opacity: 0;
   position: sticky;
-  top: 3.5rem;
+  top: var(--story-pin-top);
   isolation: isolate;
-  height: 80svh;
+  height: calc(var(--viewport-stage-height, 100vh) - var(--story-pin-top));
   overflow: hidden;
   background: var(--background);
   color: var(--foreground);
+}
+
+.safeContent {
+  height: calc(
+    var(--viewport-safe-height, 100vh) - var(--story-pin-top) -
+      env(safe-area-inset-bottom, 0px)
+  );
+}
+
+@supports (height: 100svh) {
+  .scrollTrack {
+    --story-scroll-distance: 180svh;
+  }
 }
 
 .past {
@@ -30,12 +48,6 @@
   opacity: var(--seam-opacity);
   transform: translateX(-50%);
   will-change: left, opacity;
-}
-
-@media (min-width: 768px) {
-  .pinnedScene {
-    top: 4rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -13,22 +13,28 @@ type HomeStoryHandoffProps = {
 export function HomeStoryHandoff({ copy }: HomeStoryHandoffProps) {
   return (
     <HomeStoryHandoffScroll>
-      <div className={`${styles.past} absolute inset-0`} aria-hidden="true">
+      <div
+        className={`${styles.past} absolute inset-x-0 top-0 h-[62%] overflow-hidden md:inset-0 md:h-auto`}
+        aria-hidden="true"
+      >
         <Image
           src="/story/history-new-lagoon-witness.png"
           alt=""
           fill
           sizes="100vw"
-          className="object-cover object-[66%_center]"
+          className="scale-[1.2] object-contain object-center md:scale-100"
         />
       </div>
-      <div className={`${styles.present} absolute inset-0`} aria-hidden="true">
+      <div
+        className={`${styles.present} absolute inset-x-0 top-0 h-[62%] overflow-hidden md:inset-0 md:h-auto`}
+        aria-hidden="true"
+      >
         <Image
           src="/story/history-living-archive.png"
           alt=""
           fill
           sizes="100vw"
-          className="object-cover object-[58%_center]"
+          className="scale-[1.2] object-contain object-center md:scale-100"
         />
       </div>
       <div
@@ -41,7 +47,9 @@ export function HomeStoryHandoff({ copy }: HomeStoryHandoffProps) {
       />
       <p className="sr-only">{copy.transitionDescription}</p>
 
-      <div className="relative mx-auto flex h-full max-w-[1600px] flex-col justify-between px-5 pb-8 pt-20 sm:px-8 sm:pb-10 sm:pt-24 lg:px-12">
+      <div
+        className={`${styles.safeContent} relative mx-auto flex max-w-[1600px] flex-col justify-between px-5 pb-8 pt-20 sm:px-8 sm:pb-10 sm:pt-24 lg:px-12`}
+      >
         <div className="flex justify-end">
           <p className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-foreground/55 md:block">
             {copy.timelineStart}{" "}

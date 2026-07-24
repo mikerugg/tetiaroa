@@ -18,14 +18,21 @@ export function HomeStoryHandoffScroll({ children }: PropsWithChildren) {
 
     let frame = 0;
     let isNearScene = false;
+    let sectionTop = 0;
+    let pinOffset = 0;
+    let scrollRange = 1;
+
+    const measureGeometry = () => {
+      sectionTop = section.getBoundingClientRect().top + window.scrollY;
+      pinOffset = Number.parseFloat(getComputedStyle(scene).top) || 0;
+      scrollRange = Math.max(section.offsetHeight - scene.offsetHeight, 1);
+    };
 
     const updateProgress = () => {
       frame = 0;
 
-      const bounds = section.getBoundingClientRect();
-      const pinOffset = Number.parseFloat(getComputedStyle(scene).top) || 0;
-      const scrollRange = Math.max(bounds.height - scene.offsetHeight, 1);
-      const rawProgress = (pinOffset - bounds.top) / scrollRange;
+      const rawProgress =
+        (window.scrollY + pinOffset - sectionTop) / scrollRange;
       const progress = Math.min(1, Math.max(0, rawProgress));
       const revealProgress = Math.min(
         1,
@@ -52,7 +59,7 @@ export function HomeStoryHandoffScroll({ children }: PropsWithChildren) {
       frame = window.requestAnimationFrame(updateProgress);
     };
 
-    const observer = new IntersectionObserver(
+    const intersectionObserver = new IntersectionObserver(
       ([entry]) => {
         isNearScene = entry.isIntersecting;
         if (isNearScene) {
@@ -62,15 +69,23 @@ export function HomeStoryHandoffScroll({ children }: PropsWithChildren) {
       { rootMargin: "100% 0px" },
     );
 
-    observer.observe(section);
+    const resizeObserver = new ResizeObserver(() => {
+      measureGeometry();
+      requestUpdate();
+    });
+
+    intersectionObserver.observe(section);
+    resizeObserver.observe(section);
+    resizeObserver.observe(scene);
+    resizeObserver.observe(document.body);
+    measureGeometry();
     updateProgress();
     window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
 
     return () => {
-      observer.disconnect();
+      intersectionObserver.disconnect();
+      resizeObserver.disconnect();
       window.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
       if (frame) {
         window.cancelAnimationFrame(frame);
       }
