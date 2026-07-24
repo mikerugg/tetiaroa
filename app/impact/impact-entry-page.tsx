@@ -30,6 +30,7 @@ import type {
   ImpactContentEntry,
   ImpactLanguage,
 } from "@/lib/impact/types";
+import { getDoiIdentifier } from "@/lib/impact/doi";
 import { cn } from "@/lib/utils";
 import { getImpactEntryBySlug } from "@/lib/sanity/impact";
 import {
@@ -146,6 +147,30 @@ function ImpactEntryInfoCard({
             </dd>
           </div>
         </div>
+        {entry.doiUrl ? (
+          <>
+            <Separator />
+            <div>
+              <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                DOI
+              </dt>
+              <dd className="mt-1 text-sm">
+                <a
+                  href={entry.doiUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex items-center gap-1 text-primary underline-offset-4 hover:underline"
+                >
+                  {getDoiIdentifier(entry.doiUrl)}
+                  <ArrowUpRightIcon
+                    className="size-4"
+                    aria-hidden="true"
+                  />
+                </a>
+              </dd>
+            </div>
+          </>
+        ) : null}
         {showLocation ? (
           <>
             <Separator />

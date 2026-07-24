@@ -75,6 +75,7 @@ export type ImpactContentEntry = {
   secondaryCategories: ImpactCategory[];
   publishedAt: string;
   latestUpdate: string;
+  doiUrl?: string;
   status: string;
   location: string;
   heroImage: string;

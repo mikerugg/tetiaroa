@@ -17,6 +17,7 @@ import {
   type ImpactRelatedEntry,
   toImpactFeedItem,
 } from "@/lib/impact/types";
+import { normalizeDoiUrl } from "@/lib/impact/doi";
 import {
   buildHomepageHighlights,
   type HomepageHighlight,
@@ -57,6 +58,7 @@ type SanityImpactEntry = {
   heroImageAlt?: string | null;
   publishedAt?: string | null;
   updatedAt?: string | null;
+  doiUrl?: string | null;
   status?: string | null;
   location?: string | null;
   metric?: string | null;
@@ -322,6 +324,7 @@ function normalizeSanityEntry(entry: SanityImpactEntry): ImpactContentEntry | nu
     ),
     publishedAt,
     latestUpdate,
+    doiUrl: normalizeDoiUrl(entry.doiUrl),
     status: entry.status ?? "Published",
     location: entry.location ?? "Teti'aroa",
     heroImage: entry.heroImage ?? defaultHeroImage,

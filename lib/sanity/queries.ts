@@ -46,6 +46,7 @@ const impactEntryProjection = `
     )
   ),
   entryType,
+  doiUrl,
   "summary": select(
     $language == "fr" => coalesce(french.summary, summary),
     coalesce(english.summary, summary)

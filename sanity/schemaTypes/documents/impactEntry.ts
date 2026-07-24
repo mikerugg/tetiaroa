@@ -3,6 +3,7 @@ import {
   impactCategories,
   impactEntryTypes,
 } from "../../../lib/impact/types";
+import { validateDoiUrl } from "../../../lib/impact/doi";
 import { MailchimpHtmlExportInput } from "../../components/mailchimpHtmlExportInput";
 
 const categoryOptions = impactCategories.map((category) => ({
@@ -96,6 +97,18 @@ export const impactEntry = defineType({
       title: "Latest update",
       type: "datetime",
       group: "shared",
+    }),
+    defineField({
+      name: "doiUrl",
+      title: "DOI URL",
+      type: "url",
+      group: "shared",
+      description:
+        "Paste the publication's full DOI link, for example https://doi.org/10.1234/example.",
+      validation: (rule) =>
+        rule
+          .uri({ scheme: ["http", "https"] })
+          .custom((value) => validateDoiUrl(value)),
     }),
     defineField({
       name: "program",
