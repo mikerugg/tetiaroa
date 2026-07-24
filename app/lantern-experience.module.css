@@ -3,14 +3,14 @@
 
 .cinemaTrack {
   position: relative;
-  height: 520vh;
+  height: var(--lantern-track-height, 520vh);
   overflow: clip;
 }
 
 .cinemaStage {
   position: sticky;
   top: 0;
-  height: 100vh;
+  height: var(--lantern-stage-height, 100vh);
   overflow: hidden;
 }
 
@@ -28,11 +28,14 @@
 
 @supports (height: 100lvh) {
   .cinemaTrack {
-    height: 520lvh;
+    height: var(--lantern-track-height, 520lvh);
   }
 
   .cinemaStage {
-    height: var(--viewport-stage-height, 100lvh);
+    height: var(
+      --lantern-stage-height,
+      var(--viewport-stage-height, 100lvh)
+    );
   }
 }
 

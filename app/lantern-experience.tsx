@@ -14,6 +14,10 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import type { LanternDonateLabels, LanternTier } from "./lantern-donate";
+import {
+  captureViewportLayout,
+  shouldRefreshStableViewport,
+} from "./stable-viewport";
 import styles from "./lantern-experience.module.css";
 
 export type LanternCopy = {
@@ -359,6 +363,20 @@ function LanternCinema({ night }: { night: LanternCopy }) {
     let progress = 0;
     let trackTop = 0;
     let scrollSpan = 1;
+    let viewportLayout = captureViewportLayout();
+
+    const lockViewportGeometry = () => {
+      wrap.style.removeProperty("--lantern-stage-height");
+      wrap.style.removeProperty("--lantern-track-height");
+
+      const stageHeight = stage.getBoundingClientRect().height;
+
+      wrap.style.setProperty("--lantern-stage-height", `${stageHeight}px`);
+      wrap.style.setProperty(
+        "--lantern-track-height",
+        `${stageHeight * 5.2}px`,
+      );
+    };
 
     const resizeCanvas = () => {
       const rect = stage.getBoundingClientRect();
@@ -398,10 +416,29 @@ function LanternCinema({ night }: { night: LanternCopy }) {
       });
     };
 
+    const onViewportResize = () => {
+      const nextLayout = captureViewportLayout();
+      const shouldRefresh = shouldRefreshStableViewport(
+        viewportLayout,
+        nextLayout,
+      );
+
+      viewportLayout = nextLayout;
+
+      if (!shouldRefresh) {
+        return;
+      }
+
+      lockViewportGeometry();
+      onLayoutChange();
+    };
+
+    lockViewportGeometry();
     resizeCanvas();
     measureGeometry();
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onViewportResize);
 
     const resizeObserver = new ResizeObserver(onLayoutChange);
     resizeObserver.observe(wrap);
@@ -575,6 +612,9 @@ function LanternCinema({ night }: { night: LanternCopy }) {
       cancelAnimationFrame(layoutFrame);
       resizeObserver.disconnect();
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onViewportResize);
+      wrap.style.removeProperty("--lantern-stage-height");
+      wrap.style.removeProperty("--lantern-track-height");
     };
   }, [beats]);
 
