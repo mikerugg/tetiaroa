@@ -464,7 +464,10 @@ export default function HomeExperience({
 
         <HomeStoryHandoff copy={copy.story} />
 
-        <section id="lanterns">
+        <section
+          id="lanterns"
+          style={{ scrollMarginTop: "var(--site-header-height)" }}
+        >
           <LanternExperience
             night={copy.night}
             tiers={copy.lantern.tiers}

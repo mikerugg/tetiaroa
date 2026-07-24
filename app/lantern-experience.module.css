@@ -2,21 +2,26 @@
    Ordinary layout, color, and spacing live in Tailwind utilities. */
 
 .cinemaTrack {
+  --cinema-pin-top: var(--site-header-height, 0px);
   position: relative;
-  height: var(--lantern-track-height, 520vh);
+  height: calc(
+    var(--viewport-height-unit, 1vh) * 520 - var(--cinema-pin-top)
+  );
   overflow: clip;
 }
 
 .cinemaStage {
   position: sticky;
-  top: 0;
-  height: var(--lantern-stage-height, 100vh);
+  top: var(--cinema-pin-top);
+  height: calc(
+    var(--viewport-stage-height, 100vh) - var(--cinema-pin-top)
+  );
   overflow: hidden;
 }
 
 .cinemaSafeFrame {
   position: absolute;
-  top: var(--site-header-height, 0px);
+  top: 0;
   right: 0;
   left: 0;
   height: calc(
@@ -24,19 +29,6 @@
       var(--site-header-height, 0px) -
       env(safe-area-inset-bottom, 0px)
   );
-}
-
-@supports (height: 100lvh) {
-  .cinemaTrack {
-    height: var(--lantern-track-height, 520lvh);
-  }
-
-  .cinemaStage {
-    height: var(
-      --lantern-stage-height,
-      var(--viewport-stage-height, 100lvh)
-    );
-  }
 }
 
 .lantern {
