@@ -124,7 +124,7 @@ export const donateRouteCopy: Record<DonateLocale, DonateRouteCopy> = {
       financial: {
         body: [
           "Tetiaroa Society supports donors who seek transparency in the nonprofit organizations they support. Please review Tetiaroa Society’s IRS 990 Forms and annual impact reports below.",
-          "Tetiaroa Society is a 501(c)3 – Tax ID #23-7245152. Donations are 100% tax-deductible as allowed by law.",
+          "Tetiaroa Society is a 501(c)3 – Tax ID #45-1080688. Donations are 100% tax-deductible as allowed by law.",
         ],
         annualReportLabel: "Annual Report",
         form990Label: "Form 990",
@@ -213,7 +213,7 @@ export const donateRouteCopy: Record<DonateLocale, DonateRouteCopy> = {
       financial: {
         body: [
           "Tetiaroa Society supports donors who seek transparency in the nonprofit organizations they support. Please review Tetiaroa Society’s IRS 990 Forms and annual impact reports below.",
-          "Tetiaroa Society is a 501(c)3 – Tax ID #23-7245152. Donations are 100% tax-deductible as allowed by law.",
+          "Tetiaroa Society is a 501(c)3 – Tax ID #45-1080688. Donations are 100% tax-deductible as allowed by law.",
         ],
         annualReportLabel: "Annual Report",
         form990Label: "Form 990",
