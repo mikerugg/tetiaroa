@@ -29,6 +29,13 @@ export type FooterSocialLink = {
   label: string;
 };
 
+export type FooterRating = {
+  href: string;
+  eyebrow: string;
+  copy: string;
+  ariaLabel: string;
+};
+
 export type SiteFooterCopy = {
   homeHref: string;
   columns: FooterColumn[];
@@ -37,8 +44,26 @@ export type SiteFooterCopy = {
   ctaHref: string;
   ctaLabel: string;
   socials: FooterSocialLink[];
+  rating?: FooterRating;
   legal: string;
   place: string;
+};
+
+const CHARITY_NAVIGATOR_SEAL = "/badges/charity-navigator-four-star-2026.png";
+
+// Both footer bands share these tracks so the seal sits directly under the logo.
+const footerGridTracks = "lg:grid-cols-[1.1fr_repeat(3,minmax(0,0.7fr))]";
+
+// Shared text treatment so the rating and CTA blocks read as siblings.
+const footerEyebrow = "font-mono text-xs uppercase text-primary";
+const footerBlockCopy = "max-w-[34ch] text-sm leading-5 text-muted-foreground";
+
+const defaultRating: FooterRating = {
+  href: "https://www.charitynavigator.org/ein/451080688",
+  eyebrow: "Four-Star Charity",
+  copy: "Charity Navigator's highest rating for financial health and transparency.",
+  ariaLabel:
+    "Tetiaroa Society's Four-Star rating on Charity Navigator, opens in a new tab",
 };
 
 const socialIconPaths: Record<
@@ -157,6 +182,7 @@ const defaultCopy: SiteFooterCopy = {
       label: "YouTube",
     },
   ],
+  rating: defaultRating,
   legal: "Tetiaroa Society / EIN 45-1080688",
   place: "Society Islands / French Polynesia",
 };
@@ -168,6 +194,8 @@ export function SiteFooter({
   className?: string;
   copy?: SiteFooterCopy;
 }) {
+  const rating = copy.rating ?? defaultRating;
+
   return (
     <footer
       className={cn(
@@ -178,30 +206,30 @@ export function SiteFooter({
       <div className="mx-auto max-w-[1600px]">
         <Separator />
 
-        <div className="grid gap-8 py-8 md:grid-cols-2 lg:grid-cols-[1.1fr_repeat(3,minmax(0,0.7fr))] xl:grid-cols-[1.15fr_repeat(3,minmax(0,0.7fr))_1fr]">
-          <div className="flex flex-col gap-4">
-            <Link href={copy.homeHref} className="block w-fit">
-              <Image
-                src="/logos/TSFP_Logo_2026_White.png"
-                alt="Tetiaroa Society"
-                width={596}
-                height={371}
-                className="h-36 w-auto object-contain md:h-44 lg:h-48"
-              />
-            </Link>
-          </div>
+        <div className={cn("grid gap-8 py-8 md:grid-cols-2", footerGridTracks)}>
+          <Link href={copy.homeHref} className="block h-fit w-fit">
+            <Image
+              src="/logos/TSFP_Logo_2026_White_Trimmed.png"
+              alt="Tetiaroa Society"
+              width={432}
+              height={209}
+              className="h-20 w-auto object-contain md:h-25 lg:h-27"
+            />
+          </Link>
 
           {copy.columns.map((column) => (
             <FooterLinks key={column.title} column={column} />
           ))}
+        </div>
 
-          <div className="flex flex-col gap-4 md:col-span-2 lg:col-span-4 xl:col-span-1">
-            <p className="font-mono text-xs uppercase text-primary">
-              {copy.ctaEyebrow}
-            </p>
-            <p className="text-sm leading-6 text-muted-foreground">
-              {copy.ctaCopy}
-            </p>
+        <div className={cn("grid gap-8 pb-8 md:grid-cols-2", footerGridTracks)}>
+          <FooterRatingSeal rating={rating} />
+
+          <div className="flex h-fit flex-col gap-4 lg:col-span-3">
+            <div className="flex flex-col gap-1">
+              <p className={footerEyebrow}>{copy.ctaEyebrow}</p>
+              <p className={footerBlockCopy}>{copy.ctaCopy}</p>
+            </div>
             <Button asChild variant="outline" className="w-fit">
               <a href={copy.ctaHref}>
                 {copy.ctaLabel}
@@ -224,6 +252,37 @@ export function SiteFooter({
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterRatingSeal({ rating }: { rating: FooterRating }) {
+  return (
+    <a
+      href={rating.href}
+      target="_blank"
+      rel="noreferrer noopener"
+      aria-label={rating.ariaLabel}
+      className="group flex h-fit w-fit items-start gap-5 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+    >
+      <Image
+        src={CHARITY_NAVIGATOR_SEAL}
+        alt=""
+        width={1801}
+        height={1801}
+        className="size-28 shrink-0 object-contain transition group-hover:scale-[1.03]"
+      />
+      <span className="flex flex-col gap-1">
+        <span className={footerEyebrow}>{rating.eyebrow}</span>
+        <span
+          className={cn(
+            footerBlockCopy,
+            "transition group-hover:text-foreground",
+          )}
+        >
+          {rating.copy}
+        </span>
+      </span>
+    </a>
   );
 }
 
@@ -262,7 +321,7 @@ function FooterIconLink({ social }: { social: FooterSocialLink }) {
 function FooterLinks({ column }: { column: FooterColumn }) {
   return (
     <div className="flex flex-col gap-4">
-      <p className="font-mono text-xs uppercase text-primary">{column.title}</p>
+      <p className={footerEyebrow}>{column.title}</p>
       <div className="flex flex-col gap-2 text-sm text-muted-foreground">
         {column.links.map((link) => (
           <FooterTextLink key={link.href} link={link} />

@@ -115,10 +115,6 @@ export type HomeCopy = {
     eyebrow: string;
     title: string;
     copy: string;
-    layoutLabel: string;
-    horizontalLabel: string;
-    verticalLabel: string;
-    storylineLabel: string;
     items: [Pillar, Pillar, Pillar];
   };
   kids: {
@@ -272,6 +268,13 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           label: "YouTube",
         },
       ],
+      rating: {
+        href: "https://www.charitynavigator.org/ein/451080688",
+        eyebrow: "Four-Star Charity",
+        copy: "Charity Navigator's highest rating for financial health and transparency.",
+        ariaLabel:
+          "Tetiaroa Society's Four-Star rating on Charity Navigator, opens in a new tab",
+      },
       legal: "Tetiaroa Society / EIN 45-1080688",
       place: "Society Islands / French Polynesia",
     },
@@ -359,7 +362,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       coordinatesPlace: "Society Islands / French Polynesia",
       titleLine1: "Save the island.",
       titleLine2: "Save the world.",
-      watchCta: "Watch the film / 2:14",
+      watchCta: "Watch the film / 1:13",
     },
     highlight: {
       eyebrow: "Highlight",
@@ -434,10 +437,6 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       title: "Three responsibilities, one atoll.",
       copy:
         "Research shows us what is changing, education turns that knowledge into care, and global collaboration carries what works beyond the reef, so each pillar strengthens the other two.",
-      layoutLabel: "Card layout",
-      horizontalLabel: "Horizontal",
-      verticalLabel: "Vertical",
-      storylineLabel: "Storyline",
       items: [
         {
           title: "Research and Conservation",
@@ -696,6 +695,13 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           label: "YouTube",
         },
       ],
+      rating: {
+        href: "https://www.charitynavigator.org/ein/451080688",
+        eyebrow: "Association quatre étoiles",
+        copy: "La note la plus élevée de Charity Navigator pour la santé financière et la transparence.",
+        ariaLabel:
+          "La note quatre étoiles de Tetiaroa Society sur Charity Navigator, ouvre un nouvel onglet",
+      },
       legal: "Tetiaroa Society / EIN 45-1080688",
       place: "Îles de la Société / Polynésie française",
     },
@@ -783,7 +789,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       coordinatesPlace: "Îles de la Société / Polynésie française",
       titleLine1: "Sauver l'île.",
       titleLine2: "Sauver le monde.",
-      watchCta: "Regarder le film / 2:14",
+      watchCta: "Regarder le film / 1:13",
     },
     highlight: {
       eyebrow: "À la une",
@@ -858,10 +864,6 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       title: "Trois responsabilités, un seul atoll.",
       copy:
         "La recherche révèle les changements, l’éducation transforme ce savoir en soin, et la collaboration porte les solutions au-delà du récif, alors chaque pilier renforce les deux autres.",
-      layoutLabel: "Disposition des cartes",
-      horizontalLabel: "Horizontale",
-      verticalLabel: "Verticale",
-      storylineLabel: "Récit",
       items: [
         {
           title: "Recherche et conservation",

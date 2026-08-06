@@ -1,9 +1,6 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import {
-  ArrowUpRightIcon,
-  PlayIcon,
-} from "lucide-react";
+import { ArrowUpRightIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +28,7 @@ import { HomeHighlightCarousel } from "./home-highlight-carousel";
 import { HomePillarCards } from "./home-pillar-cards";
 import { HomeStoryHandoff } from "./home-story-handoff";
 import { HomepageViewportFrame } from "./homepage-viewport-frame";
+import { HomeFilmLightbox } from "./home-film-lightbox";
 import type { HomepageHighlight } from "@/lib/impact/homepage-highlight";
 
 export default function HomeExperience({
@@ -96,17 +94,11 @@ export default function HomeExperience({
                 {copy.hero.titleLine2}
               </span>
             </h1>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className={cn(styles.watchCta, "h-auto font-mono")}
-            >
-              <a href="#dive">
-                <PlayIcon data-icon="inline-start" aria-hidden="true" />
-                {copy.hero.watchCta}
-              </a>
-            </Button>
+            <HomeFilmLightbox
+              className={styles.watchCta}
+              label={copy.hero.watchCta}
+              locale={copy.locale}
+            />
           </div>
         </section>
 
@@ -326,12 +318,8 @@ export default function HomeExperience({
             <HomePillarCards
               copy={copy.pillars.copy}
               eyebrow={copy.pillars.eyebrow}
-              horizontalLabel={copy.pillars.horizontalLabel}
               items={copy.pillars.items}
-              layoutLabel={copy.pillars.layoutLabel}
-              storylineLabel={copy.pillars.storylineLabel}
               title={copy.pillars.title}
-              verticalLabel={copy.pillars.verticalLabel}
             />
           </div>
         </section>
