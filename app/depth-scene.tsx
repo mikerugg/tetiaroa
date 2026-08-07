@@ -123,8 +123,9 @@ export function DepthScene({
     let depthNow = 0;
     let activeIndex = -1;
     let frame = 0;
-    let scrollQueued = false;
+    let applyFrame = 0;
     let lastScrollY = window.scrollY;
+    let lastPaint = 0;
     let smoothVel = 0;
     let prevProbe: number | null = null;
     let firstApply = true;
@@ -316,14 +317,18 @@ export function DepthScene({
       });
     };
 
-    const tick = () => {
+    const tick = (time: number) => {
+      if (time - lastPaint < 1000 / 30) {
+        frame = requestAnimationFrame(tick);
+        return;
+      }
+
+      lastPaint = time;
       const y = window.scrollY;
       const rawVel = y - lastScrollY;
 
       lastScrollY = y;
       smoothVel = lerp(smoothVel, rawVel, 0.14);
-
-      apply();
 
       // Sub dynamics: stay docked to the right while pitching with the dive.
       const rot = clamp(-smoothVel * 0.35, -16, 16);
@@ -444,13 +449,30 @@ export function DepthScene({
       frame = requestAnimationFrame(tick);
     };
 
+    const requestApply = () => {
+      if (applyFrame) {
+        return;
+      }
+
+      applyFrame = requestAnimationFrame(() => {
+        applyFrame = 0;
+        apply();
+      });
+    };
     const onScroll = () => {
-      if (reducedMotion && !scrollQueued) {
-        scrollQueued = true;
-        requestAnimationFrame(() => {
-          scrollQueued = false;
-          apply();
-        });
+      requestApply();
+    };
+    const handleVisibilityChange = () => {
+      if (document.hidden || reducedMotion) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        return;
+      }
+
+      if (!frame) {
+        lastScrollY = window.scrollY;
+        lastPaint = 0;
+        frame = requestAnimationFrame(tick);
       }
     };
 
@@ -459,6 +481,7 @@ export function DepthScene({
     apply();
 
     window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     if (reducedMotion) {
       canvas.style.display = "none";
@@ -469,24 +492,31 @@ export function DepthScene({
     // Media loading shifts section offsets after mount.
     const layoutObserver = new ResizeObserver(() => {
       measure();
-      apply();
+      requestApply();
     });
 
     const canvasObserver = new ResizeObserver(() => {
       sizeCanvas();
       measure();
-      apply();
+      requestApply();
     });
 
-    layoutObserver.observe(document.body);
+    stops.forEach((stop) => {
+      const section = document.getElementById(stop.id);
+      if (section) {
+        layoutObserver.observe(section);
+      }
+    });
     canvasObserver.observe(canvas);
 
     return () => {
       cancelAnimationFrame(frame);
+      cancelAnimationFrame(applyFrame);
       window.clearTimeout(commsTimer);
       layoutObserver.disconnect();
       canvasObserver.disconnect();
       window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       document.documentElement.style.removeProperty("--depth01");
       delete document.documentElement.dataset.depthStop;
     };

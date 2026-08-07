@@ -77,7 +77,6 @@ export function HomeStoryHandoffScroll({ children }: PropsWithChildren) {
     intersectionObserver.observe(section);
     resizeObserver.observe(section);
     resizeObserver.observe(scene);
-    resizeObserver.observe(document.body);
     measureGeometry();
     updateProgress();
     window.addEventListener("scroll", requestUpdate, { passive: true });

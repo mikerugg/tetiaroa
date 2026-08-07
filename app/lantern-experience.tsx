@@ -359,6 +359,7 @@ function LanternCinema({ night }: { night: LanternCopy }) {
     let progress = 0;
     let trackTop = 0;
     let scrollSpan = 1;
+    let isNearScene = false;
 
     const resizeCanvas = () => {
       const rect = stage.getBoundingClientRect();
@@ -382,6 +383,10 @@ function LanternCinema({ night }: { night: LanternCopy }) {
     };
 
     const onScroll = () => {
+      if (!isNearScene) {
+        return;
+      }
+
       progress = clamp01((window.scrollY - trackTop) / scrollSpan);
     };
 
@@ -406,9 +411,13 @@ function LanternCinema({ night }: { night: LanternCopy }) {
     const resizeObserver = new ResizeObserver(onLayoutChange);
     resizeObserver.observe(wrap);
     resizeObserver.observe(stage);
-    resizeObserver.observe(document.body);
 
     const frame = (now: number) => {
+      raf = 0;
+      if (!isNearScene || document.hidden) {
+        return;
+      }
+
       const dt = Math.min(64, now - last);
       last = now;
       const t = now / 1000;
@@ -568,12 +577,51 @@ function LanternCinema({ night }: { night: LanternCopy }) {
 
       raf = requestAnimationFrame(frame);
     };
-    raf = requestAnimationFrame(frame);
+
+    const startAnimation = () => {
+      if (raf || !isNearScene || document.hidden) {
+        return;
+      }
+
+      last = performance.now();
+      raf = requestAnimationFrame(frame);
+    };
+    const stopAnimation = () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+    };
+    const sceneObserver = new IntersectionObserver(
+      ([entry]) => {
+        isNearScene = entry.isIntersecting;
+
+        if (isNearScene) {
+          resizeCanvas();
+          measureGeometry();
+          onScroll();
+          startAnimation();
+        } else {
+          stopAnimation();
+        }
+      },
+      { rootMargin: "100% 0px" },
+    );
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopAnimation();
+      } else {
+        startAnimation();
+      }
+    };
+
+    sceneObserver.observe(wrap);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      cancelAnimationFrame(raf);
+      stopAnimation();
       cancelAnimationFrame(layoutFrame);
+      sceneObserver.disconnect();
       resizeObserver.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("scroll", onScroll);
     };
   }, [beats]);

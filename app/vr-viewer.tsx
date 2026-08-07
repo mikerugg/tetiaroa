@@ -86,7 +86,9 @@ export function VrViewer({
     pitch: number;
   } | null>(null);
   const idleUntilRef = useRef(0);
+  const visibleRef = useRef(false);
   const [hintVisible, setHintVisible] = useState(true);
+  const [sourceActive, setSourceActive] = useState(false);
   const [webglFailed, setWebglFailed] = useState(false);
   const sourceType = src.endsWith(".mp4") ? "video/mp4" : "video/webm";
 
@@ -162,7 +164,7 @@ export function VrViewer({
     ).matches;
 
     let frame = 0;
-    let visible = true;
+    let visible = false;
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
@@ -174,7 +176,7 @@ export function VrViewer({
     };
 
     const render = (time: number) => {
-      frame = requestAnimationFrame(render);
+      frame = 0;
 
       if (!visible) {
         return;
@@ -214,27 +216,43 @@ export function VrViewer({
         cy * cp,
       ]);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      frame = requestAnimationFrame(render);
     };
 
-    const observer = new IntersectionObserver(([entry]) => {
+    const preloadObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setSourceActive(true);
+        }
+      },
+      { rootMargin: "100% 0px" },
+    );
+    const playbackObserver = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
+      visibleRef.current = visible;
 
       if (visible) {
-        video.play().catch(() => {});
+        setSourceActive(true);
+        void video.play().catch(() => {});
+        if (!frame) {
+          frame = requestAnimationFrame(render);
+        }
       } else {
         video.pause();
+        cancelAnimationFrame(frame);
+        frame = 0;
       }
     });
 
-    observer.observe(wrap);
-    video.play().catch(() => {});
+    preloadObserver.observe(wrap);
+    playbackObserver.observe(wrap);
     resize();
     window.addEventListener("resize", resize);
-    frame = requestAnimationFrame(render);
 
     return () => {
       cancelAnimationFrame(frame);
-      observer.disconnect();
+      preloadObserver.disconnect();
+      playbackObserver.disconnect();
       window.removeEventListener("resize", resize);
       gl.deleteProgram(program);
       gl.deleteShader(vert);
@@ -243,6 +261,19 @@ export function VrViewer({
       gl.deleteTexture(texture);
     };
   }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+
+    if (!video || !sourceActive) {
+      return;
+    }
+
+    video.load();
+    if (visibleRef.current) {
+      void video.play().catch(() => {});
+    }
+  }, [sourceActive]);
 
   return (
     <div
@@ -287,14 +318,13 @@ export function VrViewer({
       <video
         ref={videoRef}
         className={webglFailed ? styles.deepVideo : styles.vrSource}
-        autoPlay
         muted
         loop
         playsInline
-        preload="auto"
+        preload="none"
         aria-hidden="true"
       >
-        <source src={src} type={sourceType} />
+        {sourceActive ? <source src={src} type={sourceType} /> : null}
       </video>
       {webglFailed ? null : (
         <canvas ref={canvasRef} className={styles.vrCanvas} />

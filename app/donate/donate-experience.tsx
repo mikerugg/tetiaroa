@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowDownIcon, ArrowRightIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -72,13 +72,24 @@ function StatementColumn({
       </p>
 
       <div className="mt-4 flex max-w-[48ch] flex-col gap-4">
-        {/* Heading and paragraph are one sentence; they read in sequence. */}
         <h1 className="font-display text-[clamp(2.6rem,6vw,4.5rem)] leading-[1.02] text-foreground">
           {title}
         </h1>
         <p className="text-[17px] leading-[1.85] text-muted-foreground">
           {copy.paragraph}
         </p>
+
+        {/*
+          Below xl the widget stacks underneath, so the anchor earns its place.
+          At xl the widget sits alongside and a second button would only
+          compete with the one that actually completes a gift.
+        */}
+        <Button asChild size="lg" className="mt-2 w-fit rounded-full xl:hidden">
+          <a href="#secure-donation-form">
+            {copy.ctaLabel}
+            <ArrowDownIcon data-icon="inline-end" aria-hidden="true" />
+          </a>
+        </Button>
       </div>
     </div>
   );

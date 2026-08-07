@@ -46,6 +46,7 @@
   inset: 0;
   z-index: 0;
   background-color: #2ea8b5;
+  will-change: background-color;
 }
 
 .particles {
@@ -817,6 +818,17 @@
       rgba(10, 36, 64, calc(var(--depth01, 0) * 0.38)),
       rgba(10, 36, 64, calc(var(--depth01, 0) * 0.38))
     );
+}
+
+@media (max-width: 720px) {
+  .rays {
+    display: none;
+  }
+
+  .bandMedia,
+  .scanPanel {
+    filter: none;
+  }
 }
 
 /* ---- digital twin scan ---- */

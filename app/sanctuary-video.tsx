@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import { ViewportVideo } from "./viewport-video";
 
 type SanctuaryClip = {
   src: string;
@@ -14,28 +15,13 @@ export function SanctuaryVideo({
   className?: string;
 }) {
   const [clipIndex, setClipIndex] = useState(0);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-
-  useEffect(() => {
-    const video = videoRef.current;
-
-    if (!video) {
-      return;
-    }
-
-    video.load();
-    void video.play().catch(() => {});
-  }, [clipIndex]);
+  const clip = clips[clipIndex];
 
   return (
-    <video
-      ref={videoRef}
+    <ViewportVideo
       className={className}
-      autoPlay
-      muted
-      playsInline
-      preload="metadata"
-      src={clips[clipIndex].src}
+      loop={false}
+      sources={[{ src: clip.src, type: "video/mp4" }]}
       aria-hidden="true"
       onEnded={() => {
         setClipIndex((current) => (current + 1) % clips.length);

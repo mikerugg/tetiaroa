@@ -9,12 +9,10 @@ export type DonateLocale = HomeLocale;
 
 export type DonateStatementCopy = {
   eyebrow: string;
-  /**
-   * The route-level `title` and this `paragraph` are one continuous sentence —
-   * "83 cents" / "of every dollar goes directly into…" — so they must be
-   * edited together.
-   */
+  /** Sits beneath the route-level `title`, which carries the membership ask. */
   paragraph: string;
+  /** Anchors to the widget. Rendered below xl only, where the widget stacks. */
+  ctaLabel: string;
 };
 
 export type DonateMoreWaysCopy = {
@@ -77,13 +75,14 @@ export const donateRouteCopy: Record<DonateLocale, DonateRouteCopy> = {
     metadataTitle: "Donate | Tetiaroa Society",
     metadataDescription:
       "Our goal at Tetiaroa Society is simple: We want to ensure that Tetiaroa is protected and used as a model of sustainability for all to see.",
-    title: "83 cents",
+    title: "Become a member of Tetiaroa Society",
     experience: {
       embedTitleAttribute: "Tetiaroa Society secure donation form",
       statement: {
         eyebrow: "Donate",
         paragraph:
-          "of every dollar goes directly into conservation, education, and research on the atoll. Charity Navigator rates Tetiaroa Society four stars, its highest score, for financial health and transparency.",
+          "You are funding an experiment in whether an island can outlast this century — the reefs, the turtles, the culture, the kids who will protect these atolls long after us. What works on Tetiaroa is designed to travel to every island and coastal community facing the same changing environment. That is what your membership supports.",
+        ctaLabel: "Become a member",
       },
       moreWays: {
         title: "Other Ways to Donate",
@@ -146,15 +145,16 @@ export const donateRouteCopy: Record<DonateLocale, DonateRouteCopy> = {
     metadataTitle: "Faire un don | Tetiaroa Society",
     metadataDescription:
       "Notre objectif au sein de la Tetiaroa Society est simple : Nous voulons nous assurer que Tetiaroa est protegee et utilisee comme modele de developpement durable pour tous.",
-    title: "83 centimes",
+    title: "Devenez membre de Tetiaroa Society",
     experience: {
       embedTitleAttribute: "Formulaire de don securise de Tetiaroa Society",
       // FR statement copy is a translation of the approved English and should be
       // reviewed by a native speaker before it is considered final.
       statement: {
-        eyebrow: "Faire un don",
+        eyebrow: "Adhésion",
         paragraph:
-          "de chaque dollar vont directement à la conservation, à l'éducation et à la recherche sur l'atoll. Charity Navigator attribue à Tetiaroa Society quatre étoiles, sa note la plus élevée, pour la santé financière et la transparence.",
+          "Vous financez une expérience : celle de savoir si une île peut traverser ce siècle — les récifs, les tortues, la culture, et les enfants qui protégeront ces atolls bien après nous. Ce qui fonctionne à Tetiaroa est conçu pour servir à toutes les îles et communautés côtières confrontées au même environnement en mutation. Voilà ce que soutient votre adhésion.",
+        ctaLabel: "Devenir membre",
       },
       moreWays: {
         title: "Autres façons de faire un don",

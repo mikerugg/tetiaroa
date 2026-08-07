@@ -28,6 +28,7 @@ import { HomeHighlightCarousel } from "./home-highlight-carousel";
 import { HomePillarCards } from "./home-pillar-cards";
 import { HomeStoryHandoff } from "./home-story-handoff";
 import { HomepageViewportFrame } from "./homepage-viewport-frame";
+import { ViewportVideo } from "./viewport-video";
 import { HomeFilmLightbox } from "./home-film-lightbox";
 import type { HomepageHighlight } from "@/lib/impact/homepage-highlight";
 
@@ -108,18 +109,15 @@ export default function HomeExperience({
         />
 
         <section className={styles.hero} id="dive">
-          <video
+          <ViewportVideo
             className={styles.heroVideo}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
             poster="https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=2400&q=85&auto=format&fit=crop"
+            sources={[
+              { src: "/atoll.webm", type: "video/webm" },
+              { src: "/atoll.mp4", type: "video/mp4" },
+            ]}
             aria-hidden="true"
-          >
-            <source src="/atoll.mp4" type="video/mp4" />
-          </video>
+          />
           <div className={styles.heroScrim} aria-hidden="true" />
 
           <div className={`${styles.heroInner} ${styles.diveInner}`}>
@@ -396,17 +394,12 @@ export default function HomeExperience({
             </div>
 
             <div className={styles.shallowsBanner}>
-              <video
+              <ViewportVideo
                 className={styles.mediaVideo}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
+                poster="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1600&q=80&auto=format&fit=crop"
+                sources={[{ src: "/turtlecare.mp4", type: "video/mp4" }]}
                 aria-hidden="true"
-              >
-                <source src="/turtlecare.mp4" type="video/mp4" />
-              </video>
+              />
               <Badge
                 variant="secondary"
                 className={cn(styles.mediaCaption, "h-auto font-mono")}
