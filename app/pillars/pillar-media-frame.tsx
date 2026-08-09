@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { SproutBackgroundVideo } from "../sprout-background-video";
 import type { PillarMedia } from "./pillar-content";
 
 export function PillarMediaFrame({
@@ -23,20 +24,14 @@ export function PillarMediaFrame({
       )}
     >
       {media.kind === "video" ? (
-        <video
+        <SproutBackgroundVideo
           className={cn(
             "size-full object-cover transition-transform duration-700 group-hover:scale-[1.02]",
             imageClassName,
           )}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-label={media.alt}
-        >
-          <source src={media.src} type="video/mp4" />
-        </video>
+          embedUrl={media.src}
+          title={media.alt}
+        />
       ) : (
         <Image
           src={media.src}

@@ -1,5 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import type { SproutVideoSource } from "../home-video-sources";
+import { homeVideoSources } from "../home-video-sources";
+import { SproutBackgroundVideo } from "../sprout-background-video";
 import { TetiaroaMark } from "../tetiaroa-mark";
 import styles from "./page.module.css";
 
@@ -9,7 +12,7 @@ type Project = {
   title: string;
   deck: string;
   body: string;
-  video: string;
+  video: SproutVideoSource;
   poster: string;
   runtime: string;
   theme: "honu" | "sanctuary" | "biocode";
@@ -30,7 +33,7 @@ const projects: Project[] = [
     deck: "Deep-water VR and AR submersible storytelling.",
     body:
       "A cinematic portal into Tetiaroa's least-seen waters, built to turn expedition footage, spatial data, and ocean science into experiences students and supporters can enter.",
-    video: "/turtleclip.mp4",
+    video: homeVideoSources.turtleClip,
     poster:
       "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1800&q=85&auto=format&fit=crop",
     runtime: "00:34",
@@ -43,7 +46,7 @@ const projects: Project[] = [
     deck: "Protected waters for animals that define the atoll.",
     body:
       "Nesting beaches, lagoon corridors, and nursery zones become a living protection system for honu, sharks, and the communities learning from their return.",
-    video: "/turtlecare.mp4",
+    video: homeVideoSources.turtleCare,
     poster:
       "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1800&q=85&auto=format&fit=crop",
     runtime: "01:08",
@@ -56,7 +59,7 @@ const projects: Project[] = [
     deck: "A living model of island recovery.",
     body:
       "Satellite layers, reef observations, species records, and field protocols converge into a shared model that helps partners see change before it becomes irreversible.",
-    video: "/atoll.mp4",
+    video: homeVideoSources.atoll,
     poster:
       "https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=1800&q=85&auto=format&fit=crop",
     runtime: "01:46",
@@ -120,19 +123,12 @@ function ProjectChapter({ project }: { project: Project }) {
       id={project.id}
     >
       <div className={styles.chapterMedia}>
-        <video
+        <SproutBackgroundVideo
           className={styles.chapterVideo}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
+          embedUrl={project.video.embedUrl}
           poster={project.poster}
-          aria-label={`${project.title} footage preview`}
-        >
-          <source src={project.video} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+          title={`${project.title} footage preview`}
+        />
         <div className={styles.chapterScrim} aria-hidden="true" />
         <div className={styles.motionGrid} aria-hidden="true" />
         <div className={styles.timecode}>
@@ -171,19 +167,13 @@ export default function OceanCinemaPage() {
       </nav>
 
       <section className={styles.hero} id="reel">
-        <video
+        <SproutBackgroundVideo
           className={styles.heroVideo}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
+          embedUrl={homeVideoSources.atoll.embedUrl}
           poster="https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=2400&q=85&auto=format&fit=crop"
-          aria-hidden="true"
-        >
-          <source src="/atoll.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+          title={homeVideoSources.atoll.title}
+          eager
+        />
         <div className={styles.heroScrim} aria-hidden="true" />
 
         <div className={styles.heroContent}>
@@ -242,19 +232,12 @@ export default function OceanCinemaPage() {
 
       <section className={styles.education} id="education">
         <div className={styles.educationMedia}>
-          <video
+          <SproutBackgroundVideo
             className={styles.educationVideo}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
+            embedUrl={homeVideoSources.turtleCare.embedUrl}
             poster="https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1600&q=85&auto=format&fit=crop"
-            aria-label="Education and kids field learning footage"
-          >
-            <source src="/turtlecare.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+            title="Education and kids field learning footage"
+          />
           <div className={styles.educationFrame} aria-hidden="true" />
         </div>
 
@@ -316,18 +299,12 @@ export default function OceanCinemaPage() {
 
       <section className={styles.join} id="donate">
         <div className={styles.joinMedia} aria-hidden="true">
-          <video
+          <SproutBackgroundVideo
             className={styles.joinVideo}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
+            embedUrl={homeVideoSources.atoll.embedUrl}
             poster="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1800&q=85&auto=format&fit=crop"
-          >
-            <source src="/atoll.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+            title={homeVideoSources.atoll.title}
+          />
         </div>
         <div className={styles.joinScrim} aria-hidden="true" />
 

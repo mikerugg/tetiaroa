@@ -16,7 +16,6 @@ import { homeCopies, type HomeLocale } from "./home-copy";
 import { ENGLISH_DONATE_PATH, FRENCH_DONATE_PATH } from "./language-links";
 import { HomepageInitialScrollReset } from "./homepage-client";
 import { DepthScene } from "./depth-scene";
-import { VrViewer } from "./vr-viewer";
 import { SanctuaryVideo } from "./sanctuary-video";
 import { LanternExperience } from "./lantern-experience";
 import { ScanPanel } from "./scan-panel";
@@ -28,8 +27,10 @@ import { HomeHighlightCarousel } from "./home-highlight-carousel";
 import { HomePillarCards } from "./home-pillar-cards";
 import { HomeStoryHandoff } from "./home-story-handoff";
 import { HomepageViewportFrame } from "./homepage-viewport-frame";
-import { ViewportVideo } from "./viewport-video";
 import { HomeFilmLightbox } from "./home-film-lightbox";
+import { homeVideoSources } from "./home-video-sources";
+import { SproutBackgroundVideo } from "./sprout-background-video";
+import { HomeVrLightbox, SproutVrPreview } from "./home-vr-experience";
 import type { HomepageHighlight } from "@/lib/impact/homepage-highlight";
 
 export default function HomeExperience({
@@ -63,18 +64,13 @@ export default function HomeExperience({
         {copy.locale === "en" ? <FrenchVersionPrompt /> : null}
 
         <section className={styles.hero} id="hero">
-          <video
+          <SproutBackgroundVideo
             className={styles.heroVideo}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
+            embedUrl={homeVideoSources.turtleClip.embedUrl}
+            title={homeVideoSources.turtleClip.title}
+            eager
             poster="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=2400&q=85&auto=format&fit=crop"
-            aria-hidden="true"
-          >
-            <source src="/turtleclip.mp4" type="video/mp4" />
-          </video>
+          />
           <div className={styles.heroScrim} aria-hidden="true" />
 
           <div className={`${styles.cornerCoords} font-mono`}>
@@ -109,14 +105,11 @@ export default function HomeExperience({
         />
 
         <section className={styles.hero} id="dive">
-          <ViewportVideo
+          <SproutBackgroundVideo
             className={styles.heroVideo}
+            embedUrl={homeVideoSources.atoll.embedUrl}
+            title={homeVideoSources.atoll.title}
             poster="https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=2400&q=85&auto=format&fit=crop"
-            sources={[
-              { src: "/atoll.webm", type: "video/webm" },
-              { src: "/atoll.mp4", type: "video/mp4" },
-            ]}
-            aria-hidden="true"
           />
           <div className={styles.heroScrim} aria-hidden="true" />
 
@@ -185,21 +178,18 @@ export default function HomeExperience({
                 </figcaption>
               </figure>
             </div>
-            <VrViewer src="/vr-clip.mp4" labels={copy.honu.viewer} />
-            <Button
-              asChild
-              variant="link"
-              className={cn(styles.deepCta, "h-auto p-0 font-mono")}
-            >
-              <a
-                href="https://www.youtube.com/watch?v=B9IGe7s6Ook"
-                target="_blank"
-                rel="noreferrer"
-              >
-                {copy.honu.cta}
-                <ArrowUpRightIcon data-icon="inline-end" aria-hidden="true" />
-              </a>
-            </Button>
+            <SproutVrPreview
+              source={homeVideoSources.vrClip}
+              labels={copy.honu.viewer}
+            />
+            <HomeVrLightbox
+              className={styles.deepCta}
+              label={copy.honu.cta}
+              labels={copy.honu.viewer}
+              locale={copy.locale}
+              src="/vr-clip.mp4"
+              title={copy.honu.title}
+            />
           </div>
         </section>
 
@@ -211,7 +201,10 @@ export default function HomeExperience({
             <div className={`${styles.bandMedia} ${styles.sanctuaryMedia}`}>
               <SanctuaryVideo
                 className={styles.mediaVideo}
-                clips={[{ src: "/turtleclip.mp4" }, { src: "/lemon-shark.mp4" }]}
+                clips={[
+                  homeVideoSources.turtleClip,
+                  homeVideoSources.lemonShark,
+                ]}
               />
               <Badge
                 variant="secondary"
@@ -394,11 +387,11 @@ export default function HomeExperience({
             </div>
 
             <div className={styles.shallowsBanner}>
-              <ViewportVideo
+              <SproutBackgroundVideo
                 className={styles.mediaVideo}
+                embedUrl={homeVideoSources.turtleCare.embedUrl}
+                title={homeVideoSources.turtleCare.title}
                 poster="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1600&q=80&auto=format&fit=crop"
-                sources={[{ src: "/turtlecare.mp4", type: "video/mp4" }]}
-                aria-hidden="true"
               />
               <Badge
                 variant="secondary"

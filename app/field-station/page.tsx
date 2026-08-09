@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HomepageInitialScrollReset, HomepageNavState } from "../homepage-client";
+import { homeVideoSources } from "../home-video-sources";
+import { SproutBackgroundVideo } from "../sprout-background-video";
 import { TetiaroaMark } from "../tetiaroa-mark";
 import { AcetateMap } from "./acetate-map";
 import { ExpeditionTicker } from "./expedition-ticker";
@@ -106,14 +108,12 @@ export default function FieldStationPage() {
       <main>
         {/* ——— COVER / HERO ——— */}
         <section className={styles.hero} aria-label="Cover">
-          <video
+          <SproutBackgroundVideo
             className={styles.heroVideo}
-            src="/atoll.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
+            embedUrl={homeVideoSources.atoll.embedUrl}
             poster="https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=2000&q=85&auto=format&fit=crop"
+            title={homeVideoSources.atoll.title}
+            eager
           />
           <div className={styles.heroScrim} aria-hidden="true" />
           <div className={styles.heroGrain} aria-hidden="true" />
@@ -287,13 +287,10 @@ export default function FieldStationPage() {
 
               <div className={styles.instrumentSide}>
                 <figure className={styles.slideFrame}>
-                  <video
+                  <SproutBackgroundVideo
                     className={styles.slideVideo}
-                    src="/turtleclip.mp4"
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
+                    embedUrl={homeVideoSources.turtleClip.embedUrl}
+                    title={homeVideoSources.turtleClip.title}
                   />
                   <figcaption className={styles.slideLabel}>
                     <strong>Plate II.</strong> Descent trial, outer reef wall —

@@ -1,23 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDownIcon, PauseIcon, PlayIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { homeVideoSources } from "../home-video-sources";
+import { SproutBackgroundVideo } from "../sprout-background-video";
 import type { OurStoryCopy } from "./our-story-content";
 
 export function StoryHero({ copy }: { copy: OurStoryCopy["hero"] }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const video = videoRef.current;
-
-    if (!video) return;
-
     const syncPreference = () => {
       if (mediaQuery.matches) {
-        video.pause();
         setIsPlaying(false);
       }
     };
@@ -27,46 +23,21 @@ export function StoryHero({ copy }: { copy: OurStoryCopy["hero"] }) {
     return () => mediaQuery.removeEventListener("change", syncPreference);
   }, []);
 
-  const togglePlayback = async () => {
-    const video = videoRef.current;
-
-    if (!video) return;
-
-    if (video.paused) {
-      try {
-        await video.play();
-        setIsPlaying(true);
-      } catch {
-        setIsPlaying(false);
-      }
-      return;
-    }
-
-    video.pause();
-    setIsPlaying(false);
-  };
+  const togglePlayback = () => setIsPlaying((playing) => !playing);
 
   return (
     <section
       className="relative isolate min-h-[100svh] overflow-hidden bg-background"
       aria-label={copy.videoLabel}
     >
-      <video
-        ref={videoRef}
+      <SproutBackgroundVideo
         className="absolute inset-0 size-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
+        embedUrl={homeVideoSources.atoll.embedUrl}
+        title={copy.videoLabel}
         poster="/geology/atoll-foundation-poster.webp"
-        aria-hidden="true"
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-      >
-        <source src="/atoll.webm" type="video/webm" />
-        <source src="/atoll.mp4" type="video/mp4" />
-      </video>
+        playing={isPlaying}
+        eager
+      />
       <div
         className="absolute inset-0 bg-[linear-gradient(180deg,rgb(3_14_17_/_0.18)_0%,rgb(3_14_17_/_0.2)_38%,rgb(3_14_17_/_0.9)_100%)]"
         aria-hidden="true"

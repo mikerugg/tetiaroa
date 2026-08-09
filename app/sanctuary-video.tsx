@@ -1,31 +1,30 @@
 "use client";
 
-import { useState } from "react";
-import { ViewportVideo } from "./viewport-video";
-
-type SanctuaryClip = {
-  src: string;
-};
+import { useCallback, useState } from "react";
+import type { SproutVideoSource } from "./home-video-sources";
+import { SproutBackgroundVideo } from "./sprout-background-video";
 
 export function SanctuaryVideo({
   clips,
   className,
 }: {
-  clips: [SanctuaryClip, SanctuaryClip];
+  clips: [SproutVideoSource, SproutVideoSource];
   className?: string;
 }) {
   const [clipIndex, setClipIndex] = useState(0);
   const clip = clips[clipIndex];
+  const showNextClip = useCallback(() => {
+    setClipIndex((current) => (current + 1) % clips.length);
+  }, [clips.length]);
 
   return (
-    <ViewportVideo
+    <SproutBackgroundVideo
+      key={clip.embedUrl}
       className={className}
+      embedUrl={clip.embedUrl}
+      title={clip.title}
       loop={false}
-      sources={[{ src: clip.src, type: "video/mp4" }]}
-      aria-hidden="true"
-      onEnded={() => {
-        setClipIndex((current) => (current + 1) % clips.length);
-      }}
+      onCompleted={showNextClip}
     />
   );
 }

@@ -6,6 +6,8 @@ import {
   HomepageInitialScrollReset,
   HomepageNavState,
 } from "../homepage-client";
+import { homeVideoSources } from "../home-video-sources";
+import { SproutBackgroundVideo } from "../sprout-background-video";
 import styles from "../page.module.css";
 import { TetiaroaMark } from "../tetiaroa-mark";
 
@@ -267,18 +269,13 @@ export default function Home() {
         </nav>
 
         <section className={styles.hero} id="hero">
-          <video
+          <SproutBackgroundVideo
             className={styles.heroVideo}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
+            embedUrl={homeVideoSources.turtleClip.embedUrl}
             poster="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1800&q=80"
-            aria-hidden="true"
-          >
-            <source src="https://tetiaroa.vercel.app/turtleclip.mp4" type="video/mp4" />
-          </video>
+            title={homeVideoSources.turtleClip.title}
+            eager
+          />
           <div className={styles.heroScrim} />
 
           <div className={styles.cornerCopy}>
@@ -309,18 +306,12 @@ export default function Home() {
         <ChronologySection items={chronology} />
 
         <section className={styles.panorama} id="atoll" aria-label="Atoll panorama">
-          <video
+          <SproutBackgroundVideo
             className={styles.panoramaVideo}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
+            embedUrl={homeVideoSources.atoll.embedUrl}
             poster="https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=2400&q=85&auto=format&fit=crop"
-            aria-hidden="true"
-          >
-            <source src="https://tetiaroa.vercel.app/atoll.mp4" type="video/mp4" />
-          </video>
+            title={homeVideoSources.atoll.title}
+          />
           <div className={styles.panoramaOverlay} />
           <div className={styles.panoramaCopy}>
             <div className={styles.panoramaTitle}>
@@ -374,17 +365,11 @@ export default function Home() {
         </section>
 
         <section className={styles.join} id="join">
-          <video
+          <SproutBackgroundVideo
             className={styles.joinVideo}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-hidden="true"
-          >
-            <source src="/turtlecare.mp4" type="video/mp4" />
-          </video>
+            embedUrl={homeVideoSources.turtleCare.embedUrl}
+            title={homeVideoSources.turtleCare.title}
+          />
           <div className={styles.joinVideoScrim} aria-hidden="true" />
           <div className={styles.joinWrap}>
             <div className={styles.joinEyebrow}>Be part of it</div>

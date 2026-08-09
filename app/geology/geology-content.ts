@@ -65,8 +65,6 @@ export type GeologyCopy = {
     play: string;
     videoLabel: string;
     posterAlt: string;
-    videoWebmSrc: string;
-    videoSrc: string;
     posterSrc: string;
   };
   legend: Record<EvidenceKind, string>;
@@ -424,8 +422,6 @@ export const geologyCopies: Record<GeologyLocale, GeologyCopy> = {
       videoLabel: "Aerial film of Tetiaroa Atoll",
       posterAlt:
         "Illustrative aerial view of a coral atoll with its volcanic foundation visible beneath deep water.",
-      videoWebmSrc: "/atoll.webm",
-      videoSrc: "/atoll.mp4",
       posterSrc: "/geology/atoll-foundation-poster.webp",
     },
     legend: {
@@ -627,8 +623,6 @@ export const geologyCopies: Record<GeologyLocale, GeologyCopy> = {
       videoLabel: "Film aérien de l'atoll de Tetiaroa",
       posterAlt:
         "Vue aérienne illustrée d'un atoll corallien avec sa fondation volcanique visible sous l'eau profonde.",
-      videoWebmSrc: "/atoll.webm",
-      videoSrc: "/atoll.mp4",
       posterSrc: "/geology/atoll-foundation-poster.webp",
     },
     legend: {

@@ -78,7 +78,7 @@
     overflow: hidden; background: #000;
     color: var(--paper);
   }
-  .hero video {
+  .hero video, .hero iframe {
     position: absolute; inset: 0; width: 100%; height: 100%;
     object-fit: cover; z-index: 1;
     filter: saturate(1.08) contrast(1.03);
@@ -417,7 +417,7 @@
     position: relative; height: 78vh; min-height: 540px;
     overflow: hidden; background: #000;
   }
-  .panorama video, .panorama img {
+  .panorama video, .panorama iframe, .panorama img {
     position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
     filter: saturate(1.08);
   }
@@ -616,9 +616,7 @@
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="hero">
-  <video autoplay muted loop playsinline preload="auto" poster="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1800&q=80">
-    <source src="https://tetiaroa.vercel.app/turtleclip.mp4" type="video/mp4">
-  </video>
+  <iframe src="https://videos.sproutvideo.com/embed/8c9adcb11f1ee0cb06/fcac44e653d24c4c?autoPlay=true&amp;showControls=false&amp;loop=true&amp;volume=0&amp;background=true&amp;scale=fill" title="Sea turtle swimming at Tetiaroa" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" tabindex="-1"></iframe>
   <div class="scrim"></div>
 
   <div class="corner-tr">
@@ -881,9 +879,7 @@
 
 <!-- ============ PANORAMA ============ -->
 <section class="panorama">
-  <video autoplay muted loop playsinline preload="auto" poster="https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=2400&q=85&auto=format">
-    <source src="https://tetiaroa.vercel.app/atoll.mp4" type="video/mp4">
-  </video>
+  <iframe src="https://videos.sproutvideo.com/embed/5a9adcb11f1eefc5d0/b32ffb8e71a8f8ac?autoPlay=true&amp;showControls=false&amp;loop=true&amp;volume=0&amp;background=true&amp;scale=fill" title="Aerial film of Tetiaroa atoll" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" tabindex="-1"></iframe>
   <div class="p-overlay"></div>
   <div class="p-copy">
     <div class="p-title">Twelve motu. One lagoon.<br>Six km² of <span class="em">experiment.</span></div>

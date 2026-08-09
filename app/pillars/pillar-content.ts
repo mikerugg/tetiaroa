@@ -10,6 +10,7 @@ import {
   NetworkIcon,
   type LucideIcon,
 } from "lucide-react";
+import { homeVideoSources } from "../home-video-sources";
 
 export const pillarSlugs = [
   "research-conservation",
@@ -131,7 +132,7 @@ const englishContent: Record<PillarSlug, PillarContent> = {
       },
       {
         kind: "video",
-        src: "/turtleclip.mp4",
+        src: homeVideoSources.turtleClip.embedUrl,
         alt: "Green sea turtle swimming through the waters of Tetiaroa",
         caption: "Green turtle sanctuary · lagoon monitoring",
       },
@@ -340,7 +341,7 @@ const englishContent: Record<PillarSlug, PillarContent> = {
       },
       {
         kind: "video",
-        src: "/atoll.mp4",
+        src: homeVideoSources.atoll.embedUrl,
         alt: "Aerial passage over Tetiaroa Atoll",
         caption: "Tetiaroa · a whole island system in view",
       },
@@ -440,7 +441,7 @@ const frenchContent: Record<PillarSlug, PillarContent> = {
       },
       {
         kind: "video",
-        src: "/turtleclip.mp4",
+        src: homeVideoSources.turtleClip.embedUrl,
         alt: "Tortue verte nageant dans les eaux de Tetiaroa",
         caption: "Sanctuaire des tortues vertes · suivi du lagon",
       },
@@ -650,7 +651,7 @@ const frenchContent: Record<PillarSlug, PillarContent> = {
       },
       {
         kind: "video",
-        src: "/atoll.mp4",
+        src: homeVideoSources.atoll.embedUrl,
         alt: "Vue aérienne de l’atoll de Tetiaroa",
         caption: "Tetiaroa · un système insulaire entier en vue",
       },

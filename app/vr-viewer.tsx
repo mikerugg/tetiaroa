@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 import styles from "./home-experience.module.css";
 
 const VERT_SRC = `
@@ -69,9 +70,11 @@ function compileShader(
 }
 
 export function VrViewer({
+  className,
   src,
   labels = defaultLabels,
 }: {
+  className?: string;
   src: string;
   labels?: VrViewerLabels;
 }) {
@@ -278,7 +281,7 @@ export function VrViewer({
   return (
     <div
       ref={wrapRef}
-      className={styles.deepPanel}
+      className={cn(styles.deepPanel, className)}
       onPointerDown={(event) => {
         event.currentTarget.setPointerCapture(event.pointerId);
         dragRef.current = {

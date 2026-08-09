@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDownIcon, PauseIcon, PlayIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { homeVideoSources } from "../home-video-sources";
+import { SproutBackgroundVideo } from "../sprout-background-video";
 import type { GeologyCopy } from "./geology-content";
 import { resolveMediaSource } from "./geology-content";
 import styles from "./geology.module.css";
@@ -12,26 +14,16 @@ type GeologyHeroProps = {
 };
 
 export function GeologyHero({ copy }: GeologyHeroProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const posterSrc = resolveMediaSource(
     copy.posterSrc,
     "/geology/atoll-foundation-poster.webp",
   );
-  const videoSrc = resolveMediaSource(copy.videoSrc, "/atoll.mp4");
-  const videoWebmSrc = resolveMediaSource(copy.videoWebmSrc, "/atoll.webm");
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const video = videoRef.current;
-
-    if (!video) {
-      return;
-    }
-
     const syncMotionPreference = () => {
       if (reducedMotion.matches) {
-        video.pause();
         setIsPlaying(false);
       }
     };
@@ -42,46 +34,19 @@ export function GeologyHero({ copy }: GeologyHeroProps) {
     return () => reducedMotion.removeEventListener("change", syncMotionPreference);
   }, []);
 
-  const togglePlayback = async () => {
-    const video = videoRef.current;
-
-    if (!video) {
-      return;
-    }
-
-    if (video.paused) {
-      try {
-        await video.play();
-        setIsPlaying(true);
-      } catch {
-        setIsPlaying(false);
-      }
-      return;
-    }
-
-    video.pause();
-    setIsPlaying(false);
-  };
+  const togglePlayback = () => setIsPlaying((playing) => !playing);
 
   return (
     <section className={styles.hero} aria-label={copy.videoLabel}>
       <div className={styles.heroPosterFallback} aria-hidden="true" />
-      <video
-        ref={videoRef}
+      <SproutBackgroundVideo
         className={styles.heroVideo}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
+        embedUrl={homeVideoSources.atoll.embedUrl}
         poster={posterSrc}
-        aria-hidden="true"
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-      >
-        <source src={videoWebmSrc} type="video/webm" />
-        <source src={videoSrc} type="video/mp4" />
-      </video>
+        playing={isPlaying}
+        title={copy.videoLabel}
+        eager
+      />
       <div className={styles.heroScrim} aria-hidden="true" />
       <div className={styles.heroContour} aria-hidden="true" />
 
