@@ -69,7 +69,7 @@ export default function HomeExperience({
             embedUrl={homeVideoSources.turtleClip.embedUrl}
             title={homeVideoSources.turtleClip.title}
             eager
-            poster="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=2400&q=85&auto=format&fit=crop"
+            poster="/homepage-hero-placeholder.png"
           />
           <div className={styles.heroScrim} aria-hidden="true" />
 
