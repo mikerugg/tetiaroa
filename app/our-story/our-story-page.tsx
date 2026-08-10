@@ -127,7 +127,7 @@ export function OurStoryPage() {
 
               <figure className="relative mt-14 aspect-[2.05/1] min-h-[28rem] overflow-hidden rounded-[2rem] bg-muted shadow-2xl sm:min-h-0">
                 <Image
-                  src="/story/history-new-lagoon-witness.png"
+                  src="/story/history-new-lagoon-witness.webp"
                   alt={copy.idea.imageAlt}
                   fill
                   sizes="100vw"
@@ -216,7 +216,7 @@ export function OurStoryPage() {
               <div className="mt-20 grid overflow-hidden rounded-[2rem] border border-border lg:grid-cols-[0.9fr_1.1fr]">
                 <div className="relative min-h-[28rem] bg-muted lg:min-h-[42rem]">
                   <Image
-                    src="/story/history-living-archive.png"
+                    src="/story/history-living-archive.webp"
                     alt="Illustrative composition connecting Marlon Brando's vision with present-day research and education on Tetiaroa"
                     fill
                     sizes="(max-width: 1023px) 100vw, 45vw"

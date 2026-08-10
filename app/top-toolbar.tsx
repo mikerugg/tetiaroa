@@ -83,8 +83,9 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
           alt="Tetiaroa Society"
           width={596}
           height={371}
+          sizes="(max-width: 420px) 96px, (max-width: 768px) 160px, 192px"
           className="absolute left-0 top-1/2 h-20 w-auto -translate-y-1/2 shrink-0 object-contain max-[420px]:h-14 md:h-24"
-          priority
+          preload
         />
       </Link>
 

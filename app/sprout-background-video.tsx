@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import Image from "next/image";
 import Script from "next/script";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -37,6 +37,7 @@ type SproutBackgroundVideoProps = {
   onCompleted?: () => void;
   playing?: boolean;
   poster?: string;
+  posterSizes?: string;
   preloadMargin?: string;
   title: string;
 };
@@ -68,6 +69,7 @@ export function SproutBackgroundVideo({
   onCompleted,
   playing = true,
   poster,
+  posterSizes = "100vw",
   preloadMargin = "125% 0px",
   title,
 }: SproutBackgroundVideoProps) {
@@ -192,10 +194,6 @@ export function SproutBackgroundVideo({
     }
   }, [playing]);
 
-  const posterStyle = poster
-    ? ({ backgroundImage: `url("${poster}")` } as CSSProperties)
-    : undefined;
-
   return (
     <div
       ref={wrapRef}
@@ -203,7 +201,6 @@ export function SproutBackgroundVideo({
         "overflow-hidden bg-black bg-cover bg-center",
         className,
       )}
-      style={posterStyle}
       aria-hidden="true"
     >
       <Script
@@ -212,20 +209,32 @@ export function SproutBackgroundVideo({
         strategy="afterInteractive"
         onReady={() => setApiReady(true)}
       />
-      {active ? (
-        <iframe
-          ref={iframeRef}
-          className="sproutvideo-player pointer-events-none block size-full border-0"
-          src={playerUrl}
-          title={title}
-          allow="autoplay; fullscreen; picture-in-picture"
-          allowFullScreen
-          loading={eager ? "eager" : "lazy"}
-          referrerPolicy="no-referrer-when-downgrade"
-          tabIndex={-1}
-          onLoad={() => setIframeLoaded(true)}
-        />
-      ) : null}
+      <div className="relative size-full">
+        {poster ? (
+          <Image
+            src={poster}
+            alt=""
+            fill
+            sizes={posterSizes}
+            className="pointer-events-none object-cover"
+            preload={eager}
+          />
+        ) : null}
+        {active ? (
+          <iframe
+            ref={iframeRef}
+            className="sproutvideo-player pointer-events-none absolute inset-0 size-full border-0"
+            src={playerUrl}
+            title={title}
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowFullScreen
+            loading={eager ? "eager" : "lazy"}
+            referrerPolicy="no-referrer-when-downgrade"
+            tabIndex={-1}
+            onLoad={() => setIframeLoaded(true)}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }

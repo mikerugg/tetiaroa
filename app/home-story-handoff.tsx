@@ -18,7 +18,7 @@ export function HomeStoryHandoff({ copy }: HomeStoryHandoffProps) {
         aria-hidden="true"
       >
         <Image
-          src="/story/history-new-lagoon-witness.png"
+          src="/story/history-new-lagoon-witness.webp"
           alt=""
           fill
           sizes="100vw"
@@ -30,7 +30,7 @@ export function HomeStoryHandoff({ copy }: HomeStoryHandoffProps) {
         aria-hidden="true"
       >
         <Image
-          src="/story/history-living-archive.png"
+          src="/story/history-living-archive.webp"
           alt=""
           fill
           sizes="100vw"

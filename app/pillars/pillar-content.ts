@@ -335,7 +335,7 @@ const englishContent: Record<PillarSlug, PillarContent> = {
       },
       {
         kind: "image",
-        src: "/sub-render.png",
+        src: "/sub-render.webp",
         alt: "Honu submersible concept for ocean education and research",
         caption: "Honu · opening ocean access",
       },
@@ -645,7 +645,7 @@ const frenchContent: Record<PillarSlug, PillarContent> = {
       },
       {
         kind: "image",
-        src: "/sub-render.png",
+        src: "/sub-render.webp",
         alt: "Concept du submersible Honu pour l’éducation et la recherche océaniques",
         caption: "Honu · ouvrir l’accès à l’océan",
       },

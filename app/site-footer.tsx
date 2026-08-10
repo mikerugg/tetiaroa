@@ -213,6 +213,7 @@ export function SiteFooter({
               alt="Tetiaroa Society"
               width={432}
               height={209}
+              sizes="108px"
               className="h-20 w-auto object-contain md:h-25 lg:h-27"
             />
           </Link>
@@ -269,6 +270,7 @@ function FooterRatingSeal({ rating }: { rating: FooterRating }) {
         alt=""
         width={1801}
         height={1801}
+        sizes="112px"
         className="size-28 shrink-0 object-contain transition group-hover:scale-[1.03]"
       />
       <span className="flex flex-col gap-1">

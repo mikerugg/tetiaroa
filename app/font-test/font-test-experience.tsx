@@ -94,7 +94,7 @@ export function FontTestExperience() {
             </div>
 
             <Image
-              src="/sub-render.png"
+              src="/sub-render.webp"
               alt="Render of the Honu submersible"
               width={1318}
               height={1030}

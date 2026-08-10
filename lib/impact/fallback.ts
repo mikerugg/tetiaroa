@@ -151,7 +151,7 @@ const fallbackSeeds: FallbackSeed[] = [
     latestUpdate: "2026-06-05",
     status: "Prototype expanding",
     location: "Global classrooms",
-    heroImage: "/sub-render.png",
+    heroImage: "/sub-render.webp",
     heroImageAlt: "Render of the Honu XR submersible for virtual field trips",
     metric: "104 m story dive",
     tags: ["Honu XR", "VR learning", "Ocean literacy"],

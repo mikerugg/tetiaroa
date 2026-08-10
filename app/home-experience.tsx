@@ -166,7 +166,7 @@ export default function HomeExperience({
             </div>
               <figure className={styles.deepRender}>
                 <Image
-                  src="/sub-render.png"
+                  src="/sub-render.webp"
                   alt={copy.honu.renderAlt}
                   width={1318}
                   height={1030}
@@ -392,6 +392,7 @@ export default function HomeExperience({
                 embedUrl={homeVideoSources.turtleCare.embedUrl}
                 title={homeVideoSources.turtleCare.title}
                 poster="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1600&q=80&auto=format&fit=crop"
+                posterSizes="(max-width: 960px) 100vw, 1180px"
               />
               <Badge
                 variant="secondary"
