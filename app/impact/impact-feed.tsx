@@ -40,7 +40,6 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@/components/ui/toggle-group";
-import { cn } from "@/lib/utils";
 import {
   type ImpactEntryType,
   type ImpactFeedItem,
@@ -780,11 +779,7 @@ function ProjectRow({
             src={project.image}
             alt={project.alt}
             fill
-            className={cn(
-              "object-cover transition-transform duration-500 group-hover:scale-[1.03]",
-              project.image.includes(".png") &&
-                "object-contain p-8 group-hover:scale-100",
-            )}
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
             priority={priority}
             sizes="(max-width: 768px) calc(100vw - 32px), (max-width: 1200px) 40vw, 470px"
           />
