@@ -35,7 +35,7 @@ export const ourStoryCopy = {
   },
   idea: {
     eyebrow: "1961 → 1967",
-    title: "An encounter became a proposition.",
+    title: "An encounter became a calling.",
     lead:
       "Brando first encountered Tetiaroa while filming Mutiny on the Bounty in 1961. Six years later, he acquired the atoll.",
     body:
