@@ -75,7 +75,7 @@ export function HomePillarCards({
                 )}
                 href={pillar.href}
               >
-                <Card className="h-full gap-0 overflow-hidden rounded-xl border border-border border-t-primary/55 bg-card/80 py-0 text-card-foreground shadow-2xl ring-0 backdrop-blur-md transition-[border-color,box-shadow,transform] duration-300 group-hover:-translate-y-1 group-hover:border-primary/55 group-hover:shadow-[0_32px_90px_rgb(0_0_0_/_0.34)]">
+                <Card className="h-full gap-0 overflow-hidden rounded-xl border border-border border-t-primary/55 bg-background/85 py-0 text-card-foreground shadow-2xl ring-0 transition-[border-color,box-shadow,transform] duration-300 group-hover:-translate-y-1 group-hover:border-primary/55 group-hover:shadow-[0_32px_90px_rgb(0_0_0_/_0.34)]">
                   <div className="relative aspect-[16/10] overflow-hidden bg-background">
                     <Image
                       src={pillar.image}
