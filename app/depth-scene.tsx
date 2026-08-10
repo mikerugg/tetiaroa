@@ -12,14 +12,6 @@ export type DepthStop = {
   transmission?: string;
 };
 
-type Particle = {
-  x: number;
-  y: number;
-  radius: number;
-  speed: number;
-  drift: number;
-};
-
 type Bubble = {
   x: number;
   y: number;
@@ -71,7 +63,6 @@ export function DepthScene({
   ariaLabel?: string;
 }) {
   const backdropRef = useRef<HTMLDivElement | null>(null);
-  const raysRef = useRef<HTMLDivElement | null>(null);
   const vignetteRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const readingRef = useRef<HTMLSpanElement | null>(null);
@@ -83,7 +74,6 @@ export function DepthScene({
 
   useEffect(() => {
     const backdrop = backdropRef.current;
-    const rays = raysRef.current;
     const vignette = vignetteRef.current;
     const canvas = canvasRef.current;
     const reading = readingRef.current;
@@ -95,7 +85,6 @@ export function DepthScene({
 
     if (
       !backdrop ||
-      !rays ||
       !vignette ||
       !canvas ||
       !reading ||
@@ -118,7 +107,6 @@ export function DepthScene({
     const context = canvas.getContext("2d");
 
     let anchors: number[] = [];
-    let particles: Particle[] = [];
     let bubbles: Bubble[] = [];
     let depthNow = 0;
     let activeIndex = -1;
@@ -229,8 +217,6 @@ export function DepthScene({
 
       depthNow = lerp(stops[index].depth, stops[next].depth, t);
       reading.textContent = `−${Math.max(Math.round(depthNow), 0)} m`;
-      rays.style.opacity = String(clamp(1 - depthNow / 26, 0, 1) * 0.75);
-
       const depth01 = clamp(depthNow / MAX_DEPTH, 0, 1);
 
       document.documentElement.style.setProperty(
@@ -296,13 +282,6 @@ export function DepthScene({
       canvas.width = nextWidth;
       canvas.height = nextHeight;
       viewportHeight = nextHeight;
-      particles = Array.from({ length: 70 }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: 0.6 + Math.random() * 1.7,
-        speed: 0.12 + Math.random() * 0.4,
-        drift: -0.15 + Math.random() * 0.3,
-      }));
       bubbles = [];
     };
 
@@ -340,60 +319,7 @@ export function DepthScene({
       if (context) {
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Marine snow only becomes visible once the dive is underway.
-        const visibility = clamp(depthNow / 12, 0, 1) * 0.55;
         const speedBoost = smoothVel * 0.85;
-        const streak = Math.min(Math.abs(smoothVel) * 1.1, 36);
-
-        for (const particle of particles) {
-          particle.y -= particle.speed + speedBoost;
-          particle.x += particle.drift;
-
-          if (particle.y < -6) {
-            particle.y = canvas.height + 6;
-            particle.x = Math.random() * canvas.width;
-          } else if (particle.y > canvas.height + 6) {
-            particle.y = -6;
-            particle.x = Math.random() * canvas.width;
-          }
-
-          if (particle.x < -4) {
-            particle.x = canvas.width + 4;
-          } else if (particle.x > canvas.width + 4) {
-            particle.x = -4;
-          }
-
-          if (visibility <= 0.01) {
-            continue;
-          }
-
-          const alpha = visibility * (0.35 + (particle.radius / 2.3) * 0.65);
-
-          if (streak > 5) {
-            context.strokeStyle = "rgb(189, 244, 235)";
-            context.globalAlpha = alpha * 0.8;
-            context.lineWidth = particle.radius * 0.9;
-            context.beginPath();
-            context.moveTo(particle.x, particle.y);
-            context.lineTo(
-              particle.x,
-              particle.y + streak * Math.sign(smoothVel || 1),
-            );
-            context.stroke();
-          } else {
-            context.fillStyle = "rgb(189, 244, 235)";
-            context.globalAlpha = alpha;
-            context.beginPath();
-            context.arc(
-              particle.x,
-              particle.y,
-              particle.radius,
-              0,
-              Math.PI * 2,
-            );
-            context.fill();
-          }
-        }
 
         const bubbleVisibility = clamp(depthNow / 6, 0, 1);
 
@@ -526,7 +452,6 @@ export function DepthScene({
     <>
       <div ref={backdropRef} className={styles.backdrop} aria-hidden="true" />
       <canvas ref={canvasRef} className={styles.particles} aria-hidden="true" />
-      <div ref={raysRef} className={styles.rays} aria-hidden="true" />
       <div
         ref={vignetteRef}
         className={styles.deepVignette}

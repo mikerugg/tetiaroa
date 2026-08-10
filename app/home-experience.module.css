@@ -59,44 +59,6 @@
   pointer-events: none;
 }
 
-.rays {
-  position: fixed;
-  inset: -35% -85%;
-  z-index: 3;
-  pointer-events: none;
-  background:
-    conic-gradient(
-      from 178deg at 30% -10%,
-      transparent 38%,
-      rgba(255, 255, 255, 0.14) 47%,
-      transparent 56%
-    ),
-    conic-gradient(
-      from 182deg at 65% -10%,
-      transparent 39%,
-      rgba(255, 255, 255, 0.1) 49%,
-      transparent 59%
-    ),
-    conic-gradient(
-      from 176deg at 85% -10%,
-      transparent 40%,
-      rgba(255, 255, 255, 0.08) 49%,
-      transparent 58%
-    );
-  mix-blend-mode: screen;
-  animation: raysSway 9s ease-in-out infinite alternate;
-}
-
-@keyframes raysSway {
-  from {
-    transform: translateX(-2%);
-  }
-
-  to {
-    transform: translateX(2%);
-  }
-}
-
 .deepVignette {
   position: fixed;
   inset: 0;
@@ -821,10 +783,6 @@
 }
 
 @media (max-width: 720px) {
-  .rays {
-    display: none;
-  }
-
   .bandMedia,
   .scanPanel {
     filter: none;
