@@ -3,7 +3,7 @@ import { HtmlPackageInput } from "../../components/htmlPackageInput";
 
 export const htmlPackage = defineType({
   name: "htmlPackage",
-  title: "Rich HTML package",
+  title: "CANVA / Rich HTML package",
   type: "object",
   description:
     "Use a ZIP when this language needs a designed, media-rich layout. It will be published instead of Body.",

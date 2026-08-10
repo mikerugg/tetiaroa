@@ -254,6 +254,12 @@ export function MailchimpHtmlExportInput() {
             else. The copied code contains the original stored HTML and hosted image
             URLs—not the Studio preview renderer.
           </Text>
+          <Text size={1} weight="semibold">
+            Copy Code for Mailchimp
+          </Text>
+          <Text muted size={1}>
+            Click the button below to copy a single HTML document containing both language packages. Paste it into a Mailchimp create email - Code your own - paste into code editor.
+          </Text>
         </Stack>
       </Card>
 

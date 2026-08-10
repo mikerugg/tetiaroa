@@ -113,10 +113,10 @@ export const impactEntryLocale = defineType({
     }),
     defineField({
       name: "htmlPackage",
-      title: "Rich HTML package",
+      title: "CANVA / Rich HTML package",
       type: "htmlPackage",
       description:
-        "Upload a ZIP containing email.html and its images folder. This replaces Body for this language.",
+        "Export from CANVA and upload a ZIP containing email.html and its images folder. This replaces Body for this language.",
     }),
     defineField({
       name: "body",
