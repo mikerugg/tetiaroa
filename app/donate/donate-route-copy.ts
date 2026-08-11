@@ -81,7 +81,7 @@ export const donateRouteCopy: Record<DonateLocale, DonateRouteCopy> = {
       statement: {
         eyebrow: "Donate",
         paragraph:
-          "You are funding an experiment in whether an island can outlast this century — by protecting the reefs, the turtles, the culture, and the kids who will watch over these atolls long after us. What works on Tetiaroa is designed to travel to every island and coastal community facing the same changing environment. That is what your donation supports.",
+          "You are funding an experiment in whether an island can outlast this century — by protecting the reefs, the turtles, the culture, and the kids who will watch over these atolls long after us. What works on Teti'aroa is designed to travel to every island and coastal community facing the same changing environment. That is what your donation supports.",
         ctaLabel: "Become a member",
       },
       moreWays: {
