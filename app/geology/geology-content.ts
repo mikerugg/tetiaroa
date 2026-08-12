@@ -410,10 +410,9 @@ export const geologyCopies: Record<GeologyLocale, GeologyCopy> = {
     },
     hero: {
       eyebrow: "From volcano to atoll · Interactive geology",
-      titleLead: "Tetiaroa began",
+      titleLead: "Teti'aroa began",
       titleAccent: "as a volcano.",
-      description:
-        "The volcano stopped erupting, eroded and sank below the sea. Coral kept growing around it. Ice-age sea-level change later exposed and dissolved the reef platform before flooding it again, restoring the lagoon we see today.",
+      description: "",
       coordinates: "17° 00′ 18″ S / 149° 34′ 13″ W",
       place: "53 km north of Tahiti",
       begin: "Follow the formation story",
@@ -433,12 +432,12 @@ export const geologyCopies: Record<GeologyLocale, GeologyCopy> = {
       eyebrow: "Seven stages",
       title: "From volcano to atoll, one change leads to the next.",
       intro:
-        "Scroll or choose a stage to see what changed and why. The cross-section is simplified and not to scale; it explains the sequence of events rather than the exact shape of Tetiaroa below the water.",
+        "Scroll to discover the events that led to the formation of Teti'aroa's atoll and lagoon. ",
       instructions: "Choose a geological stage",
       stageLabel: "Stage",
       factLabel: "What the evidence says",
-      ariaLabel: "Animated cross-section of Tetiaroa's formation",
-      visualTitle: "Tetiaroa through geologic time",
+      ariaLabel: "Animated cross-section of Teti'aroa's formation",
+      visualTitle: "Teti'aroa through geologic time",
       visualSummary:
         "The sequence shows a volcano emerging and moving away from its hotspot; the volcano then erodes and subsides while a reef and motu form around it. Ice-age sea-level fall exposes and dissolves the reef platform before rising seas flood it to form the modern lagoon.",
     },
