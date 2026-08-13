@@ -31,6 +31,7 @@ import type {
   ImpactContentEntry,
   ImpactLanguage,
 } from "@/lib/impact/types";
+import { getImpactBodyImageLayout } from "@/lib/impact/body-image";
 import { getDoiIdentifier } from "@/lib/impact/doi";
 import { cn } from "@/lib/utils";
 import { getImpactEntryBySlug } from "@/lib/sanity/impact";
@@ -721,6 +722,7 @@ function getPortableTextComponents(
         const url = getString(record, "url");
         const alt = getString(record, "alt");
         const caption = getString(record, "caption");
+        const layout = getImpactBodyImageLayout(record.displaySize);
 
         if (!url) {
           return null;
@@ -729,14 +731,22 @@ function getPortableTextComponents(
         const dimensions = getImageDimensions(record, url);
 
         return (
-          <figure className="my-10 flex flex-col items-center gap-3">
+          <figure
+            className={cn(
+              "mx-auto my-10 flex w-full flex-col items-center gap-3",
+              layout.figureClassName,
+            )}
+          >
             <Image
               src={url}
               alt={alt}
               width={dimensions.width}
               height={dimensions.height}
-              className="h-auto max-w-full rounded-md bg-muted object-contain"
-              sizes="(max-width: 768px) calc(100vw - 40px), 896px"
+              className={cn(
+                "h-auto max-w-full rounded-md bg-muted object-contain",
+                layout.imageClassName,
+              )}
+              sizes={layout.sizes}
             />
             {caption ? (
               <figcaption className="text-center font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">

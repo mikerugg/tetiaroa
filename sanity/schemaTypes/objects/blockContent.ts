@@ -1,5 +1,20 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
+const impactBodyImageDisplaySizeOptions = [
+  {
+    title: "Compact — portraits, logos, or diagrams",
+    value: "compact",
+  },
+  {
+    title: "Standard — recommended for most images",
+    value: "standard",
+  },
+  {
+    title: "Full article width — landscapes or feature images",
+    value: "full",
+  },
+];
+
 export const blockContent = defineType({
   name: "blockContent",
   title: "Body",
@@ -58,6 +73,18 @@ export const blockContent = defineType({
           name: "caption",
           title: "Caption",
           type: "string",
+        }),
+        defineField({
+          name: "displaySize",
+          title: "Display size",
+          type: "string",
+          description:
+            "Set how wide this image appears in the published article.",
+          options: {
+            list: impactBodyImageDisplaySizeOptions,
+            layout: "radio",
+          },
+          initialValue: "standard",
         }),
       ],
     }),

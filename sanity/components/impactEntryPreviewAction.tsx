@@ -11,9 +11,11 @@ import {
   useClient,
 } from "sanity";
 import { ImpactHtmlPackage } from "@/app/impact/impact-html-package";
+import { getImpactBodyImageLayout } from "@/lib/impact/body-image";
 import type { ImpactBodyBlock } from "@/lib/impact/types";
 import { sanityApiVersion } from "@/lib/sanity/env";
 import { impactEntryPreviewByIdQuery } from "@/lib/sanity/queries";
+import { cn } from "@/lib/utils";
 
 type PreviewImpactEntry = {
   _id: string;
@@ -109,23 +111,42 @@ const portableTextComponents: PortableTextComponents<ImpactBodyBlock> = {
   },
   types: {
     image: ({ value }) => {
-      const url = getString(value, "url");
+      const record = value as Record<string, unknown>;
+      const url = getString(record, "url");
 
       if (!url) {
         return null;
       }
 
-      const alt = getString(value, "alt");
-      const caption = getString(value, "caption");
+      const alt = getString(record, "alt");
+      const caption = getString(record, "caption");
+      const layout = getImpactBodyImageLayout(record.displaySize);
+      const width =
+        typeof record.width === "number" && record.width > 0
+          ? record.width
+          : 1200;
+      const height =
+        typeof record.height === "number" && record.height > 0
+          ? record.height
+          : 800;
 
       return (
-        <figure className="my-10 flex flex-col gap-3">
+        <figure
+          className={cn(
+            "mx-auto my-10 flex w-full flex-col items-center gap-3",
+            layout.figureClassName,
+          )}
+        >
           <Image
             src={url}
             alt={alt}
-            width={1200}
-            height={800}
-            className="h-auto w-full rounded-md bg-muted object-contain"
+            width={width}
+            height={height}
+            className={cn(
+              "h-auto max-w-full rounded-md bg-muted object-contain",
+              layout.imageClassName,
+            )}
+            sizes={layout.sizes}
           />
           {caption ? (
             <figcaption className="text-center font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
