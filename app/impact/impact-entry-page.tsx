@@ -1011,7 +1011,7 @@ export async function ImpactEntryPageContent({
           </section>
 
           <section className="mx-auto grid max-w-[1540px] gap-8 px-5 py-8 sm:px-8 md:px-9 lg:grid-cols-[300px_minmax(0,1fr)] lg:px-10">
-            <aside className="hidden lg:sticky lg:top-24 lg:block lg:self-start">
+            <aside className="hidden lg:block lg:self-start">
               <ImpactEntryInfoCard
                 entry={entry}
                 copy={copy}
