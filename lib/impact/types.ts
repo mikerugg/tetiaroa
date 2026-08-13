@@ -62,6 +62,16 @@ export type ImpactRelatedEntry = {
   entryType: ImpactEntryType;
 };
 
+export type ImpactAuthor = {
+  name: string;
+  orcidUrl?: string;
+};
+
+export type ImpactAffiliation = {
+  name: string;
+  dataciteUrl?: string;
+};
+
 export type ImpactContentEntry = {
   id: string;
   title: string;
@@ -76,6 +86,8 @@ export type ImpactContentEntry = {
   publishedAt: string;
   latestUpdate: string;
   doiUrl?: string;
+  iplacesUrl?: string;
+  iplacesTitle?: string;
   status: string;
   location: string;
   heroImage: string;
@@ -86,8 +98,10 @@ export type ImpactContentEntry = {
   htmlPackage?: ImpactHtmlPackage;
   gallery?: ImpactGalleryImage[];
   projectDates?: string;
+  authors?: ImpactAuthor[];
   team?: string[];
   affiliation?: string;
+  affiliations?: ImpactAffiliation[];
   relatedEntries?: ImpactRelatedEntry[];
   legacyNodeId?: number;
   legacyVid?: number;

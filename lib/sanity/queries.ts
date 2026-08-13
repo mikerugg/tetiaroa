@@ -46,7 +46,9 @@ const impactEntryProjection = `
     )
   ),
   entryType,
-  doiUrl,
+  "doiUrl": coalesce(iplacesSource.doiUrl, doiUrl),
+  "iplacesUrl": iplacesSource.url,
+  "iplacesTitle": iplacesSource.title,
   "summary": select(
     $language == "fr" => coalesce(french.summary, summary),
     coalesce(english.summary, summary)
@@ -120,6 +122,8 @@ const impactEntryProjection = `
   "program": program->{title, "slug": slug.current},
   "topics": topics[]->{title, "slug": slug.current},
   "team": team[]->{name, role},
+  "authors": iplacesSource.authors[]{name, orcid},
+  "affiliations": iplacesSource.affiliations[]{name, ror},
   "organizations": organizations[]->{name, url},
   "relatedEntries": relatedEntries[]->{
     "title": select(

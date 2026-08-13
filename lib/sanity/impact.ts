@@ -6,7 +6,9 @@ import {
 import {
   impactCategories,
   impactEntryTypes,
+  type ImpactAffiliation,
   type ImpactBodyBlock,
+  type ImpactAuthor,
   type ImpactCategory,
   type ImpactContentEntry,
   type ImpactEntryType,
@@ -18,6 +20,9 @@ import {
   toImpactFeedItem,
 } from "@/lib/impact/types";
 import { normalizeDoiUrl } from "@/lib/impact/doi";
+import { parseIPlacesArticleUrl } from "@/lib/impact/iplaces";
+import { normalizeOrcidUrl } from "@/lib/impact/orcid";
+import { getRorDataCiteUrl } from "@/lib/impact/ror";
 import {
   buildHomepageHighlights,
   type HomepageHighlight,
@@ -43,6 +48,16 @@ type SanityPerson = {
   role?: string | null;
 };
 
+type SanityIPlacesAuthor = {
+  name?: string | null;
+  orcid?: string | null;
+};
+
+type SanityIPlacesAffiliation = {
+  name?: string | null;
+  ror?: string | null;
+};
+
 type SanityImpactEntry = {
   _id: string;
   title?: string | null;
@@ -59,6 +74,8 @@ type SanityImpactEntry = {
   publishedAt?: string | null;
   updatedAt?: string | null;
   doiUrl?: string | null;
+  iplacesUrl?: string | null;
+  iplacesTitle?: string | null;
   status?: string | null;
   location?: string | null;
   metric?: string | null;
@@ -70,6 +87,8 @@ type SanityImpactEntry = {
   gallery?: Array<Partial<ImpactGalleryImage>> | null;
   program?: SanityReferenceLabel | null;
   topics?: SanityReferenceLabel[] | null;
+  authors?: SanityIPlacesAuthor[] | null;
+  affiliations?: SanityIPlacesAffiliation[] | null;
   team?: SanityPerson[] | null;
   organizations?: Array<{ name?: string | null; url?: string | null }> | null;
   relatedEntries?: Array<{
@@ -121,6 +140,18 @@ async function isDraftModeEnabled() {
 
 function normalizeDate(value: string | null | undefined, fallback: string) {
   return (value ?? fallback).slice(0, 10);
+}
+
+function normalizeIPlacesUrl(value: string | null | undefined) {
+  if (!value) {
+    return undefined;
+  }
+
+  try {
+    return parseIPlacesArticleUrl(value).canonicalUrl;
+  } catch {
+    return undefined;
+  }
 }
 
 function normalizeCategoryValue(
@@ -217,6 +248,60 @@ function normalizeTeam(team: SanityImpactEntry["team"]) {
 
     return [person.role ? `${person.name}, ${person.role}` : person.name];
   });
+}
+
+function normalizeAuthors(
+  authors: SanityImpactEntry["authors"],
+): ImpactAuthor[] {
+  const normalizedAuthors = (authors ?? []).flatMap((author) => {
+    const name = author.name?.trim();
+
+    if (!name) {
+      return [];
+    }
+
+    return [
+      {
+        name,
+        orcidUrl: normalizeOrcidUrl(author.orcid),
+      },
+    ];
+  });
+  const uniqueAuthors = new Map(
+    normalizedAuthors.map((author) => [
+      `${author.name.toLocaleLowerCase()}:${author.orcidUrl ?? ""}`,
+      author,
+    ]),
+  );
+
+  return [...uniqueAuthors.values()];
+}
+
+function normalizeAffiliations(
+  affiliations: SanityImpactEntry["affiliations"],
+): ImpactAffiliation[] {
+  const normalizedAffiliations = (affiliations ?? []).flatMap(
+    (affiliation) => {
+      const name = affiliation.name?.trim();
+
+      return name
+        ? [
+            {
+              name,
+              dataciteUrl: getRorDataCiteUrl(affiliation.ror),
+            },
+          ]
+        : [];
+    },
+  );
+  const uniqueAffiliations = new Map(
+    normalizedAffiliations.map((affiliation) => [
+      affiliation.name.toLocaleLowerCase(),
+      affiliation,
+    ]),
+  );
+
+  return [...uniqueAffiliations.values()];
 }
 
 function normalizeTagComparison(value: string) {
@@ -325,6 +410,8 @@ function normalizeSanityEntry(entry: SanityImpactEntry): ImpactContentEntry | nu
     publishedAt,
     latestUpdate,
     doiUrl: normalizeDoiUrl(entry.doiUrl),
+    iplacesUrl: normalizeIPlacesUrl(entry.iplacesUrl),
+    iplacesTitle: entry.iplacesTitle?.trim() || undefined,
     status: entry.status ?? "Published",
     location: entry.location ?? "Teti'aroa",
     heroImage: entry.heroImage ?? defaultHeroImage,
@@ -335,8 +422,10 @@ function normalizeSanityEntry(entry: SanityImpactEntry): ImpactContentEntry | nu
     htmlPackage: normalizeHtmlPackage(entry.htmlPackage),
     gallery: normalizeGallery(entry.gallery),
     projectDates: entry.projectDates ?? undefined,
+    authors: normalizeAuthors(entry.authors),
     team: normalizeTeam(entry.team),
     affiliation: entry.affiliation ?? undefined,
+    affiliations: normalizeAffiliations(entry.affiliations),
     relatedEntries: normalizeRelatedEntries(entry.relatedEntries),
     legacyNodeId: entry.legacyNodeId ?? undefined,
     legacyVid: entry.legacyVid ?? undefined,

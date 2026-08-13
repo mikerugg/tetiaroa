@@ -165,11 +165,6 @@ export const impactEntryLocale = defineType({
       type: "string",
     }),
     defineField({
-      name: "affiliation",
-      title: "Affiliation",
-      type: "string",
-    }),
-    defineField({
       name: "seoTitle",
       title: "SEO title",
       type: "string",

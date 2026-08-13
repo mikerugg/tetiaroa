@@ -27,7 +27,7 @@ type PreviewImpactEntry = {
   publishedAt?: string | null;
   updatedAt?: string | null;
   location?: string | null;
-  affiliation?: string | null;
+  affiliations?: Array<{ name?: string | null }> | null;
   tags?: string[] | null;
   body?: ImpactBodyBlock[] | null;
   htmlPackage?: {
@@ -261,12 +261,22 @@ function PreviewCanvas({ entry }: { entry: PreviewImpactEntry }) {
                 <dd className="mt-1">{entry.location}</dd>
               </div>
             ) : null}
-            {entry.affiliation ? (
+            {entry.affiliations?.length ? (
               <div className="border-t border-border pt-5">
                 <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                  {entry.language === "fr" ? "Affiliation" : "Affiliation"}
+                  Affiliations
                 </dt>
-                <dd className="mt-1">{entry.affiliation}</dd>
+                <dd className="mt-1">
+                  <ul className="flex flex-col gap-1">
+                    {entry.affiliations.map((affiliation, index) =>
+                      affiliation.name ? (
+                        <li key={`${affiliation.name}:${index}`}>
+                          {affiliation.name}
+                        </li>
+                      ) : null,
+                    )}
+                  </ul>
+                </dd>
               </div>
             ) : null}
             {entry.tags?.length ? (

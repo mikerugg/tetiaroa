@@ -6,6 +6,7 @@ import { topic } from "./documents/topic";
 import { blockContent } from "./objects/blockContent";
 import { htmlPackage } from "./objects/htmlPackage";
 import { impactEntryLocale } from "./objects/impactEntryLocale";
+import { iplacesSource } from "./objects/iplacesSource";
 
 export const schemaTypes = [
   impactEntry,
@@ -16,4 +17,5 @@ export const schemaTypes = [
   blockContent,
   htmlPackage,
   impactEntryLocale,
+  iplacesSource,
 ];

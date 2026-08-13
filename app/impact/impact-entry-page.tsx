@@ -26,6 +26,7 @@ import {
 import { SiteFooter } from "@/app/site-footer";
 import { TopToolbar } from "@/app/top-toolbar";
 import type {
+  ImpactAffiliation,
   ImpactBodyBlock,
   ImpactContentEntry,
   ImpactLanguage,
@@ -51,11 +52,6 @@ export type ImpactEntrySource = "team";
 type ImpactEntryInfoCardProps = {
   entry: ImpactContentEntry;
   copy: (typeof impactRouteCopy)[ImpactLocale];
-  sidebarDate: {
-    label: string;
-    value: string;
-    dateTime: string;
-  };
   affiliationLabel: string;
   showLocation: boolean;
 };
@@ -95,7 +91,7 @@ function getHeroDateLabel(
   locale: ImpactLocale,
 ) {
   const label =
-    entry.latestUpdate === entry.publishedAt && hasRealPublishedDate(entry)
+    !hasDistinctLatestUpdate(entry) && hasRealPublishedDate(entry)
       ? copy.publishedLabel
       : copy.updatedLabel;
 
@@ -106,64 +102,205 @@ function hasRealPublishedDate(entry: ImpactContentEntry) {
   return entry.publishedAt !== "1970-01-01";
 }
 
-function getSidebarDate(
-  entry: ImpactContentEntry,
-  copy: (typeof impactRouteCopy)[ImpactLocale],
-  locale: ImpactLocale,
-) {
-  if (hasRealPublishedDate(entry)) {
-    return {
-      label: copy.publishedLabel,
-      value: formatDate(entry.publishedAt, locale),
-      dateTime: entry.publishedAt,
-    };
+function hasDistinctLatestUpdate(entry: ImpactContentEntry) {
+  return entry.latestUpdate !== entry.publishedAt;
+}
+
+function getAffiliations(entry: ImpactContentEntry): ImpactAffiliation[] {
+  const structuredAffiliations = new Map(
+    (entry.affiliations ?? []).map((affiliation) => [
+      affiliation.name.toLocaleLowerCase(),
+      affiliation,
+    ]),
+  );
+  const affiliationNames = (entry.affiliation ?? "")
+    .split(/[;\n]+/)
+    .map((affiliation) => affiliation.trim())
+    .filter(Boolean);
+
+  if (!affiliationNames.length) {
+    return [...structuredAffiliations.values()];
   }
 
-  return {
-    label: copy.updatedLabel,
-    value: formatDate(entry.latestUpdate, locale),
-    dateTime: entry.latestUpdate,
-  };
+  return affiliationNames.map((name) => ({
+    name,
+    dataciteUrl: structuredAffiliations.get(name.toLocaleLowerCase())
+      ?.dataciteUrl,
+  }));
 }
 
 function ImpactEntryInfoCard({
   entry,
   copy,
-  sidebarDate,
   affiliationLabel,
   showLocation,
 }: ImpactEntryInfoCardProps) {
+  const affiliations = getAffiliations(entry);
+  const hasAffiliations = affiliations.length > 0;
+  const articleTitle = entry.iplacesTitle ?? entry.title;
+
   return (
-    <div className="rounded-md border border-border bg-card/80 p-5 shadow-2xl backdrop-blur-md">
-      <dl className="flex flex-col gap-5">
-        <div className="grid grid-cols-[32px_1fr] gap-3">
-          <CalendarDaysIcon aria-hidden="true" />
-          <div>
-            <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-              {sidebarDate.label}
-            </dt>
-            <dd className="mt-1 text-sm text-foreground">
-              <time dateTime={sidebarDate.dateTime}>{sidebarDate.value}</time>
-            </dd>
-          </div>
+    <div className="min-w-0 rounded-md border border-border bg-card/80 p-5 shadow-2xl backdrop-blur-md">
+      <dl className="flex min-w-0 flex-col gap-5">
+        <div className="min-w-0">
+          <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+            {copy.articleTitleLabel}
+          </dt>
+          <dd className="mt-2 min-w-0 break-words text-sm text-foreground">
+            {entry.iplacesUrl ? (
+              <a
+                href={entry.iplacesUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+                aria-label={`${articleTitle} — ${copy.iplacesArticleLabel}`}
+                className="inline-flex max-w-full items-center gap-1 text-primary underline-offset-4 hover:underline"
+              >
+                <span className="min-w-0 break-words">{articleTitle}</span>
+                <ArrowUpRightIcon
+                  className="size-3 shrink-0"
+                  aria-hidden="true"
+                />
+              </a>
+            ) : (
+              articleTitle
+            )}
+          </dd>
         </div>
-        {entry.doiUrl ? (
+        {entry.authors?.length ? (
           <>
             <Separator />
             <div>
               <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                {copy.authorsLabel}
+              </dt>
+              <dd className="mt-2 text-sm text-foreground">
+                <ul className="flex flex-col gap-1">
+                  {entry.authors.map((author, index) => (
+                    <li
+                      key={`${author.name}:${author.orcidUrl ?? index}`}
+                      className="min-w-0 break-words"
+                    >
+                      {author.orcidUrl ? (
+                        <a
+                          href={author.orcidUrl}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          aria-label={`${author.name} — ${copy.orcidProfileLabel}`}
+                          className="inline-flex max-w-full items-center gap-1 text-primary underline-offset-4 hover:underline"
+                        >
+                          <span className="min-w-0 break-words">
+                            {author.name}
+                          </span>
+                          <ArrowUpRightIcon
+                            className="size-3 shrink-0"
+                            aria-hidden="true"
+                          />
+                        </a>
+                      ) : (
+                        author.name
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          </>
+        ) : null}
+        {hasAffiliations ? (
+          <>
+            <Separator />
+            <div>
+              <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                {affiliationLabel}
+              </dt>
+              <dd className="mt-2 text-sm text-foreground">
+                <ul className="flex flex-col gap-1">
+                  {affiliations.map((affiliation, index) => (
+                    <li
+                      key={`${affiliation.name}:${index}`}
+                      className="min-w-0 break-words"
+                    >
+                      {affiliation.dataciteUrl ? (
+                        <a
+                          href={affiliation.dataciteUrl}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          aria-label={`${affiliation.name} — ${copy.dataciteAffiliationLabel}`}
+                          className="inline-flex max-w-full items-center gap-1 text-primary underline-offset-4 hover:underline"
+                        >
+                          <span className="min-w-0 break-words">
+                            {affiliation.name}
+                          </span>
+                          <ArrowUpRightIcon
+                            className="size-3 shrink-0"
+                            aria-hidden="true"
+                          />
+                        </a>
+                      ) : (
+                        affiliation.name
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          </>
+        ) : null}
+        {hasDistinctLatestUpdate(entry) ? (
+          <>
+            <Separator />
+            <div className="grid grid-cols-[32px_minmax(0,1fr)] gap-3">
+              <CalendarDaysIcon aria-hidden="true" />
+              <div className="min-w-0">
+                <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                  {copy.updatedLabel}
+                </dt>
+                <dd className="mt-1 text-sm text-foreground">
+                  <time dateTime={entry.latestUpdate}>
+                    {formatDate(entry.latestUpdate, entry.language)}
+                  </time>
+                </dd>
+              </div>
+            </div>
+          </>
+        ) : null}
+        {hasRealPublishedDate(entry) ? (
+          <>
+            <Separator />
+            <div className="grid grid-cols-[32px_minmax(0,1fr)] gap-3">
+              <CalendarDaysIcon aria-hidden="true" />
+              <div className="min-w-0">
+                <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                  {copy.publishedLabel}
+                </dt>
+                <dd className="mt-1 text-sm text-foreground">
+                  <time dateTime={entry.publishedAt}>
+                    {formatDate(entry.publishedAt, entry.language)}
+                  </time>
+                </dd>
+              </div>
+            </div>
+          </>
+        ) : null}
+        {entry.doiUrl ? (
+          <>
+            <Separator />
+            <div className="min-w-0">
+              <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                 DOI
               </dt>
-              <dd className="mt-1 text-sm">
+              <dd className="mt-1 min-w-0 text-sm">
                 <a
                   href={entry.doiUrl}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="inline-flex items-center gap-1 text-primary underline-offset-4 hover:underline"
+                  className="inline-flex max-w-full items-center gap-1 text-primary underline-offset-4 hover:underline"
                 >
-                  {getDoiIdentifier(entry.doiUrl)}
+                  <span className="min-w-0 break-all">
+                    {getDoiIdentifier(entry.doiUrl)}
+                  </span>
                   <ArrowUpRightIcon
-                    className="size-4"
+                    className="size-4 shrink-0"
                     aria-hidden="true"
                   />
                 </a>
@@ -174,29 +311,16 @@ function ImpactEntryInfoCard({
         {showLocation ? (
           <>
             <Separator />
-            <div className="grid grid-cols-[32px_1fr] gap-3">
+            <div className="grid grid-cols-[32px_minmax(0,1fr)] gap-3">
               <MapPinIcon aria-hidden="true" />
-              <div>
+              <div className="min-w-0">
                 <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                   {copy.locationLabel}
                 </dt>
-                <dd className="mt-1 text-sm text-foreground">
+                <dd className="mt-1 break-words text-sm text-foreground">
                   {entry.location}
                 </dd>
               </div>
-            </div>
-          </>
-        ) : null}
-        {entry.affiliation ? (
-          <>
-            <Separator />
-            <div>
-              <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                {affiliationLabel}
-              </dt>
-              <dd className="mt-1 text-sm text-foreground">
-                {entry.affiliation}
-              </dd>
             </div>
           </>
         ) : null}
@@ -209,8 +333,12 @@ function ImpactEntryInfoCard({
               </dt>
               <dd className="mt-2 flex flex-wrap gap-2">
                 {entry.tags.map((tag) => (
-                  <Badge key={tag} variant="outline" className="h-auto">
-                    {tag}
+                  <Badge
+                    key={tag}
+                    variant="outline"
+                    className="h-auto max-w-full justify-start whitespace-normal break-words text-left"
+                  >
+                    <span className="min-w-0 break-words">{tag}</span>
                   </Badge>
                 ))}
               </dd>
@@ -522,7 +650,7 @@ function getAffiliationLabel(
     case "Profile":
       return copy.roleLabel;
     case "Project":
-      return copy.researchPartnerLabel;
+      return copy.affiliationsLabel;
     case "Partner":
       return copy.organizationLabel;
     default:
@@ -773,6 +901,10 @@ export async function generateImpactEntryMetadata(
   return {
     title: `${entry.seoTitle ?? entry.title} / Tetiaroa Society`,
     description: entry.seoDescription ?? entry.summary,
+    authors: entry.authors?.map((author) => ({
+      name: author.name,
+      ...(author.orcidUrl ? { url: author.orcidUrl } : {}),
+    })),
     alternates: {
       canonical: getAbsoluteUrl(path),
       ...(languageAlternates ? { languages: languageAlternates } : {}),
@@ -815,7 +947,6 @@ export async function ImpactEntryPageContent({
   const body = normalizeImpactBody(entry.body);
   const heroSupportText = getHeroSupportText(entry, body);
   const heroDateLabel = getHeroDateLabel(entry, copy, locale);
-  const sidebarDate = getSidebarDate(entry, copy, locale);
   const affiliationLabel = getAffiliationLabel(entry, copy);
   const showLocation = entry.entryType !== "Profile";
 
@@ -884,7 +1015,6 @@ export async function ImpactEntryPageContent({
               <ImpactEntryInfoCard
                 entry={entry}
                 copy={copy}
-                sidebarDate={sidebarDate}
                 affiliationLabel={affiliationLabel}
                 showLocation={showLocation}
               />
@@ -920,7 +1050,6 @@ export async function ImpactEntryPageContent({
                 <ImpactEntryInfoCard
                   entry={entry}
                   copy={copy}
-                  sidebarDate={sidebarDate}
                   affiliationLabel={affiliationLabel}
                   showLocation={showLocation}
                 />

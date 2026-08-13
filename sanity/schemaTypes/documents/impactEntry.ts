@@ -3,7 +3,6 @@ import {
   impactCategories,
   impactEntryTypes,
 } from "../../../lib/impact/types";
-import { validateDoiUrl } from "../../../lib/impact/doi";
 import { MailchimpHtmlExportInput } from "../../components/mailchimpHtmlExportInput";
 
 const categoryOptions = impactCategories.map((category) => ({
@@ -18,6 +17,7 @@ export const impactEntry = defineType({
   groups: [
     { name: "english", title: "English", default: true },
     { name: "french", title: "French" },
+    { name: "research", title: "Research" },
     { name: "mailchimp", title: "Mailchimp" },
     { name: "shared", title: "Shared" },
     { name: "legacy", title: "Legacy" },
@@ -99,16 +99,13 @@ export const impactEntry = defineType({
       group: "shared",
     }),
     defineField({
-      name: "doiUrl",
-      title: "DOI URL",
-      type: "url",
-      group: "shared",
+      name: "iplacesSource",
+      title: "iPlaces source",
+      type: "iplacesSource",
+      group: "research",
+      readOnly: true,
       description:
-        "Paste the publication's full DOI link, for example https://doi.org/10.1234/example.",
-      validation: (rule) =>
-        rule
-          .uri({ scheme: ["http", "https"] })
-          .custom((value) => validateDoiUrl(value)),
+        "Saved from the latest iPlaces import. Run Import from iPlaces again to refresh these details.",
     }),
     defineField({
       name: "program",

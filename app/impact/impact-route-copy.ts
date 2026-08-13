@@ -43,8 +43,13 @@ export const impactRouteCopy: Record<
     locationLabel: string;
     affiliationLabel: string;
     roleLabel: string;
-    researchPartnerLabel: string;
+    affiliationsLabel: string;
+    articleTitleLabel: string;
+    iplacesArticleLabel: string;
     organizationLabel: string;
+    authorsLabel: string;
+    orcidProfileLabel: string;
+    dataciteAffiliationLabel: string;
     tagsLabel: string;
     galleryLabel: string;
     teamLabel: string;
@@ -64,8 +69,14 @@ export const impactRouteCopy: Record<
     locationLabel: "Location",
     affiliationLabel: "Affiliation",
     roleLabel: "Role",
-    researchPartnerLabel: "Research Partner",
+    affiliationsLabel: "Affiliations",
+    articleTitleLabel: "Title",
+    iplacesArticleLabel: "View article on iPlaces (opens in a new tab)",
     organizationLabel: "Organization",
+    authorsLabel: "Authors",
+    orcidProfileLabel: "ORCID profile (opens in a new tab)",
+    dataciteAffiliationLabel:
+      "View affiliation in DataCite Commons (opens in a new tab)",
     tagsLabel: "Tags",
     galleryLabel: "Gallery",
     teamLabel: "Team",
@@ -80,12 +91,18 @@ export const impactRouteCopy: Record<
     backLabel: "Retour au fil d'impact",
     teamBackLabel: "Retour à la page Équipe",
     publishedLabel: "Publié",
-    updatedLabel: "Mis à jour",
+    updatedLabel: "Dernière mise à jour",
     locationLabel: "Lieu",
     affiliationLabel: "Affiliation",
     roleLabel: "Rôle",
-    researchPartnerLabel: "Partenaire de recherche",
+    affiliationsLabel: "Affiliations",
+    articleTitleLabel: "Titre",
+    iplacesArticleLabel: "Voir l’article sur iPlaces (s’ouvre dans un nouvel onglet)",
     organizationLabel: "Organisation",
+    authorsLabel: "Auteurs",
+    orcidProfileLabel: "Profil ORCID (s’ouvre dans un nouvel onglet)",
+    dataciteAffiliationLabel:
+      "Voir l’affiliation dans DataCite Commons (s’ouvre dans un nouvel onglet)",
     tagsLabel: "Mots-clés",
     galleryLabel: "Galerie",
     teamLabel: "Équipe",
