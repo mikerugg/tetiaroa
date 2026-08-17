@@ -240,7 +240,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       ctaCopy:
         "Your gift becomes patrols, monitoring, lessons, and the daily care the atoll needs.",
       ctaHref: ENGLISH_DONATE_PATH,
-      ctaLabel: "Fund the work",
+      ctaLabel: "Donate",
       socials: [
         {
           platform: "contact",
@@ -667,7 +667,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       ctaCopy:
         "Votre don devient des patrouilles tortues, du suivi récifal, des leçons pour les élèves et le soin discret dont un atoll a besoin chaque jour.",
       ctaHref: FRENCH_DONATE_PATH,
-      ctaLabel: "Financer le travail",
+      ctaLabel: "Donner",
       socials: [
         {
           platform: "contact",

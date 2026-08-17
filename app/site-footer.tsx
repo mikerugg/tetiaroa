@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRightIcon, MailIcon } from "lucide-react";
+import { MailIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -154,7 +154,7 @@ const defaultCopy: SiteFooterCopy = {
   ctaCopy:
     "Your gift becomes patrols, monitoring, lessons, and the daily care the atoll needs.",
   ctaHref: ENGLISH_DONATE_PATH,
-  ctaLabel: "Fund the work",
+  ctaLabel: "Donate",
   socials: [
     {
       platform: "contact",
@@ -231,11 +231,13 @@ export function SiteFooter({
               <p className={footerEyebrow}>{copy.ctaEyebrow}</p>
               <p className={footerBlockCopy}>{copy.ctaCopy}</p>
             </div>
-            <Button asChild variant="outline" className="w-fit">
-              <a href={copy.ctaHref}>
-                {copy.ctaLabel}
-                <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
-              </a>
+            <Button
+              asChild
+              variant="donate"
+              size="sm"
+              className="h-auto w-fit rounded-full px-[18px] py-2 font-semibold"
+            >
+              <Link href={copy.ctaHref}>{copy.ctaLabel}</Link>
             </Button>
           </div>
         </div>
