@@ -39,3 +39,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 The localized email-list signup routes and required Mailchimp dashboard setup
 are documented in [docs/mailchimp-email-list-setup.md](docs/mailchimp-email-list-setup.md).
+
+## Homepage popup
+
+Turning the homepage popup on or off, switching between the email-list and
+announcement panels, and previewing either one is documented in
+[docs/homepage-popup.md](docs/homepage-popup.md).

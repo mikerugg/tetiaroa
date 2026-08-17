@@ -21,6 +21,7 @@ import { LanternExperience } from "./lantern-experience";
 import { ScanPanel } from "./scan-panel";
 import styles from "./home-experience.module.css";
 import { FrenchVersionPrompt } from "./french-version-prompt";
+import { SitePopup } from "./site-popup/site-popup";
 import { SiteFooter } from "./site-footer";
 import { TopToolbar } from "./top-toolbar";
 import { HomeHighlightCarousel } from "./home-highlight-carousel";
@@ -62,6 +63,7 @@ export default function HomeExperience({
         <DepthScene stops={copy.depthStops} ariaLabel={copy.depthAriaLabel} />
         <TopToolbar copy={copy.toolbar} />
         {copy.locale === "en" ? <FrenchVersionPrompt /> : null}
+        <SitePopup locale={copy.locale} />
 
         <section className={styles.hero} id="hero">
           <SproutBackgroundVideo

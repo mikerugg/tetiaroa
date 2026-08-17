@@ -332,7 +332,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       {
         id: "kids",
         depth: 2,
-        label: "Tamari'i",
+        label: "Education",
         color: "#8fd8cf",
         transmission: "surfacing — warm water ahead",
       },
@@ -759,7 +759,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       {
         id: "kids",
         depth: 2,
-        label: "Tamari'i",
+        label: "Éducation",
         color: "#8fd8cf",
         transmission: "remontée — eau chaude devant",
       },
