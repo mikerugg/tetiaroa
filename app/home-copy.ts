@@ -483,7 +483,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       ],
     },
     kids: {
-      eyebrow: "Education for young stewards",
+      eyebrow: "Educating the next guardians",
       titleLead: "Tamari'i",
       titleEmphasis: "how kids meet the atoll",
       copy:
