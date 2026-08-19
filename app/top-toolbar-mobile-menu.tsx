@@ -44,13 +44,6 @@ export function TopToolbarMobileMenu({
       className: menuImpactLinkClass,
     },
     {
-      href: copy.stationsHref,
-      label: copy.stationsLabel,
-      className: menuOutlineLinkClass,
-    },
-    { href: copy.teamHref, label: copy.teamLabel, className: menuOutlineLinkClass },
-    { href: "/our-logo", label: copy.logoLabel, className: menuOutlineLinkClass },
-    {
       href: copy.storyHref,
       label: copy.storyLabel,
       className: menuOutlineLinkClass,
@@ -60,6 +53,13 @@ export function TopToolbarMobileMenu({
       label: copy.atollLabel,
       className: menuOutlineLinkClass,
     },
+    {
+      href: copy.stationsHref,
+      label: copy.stationsLabel,
+      className: menuOutlineLinkClass,
+    },
+    { href: "/our-logo", label: copy.logoLabel, className: menuOutlineLinkClass },
+    { href: copy.teamHref, label: copy.teamLabel, className: menuOutlineLinkClass },
   ];
   const languageLabel =
     copy.languageLabel === "FR" ? "Français" : copy.languageLabel;

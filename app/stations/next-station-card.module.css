@@ -1,0 +1,46 @@
+/* Hazard tape along the top edge — the "under construction" tell. */
+.stripes {
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--primary) 0 10px,
+    transparent 10px 20px
+  );
+  opacity: 0.5;
+  animation: tape 2.4s linear infinite;
+}
+
+@keyframes tape {
+  to {
+    background-position: 28.3px 0;
+  }
+}
+
+/* Marching ants: a footprint that reads as provisional, not finalised. */
+.plan {
+  stroke-dasharray: 7 6;
+  animation: ants 1.6s linear infinite;
+}
+
+@keyframes ants {
+  to {
+    stroke-dashoffset: -13;
+  }
+}
+
+/* The surveyor's crosshair drifts between candidate sites. */
+.marker {
+  animation: drift 9s ease-in-out infinite;
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(46px, -18px);
+  }
+  66% {
+    transform: translate(-32px, 14px);
+  }
+}

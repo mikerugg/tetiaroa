@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDownIcon, ArrowRightIcon, ConstructionIcon } from "lucide-react";
+import { ArrowDownIcon, ArrowRightIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,15 +12,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { homeCopies } from "@/app/home-copy";
+import { homeCopies, type HomeLocale } from "@/app/home-copy";
 import { SiteFooter } from "@/app/site-footer";
 import { TopToolbar } from "@/app/top-toolbar";
+import { NextStationCard } from "./next-station-card";
 import {
   getStationPath,
   getStationsToolbarCopy,
   stationSlugs,
   stations,
-  stationsIndexCopy as copy,
+  stationsIndexCopies,
 } from "./stations-content";
 
 const paperTheme = {
@@ -45,12 +46,17 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function StationsIndexPage() {
-  const homeCopy = homeCopies.en;
+export function StationsIndexPage({
+  locale = "en",
+}: {
+  locale?: HomeLocale;
+}) {
+  const copy = stationsIndexCopies[locale];
+  const homeCopy = homeCopies[locale];
 
   return (
     <>
-      <TopToolbar copy={getStationsToolbarCopy("en")} />
+      <TopToolbar copy={getStationsToolbarCopy(locale)} />
       <main className="bg-background text-foreground">
         <section
           className="relative isolate min-h-[92svh] overflow-hidden"
@@ -74,17 +80,19 @@ export function StationsIndexPage() {
             aria-hidden="true"
           />
 
-          <div className="relative mx-auto flex min-h-[92svh] max-w-[1600px] flex-col justify-end px-5 pb-14 pt-32 sm:px-8 lg:px-12">
+          <div className="relative mx-auto flex min-h-[92svh] max-w-[1600px] flex-col justify-end px-5 pb-14 pt-24 sm:px-8 lg:px-12">
             <Eyebrow>{copy.eyebrow}</Eyebrow>
-            <h1 className="mt-5 max-w-5xl font-header text-[clamp(4rem,12vw,12rem)] leading-[0.78] tracking-[-0.02em]">
+            <h1 className="mt-5 max-w-2xl font-header text-[clamp(4rem,12vw,12rem)] leading-[0.78] tracking-[-0.02em] [text-shadow:3px_4px_0_var(--lagoon)]">
               {copy.title}
-              <span className="mt-3 block max-w-[19ch] font-display text-[0.34em] font-normal italic leading-[1.15] text-primary">
+              <span className="mt-3 block max-w-[19ch] font-display text-[0.34em] font-normal italic leading-[1.15] text-primary [text-shadow:3px_4px_0_var(--shadow),0_10px_22px_var(--shadow),0_0_24px_var(--primary)] sm:text-[0.36em]">
                 {copy.titleAccent}
               </span>
             </h1>
-            <p className="mt-7 max-w-2xl text-base leading-7 text-foreground/85 sm:text-lg sm:leading-8">
-              {copy.intro}
-            </p>
+            {copy.intro ? (
+              <p className="mt-7 max-w-2xl text-base leading-7 text-foreground/85 sm:text-lg sm:leading-8">
+                {copy.intro}
+              </p>
+            ) : null}
 
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <Button
@@ -103,7 +111,7 @@ export function StationsIndexPage() {
                 size="lg"
                 className="h-auto rounded-full px-5 py-3 font-semibold"
               >
-                <Link href="/donate">{copy.heroDonateCta}</Link>
+                <Link href={homeCopy.toolbar.donateHref}>{copy.heroDonateCta}</Link>
               </Button>
             </div>
 
@@ -125,16 +133,6 @@ export function StationsIndexPage() {
         <div style={paperTheme} className="bg-background text-foreground">
           <section id="stations" className="px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
           <div className="mx-auto flex max-w-[1450px] flex-col gap-12">
-            <div className="flex flex-col gap-4">
-              <Eyebrow>{copy.listEyebrow}</Eyebrow>
-              <h2 className="max-w-3xl font-header text-4xl leading-[0.92] sm:text-6xl">
-                {copy.listTitle}
-              </h2>
-              <p className="max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
-                {copy.listIntro}
-              </p>
-            </div>
-
             <div className="grid gap-6 lg:grid-cols-2">
               {stationSlugs.map((slug) => {
                 const station = stations[slug];
@@ -147,7 +145,7 @@ export function StationsIndexPage() {
                     <div className="relative aspect-video overflow-hidden bg-muted">
                       <Image
                         src={station.cardImage}
-                        alt={station.cardImageAlt}
+                        alt={copy.stationCard.imageAlt}
                         fill
                         sizes="(max-width: 1023px) 92vw, 46vw"
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -161,12 +159,12 @@ export function StationsIndexPage() {
                         {station.name}
                       </CardTitle>
                       <CardDescription className="text-base">
-                        {station.location}
+                        {copy.stationCard.location}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <p className="text-base leading-7 text-muted-foreground">
-                        {station.cardSummary}
+                        {copy.stationCard.summary}
                       </p>
                     </CardContent>
                     <CardFooter>
@@ -188,25 +186,11 @@ export function StationsIndexPage() {
                 );
               })}
 
-              <Card className="flex flex-col justify-center rounded-2xl border-dashed">
-                <CardHeader>
-                  <ConstructionIcon
-                    className="size-6 text-primary"
-                    aria-hidden="true"
-                  />
-                  <Badge variant="outline" className="mt-3 w-fit font-mono">
-                    {copy.futureBadge}
-                  </Badge>
-                  <CardTitle className="mt-3 font-header text-4xl leading-none tracking-normal sm:text-5xl">
-                    {copy.futureTitle}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-base leading-7 text-muted-foreground">
-                    {copy.futureCopy}
-                  </p>
-                </CardContent>
-              </Card>
+              <NextStationCard
+                badge={copy.futureBadge}
+                title={copy.futureTitle}
+                line={copy.futureCopy}
+              />
             </div>
           </div>
           </section>
@@ -220,9 +204,11 @@ export function StationsIndexPage() {
                 <h2 className="max-w-4xl font-header text-5xl leading-[0.9] sm:text-7xl lg:text-8xl">
                   {copy.workTitle}
                 </h2>
-                <p className="max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg">
-                  {copy.workIntro}
-                </p>
+                {copy.workIntro ? (
+                  <p className="max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg">
+                    {copy.workIntro}
+                  </p>
+                ) : null}
               </div>
 
               <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
@@ -259,9 +245,11 @@ export function StationsIndexPage() {
                 <h2 className="max-w-3xl font-header text-5xl leading-[0.9] sm:text-7xl lg:text-8xl">
                   {copy.engageTitle}
                 </h2>
-                <p className="max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg">
-                  {copy.engageIntro}
-                </p>
+                {copy.engageIntro ? (
+                  <p className="max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg">
+                    {copy.engageIntro}
+                  </p>
+                ) : null}
               </div>
 
               <div className="grid gap-5 lg:grid-cols-3">

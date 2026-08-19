@@ -1,5 +1,9 @@
 import { homeCopies, type HomeLocale } from "../home-copy";
-import { ENGLISH_STATIONS_PATH } from "../language-links";
+import {
+  ENGLISH_STATIONS_PATH,
+  FRENCH_DONATE_PATH,
+  FRENCH_STATIONS_PATH,
+} from "../language-links";
 import type { TopToolbarCopy } from "../top-toolbar";
 import {
   BedDoubleIcon,
@@ -507,9 +511,9 @@ export type StationEngageRoute = {
 export const stationsIndexCopy = {
   eyebrow: "Our Stations",
   title: "Science lives here",
-  titleAccent: "because conservation is a residency, not an expedition",
+  titleAccent: "The Bailey Field Station gives our research a home.",
   intro:
-    "Researchers come and go. A season here, a field course there, a doctorate that runs three years. The station is the part that stays — beds, two labs and a boat tied up outside — so the work carries on between them. That continuity is why the rats are nearly gone and why the seabirds are coming back.",
+    "",
   heroImage: siteFile("2024-09/ecostation-from-above.JPG"),
   heroImageAlt:
     "The Bailey Field Station seen from the air, set among the palms on Motu Onetahi",
@@ -523,21 +527,21 @@ export const stationsIndexCopy = {
     { value: "3", label: "water lines: fresh, reef and deep ocean" },
   ] satisfies StationStat[],
 
-  listEyebrow: "The station",
-  listTitle: "The Bailey Field Station, on Motu Onetahi",
-  listIntro:
-    "A resort built a laboratory and gave it away. Pacific Beachcomber constructed the station to LEED Platinum standards while it was building The Brando, then donated it to us. It sleeps 18 across five bedrooms, with a dry lab, a wet lab, boats and bikes, and reefs, brackish lakes and archaeological sites minutes from the door.",
-  futureTitle: "One station, for now",
-  futureCopy:
-    "Tetiaroa is the proof of concept. A single well-run station on one atoll has changed what's possible across thirteen motus, and the same model would work on other atolls and coastlines across the Pacific. Building the next one starts with showing that the first one works. It does.",
-  futureBadge: "In planning",
+  stationCard: {
+    location: "Motu Onetahi, Tetiaroa Atoll",
+    summary:
+      "Tetiaroa Society's first field station: LEED Platinum, beds for eighteen, wet and dry labs, and a whole atoll for a study site.",
+    imageAlt: "The entrance and covered walkway of the Bailey Field Station",
+  },
+  futureTitle: "Station 02",
+  futureCopy: "Still on the drawing board.",
+  futureBadge: "Under construction",
   openBadge: "Open to researchers",
   cardCta: "Go inside the station",
 
-  workEyebrow: "What it enables",
-  workTitle: "Every win here has an address.",
-  workIntro:
-    "None of the work below happened on a two-week visit. It happened because there's a place to sleep, a lab to work in, and a boat tied up outside. Here's what having a station on the atoll actually buys us.",
+  workEyebrow: "Why stations matter",
+  workTitle: "Our Field Stations serve as a base for our conservation efforts.",
+  workIntro:"",
   work: [
     {
       image: siteFile("2024-09/P5030071-small.jpeg"),
@@ -580,27 +584,27 @@ export const stationsIndexCopy = {
   ] satisfies StationWork[],
 
   engageEyebrow: "Get involved",
-  engageTitle: "Keep somebody on the atoll.",
+  engageTitle: "Help keep the lights on.",
   engageIntro:
-    "The station runs on people, and people need funding, fuel and food. Whether you give, follow along, or come and work here yourself, you're helping keep the lights on in a building that a lot of vulnerable species depend on.",
+    "The station runs on people, and people need funding, fuel and food. Whether you give, follow along, or come and work here yourself, you're helping to protect vulnerable species.",
   engage: [
     {
       title: "Give",
-      copy: "Your gift pays for the things that make a permanent presence possible: boat fuel to reach the far motus, bait for the next eradication round, lab supplies, and salaries for the people who show up all year. It's the least glamorous budget in conservation and the most important.",
+      copy: "Your gift pays for the things that make a permanent presence possible: boat fuel, lab supplies, and salaries for the people who show up all year.",
       href: "/donate",
       cta: "Donate now",
       variant: "donate",
     },
     {
       title: "Follow the work",
-      copy: "We publish what's actually happening on the atoll: eradication updates, seabird counts, what the students found, what surprised us. No press releases, no polish. If you want to see what your support builds over months and years, this is the honest version.",
+      copy: "We publish what's actually happening on the atoll: eradication updates, seabird counts, what the students found, what surprised us.",
       href: "/impact",
       cta: "Read the impact feed",
       variant: "default",
     },
     {
       title: "Work here",
-      copy: "The station is open to visiting researchers, with lab space, teaching space, sea access, and a community of people already doing the work. If your research belongs on a Pacific atoll, we'd like to hear from you. There's a full guide to facilities, access and how to apply.",
+      copy: "The station is open to visiting researchers. There's a full guide to facilities, equipment, and how to apply.",
       href: "/stations/bailey-field-station#apply",
       cta: "For researchers",
       variant: "outline",
@@ -611,6 +615,122 @@ export const stationsIndexCopy = {
   metadataDescription:
     "The Bailey Field Station is where scientists live and work on Tetiaroa. Beds, labs and boats on the atoll, all year — and the conservation results that only a permanent presence makes possible.",
 };
+
+export const stationsIndexCopyFr: typeof stationsIndexCopy = {
+  eyebrow: "Nos stations",
+  title: "La science vit ici",
+  titleAccent: "La station Bailey donne un foyer à nos recherches.",
+  intro: "",
+  heroImage: siteFile("2024-09/ecostation-from-above.JPG"),
+  heroImageAlt:
+    "La station Bailey vue du ciel, posée parmi les cocotiers du motu Onetahi",
+  heroPrimaryCta: "Voir le travail",
+  heroDonateCta: "Soutenir la station",
+
+  stats: [
+    { value: "18", label: "lits qui font vivre le travail toute l'année" },
+    {
+      value: "40 m²",
+      label: "de laboratoire : les échantillons ne quittent pas l'atoll",
+    },
+    { value: "13", label: "motu à une matinée de bateau" },
+    { value: "3", label: "circuits d'eau : douce, lagon et océan profond" },
+  ],
+
+  stationCard: {
+    location: "Motu Onetahi, atoll de Tetiaroa",
+    summary:
+      "La première station de terrain de Tetiaroa Society : LEED Platinum, dix-huit couchages, laboratoires sec et humide, et un atoll entier comme terrain d'étude.",
+    imageAlt: "L'entrée et la coursive couverte de la station Bailey",
+  },
+  futureTitle: "Station 02",
+  futureCopy: "Encore sur la planche à dessin.",
+  futureBadge: "En construction",
+  openBadge: "Ouverte aux chercheurs",
+  cardCta: "Entrer dans la station",
+
+  workEyebrow: "Pourquoi les stations comptent",
+  workTitle:
+    "Nos stations de terrain servent de base à nos actions de conservation.",
+  workIntro: "",
+  work: [
+    {
+      image: siteFile("2024-09/P5030071-small.jpeg"),
+      alt: "Un fou brun veillant sur deux œufs dans un nid à même le sol",
+      title: "Les oiseaux marins reviennent sur les motu traités",
+      copy: "Les oiseaux qui nichent au sol sont le vrai baromètre, et leur nombre augmente sur les motu traités. On ne le sait que parce que quelqu'un parcourt ces plages saison après saison et compte les mêmes nids aux mêmes endroits. Ce relevé tient de l'habitude, et c'est la station qui rend cette habitude possible.",
+    },
+    {
+      image: siteFile("2024-09/research-in-the-forest.JPG"),
+      alt: "Les bâtiments de la station parmi la forêt littorale de l'île",
+      title: "Éradiquer les rats prend des années, alors nous restons des années",
+      copy: "Le Tetiaroa Atoll Restoration Project a débarrassé la majeure partie de l'atoll de ses rats. Tiaraunu, Tauvini et Ahuroa montrent encore des signes de présence, et une nouvelle campagne d'appâtage est prévue. Une éradication se gagne dans le suivi : les contrôles, le réappâtage, le mardi sans gloire de février. Avec des lits et des bateaux sur place, nous pouvons revenir jusqu'au dernier motu.",
+    },
+    {
+      image: siteFile("2024-07/TCA%20baiting-sm.png"),
+      alt: "Une équipe transportant des seaux d'appâts en forêt contre la fourmi folle jaune",
+      title: "Nous avons pris les fourmis folles de vitesse",
+      copy: "La fourmi folle jaune figure parmi les cent pires espèces envahissantes selon l'UICN. Elle projette un acide formique qui aveugle les poussins d'oiseaux marins au nid. Nous avons traité les derniers foyers connus jusqu'en mai 2025 et nous surveillons désormais pour confirmer leur disparition. Repérer un foyer aussi tôt suppose des yeux sur le terrain tous les mois.",
+    },
+    {
+      image: siteFile("2024-09/aquarium.jpg"),
+      alt: "Une jeune tortue verte nageant parmi les coraux dans un bac du laboratoire",
+      title: "Les tortues sont étudiées à quelques pas du récif",
+      copy: "Le laboratoire humide extérieur est alimenté par trois circuits — eau douce, eau de surface et eau océanique profonde — qui nourrissent les bacs et les tables à marée à quelques pas du lagon. Le suivi des tortues vertes se fait avec Te Mana o te Moana, et il se fait ici, sur l'atoll. Un animal peut être soigné puis relâché dans l'eau d'où il vient.",
+    },
+    {
+      image: siteFile(
+        "2024-07/2-%20Male%20mosquito%20release%202%20-%20Photo%20credit%20Denis%20PINSON%20Archipel%20Production.jpg",
+      ),
+      alt: "Trois personnes relâchant des moustiques mâles stériles en forêt",
+      title: "Un programme moustiques qui a besoin d'un partenaire sur place",
+      copy: "L'Institut Louis Malardé pilote AeLIMIN+ pour le compte de The Brando, en relâchant des mâles stériles pour réduire les Aedes responsables de la dengue et de la filariose, principalement sur Onetahi. Nous sommes partenaires de ce travail. Un tel programme exige des gens qui vivent ici, connaissent le terrain et sont présents lâcher après lâcher. C'est exactement le rôle d'une station.",
+    },
+    {
+      image: siteFile("2021-09/IMG_2304_0.jpg"),
+      alt: "Un groupe d'élèves et d'enseignants polynésiens tenant des paniers tressés",
+      title: "Le laboratoire pédagogique, là où commence la relève",
+      copy: "Le laboratoire sec sert aussi de salle de classe, et les stages universitaires comme les groupes scolaires la remplissent. Les élèves rencontrent des enseignants polynésiens, manipulent de vrais spécimens et posent le pied sur le récif qu'ils étudiaient sur le papier. Les marae de Tetiaroa sont protégés par la loi polynésienne et traités avec le respect qui leur est dû. Ici, science et culture s'enseignent ensemble, parce que sur cet atoll elles ne font qu'un.",
+    },
+  ],
+
+  engageEyebrow: "S'impliquer",
+  engageTitle: "Aidez-nous à garder la lumière allumée.",
+  engageIntro:
+    "La station repose sur des personnes, et ces personnes ont besoin de financement, de carburant et de repas. Que vous donniez, que vous suiviez le travail ou que vous veniez y travailler, vous contribuez à protéger des espèces fragiles.",
+  engage: [
+    {
+      title: "Donner",
+      copy: "Votre don paie ce qui rend une présence permanente possible : le carburant des bateaux, le matériel de laboratoire et les salaires de celles et ceux qui sont là toute l'année.",
+      href: FRENCH_DONATE_PATH,
+      cta: "Faire un don",
+      variant: "donate",
+    },
+    {
+      title: "Suivre le travail",
+      copy: "Nous publions ce qui se passe réellement sur l'atoll : avancement des éradications, comptages d'oiseaux, découvertes des étudiants, surprises du terrain.",
+      href: "/fr/impact",
+      cta: "Lire le fil d'impact",
+      variant: "default",
+    },
+    {
+      title: "Venir y travailler",
+      copy: "La station accueille les chercheurs en visite. Un guide complet détaille les installations, l'équipement et la candidature.",
+      href: "/stations/bailey-field-station#apply",
+      cta: "Pour les chercheurs",
+      variant: "outline",
+    },
+  ],
+
+  metadataTitle: "Nos stations | Tetiaroa Society",
+  metadataDescription:
+    "La station Bailey est le lieu où les scientifiques vivent et travaillent à Tetiaroa. Des lits, des laboratoires et des bateaux sur l'atoll, toute l'année — et les résultats de conservation qu'une présence permanente rend possibles.",
+};
+
+export const stationsIndexCopies = {
+  en: stationsIndexCopy,
+  fr: stationsIndexCopyFr,
+} satisfies Record<HomeLocale, typeof stationsIndexCopy>;
 
 export function isStationSlug(value: string): value is StationSlug {
   return (stationSlugs as readonly string[]).includes(value);
@@ -627,6 +747,14 @@ export function getStationUrl(slug: StationSlug) {
 export function getStationsToolbarCopy(locale: HomeLocale): TopToolbarCopy {
   return {
     ...homeCopies[locale].toolbar,
-    stationsHref: ENGLISH_STATIONS_PATH,
+    stationsHref:
+      locale === "fr" ? FRENCH_STATIONS_PATH : ENGLISH_STATIONS_PATH,
+    languageHref:
+      locale === "fr" ? ENGLISH_STATIONS_PATH : FRENCH_STATIONS_PATH,
+    languageLabel: locale === "fr" ? "EN" : "FR",
+    languageHrefLang: locale === "fr" ? "en" : "fr",
+    languageLang: locale === "fr" ? "en" : "fr",
+    languageAriaLabel:
+      locale === "fr" ? "Read in English" : "Lire en français",
   };
 }

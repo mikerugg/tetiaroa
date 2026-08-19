@@ -138,45 +138,6 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
           asChild
           variant="outline"
           size="sm"
-          className={cn(toolbarOutlineButtonClass, "max-[860px]:hidden")}
-        >
-          <Link
-            href={copy.stationsHref}
-            aria-current={activeHref === copy.stationsHref ? "page" : undefined}
-          >
-            {copy.stationsLabel}
-          </Link>
-        </Button>
-        <Button
-          asChild
-          variant="outline"
-          size="sm"
-          className={cn(toolbarOutlineButtonClass, "max-[640px]:hidden")}
-        >
-          <Link
-            href={copy.teamHref}
-            aria-current={activeHref === copy.teamHref ? "page" : undefined}
-          >
-            {copy.teamLabel}
-          </Link>
-        </Button>
-        <Button
-          asChild
-          variant="outline"
-          size="sm"
-          className={cn(toolbarOutlineButtonClass, "max-[1200px]:hidden")}
-        >
-          <Link
-            href="/our-logo"
-            aria-current={activeHref === "/our-logo" ? "page" : undefined}
-          >
-            {copy.logoLabel}
-          </Link>
-        </Button>
-        <Button
-          asChild
-          variant="outline"
-          size="sm"
           className={cn(toolbarOutlineButtonClass, "max-[1100px]:hidden")}
         >
           <Link
@@ -197,6 +158,45 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
             aria-current={activeHref === copy.atollHref ? "page" : undefined}
           >
             {copy.atollLabel}
+          </Link>
+        </Button>
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className={cn(toolbarOutlineButtonClass, "max-[860px]:hidden")}
+        >
+          <Link
+            href={copy.stationsHref}
+            aria-current={activeHref === copy.stationsHref ? "page" : undefined}
+          >
+            {copy.stationsLabel}
+          </Link>
+        </Button>
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className={cn(toolbarOutlineButtonClass, "max-[1200px]:hidden")}
+        >
+          <Link
+            href="/our-logo"
+            aria-current={activeHref === "/our-logo" ? "page" : undefined}
+          >
+            {copy.logoLabel}
+          </Link>
+        </Button>
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className={cn(toolbarOutlineButtonClass, "max-[640px]:hidden")}
+        >
+          <Link
+            href={copy.teamHref}
+            aria-current={activeHref === copy.teamHref ? "page" : undefined}
+          >
+            {copy.teamLabel}
           </Link>
         </Button>
         <Button

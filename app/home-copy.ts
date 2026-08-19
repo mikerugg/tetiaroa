@@ -17,6 +17,7 @@ import {
   FRENCH_EMAIL_LIST_PATH,
   FRENCH_GEOLOGY_PATH,
   FRENCH_IMPACT_PATH,
+  FRENCH_STATIONS_PATH,
   FRENCH_HOME_PATH,
   FRENCH_TEAM_PATH,
 } from "./language-links";
@@ -621,7 +622,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       storyLabel: "Notre histoire",
       atollHref: FRENCH_GEOLOGY_PATH,
       atollLabel: "Notre atoll",
-      stationsHref: ENGLISH_STATIONS_PATH,
+      stationsHref: FRENCH_STATIONS_PATH,
       stationsLabel: "Nos stations",
       languageHref: ENGLISH_HOME_PATH,
       languageLabel: "EN",
@@ -659,7 +660,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           title: "Relier",
           links: [
             { href: "/turtle-tales", label: "Turtle Tales" },
-            { href: ENGLISH_STATIONS_PATH, label: "Nos stations" },
+            { href: FRENCH_STATIONS_PATH, label: "Nos stations" },
             { href: FRENCH_EMAIL_LIST_PATH, label: "Liste de diffusion" },
             {
               href: FRENCH_CONTACT_PATH,

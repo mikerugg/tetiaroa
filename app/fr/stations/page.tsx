@@ -3,19 +3,19 @@ import {
   ENGLISH_STATIONS_URL,
   FRENCH_STATIONS_URL,
 } from "@/app/language-links";
-import { StationsIndexPage } from "./stations-index-page";
+import { StationsIndexPage } from "@/app/stations/stations-index-page";
 import {
   getStationUrl,
   stationSlugs,
   stations,
-  stationsIndexCopy,
-} from "./stations-content";
+  stationsIndexCopyFr as copy,
+} from "@/app/stations/stations-content";
 
 export const metadata: Metadata = {
-  title: stationsIndexCopy.metadataTitle,
-  description: stationsIndexCopy.metadataDescription,
+  title: copy.metadataTitle,
+  description: copy.metadataDescription,
   alternates: {
-    canonical: ENGLISH_STATIONS_URL,
+    canonical: FRENCH_STATIONS_URL,
     languages: {
       en: ENGLISH_STATIONS_URL,
       fr: FRENCH_STATIONS_URL,
@@ -23,10 +23,10 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    title: stationsIndexCopy.metadataTitle,
-    description: stationsIndexCopy.metadataDescription,
-    url: ENGLISH_STATIONS_URL,
-    locale: "en_US",
+    title: copy.metadataTitle,
+    description: copy.metadataDescription,
+    url: FRENCH_STATIONS_URL,
+    locale: "fr_FR",
     images: stationSlugs.map((slug) => ({
       url: stations[slug].heroImage,
       alt: stations[slug].heroImageAlt,
@@ -37,10 +37,10 @@ export const metadata: Metadata = {
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: stationsIndexCopy.metadataTitle,
-  description: stationsIndexCopy.metadataDescription,
-  url: ENGLISH_STATIONS_URL,
-  inLanguage: "en",
+  name: copy.metadataTitle,
+  description: copy.metadataDescription,
+  url: FRENCH_STATIONS_URL,
+  inLanguage: "fr",
   publisher: {
     "@type": "Organization",
     name: "Tetiaroa Society",
@@ -64,7 +64,7 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <StationsIndexPage />
+      <StationsIndexPage locale="fr" />
     </>
   );
 }

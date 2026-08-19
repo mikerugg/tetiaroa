@@ -17,6 +17,7 @@ import {
   FRENCH_HOME_PATH,
   FRENCH_IMPACT_PATH,
   FRENCH_PRIVACY_PATH,
+  FRENCH_STATIONS_PATH,
   FRENCH_TEAM_PATH,
 } from "./language-links";
 import { getImpactSitemapEntries } from "@/lib/sanity/impact";
@@ -57,6 +58,7 @@ const staticRoutes = [
   { path: FRENCH_GEOLOGY_PATH, priority: 0.7 },
   { path: ENGLISH_OUR_STORY_PATH, priority: 0.8 },
   { path: ENGLISH_STATIONS_PATH, priority: 0.8 },
+  { path: FRENCH_STATIONS_PATH, priority: 0.7 },
   ...stationRoutes,
   { path: "/our-logo", priority: 0.6 },
   { path: "/field-station", priority: 0.6 },

@@ -19,6 +19,7 @@
   --coral: oklch(0.6186 0.1937 33.32);
   --background: var(--ink);
   --foreground: var(--paper);
+  --shadow: oklch(0 0 0);
   --card: oklch(0.9585 0.0098 87.47 / 4.5%);
   --card-foreground: var(--paper);
   --popover: var(--ink-2);
