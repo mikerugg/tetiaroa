@@ -484,6 +484,12 @@ function getDocumentHtmlPackage(
 export function HtmlPackageInput(props: ObjectInputProps<HtmlPackageValue>) {
   const { onChange, readOnly, value } = props;
   const htmlPackageLocale = getHtmlPackageLocale(props.path);
+  const publishedHtmlLabel =
+    htmlPackageLocale === "english"
+      ? "ENGLISH Published HTML"
+      : htmlPackageLocale === "french"
+        ? "FRENCH Published HTML"
+        : "Published HTML";
   const client = useClient({ apiVersion: sanityApiVersion });
   const documentId = useFormValue(["_id"]);
   const publishedDocumentId =
@@ -912,7 +918,7 @@ export function HtmlPackageInput(props: ObjectInputProps<HtmlPackageValue>) {
           <Stack space={3}>
             <Stack space={2}>
               <Text size={1} weight="semibold">
-                Published HTML
+                {publishedHtmlLabel}
               </Text>
               <Text muted size={1}>
                 Copy the deployed HTML for Mailchimp. It includes the hosted image URLs.

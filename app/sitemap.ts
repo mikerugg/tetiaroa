@@ -8,6 +8,7 @@ import {
   ENGLISH_IMPACT_PATH,
   ENGLISH_OUR_STORY_PATH,
   ENGLISH_PRIVACY_PATH,
+  ENGLISH_STATIONS_PATH,
   ENGLISH_TEAM_PATH,
   FRENCH_CONTACT_PATH,
   FRENCH_DONATE_PATH,
@@ -20,6 +21,7 @@ import {
 } from "./language-links";
 import { getImpactSitemapEntries } from "@/lib/sanity/impact";
 import { getPillarPath, pillarSlugs } from "./pillars/pillar-content";
+import { getStationPath, stationSlugs } from "./stations/stations-content";
 
 export const revalidate = 3600;
 
@@ -30,6 +32,11 @@ const pillarRoutes = pillarSlugs.flatMap((slug) => [
   { path: getPillarPath("en", slug), priority: 0.8 },
   { path: getPillarPath("fr", slug), priority: 0.7 },
 ]);
+
+const stationRoutes = stationSlugs.map((slug) => ({
+  path: getStationPath(slug),
+  priority: 0.8,
+}));
 
 const staticRoutes = [
   { path: ENGLISH_HOME_PATH, priority: 1 },
@@ -49,6 +56,8 @@ const staticRoutes = [
   { path: ENGLISH_GEOLOGY_PATH, priority: 0.8 },
   { path: FRENCH_GEOLOGY_PATH, priority: 0.7 },
   { path: ENGLISH_OUR_STORY_PATH, priority: 0.8 },
+  { path: ENGLISH_STATIONS_PATH, priority: 0.8 },
+  ...stationRoutes,
   { path: "/our-logo", priority: 0.6 },
   { path: "/field-station", priority: 0.6 },
   { path: "/turtle-tales", priority: 0.6 },

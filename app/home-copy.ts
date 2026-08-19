@@ -10,6 +10,7 @@ import {
   ENGLISH_GEOLOGY_PATH,
   ENGLISH_IMPACT_PATH,
   ENGLISH_HOME_PATH,
+  ENGLISH_STATIONS_PATH,
   ENGLISH_TEAM_PATH,
   FRENCH_CONTACT_PATH,
   FRENCH_DONATE_PATH,
@@ -194,6 +195,8 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       storyLabel: "Our Story",
       atollHref: ENGLISH_GEOLOGY_PATH,
       atollLabel: "Our Atoll",
+      stationsHref: ENGLISH_STATIONS_PATH,
+      stationsLabel: "Our Stations",
       languageHref: FRENCH_HOME_PATH,
       languageLabel: "FR",
       languageHrefLang: "fr",
@@ -227,7 +230,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           title: "Connect",
           links: [
             { href: "/turtle-tales", label: "Turtle Tales" },
-            { href: "/field-station", label: "Field Station" },
+            { href: ENGLISH_STATIONS_PATH, label: "Our Stations" },
             { href: ENGLISH_EMAIL_LIST_PATH, label: "Email list" },
             {
               href: ENGLISH_CONTACT_PATH,
@@ -618,6 +621,8 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       storyLabel: "Notre histoire",
       atollHref: FRENCH_GEOLOGY_PATH,
       atollLabel: "Notre atoll",
+      stationsHref: ENGLISH_STATIONS_PATH,
+      stationsLabel: "Nos stations",
       languageHref: ENGLISH_HOME_PATH,
       languageLabel: "EN",
       languageHrefLang: "en",
@@ -654,7 +659,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           title: "Relier",
           links: [
             { href: "/turtle-tales", label: "Turtle Tales" },
-            { href: "/field-station", label: "Field Station" },
+            { href: ENGLISH_STATIONS_PATH, label: "Nos stations" },
             { href: FRENCH_EMAIL_LIST_PATH, label: "Liste de diffusion" },
             {
               href: FRENCH_CONTACT_PATH,

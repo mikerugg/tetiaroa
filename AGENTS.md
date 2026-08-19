@@ -54,3 +54,13 @@ Icons should come from the configured project icon library, currently `lucide-re
 <!-- BEGIN:text-writing-rules -->
 Anytime headers or copy is written, the initial AI coding agent should not be trusted to write contextual relevant, human sounding copy. Upon completion of the sessions coding efforts, when appropriate, create a copywriting expert agent to rewrite that session's copy. The writing should be compelling, should have a viewpoint, should tell a story, and should never be *safe*. I don't want generic AI corporate slop. I want writing that connects with people on a human level, and sounds like an actual human wrote it.
 <!-- END:text-writing-rules -->
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

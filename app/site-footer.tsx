@@ -142,7 +142,7 @@ const defaultCopy: SiteFooterCopy = {
       title: "Connect",
       links: [
         { href: "/turtle-tales", label: "Turtle Tales" },
-        { href: "/field-station", label: "Field Station" },
+        { href: "/stations", label: "Our Stations" },
         {
           href: ENGLISH_CONTACT_PATH,
           label: "Contact us",

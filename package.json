@@ -6,7 +6,7 @@
     "dev": "next dev --port 3298",
     "build": "next build",
     "start": "next start",
-    "test": "node --experimental-strip-types --test app/contact/*.test.mjs app/email-list/*.test.mjs app/geology/*.test.mjs app/site-popup/*.test.mjs lib/impact/*.test.mjs sanity/components/*.test.mjs sanity/schemaTypes/objects/*.test.mjs scripts/*.test.mjs",
+    "test": "node --experimental-strip-types --test app/contact/*.test.mjs app/stations/apply/*.test.mjs app/email-list/*.test.mjs app/geology/*.test.mjs app/site-popup/*.test.mjs lib/impact/*.test.mjs sanity/components/*.test.mjs sanity/schemaTypes/objects/*.test.mjs scripts/*.test.mjs",
     "lint": "eslint",
     "migrate:drupal-impact": "node scripts/migrate-drupal-impact.mjs",
     "migrate:impact-localization": "node scripts/migrate-impact-localization.mjs"

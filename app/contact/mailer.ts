@@ -19,7 +19,7 @@ function getRequiredEnv(name: string) {
   return value;
 }
 
-function escapeHtml(value: string) {
+export function escapeHtml(value: string) {
   return value
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -110,7 +110,22 @@ async function getGraphAccessToken() {
   return token.access_token;
 }
 
-export async function sendContactMessage(values: ContactFieldValues) {
+export type GraphMailMessage = {
+  subject: string;
+  html: string;
+  replyTo?: { address: string; name: string };
+};
+
+/**
+ * Shared Graph send path. The contact form and the field station application
+ * form both post through here so the token cache and recipient list stay in
+ * one place.
+ */
+export async function sendGraphMail({
+  subject,
+  html,
+  replyTo,
+}: GraphMailMessage) {
   const sender = getRequiredEnv("MICROSOFT_GRAPH_SENDER");
   const accessToken = await getGraphAccessToken();
   const response = await fetch(
@@ -123,13 +138,21 @@ export async function sendContactMessage(values: ContactFieldValues) {
       },
       body: JSON.stringify({
         message: {
-          subject: `Tetiaroa Society Contact Form: ${values.subject}`,
+          subject,
           body: {
             contentType: "HTML",
-            content: buildHtmlMessage(values),
+            content: html,
           },
           toRecipients: getRecipients(),
-          replyTo: [{ emailAddress: { address: values.email, name: values.name } }],
+          ...(replyTo
+            ? {
+                replyTo: [
+                  {
+                    emailAddress: { address: replyTo.address, name: replyTo.name },
+                  },
+                ],
+              }
+            : {}),
         },
         saveToSentItems: true,
       }),
@@ -140,4 +163,12 @@ export async function sendContactMessage(values: ContactFieldValues) {
   if (!response.ok) {
     throw new Error(`Microsoft Graph sendMail failed (${response.status}).`);
   }
+}
+
+export async function sendContactMessage(values: ContactFieldValues) {
+  await sendGraphMail({
+    subject: `Tetiaroa Society Contact Form: ${values.subject}`,
+    html: buildHtmlMessage(values),
+    replyTo: { address: values.email, name: values.name },
+  });
 }

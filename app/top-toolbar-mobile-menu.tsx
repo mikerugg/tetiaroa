@@ -20,19 +20,21 @@ const menuLinkClass =
 
 const menuOutlineLinkClass = cn(
   menuLinkClass,
-  "rounded-md border-glow/30 border-l-glow bg-background/20 text-ink-light shadow-[inset_3px_0_0_rgb(143_201_201_/_0.45)] hover:-translate-y-px hover:border-glow/60 hover:bg-glow/10 hover:text-ink-light hover:shadow-[0_6px_18px_rgb(0_0_0_/_0.22)]",
+  "rounded-md border-glow/30 border-l-glow bg-background/20 text-ink-light shadow-[inset_3px_0_0_rgb(143_201_201_/_0.45)] hover:-translate-y-px hover:border-glow/60 hover:bg-glow/10 hover:text-ink-light hover:shadow-[0_6px_18px_rgb(0_0_0_/_0.22)] aria-[current=page]:-translate-y-px aria-[current=page]:border-glow/60 aria-[current=page]:bg-glow/10 aria-[current=page]:text-ink-light aria-[current=page]:shadow-[0_6px_18px_rgb(0_0_0_/_0.22)]",
 );
 
 const menuImpactLinkClass = cn(
   menuLinkClass,
-  "rounded-md border-toolbar-impact/70 bg-toolbar-impact/20 text-ink-light shadow-[inset_3px_0_0_rgb(96_132_132_/_0.9),0_0_18px_rgb(96_132_132_/_0.18)] hover:-translate-y-px hover:border-toolbar-impact hover:bg-toolbar-impact/30 hover:text-ink-light hover:shadow-[inset_3px_0_0_rgb(96_132_132_/_1),0_6px_18px_rgb(0_0_0_/_0.24)]",
+  "rounded-md border-toolbar-impact/70 bg-toolbar-impact/20 text-ink-light shadow-[inset_3px_0_0_rgb(96_132_132_/_0.9),0_0_18px_rgb(96_132_132_/_0.18)] hover:-translate-y-px hover:border-toolbar-impact hover:bg-toolbar-impact/30 hover:text-ink-light hover:shadow-[inset_3px_0_0_rgb(96_132_132_/_1),0_6px_18px_rgb(0_0_0_/_0.24)] aria-[current=page]:-translate-y-px aria-[current=page]:border-toolbar-impact aria-[current=page]:bg-toolbar-impact/30 aria-[current=page]:text-ink-light aria-[current=page]:shadow-[inset_3px_0_0_rgb(96_132_132_/_1),0_6px_18px_rgb(0_0_0_/_0.24)]",
 );
 
 export function TopToolbarMobileMenu({
   copy,
+  activeHref,
   triggerClassName,
 }: {
   copy: TopToolbarCopy;
+  activeHref?: string;
   triggerClassName?: string;
 }) {
   const menuItems = [
@@ -40,6 +42,11 @@ export function TopToolbarMobileMenu({
       href: copy.impactHref,
       label: copy.impactLabel,
       className: menuImpactLinkClass,
+    },
+    {
+      href: copy.stationsHref,
+      label: copy.stationsLabel,
+      className: menuOutlineLinkClass,
     },
     { href: copy.teamHref, label: copy.teamLabel, className: menuOutlineLinkClass },
     { href: "/our-logo", label: copy.logoLabel, className: menuOutlineLinkClass },
@@ -85,7 +92,11 @@ export function TopToolbarMobileMenu({
         >
           {menuItems.map((item) => (
             <SheetClose key={item.href} asChild>
-              <Link href={item.href} className={item.className}>
+              <Link
+                href={item.href}
+                className={item.className}
+                aria-current={activeHref === item.href ? "page" : undefined}
+              >
                 {item.label}
               </Link>
             </SheetClose>
@@ -108,7 +119,10 @@ export function TopToolbarMobileMenu({
           <SheetClose asChild>
             <Link
               href={copy.donateHref}
-              className="donate-lava flex min-h-12 items-center rounded-md px-4 py-3 font-semibold text-ink-light shadow-toolbar-donate transition-[filter,box-shadow,transform] duration-300 hover:-translate-y-px hover:text-ink-light hover:brightness-110 hover:shadow-[0_6px_18px_rgb(0_0_0_/_0.24)] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+              aria-current={
+                activeHref === copy.donateHref ? "page" : undefined
+              }
+              className="donate-lava flex min-h-12 items-center rounded-md px-4 py-3 font-semibold text-ink-light shadow-toolbar-donate transition-[filter,box-shadow,transform] duration-300 hover:-translate-y-px hover:text-ink-light hover:brightness-110 hover:shadow-[0_6px_18px_rgb(0_0_0_/_0.24)] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 aria-[current=page]:-translate-y-px aria-[current=page]:brightness-110 aria-[current=page]:shadow-[0_6px_18px_rgb(0_0_0_/_0.24)]"
             >
               {copy.donateLabel}
             </Link>
