@@ -122,10 +122,10 @@ export function StationPage({
             </Button>
 
             <Eyebrow>{station.eyebrow}</Eyebrow>
-            <h1 className="mt-5 max-w-5xl font-header text-[clamp(3.5rem,10vw,9rem)] leading-[0.82] tracking-[-0.02em] text-foreground">
+            <h1 className="mt-5 max-w-5xl font-header text-[clamp(3.5rem,10vw,9rem)] leading-[0.82] tracking-[-0.02em] text-foreground [text-shadow:3px_4px_0_var(--lagoon)]">
               {station.name}
             </h1>
-            <p className="mt-6 max-w-3xl font-display text-2xl leading-tight text-primary sm:text-3xl">
+            <p className="mt-6 max-w-3xl font-display text-2xl leading-tight text-primary [text-shadow:3px_4px_0_var(--shadow),0_10px_22px_var(--shadow),0_0_24px_var(--primary)] sm:text-3xl">
               {station.tagline}
             </p>
             {station.summary ? (
