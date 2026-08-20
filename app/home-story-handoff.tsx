@@ -30,7 +30,7 @@ export function HomeStoryHandoff({ copy }: HomeStoryHandoffProps) {
         aria-hidden="true"
       >
         <Image
-          src="/story/history-living-archive.webp"
+          src="/story/history-living-updated.png"
           alt=""
           fill
           sizes="100vw"

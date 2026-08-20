@@ -375,7 +375,7 @@ export const stations: Record<StationSlug, StationContent> = {
     },
 
     applyEyebrow: "Visiting researchers",
-    applyTitle: "Apply, and reserve your dates.",
+    applyTitle: "Apply and reserve your dates.",
     applyIntro:
       "Any researcher starting a scientific project — or bringing a university class — works through the steps below. Applications are managed in RAMS, the system Tetiaroa Society shares with the University of California Natural Reserve System.",
     applyLeadTime:

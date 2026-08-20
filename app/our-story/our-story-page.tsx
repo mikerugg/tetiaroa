@@ -216,7 +216,7 @@ export function OurStoryPage() {
               <div className="mt-20 grid overflow-hidden rounded-[2rem] border border-border lg:grid-cols-[0.9fr_1.1fr]">
                 <div className="relative min-h-[28rem] bg-muted lg:min-h-[42rem]">
                   <Image
-                    src="/story/history-living-archive.webp"
+                    src="/story/history-living-updated.png"
                     alt="Illustrative composition connecting Marlon Brando's vision with present-day research and education on Tetiaroa"
                     fill
                     sizes="(max-width: 1023px) 100vw, 45vw"

@@ -57,7 +57,7 @@ const concepts: StoryConcept[] = [
     slug: "work",
     variantClass: "work",
     navLabel: "Living Mission",
-    image: "/story/history-living-archive.webp",
+    image: "/story/history-living-updated.png",
     alt: "Archival-to-present collage showing Marlon Brando, Tetiaroa, researchers, children, and a turtle.",
     title: "The work continues",
     intro:
