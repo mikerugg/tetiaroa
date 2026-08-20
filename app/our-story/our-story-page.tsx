@@ -141,11 +141,10 @@ export function OurStoryPage({ locale }: { locale: OurStoryLocale }) {
                     {copy.idea.title}
                   </h2>
                 </div>
-                <div className="flex flex-col gap-5 text-base leading-8 text-muted-foreground sm:text-lg">
+                <div className="flex flex-col gap-5">
                   <p className="font-display text-3xl leading-tight text-primary sm:text-4xl">
                     {copy.idea.lead}
                   </p>
-                  <p>{copy.idea.body}</p>
                 </div>
               </div>
 

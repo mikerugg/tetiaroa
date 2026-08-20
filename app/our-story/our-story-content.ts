@@ -31,9 +31,7 @@ const englishCopy = {
     eyebrow: "1961 → 1967",
     title: "An encounter became a calling.",
     lead:
-      "Brando first encountered Tetiaroa while filming Mutiny on the Bounty in 1961. Six years later, he acquired the atoll.",
-    body:
-      "What he later put into words was larger than a private retreat: a place where tourism would coexist with marine protection, and where scientists could study a living atoll. The idea mattered. But an idea, even a generous one, does not protect an island by itself.",
+      "Brando first encountered Tetiaroa while filming Mutiny on the Bounty in 1961. Six years later, he acquired the place he sought to protect.",
     imageAlt:
       "Marlon Brando in costume as Fletcher Christian aboard the Bounty during the filming of Mutiny on the Bounty",
     imageCaption: "Marlon Brando as Fletcher Christian · Mutiny on the Bounty, 1962",
@@ -221,9 +219,7 @@ const frenchCopy: OurStoryCopy = {
     eyebrow: "1961 → 1967",
     title: "Une rencontre devenue vocation.",
     lead:
-      "Brando découvre Teti'aroa en 1961, pendant le tournage des Révoltés du Bounty. Six ans plus tard, il acquiert l'atoll.",
-    body:
-      "Ce qu'il a formulé plus tard dépassait la retraite privée : un lieu où le tourisme coexisterait avec la protection marine, et où les scientifiques pourraient étudier un atoll vivant. L'idée comptait. Mais une idée, même généreuse, ne protège pas une île à elle seule.",
+      "Brando découvre Teti'aroa en 1961, pendant le tournage des Révoltés du Bounty. Six ans plus tard, il acquiert le lieu qu'il cherchait à protéger.",
     imageAlt:
       "Marlon Brando en costume de Fletcher Christian à bord du Bounty pendant le tournage des Révoltés du Bounty",
     imageCaption:
