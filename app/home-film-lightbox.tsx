@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 
-const FILM_URL =
-  "https://videos.sproutvideo.com/embed/729adab61f1fefc9f8/f4bfbfcb9a151af2?autoPlay=true"
+import { homeVideoSources } from "./home-video-sources"
+
+const FILM_URL = `${homeVideoSources.societyFilm.embedUrl}?autoPlay=true`
 
 const filmLabels = {
   en: {

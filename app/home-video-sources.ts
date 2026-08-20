@@ -4,6 +4,11 @@ export type SproutVideoSource = {
 };
 
 export const homeVideoSources = {
+  societyFilm: {
+    embedUrl:
+      "https://videos.sproutvideo.com/embed/729adab61f1fefc9f8/f4bfbfcb9a151af2",
+    title: "Tetiaroa Society film",
+  },
   vrClip: {
     embedUrl:
       "https://videos.sproutvideo.com/embed/109adcb11f1ee7c29a/fbc480b9c9885643",

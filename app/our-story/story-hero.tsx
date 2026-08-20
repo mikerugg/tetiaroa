@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDownIcon, PauseIcon, PlayIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { homeVideoSources } from "../home-video-sources";
 import { SproutBackgroundVideo } from "../sprout-background-video";
 import type { OurStoryCopy } from "./our-story-content";
+import { StoryFilmDialog } from "./story-film-dialog";
+
+const film = homeVideoSources.societyFilm;
 
 export function StoryHero({ copy }: { copy: OurStoryCopy["hero"] }) {
   const [isPlaying, setIsPlaying] = useState(true);
+  const [isWatching, setIsWatching] = useState(false);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -23,8 +25,6 @@ export function StoryHero({ copy }: { copy: OurStoryCopy["hero"] }) {
     return () => mediaQuery.removeEventListener("change", syncPreference);
   }, []);
 
-  const togglePlayback = () => setIsPlaying((playing) => !playing);
-
   return (
     <section
       className="relative isolate min-h-[100svh] overflow-hidden bg-background"
@@ -32,14 +32,14 @@ export function StoryHero({ copy }: { copy: OurStoryCopy["hero"] }) {
     >
       <SproutBackgroundVideo
         className="absolute inset-0 size-full object-cover"
-        embedUrl={homeVideoSources.atoll.embedUrl}
+        embedUrl={film.embedUrl}
         title={copy.videoLabel}
-        poster="/geology/atoll-foundation-poster.webp"
-        playing={isPlaying}
+        poster="/story/society-film-poster.webp"
+        playing={isPlaying && !isWatching}
         eager
       />
       <div
-        className="absolute inset-0 bg-[linear-gradient(180deg,rgb(3_14_17_/_0.18)_0%,rgb(3_14_17_/_0.2)_38%,rgb(3_14_17_/_0.9)_100%)]"
+        className="absolute inset-0 bg-[linear-gradient(180deg,rgb(3_14_17_/_0.38)_0%,rgb(3_14_17_/_0.42)_38%,rgb(3_14_17_/_0.92)_100%)]"
         aria-hidden="true"
       />
       <div
@@ -48,48 +48,21 @@ export function StoryHero({ copy }: { copy: OurStoryCopy["hero"] }) {
       />
 
       <div className="relative mx-auto flex min-h-[100svh] max-w-[1600px] flex-col justify-end px-5 pb-24 pt-32 sm:px-8 lg:px-12 lg:pb-20">
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary sm:text-xs">
-          {copy.eyebrow}
-        </p>
-        <h1 className="mt-5 max-w-6xl font-header text-[clamp(5rem,13vw,13rem)] leading-[0.72] tracking-[-0.02em] text-foreground">
-          {copy.titleLead}
-          <span className="block font-display text-[0.54em] font-normal italic leading-[1.05] text-primary">
-            {copy.titleAccent}
-          </span>
+        <h1 className="max-w-2xl font-header text-[clamp(2.5rem,11vw,11rem)] leading-[0.84] tracking-[-0.02em] text-foreground">
+          {copy.title}
         </h1>
-        <div className="mt-7 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-          <p className="max-w-2xl text-base leading-7 text-foreground/82 sm:text-lg sm:leading-8">
+        <div className="mt-7 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
+          <p className="max-w-3xl font-display text-2xl italic leading-tight text-primary sm:text-3xl">
             {copy.description}
           </p>
-          <Button
-            asChild
-            variant="outline"
-            size="lg"
-            className="h-auto w-fit rounded-full bg-background/25 px-5 py-3 font-mono text-xs uppercase tracking-[0.14em] backdrop-blur-sm"
-          >
-            <a href="#inheritance">
-              {copy.begin}
-              <ChevronDownIcon data-icon="inline-end" aria-hidden="true" />
-            </a>
-          </Button>
+          <div className="flex shrink-0 flex-col gap-3 sm:items-end">
+            <p className="max-w-xs font-mono text-base uppercase leading-5 tracking-[0.14em] text-foreground/62 sm:text-right sm:text-sm">
+              {copy.filmNote}
+            </p>
+            <StoryFilmDialog copy={copy} onOpenChange={setIsWatching} />
+          </div>
         </div>
       </div>
-
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        className="absolute right-4 top-20 h-auto rounded-full bg-background/30 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] backdrop-blur-md sm:right-7 md:top-24"
-        onClick={togglePlayback}
-        aria-pressed={!isPlaying}
-      >
-        {isPlaying ? (
-          <PauseIcon data-icon="inline-start" aria-hidden="true" />
-        ) : (
-          <PlayIcon data-icon="inline-start" aria-hidden="true" />
-        )}
-        {isPlaying ? copy.pause : copy.play}
-      </Button>
     </section>
   );
 }
