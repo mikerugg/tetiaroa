@@ -10,6 +10,7 @@ import {
   ENGLISH_GEOLOGY_PATH,
   ENGLISH_IMPACT_PATH,
   ENGLISH_HOME_PATH,
+  ENGLISH_OUR_STORY_PATH,
   ENGLISH_STATIONS_PATH,
   ENGLISH_TEAM_PATH,
   FRENCH_CONTACT_PATH,
@@ -19,6 +20,7 @@ import {
   FRENCH_IMPACT_PATH,
   FRENCH_STATIONS_PATH,
   FRENCH_HOME_PATH,
+  FRENCH_OUR_STORY_PATH,
   FRENCH_TEAM_PATH,
 } from "./language-links";
 
@@ -192,7 +194,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       impactHref: ENGLISH_IMPACT_PATH,
       impactLabel: "Impact Feed",
       logoLabel: "Our Logo",
-      storyHref: "/our-story",
+      storyHref: ENGLISH_OUR_STORY_PATH,
       storyLabel: "Our Story",
       atollHref: ENGLISH_GEOLOGY_PATH,
       atollLabel: "Our Atoll",
@@ -215,7 +217,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             { href: ENGLISH_HOME_PATH, label: "Home" },
             { href: ENGLISH_TEAM_PATH, label: "Our Team" },
             { href: "/our-logo", label: "Our Logo" },
-            { href: "/our-story", label: "Our Story" },
+            { href: ENGLISH_OUR_STORY_PATH, label: "Our Story" },
           ],
         },
         {
@@ -510,7 +512,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             "For children who visit the atoll: reef observations, junior naturalist prompts, turtle-care moments, and shoreline activities rooted in the real place beneath their feet.",
           image: sharedKidImages.snorkel,
           alt: "Bright coral in shallow water",
-          href: "/field-station#education",
+          href: "/stations/bailey-field-station",
           cta: "See activities",
         },
         {
@@ -545,7 +547,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       body:
         "Marlon Brando sought to create a living lab that would protect the island, and in turn, all vulnerable island communities. Tetiaroa Society uses fieldwork, research, education, and technology to advance this mission.",
       cta: "Learn more about our story",
-      ctaHref: "/our-story",
+      ctaHref: ENGLISH_OUR_STORY_PATH,
       timelineStart: "1961",
       timelineEnd: "now",
       transitionDescription:
@@ -618,7 +620,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       impactHref: FRENCH_IMPACT_PATH,
       impactLabel: "Fil d'impact",
       logoLabel: "Le logo",
-      storyHref: "/our-story",
+      storyHref: FRENCH_OUR_STORY_PATH,
       storyLabel: "Notre histoire",
       atollHref: FRENCH_GEOLOGY_PATH,
       atollLabel: "Notre atoll",
@@ -641,7 +643,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             { href: FRENCH_HOME_PATH, label: "Accueil" },
             { href: FRENCH_TEAM_PATH, label: "Notre équipe" },
             { href: "/our-logo", label: "Le logo" },
-            { href: "/our-story", label: "Notre histoire" },
+            { href: FRENCH_OUR_STORY_PATH, label: "Notre histoire" },
           ],
         },
         {
@@ -939,7 +941,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             "Pour les enfants qui visitent l'atoll : observations du récif, carnet de jeune naturaliste, moments autour des tortues et activités de rivage ancrées dans le lieu réel.",
           image: sharedKidImages.snorkel,
           alt: "Corail lumineux en eau peu profonde",
-          href: "/field-station#education",
+          href: "/fr/stations/bailey-field-station",
           cta: "Voir les activités",
         },
         {
@@ -970,11 +972,11 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
     story: {
       sectionLabel: "Notre histoire",
       title: "Une idée change de mains.",
-      titleAccent: "L'île en demeure la mesure.",
+      titleAccent: "La Tetiaroa Society veille à tenir sa promesse.",
       body:
-        "Brando a formulé une proposition écologique. La Société n'a hérité d'aucune réponse toute faite, seulement d'une épreuve : transformer l'espoir en travail de terrain, en savoir, en éducation et en décisions qui renforcent Tetiaroa.",
-      cta: "Voir ce que la promesse est devenue",
-      ctaHref: "/our-story",
+        "Profondément marqué par ce lieu, Marlon Brando a consacré ses dernières années à le protéger : un laboratoire vivant au service de l'île et, à travers elle, de toutes les communautés insulaires vulnérables. La Tetiaroa Society poursuit cette mission par le travail de terrain, la recherche, l'éducation et la technologie.",
+      cta: "En savoir plus sur notre histoire",
+      ctaHref: FRENCH_OUR_STORY_PATH,
       timelineStart: "1961",
       timelineEnd: "aujourd'hui",
       transitionDescription:

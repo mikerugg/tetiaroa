@@ -13,8 +13,9 @@ export const FRENCH_EMAIL_LIST_PATH = "/fr/email-list";
 export const ENGLISH_PRIVACY_PATH = "/privacy";
 export const FRENCH_PRIVACY_PATH = "/fr/privacy";
 export const ENGLISH_GEOLOGY_PATH = "/island/geology";
-export const FRENCH_GEOLOGY_PATH = "/fr/ile/geologie";
+export const FRENCH_GEOLOGY_PATH = "/fr/island/geology";
 export const ENGLISH_OUR_STORY_PATH = "/our-story";
+export const FRENCH_OUR_STORY_PATH = "/fr/our-story";
 export const ENGLISH_STATIONS_PATH = "/stations";
 export const FRENCH_STATIONS_PATH = "/fr/stations";
 
@@ -37,9 +38,11 @@ export const FRENCH_PRIVACY_URL = "https://www.tetiaroasociety.org/fr/privacy";
 export const ENGLISH_GEOLOGY_URL =
   "https://www.tetiaroasociety.org/island/geology";
 export const FRENCH_GEOLOGY_URL =
-  "https://www.tetiaroasociety.org/fr/ile/geologie";
+  "https://www.tetiaroasociety.org/fr/island/geology";
 export const ENGLISH_OUR_STORY_URL =
   "https://www.tetiaroasociety.org/our-story";
+export const FRENCH_OUR_STORY_URL =
+  "https://www.tetiaroasociety.org/fr/our-story";
 export const ENGLISH_STATIONS_URL = "https://www.tetiaroasociety.org/stations";
 export const FRENCH_STATIONS_URL =
   "https://www.tetiaroasociety.org/fr/stations";

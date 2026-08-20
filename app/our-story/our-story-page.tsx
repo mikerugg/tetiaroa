@@ -17,10 +17,19 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { homeCopies } from "@/app/home-copy";
+import {
+  ENGLISH_DONATE_PATH,
+  ENGLISH_IMPACT_PATH,
+  ENGLISH_OUR_STORY_PATH,
+  ENGLISH_TEAM_PATH,
+  FRENCH_DONATE_PATH,
+  FRENCH_IMPACT_PATH,
+  FRENCH_OUR_STORY_PATH,
+  FRENCH_TEAM_PATH,
+} from "@/app/language-links";
 import { SiteFooter } from "@/app/site-footer";
 import { TopToolbar } from "@/app/top-toolbar";
-import { ourStoryCopy as copy } from "./our-story-content";
-import { StoryChapterNav } from "./story-chapter-nav";
+import { ourStoryCopies, type OurStoryLocale } from "./our-story-content";
 import { StoryHero } from "./story-hero";
 
 const paperTheme = {
@@ -49,6 +58,25 @@ const darkTheme = {
   "--primary-foreground": "var(--ink)",
 } as CSSProperties;
 
+const localeLinks = {
+  en: {
+    storyHref: ENGLISH_OUR_STORY_PATH,
+    languageHref: FRENCH_OUR_STORY_PATH,
+    languageAriaLabel: "Lire cette histoire en français",
+    impactHref: ENGLISH_IMPACT_PATH,
+    teamHref: ENGLISH_TEAM_PATH,
+    donateHref: ENGLISH_DONATE_PATH,
+  },
+  fr: {
+    storyHref: FRENCH_OUR_STORY_PATH,
+    languageHref: ENGLISH_OUR_STORY_PATH,
+    languageAriaLabel: "Read this story in English",
+    impactHref: FRENCH_IMPACT_PATH,
+    teamHref: FRENCH_TEAM_PATH,
+    donateHref: FRENCH_DONATE_PATH,
+  },
+} satisfies Record<OurStoryLocale, Record<string, string>>;
+
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary sm:text-xs">
@@ -57,13 +85,15 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function OurStoryPage() {
-  const homeCopy = homeCopies.en;
+export function OurStoryPage({ locale }: { locale: OurStoryLocale }) {
+  const copy = ourStoryCopies[locale];
+  const homeCopy = homeCopies[locale];
+  const links = localeLinks[locale];
   const toolbarCopy = {
     ...homeCopy.toolbar,
-    storyHref: "/our-story",
-    languageHref: "/fr#our-story",
-    languageAriaLabel: "Lire le résumé de cette histoire en français",
+    storyHref: links.storyHref,
+    languageHref: links.languageHref,
+    languageAriaLabel: links.languageAriaLabel,
   };
 
   return (
@@ -71,14 +101,12 @@ export function OurStoryPage() {
       <TopToolbar copy={toolbarCopy} />
       <main className="bg-background text-foreground">
         <StoryHero copy={copy.hero} />
-        <StoryChapterNav chapters={copy.chapters} />
 
         <div style={paperTheme} className="bg-background text-foreground">
           <section id="inheritance" className="px-5 py-24 sm:px-8 lg:px-12 lg:py-36">
             <div className="mx-auto grid max-w-[1450px] gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-20">
               <div className="flex flex-col gap-6">
-                <Eyebrow>{copy.inheritance.eyebrow}</Eyebrow>
-                <h2 className="max-w-3xl font-header text-6xl leading-[0.88] sm:text-8xl lg:text-9xl">
+                <h2 className="max-w-3xl font-header text-5xl leading-[0.88] sm:text-7xl lg:text-8xl">
                   {copy.inheritance.title}
                 </h2>
                 <p className="max-w-2xl font-display text-3xl leading-tight text-primary sm:text-4xl">
@@ -89,19 +117,15 @@ export function OurStoryPage() {
                 </p>
               </div>
 
-              <figure className="relative min-h-[38rem] overflow-hidden rounded-[2rem] bg-muted shadow-2xl lg:min-h-[52rem]">
+              <figure className="relative mx-auto aspect-[474/646] w-full max-w-[calc(90svh*474/646)] overflow-hidden rounded-[2rem] bg-muted shadow-2xl">
                 <Image
-                  src="/story/honoura.webp"
+                  src="/story/gauguin-mata-mua.webp"
                   alt={copy.inheritance.imageAlt}
                   fill
                   loading="eager"
-                  sizes="(max-width: 1023px) 100vw, 56vw"
+                  sizes="(max-width: 1023px) 100vw, 40vw"
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_45%,rgb(7_16_14_/_0.84)_100%)]" aria-hidden="true" />
-                <figcaption className="absolute inset-x-0 bottom-0 p-7 font-display text-2xl leading-tight text-white sm:p-9 sm:text-3xl">
-                  {copy.inheritance.note}
-                </figcaption>
               </figure>
             </div>
           </section>
@@ -125,13 +149,13 @@ export function OurStoryPage() {
                 </div>
               </div>
 
-              <figure className="relative mt-14 aspect-[2.05/1] min-h-[28rem] overflow-hidden rounded-[2rem] bg-muted shadow-2xl sm:min-h-0">
+              <figure className="relative mt-14 aspect-[2.05/1] max-h-[80svh] min-h-[28rem] w-full overflow-hidden rounded-[2rem] bg-muted shadow-2xl sm:min-h-0">
                 <Image
-                  src="/story/history-new-lagoon-witness.webp"
+                  src="/story/brando-mutiny-on-the-bounty.webp"
                   alt={copy.idea.imageAlt}
                   fill
                   sizes="100vw"
-                  className="object-cover object-[68%_center]"
+                  className="object-cover object-[center_20%]"
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,rgb(7_16_14_/_0.75)_100%)]" aria-hidden="true" />
                 <figcaption className="absolute bottom-5 left-5 font-mono text-[10px] uppercase tracking-[0.16em] text-white/75 sm:bottom-7 sm:left-7 sm:text-xs">
@@ -347,16 +371,16 @@ export function OurStoryPage() {
             </p>
             <div className="mt-9 flex flex-wrap justify-center gap-3">
               <Button asChild variant="impact" size="lg" className="h-auto rounded-full px-5 py-3">
-                <Link href="/impact">
+                <Link href={links.impactHref}>
                   {copy.closing.impactLabel}
                   <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="h-auto rounded-full bg-background/30 px-5 py-3 backdrop-blur-sm">
-                <Link href="/team">{copy.closing.teamLabel}</Link>
+                <Link href={links.teamHref}>{copy.closing.teamLabel}</Link>
               </Button>
               <Button asChild variant="donate" size="lg" className="h-auto rounded-full px-5 py-3">
-                <Link href="/donate">{copy.closing.donateLabel}</Link>
+                <Link href={links.donateHref}>{copy.closing.donateLabel}</Link>
               </Button>
             </div>
           </div>

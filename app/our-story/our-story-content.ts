@@ -1,4 +1,6 @@
-export const ourStoryCopy = {
+export type OurStoryLocale = "en" | "fr";
+
+const englishCopy = {
   metadata: {
     title: "Our Story | Tetiaroa Society",
     description:
@@ -16,23 +18,14 @@ export const ourStoryCopy = {
     filmTitle: "Tetiaroa Society film",
     filmClose: "Close the film",
   },
-  chapters: [
-    { id: "inheritance", shortLabel: "Before", label: "Before the cameras" },
-    { id: "idea", shortLabel: "The idea", label: "An ecological proposition" },
-    { id: "practice", shortLabel: "The work", label: "Making it accountable" },
-    { id: "horizon", shortLabel: "Beyond", label: "From one atoll outward" },
-  ],
   inheritance: {
-    eyebrow: "Long before 1961",
-    title: "This story does not begin with a movie star.",
+    title: "This story begins long ago...",
     lead:
-      "Long before a film camera crossed its lagoon, Tetiaroa was a place of ceremony, rest, and chiefly authority.",
+      "Long before the film crews, Teti'aroa was a place of ceremony, rest, and chiefly authority.",
     body:
-      "Archaeology and oral histories place the atoll within the political and cultural life of Tahiti. Marae, archery platforms, fishponds, and more than a hundred recorded structures carry a history far older than the Society—one to approach with care, never to claim as its own.",
+      "Archaeology and oral histories cast the atoll as a central part of the political and cultural life of Tahiti. Marae, archery platforms, fishponds, and more than a hundred recorded structures carry an old and rich history.",
     imageAlt:
-      "Traditional Polynesian voyaging canoe on the lagoon, representing Tetiaroa's history before Brando",
-    note:
-      "Stewardship begins with a simple truth: no one working here today invented the island's value.",
+      "Paul Gauguin's 1892 painting Mata Mua (In Olden Times), showing Tahitian figures gathered in a landscape beneath a great tree",
   },
   idea: {
     eyebrow: "1961 → 1967",
@@ -42,8 +35,8 @@ export const ourStoryCopy = {
     body:
       "What he later put into words was larger than a private retreat: a place where tourism would coexist with marine protection, and where scientists could study a living atoll. The idea mattered. But an idea, even a generous one, does not protect an island by itself.",
     imageAlt:
-      "Illustrative composition of Marlon Brando standing in Tetiaroa's lagoon at first light",
-    imageCaption: "Illustrative composition · Tetiaroa, early 1960s",
+      "Marlon Brando in costume as Fletcher Christian aboard the Bounty during the filming of Mutiny on the Bounty",
+    imageCaption: "Marlon Brando as Fletcher Christian · Mutiny on the Bounty, 1962",
     quote:
       "It is my hope that the island will serve as an ecological model… not only a tourist preserve but a marine preserve as well—a place for all manner of scientific research and investigation.",
     quoteCredit: "Marlon Brando",
@@ -103,7 +96,7 @@ export const ourStoryCopy = {
         number: "02",
         title: "Make room for hard questions",
         body: "Give scientists a field station, long-term observations, and a whole-atoll setting where the effects of local action can be measured honestly.",
-        href: "/field-station",
+        href: "/stations/bailey-field-station",
         action: "Visit the field station",
       },
       {
@@ -160,8 +153,7 @@ export const ourStoryCopy = {
   sources: {
     eyebrow: "Read the record",
     title: "The sources behind this story.",
-    intro:
-      "The history is documented. The promise is still being tested.",
+    intro: "The history is documented. The promise is still being tested.",
     items: [
       {
         label: "A brief history of Tetiaroa",
@@ -194,6 +186,201 @@ export const ourStoryCopy = {
     teamLabel: "Meet the team",
     donateLabel: "Fund the work",
   },
-} as const;
+};
 
-export type OurStoryCopy = typeof ourStoryCopy;
+export type OurStoryCopy = typeof englishCopy;
+
+const frenchCopy: OurStoryCopy = {
+  metadata: {
+    title: "Notre histoire | Tetiaroa Society",
+    description:
+      "L'histoire de Teti'aroa n'a pas commencé avec Marlon Brando. Découvrez comment son espoir écologique est devenu le travail de la Tetiaroa Society.",
+  },
+  hero: {
+    title: "Fidèles à la promesse",
+    description:
+      "Marlon Brando a été si profondément marqué par ce lieu qu'il a consacré ses dernières années à le protéger. La Tetiaroa Society poursuit sa mission.",
+    videoLabel: "Film de la Tetiaroa Society, diffusé sans le son",
+    filmLabel: "Voir le film",
+    filmRuntime: "1:13",
+    filmRuntimeLabel: "1 minute 13 secondes",
+    filmNote: "Un court film sur la naissance de la Tetiaroa Society.",
+    filmTitle: "Film de la Tetiaroa Society",
+    filmClose: "Fermer le film",
+  },
+  inheritance: {
+    title: "Cette histoire commence il y a longtemps...",
+    lead:
+      "Bien avant les équipes de tournage, Teti'aroa était un lieu de cérémonie, de repos et d'autorité chefferiale.",
+    body:
+      "L'archéologie et les traditions orales placent l'atoll au cœur de la vie politique et culturelle de Tahiti. Marae, plateformes de tir à l'arc, bassins piscicoles et plus d'une centaine de structures recensées portent une histoire ancienne et riche.",
+    imageAlt:
+      "Mata Mua (Autrefois), tableau peint par Paul Gauguin en 1892, où des figures tahitiennes se rassemblent dans un paysage au pied d'un grand arbre",
+  },
+  idea: {
+    eyebrow: "1961 → 1967",
+    title: "Une rencontre devenue vocation.",
+    lead:
+      "Brando découvre Teti'aroa en 1961, pendant le tournage des Révoltés du Bounty. Six ans plus tard, il acquiert l'atoll.",
+    body:
+      "Ce qu'il a formulé plus tard dépassait la retraite privée : un lieu où le tourisme coexisterait avec la protection marine, et où les scientifiques pourraient étudier un atoll vivant. L'idée comptait. Mais une idée, même généreuse, ne protège pas une île à elle seule.",
+    imageAlt:
+      "Marlon Brando en costume de Fletcher Christian à bord du Bounty pendant le tournage des Révoltés du Bounty",
+    imageCaption:
+      "Marlon Brando dans le rôle de Fletcher Christian · Les Révoltés du Bounty, 1962",
+    quote:
+      "J'espère que l'île servira de modèle écologique… non seulement une réserve touristique, mais aussi une réserve marine — un lieu ouvert à toutes les formes de recherche et d'investigation scientifiques.",
+    quoteCredit: "Marlon Brando · traduit de l'anglais",
+  },
+  handoff: {
+    eyebrow: "Une idée prend forme",
+    title: "Une promesse ne vaut que par le travail qui la porte.",
+    body:
+      "Brando a soutenu des travaux archéologiques sur Teti'aroa en 1972–73. Protéger un atoll demande pourtant plus que la conviction d'un seul homme : des personnes, des règles, des installations, des relevés au long cours, et l'humilité de changer de cap quand l'île indique que quelque chose ne fonctionne pas.",
+    timeline: [
+      {
+        year: "1961",
+        title: "La rencontre",
+        body: "Brando atteint Teti'aroa pendant le tournage des Révoltés du Bounty en Polynésie française.",
+      },
+      {
+        year: "1967",
+        title: "L'acquisition",
+        body: "Il acquiert l'atoll. Son espoir d'un modèle écologique entrera dans l'histoire moderne de Teti'aroa.",
+      },
+      {
+        year: "1972–73",
+        title: "Apprendre du passé",
+        body: "Brando soutient des travaux archéologiques et une école de terrain pour des étudiants tahitiens.",
+      },
+      {
+        year: "2010",
+        title: "La Society",
+        body: "La Tetiaroa Society est fondée pour porter l'éducation, la conservation et la recherche sur l'atoll.",
+      },
+      {
+        year: "2014–2016",
+        title: "Un lieu et un plan",
+        body: "L'Écostation est achevée en 2014. Le projet de Plan de conservation et d'usage durable est publié en 2016.",
+      },
+      {
+        year: "Aujourd'hui",
+        title: "L'épreuve quotidienne",
+        body: "Équipes de terrain, éducateurs, scientifiques, partenaires et donateurs confrontent la promesse à ce qui se passe réellement sur l'atoll.",
+      },
+    ],
+  },
+  practice: {
+    eyebrow: "La raison d'être de la Society",
+    title: "Prendre soin de tout l'atoll — et prouver que ce soin fonctionne.",
+    intro:
+      "Les propriétaires de Teti'aroa ont désigné la Society comme gardienne environnementale de l'atoll. Ce rôle n'est pas un titre. Il doit se lire dans l'état du récif, des motu, des espèces et des savoirs transmis.",
+    items: [
+      {
+        number: "01",
+        title: "Aider les systèmes vivants à se rétablir",
+        body: "Réduire la pression des espèces envahissantes, protéger les plages de ponte, renforcer la biosécurité et suivre ensemble le rétablissement de la terre et du lagon.",
+        href: "/fr/pillars/research-conservation",
+        action: "Recherche + conservation",
+      },
+      {
+        number: "02",
+        title: "Faire place aux questions difficiles",
+        body: "Offrir aux scientifiques une station de terrain, des observations de longue durée et un atoll entier où mesurer honnêtement les effets des actions locales.",
+        href: "/fr/stations/bailey-field-station",
+        action: "Voir la station de terrain",
+      },
+      {
+        number: "03",
+        title: "Protéger plus que l'habitat",
+        body: "Garder présents l'histoire polynésienne, la langue, les savoirs traditionnels, l'archéologie et les liens communautaires vivants dans la façon dont Teti'aroa est comprise.",
+        href: "/fr/pillars/education-culture",
+        action: "Éducation + culture",
+      },
+      {
+        number: "04",
+        title: "Ne pas laisser l'apprentissage s'arrêter ici",
+        body: "Guider les visiteurs du resort dans la nature et la culture de l'atoll, et relier étudiants, chercheurs, partenaires et communautés insulaires pour que les savoirs utiles ne restent pas sur un seul motu.",
+        href: "/fr/pillars/community-global-impact",
+        action: "Communauté + impact",
+      },
+    ],
+  },
+  plan: {
+    eyebrow: "Le cadre de conservation",
+    title: "C'est ici que les idéaux rencontrent les décisions.",
+    body:
+      "Le Plan de conservation et d'usage durable de 2016 a défini un cadre commun pour la recherche, les récifs coralliens, les tortues, les oiseaux, la végétation, le patrimoine culturel, l'eau, les déchets, les espèces envahissantes et l'usage humain responsable. Un plan prend sa valeur dans les décisions quotidiennes : ce qui est protégé, ce qui est mesuré, ce qui doit changer, et qui en répond.",
+    documentNote:
+      "Document publié · Projet daté du 18 mars 2016 · 84 pages · en anglais",
+    documentLabel: "Lire le plan de conservation",
+    documentHref:
+      "https://www.tetiaroasociety.org/sites/default/files/research-docs/Tetiaroa-CASUP.pdf",
+  },
+  horizon: {
+    eyebrow: "La trajectoire",
+    title: "Un atoll. Des leçons faites pour voyager.",
+    lead:
+      "Teti'aroa est le lieu où le travail est mis à l'épreuve. Ce n'est pas là que s'arrête la responsabilité.",
+    body:
+      "La Society cherche à comprendre et à restaurer ce lieu assez profondément pour que les enseignements servent au-delà — en aidant les communautés insulaires et côtières à affronter le changement global sans séparer la résilience écologique de la continuité culturelle.",
+    steps: [
+      {
+        label: "Protéger",
+        title: "Commencer par un lieu entier",
+        body: "Prendre soin du récif, du lagon, des motu, de la faune, de la culture et de l'usage humain comme des parties d'un même système.",
+      },
+      {
+        label: "Apprendre",
+        title: "Être attentif à ce qui change",
+        body: "Réunir savoirs traditionnels, expérience de terrain et recherche scientifique — et accepter d'être corrigé.",
+      },
+      {
+        label: "Partager",
+        title: "Laisser les enseignements quitter l'île",
+        body: "Transformer les pratiques éprouvées en partenariats, en éducation et en outils que d'autres communautés peuvent adapter à leur propre lieu, plutôt que copier à l'aveugle.",
+      },
+    ],
+  },
+  sources: {
+    eyebrow: "Consulter les sources",
+    title: "Les sources de cette histoire.",
+    intro: "L'histoire est documentée. La promesse, elle, est encore à l'épreuve.",
+    items: [
+      {
+        label: "Brève histoire de Teti'aroa",
+        note: "Tetiaroa Society · en anglais",
+        href: "https://www.tetiaroasociety.org/island/history-culture/brief-history",
+      },
+      {
+        label: "L'histoire longue de Teti'aroa",
+        note: "Journal of Pacific Archaeology · 2019 · en anglais",
+        href: "https://www.tetiaroasociety.org/sites/default/files/research-docs/Molle%20et%20al.%202019-the%20long-term%20history%20of%20Tetiaroa.pdf",
+      },
+      {
+        label: "Plan de conservation et d'usage durable",
+        note: "Tetiaroa Society · projet 2016 · en anglais",
+        href: "https://www.tetiaroasociety.org/sites/default/files/research-docs/Tetiaroa-CASUP.pdf",
+      },
+      {
+        label: "Les programmes de la Tetiaroa Society",
+        note: "Recherche, conservation, éducation et guidage · en anglais",
+        href: "https://www.tetiaroasociety.org/programs",
+      },
+    ],
+  },
+  closing: {
+    eyebrow: "Le prochain chapitre est déjà sur le terrain",
+    title: "Une promesse survit en devenant du travail.",
+    body:
+      "Suivez ce que l'équipe apprend en ce moment, rencontrez celles et ceux qui le font, et aidez à porter ce travail.",
+    impactLabel: "Découvrir le fil d'impact",
+    teamLabel: "Rencontrer l'équipe",
+    donateLabel: "Soutenir le travail",
+  },
+};
+
+export const ourStoryCopies: Record<OurStoryLocale, OurStoryCopy> = {
+  en: englishCopy,
+  fr: frenchCopy,
+};

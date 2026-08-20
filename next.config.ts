@@ -52,6 +52,16 @@ const nextConfig: NextConfig = {
         destination: "/impact/cool-reef",
         permanent: true,
       },
+      {
+        source: "/field-station",
+        destination: "/stations/bailey-field-station",
+        permanent: true,
+      },
+      {
+        source: "/fr/ile/geologie",
+        destination: "/fr/island/geology",
+        permanent: true,
+      },
     ];
   },
 };

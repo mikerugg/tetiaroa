@@ -297,7 +297,7 @@ const englishContent: Record<PillarSlug, PillarContent> = {
         label: "Visit the Field Station",
         description:
           "See how learning fits into the daily rhythm of field science.",
-        href: "/field-station#education",
+        href: "/stations/bailey-field-station",
       },
       {
         label: "Meet Turtle Tales",
@@ -607,7 +607,7 @@ const frenchContent: Record<PillarSlug, PillarContent> = {
         label: "Visiter la station de terrain",
         description:
           "Voir comment l’apprentissage rejoint le rythme quotidien de la science de terrain.",
-        href: "/field-station#education",
+        href: "/fr/stations/bailey-field-station",
       },
       {
         label: "Découvrir Turtle Tales",

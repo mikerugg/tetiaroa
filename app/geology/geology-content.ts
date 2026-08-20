@@ -1,9 +1,9 @@
 const ENGLISH_GEOLOGY_PATH = "/island/geology";
-const FRENCH_GEOLOGY_PATH = "/fr/ile/geologie";
+const FRENCH_GEOLOGY_PATH = "/fr/island/geology";
 const ENGLISH_GEOLOGY_URL =
   "https://www.tetiaroasociety.org/island/geology";
 const FRENCH_GEOLOGY_URL =
-  "https://www.tetiaroasociety.org/fr/ile/geologie";
+  "https://www.tetiaroasociety.org/fr/island/geology";
 
 export type GeologyLocale = "en" | "fr";
 

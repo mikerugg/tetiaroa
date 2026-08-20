@@ -18,7 +18,7 @@ import styles from "./geology.module.css";
 const sourceHrefs = {
   society: {
     en: "https://www.tetiaroasociety.org/island/geology",
-    fr: "https://www.tetiaroasociety.org/fr/ile/geologie",
+    fr: "https://www.tetiaroasociety.org/fr/island/geology",
   },
   lithosphere: "https://academic.oup.com/gji/article/147/1/123/608429",
   moorea: "https://doi.org/10.1016/j.jvolgeores.2026.108555",
