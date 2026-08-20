@@ -20,17 +20,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { homeCopies } from "@/app/home-copy";
-import { ENGLISH_STATIONS_PATH } from "@/app/language-links";
+import { homeCopies, type HomeLocale } from "@/app/home-copy";
+import {
+  ENGLISH_STATIONS_PATH,
+  FRENCH_STATIONS_PATH,
+} from "@/app/language-links";
 import { SiteFooter } from "@/app/site-footer";
 import { TopToolbar } from "@/app/top-toolbar";
 import { StationApplicationForm } from "./apply/station-application-form";
-import { stationApplicationCopy } from "./apply/apply-copy";
+import { stationApplicationCopies } from "./apply/apply-copy";
 import { StationGallery } from "./station-gallery";
 import {
+  getStationPath,
   getStationsToolbarCopy,
-  stations,
-  stationsIndexCopy,
+  stationUiCopy,
+  stationsByLocale,
   type StationSlug,
 } from "./stations-content";
 
@@ -56,15 +60,31 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function StationPage({ slug }: { slug: StationSlug }) {
-  const station = stations[slug];
-  const homeCopy = homeCopies.en;
+export function StationPage({
+  slug,
+  locale = "en",
+}: {
+  slug: StationSlug;
+  locale?: HomeLocale;
+}) {
+  const station = stationsByLocale[locale][slug];
+  const ui = stationUiCopy[locale];
+  const applyCopy = stationApplicationCopies[locale];
+  const homeCopy = homeCopies[locale];
+  const stationsPath =
+    locale === "fr" ? FRENCH_STATIONS_PATH : ENGLISH_STATIONS_PATH;
   const turnstileSiteKey =
     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() ?? "";
 
   return (
     <>
-      <TopToolbar copy={getStationsToolbarCopy("en")} />
+      <TopToolbar
+        copy={{
+          ...getStationsToolbarCopy(locale),
+          // Send the language toggle to this station, not the stations index.
+          languageHref: getStationPath(slug, locale === "fr" ? "en" : "fr"),
+        }}
+      />
       <main className="bg-background text-foreground">
         <section
           className="relative isolate min-h-[92svh] overflow-hidden"
@@ -79,7 +99,12 @@ export function StationPage({ slug }: { slug: StationSlug }) {
             className="object-cover"
           />
           <div
-            className="absolute inset-0 bg-[linear-gradient(180deg,rgb(3_14_17_/_0.55)_0%,rgb(3_14_17_/_0.4)_38%,rgb(3_14_17_/_0.94)_100%)]"
+            className="absolute inset-0 bg-[linear-gradient(180deg,rgb(3_14_17_/_0.5)_0%,rgb(3_14_17_/_0.32)_42%,rgb(3_14_17_/_0.95)_100%)]"
+            aria-hidden="true"
+          />
+          {/* Keeps the headline and intro legible over the canopy. */}
+          <div
+            className="absolute inset-0 bg-[linear-gradient(90deg,rgb(3_14_17_/_0.72)_0%,rgb(3_14_17_/_0.35)_46%,transparent_78%)]"
             aria-hidden="true"
           />
 
@@ -90,9 +115,9 @@ export function StationPage({ slug }: { slug: StationSlug }) {
               size="sm"
               className="mb-8 h-auto w-fit rounded-full bg-background/25 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.14em] backdrop-blur-sm"
             >
-              <Link href={ENGLISH_STATIONS_PATH}>
+              <Link href={stationsPath}>
                 <ArrowLeftIcon data-icon="inline-start" aria-hidden="true" />
-                {stationsIndexCopy.eyebrow}
+                {ui.backToStations}
               </Link>
             </Button>
 
@@ -103,9 +128,11 @@ export function StationPage({ slug }: { slug: StationSlug }) {
             <p className="mt-6 max-w-3xl font-display text-2xl leading-tight text-primary sm:text-3xl">
               {station.tagline}
             </p>
-            <p className="mt-6 max-w-2xl text-base leading-7 text-foreground/85 sm:text-lg sm:leading-8">
-              {station.summary}
-            </p>
+            {station.summary ? (
+              <p className="mt-6 max-w-2xl text-base leading-7 text-foreground/85 sm:text-lg sm:leading-8">
+                {station.summary}
+              </p>
+            ) : null}
 
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <Button
@@ -114,7 +141,7 @@ export function StationPage({ slug }: { slug: StationSlug }) {
                 className="h-auto rounded-full px-5 py-3 font-mono text-xs uppercase tracking-[0.14em] text-primary-foreground!"
               >
                 <a href="#apply">
-                  Apply to visit
+                  {ui.applyCta}
                   <ArrowDownIcon data-icon="inline-end" aria-hidden="true" />
                 </a>
               </Button>
@@ -124,7 +151,7 @@ export function StationPage({ slug }: { slug: StationSlug }) {
                 size="lg"
                 className="h-auto rounded-full bg-background/25 px-5 py-3 font-mono text-xs uppercase tracking-[0.14em] backdrop-blur-sm"
               >
-                <a href="#facilities">Facilities</a>
+                <a href="#facilities">{ui.facilitiesCta}</a>
               </Button>
             </div>
 
@@ -147,13 +174,14 @@ export function StationPage({ slug }: { slug: StationSlug }) {
           <section id="origin" className="px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
             <div className="mx-auto grid max-w-[1450px] gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-20">
               <div className="flex flex-col gap-6">
-                <Eyebrow>{station.location}</Eyebrow>
                 <h2 className="max-w-2xl font-header text-5xl leading-[0.9] sm:text-7xl lg:text-8xl">
                   {station.originTitle}
                 </h2>
-                <p className="max-w-2xl font-display text-2xl leading-tight text-primary sm:text-3xl">
-                  {station.originLead}
-                </p>
+                {station.originLead ? (
+                  <p className="max-w-2xl font-display text-2xl leading-tight text-primary sm:text-3xl">
+                    {station.originLead}
+                  </p>
+                ) : null}
                 {station.originBody.map((paragraph) => (
                   <p
                     key={paragraph.slice(0, 48)}
@@ -172,13 +200,6 @@ export function StationPage({ slug }: { slug: StationSlug }) {
                   sizes="(max-width: 1023px) 92vw, 40vw"
                   className="object-cover"
                 />
-                <div
-                  className="absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,rgb(7_16_14_/_0.82)_100%)]"
-                  aria-hidden="true"
-                />
-                <figcaption className="absolute inset-x-0 bottom-0 p-6 font-display text-xl leading-tight text-white sm:p-8 sm:text-2xl">
-                  {station.originImage.caption}
-                </figcaption>
               </figure>
             </div>
           </section>
@@ -283,9 +304,11 @@ export function StationPage({ slug }: { slug: StationSlug }) {
               <h2 className="max-w-3xl font-header text-5xl leading-[0.9] sm:text-7xl">
                 {station.galleryTitle}
               </h2>
-              <p className="max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
-                {station.galleryIntro}
-              </p>
+              {station.galleryIntro ? (
+                <p className="max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
+                  {station.galleryIntro}
+                </p>
+              ) : null}
             </div>
             <StationGallery
               images={station.gallery}
@@ -307,7 +330,6 @@ export function StationPage({ slug }: { slug: StationSlug }) {
             </figure>
 
             <div className="flex flex-col gap-6">
-              <Eyebrow>{station.atollEyebrow}</Eyebrow>
               <h2 className="max-w-2xl font-header text-5xl leading-[0.9] sm:text-6xl lg:text-7xl">
                 {station.atollTitle}
               </h2>
@@ -321,7 +343,7 @@ export function StationPage({ slug }: { slug: StationSlug }) {
               ))}
               <Alert>
                 <InfoIcon aria-hidden="true" />
-                <AlertTitle>Signed on arrival</AlertTitle>
+                <AlertTitle>{ui.arrivalNoteTitle}</AlertTitle>
                 <AlertDescription>{station.atollNote}</AlertDescription>
               </Alert>
             </div>
@@ -341,7 +363,7 @@ export function StationPage({ slug }: { slug: StationSlug }) {
                 </p>
                 <Alert className="max-w-3xl">
                   <CalendarClockIcon aria-hidden="true" />
-                  <AlertTitle>Plan on a long runway</AlertTitle>
+                  <AlertTitle>{ui.leadTimeTitle}</AlertTitle>
                   <AlertDescription>{station.applyLeadTime}</AlertDescription>
                 </Alert>
               </div>
@@ -352,7 +374,7 @@ export function StationPage({ slug }: { slug: StationSlug }) {
                     <Card className="h-full rounded-xl">
                       <CardHeader>
                         <Badge variant="secondary" className="w-fit font-mono">
-                          Step {String(index + 1).padStart(2, "0")}
+                          {ui.stepLabel} {String(index + 1).padStart(2, "0")}
                         </Badge>
                         <CardTitle className="mt-3 font-header text-3xl leading-none tracking-normal">
                           {step.title}
@@ -489,13 +511,13 @@ export function StationPage({ slug }: { slug: StationSlug }) {
               <div className="grid gap-10 lg:grid-cols-[minmax(0,0.7fr)_minmax(360px,1fr)] lg:items-start lg:gap-16">
                 <div className="flex flex-col gap-5">
                   <h3 className="font-header text-5xl leading-[0.9] sm:text-6xl">
-                    {stationApplicationCopy.title}
+                    {applyCopy.title}
                   </h3>
                   <p className="max-w-xl text-base leading-8 text-muted-foreground sm:text-lg">
-                    {stationApplicationCopy.description}
+                    {applyCopy.description}
                   </p>
                   <p className="max-w-xl text-sm leading-6 text-muted-foreground">
-                    {stationApplicationCopy.managerNote}
+                    {applyCopy.managerNote}
                   </p>
                 </div>
 
@@ -503,6 +525,7 @@ export function StationPage({ slug }: { slug: StationSlug }) {
                   <CardContent className="pt-6">
                     <StationApplicationForm
                       slug={slug}
+                      locale={locale}
                       turnstileSiteKey={turnstileSiteKey}
                     />
                   </CardContent>

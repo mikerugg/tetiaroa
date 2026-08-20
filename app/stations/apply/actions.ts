@@ -6,16 +6,17 @@ import { isContactSubmissionAllowed } from "@/app/contact/rate-limit";
 import { verifyRenderToken } from "@/app/contact/timing-token";
 import { verifyTurnstileToken } from "@/app/contact/turnstile";
 import { isStationSlug, stations, type StationSlug } from "../stations-content";
-import { stationApplicationCopy } from "./apply-copy";
+import type { HomeLocale } from "@/app/home-copy";
+import { stationApplicationCopies } from "./apply-copy";
 import { sendStationApplication } from "./mailer";
 import {
   validateStationApplicationFields,
   type StationApplicationFormState,
 } from "./validation";
 
-const copy = stationApplicationCopy;
-
-function successState(): StationApplicationFormState {
+function successState(
+  copy: (typeof stationApplicationCopies)[HomeLocale],
+): StationApplicationFormState {
   return {
     status: "success",
     fieldErrors: {},
@@ -26,7 +27,9 @@ function successState(): StationApplicationFormState {
   };
 }
 
-function errorState(): StationApplicationFormState {
+function errorState(
+  copy: (typeof stationApplicationCopies)[HomeLocale],
+): StationApplicationFormState {
   return {
     status: "error",
     fieldErrors: {},
@@ -55,17 +58,20 @@ async function getRemoteIp() {
 }
 
 export async function submitStationApplication(
+  locale: HomeLocale,
   slug: StationSlug,
   _prevState: StationApplicationFormState,
   formData: FormData,
 ): Promise<StationApplicationFormState> {
+  const copy = stationApplicationCopies[locale] ?? stationApplicationCopies.en;
+
   if (!isStationSlug(slug)) {
-    return errorState();
+    return errorState(copy);
   }
 
   // Honeypot: bots fill it, people never see it.
   if (getTrimmedFormValue(formData, "company")) {
-    return successState();
+    return successState(copy);
   }
 
   const renderTokenResult = verifyRenderToken(formData.get("renderToken"));
@@ -75,7 +81,7 @@ export async function submitStationApplication(
       reason: renderTokenResult.reason,
     });
 
-    return errorState();
+    return errorState(copy);
   }
 
   const validation = validateStationApplicationFields(
@@ -95,7 +101,7 @@ export async function submitStationApplication(
   if (!(await isContactSubmissionAllowed(remoteIp))) {
     console.warn("Station application rate limit exceeded.");
 
-    return errorState();
+    return errorState(copy);
   }
 
   const turnstileOk = await verifyTurnstileToken(
@@ -106,7 +112,7 @@ export async function submitStationApplication(
   if (!turnstileOk) {
     console.warn("Station application Turnstile verification failed.");
 
-    return errorState();
+    return errorState(copy);
   }
 
   try {
@@ -115,10 +121,10 @@ export async function submitStationApplication(
       values: validation.values,
     });
 
-    return successState();
+    return successState(copy);
   } catch (error) {
     console.error("Station application email delivery failed.", error);
 
-    return errorState();
+    return errorState(copy);
   }
 }

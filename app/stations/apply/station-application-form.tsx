@@ -31,8 +31,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 import type { StationSlug } from "../stations-content";
+import type { HomeLocale } from "@/app/home-copy";
 import { submitStationApplication } from "./actions";
-import { stationApplicationCopy as copy } from "./apply-copy";
+import {
+  stationApplicationCopies,
+  stationApplicationOptionLabels,
+  type StationApplicationFormCopy,
+} from "./apply-copy";
 import {
   initialStationApplicationState,
   partySizeOptions,
@@ -100,13 +105,17 @@ function useRenderToken() {
 
 export function StationApplicationForm({
   slug,
+  locale = "en",
   turnstileSiteKey,
 }: {
   slug: StationSlug;
+  locale?: HomeLocale;
   turnstileSiteKey?: string;
 }) {
+  const copy = stationApplicationCopies[locale];
+  const optionLabels = stationApplicationOptionLabels[locale];
   const [state, formAction, isPending] = useActionState(
-    submitStationApplication.bind(null, slug),
+    submitStationApplication.bind(null, locale, slug),
     initialStationApplicationState,
   );
   const renderToken = useRenderToken();
@@ -137,12 +146,14 @@ export function StationApplicationForm({
       <FieldGroup>
         <div className="grid gap-7 sm:grid-cols-2">
           <TextField
+            copy={copy}
             field="name"
             type="text"
             autoComplete="name"
             fieldErrors={state.fieldErrors}
           />
           <TextField
+            copy={copy}
             field="email"
             type="email"
             autoComplete="email"
@@ -152,6 +163,7 @@ export function StationApplicationForm({
 
         <div className="grid gap-7 sm:grid-cols-2">
           <TextField
+            copy={copy}
             field="institution"
             type="text"
             autoComplete="organization"
@@ -163,11 +175,13 @@ export function StationApplicationForm({
             label={copy.fields.role.label}
             placeholder={copy.fields.role.placeholder}
             options={roleOptions}
+            optionLabels={optionLabels.role}
             fieldErrors={state.fieldErrors}
           />
         </div>
 
         <TextField
+            copy={copy}
           field="projectTitle"
           type="text"
           autoComplete="off"
@@ -175,6 +189,8 @@ export function StationApplicationForm({
         />
 
         <ProjectTypeField
+          copy={copy}
+          optionLabels={optionLabels.projectType}
           value={projectType}
           onChange={setProjectType}
           fieldErrors={state.fieldErrors}
@@ -202,13 +218,14 @@ export function StationApplicationForm({
           label={copy.fields.partySize.label}
           placeholder={copy.fields.partySize.placeholder}
           options={partySizeOptions}
+          optionLabels={optionLabels.partySize}
           fieldErrors={state.fieldErrors}
           className="sm:max-w-xs"
         />
 
-        <SummaryField fieldErrors={state.fieldErrors} />
+        <SummaryField copy={copy} fieldErrors={state.fieldErrors} />
 
-        <AcknowledgementField fieldErrors={state.fieldErrors} />
+        <AcknowledgementField copy={copy} fieldErrors={state.fieldErrors} />
       </FieldGroup>
 
       <div
@@ -261,6 +278,7 @@ export function StationApplicationForm({
 }
 
 function TextField({
+  copy,
   field,
   type,
   autoComplete,
@@ -275,6 +293,7 @@ function TextField({
   autoComplete: string;
   description?: string;
   fieldErrors: StationApplicationFieldErrors;
+  copy: StationApplicationFormCopy;
 }) {
   const errors = errorsFor(fieldErrors, field);
   const isInvalid = errors.length > 0;
@@ -329,6 +348,7 @@ function SelectField({
   label,
   placeholder,
   options,
+  optionLabels,
   fieldErrors,
   className,
 }: {
@@ -336,6 +356,7 @@ function SelectField({
   label: string;
   placeholder: string;
   options: ReadonlyArray<{ value: string; label: string }>;
+  optionLabels: Record<string, string>;
   fieldErrors: StationApplicationFieldErrors;
   className?: string;
 }) {
@@ -353,7 +374,7 @@ function SelectField({
           <SelectGroup>
             {options.map((option) => (
               <SelectItem key={option.value} value={option.value}>
-                {option.label}
+                {optionLabels[option.value] ?? option.label}
               </SelectItem>
             ))}
           </SelectGroup>
@@ -365,13 +386,17 @@ function SelectField({
 }
 
 function ProjectTypeField({
+  copy,
+  optionLabels,
   value,
   onChange,
   fieldErrors,
 }: {
+  optionLabels: Record<string, string>;
   value: string;
   onChange: (value: string) => void;
   fieldErrors: StationApplicationFieldErrors;
+  copy: StationApplicationFormCopy;
 }) {
   const errors = errorsFor(fieldErrors, "projectType");
   const isInvalid = errors.length > 0;
@@ -397,7 +422,7 @@ function ProjectTypeField({
       >
         {projectTypeOptions.map((option) => (
           <ToggleGroupItem key={option.value} value={option.value}>
-            {option.label}
+            {optionLabels[option.value] ?? option.label}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
@@ -407,9 +432,11 @@ function ProjectTypeField({
 }
 
 function SummaryField({
+  copy,
   fieldErrors,
 }: {
   fieldErrors: StationApplicationFieldErrors;
+  copy: StationApplicationFormCopy;
 }) {
   const errors = errorsFor(fieldErrors, "summary");
   const isInvalid = errors.length > 0;
@@ -434,9 +461,11 @@ function SummaryField({
 }
 
 function AcknowledgementField({
+  copy,
   fieldErrors,
 }: {
   fieldErrors: StationApplicationFieldErrors;
+  copy: StationApplicationFormCopy;
 }) {
   const errors = errorsFor(fieldErrors, "acknowledgement");
   const isInvalid = errors.length > 0;

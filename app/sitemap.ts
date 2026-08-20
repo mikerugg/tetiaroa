@@ -34,10 +34,10 @@ const pillarRoutes = pillarSlugs.flatMap((slug) => [
   { path: getPillarPath("fr", slug), priority: 0.7 },
 ]);
 
-const stationRoutes = stationSlugs.map((slug) => ({
-  path: getStationPath(slug),
-  priority: 0.8,
-}));
+const stationRoutes = stationSlugs.flatMap((slug) => [
+  { path: getStationPath(slug, "en"), priority: 0.8 },
+  { path: getStationPath(slug, "fr"), priority: 0.7 },
+]);
 
 const staticRoutes = [
   { path: ENGLISH_HOME_PATH, priority: 1 },

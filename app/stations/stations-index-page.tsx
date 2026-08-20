@@ -138,51 +138,54 @@ export function StationsIndexPage({
                 const station = stations[slug];
 
                 return (
-                  <Card
+                  <Link
                     key={slug}
-                    className="group overflow-hidden rounded-2xl pt-0 transition-shadow duration-300 hover:shadow-2xl"
+                    href={getStationPath(slug, locale)}
+                    className="group block rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
-                    <div className="relative aspect-video overflow-hidden bg-muted">
-                      <Image
-                        src={station.cardImage}
-                        alt={copy.stationCard.imageAlt}
-                        fill
-                        sizes="(max-width: 1023px) 92vw, 46vw"
-                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      />
-                    </div>
-                    <CardHeader>
-                      <Badge variant="secondary" className="w-fit font-mono">
-                        {copy.openBadge}
-                      </Badge>
-                      <CardTitle className="mt-3 font-header text-4xl leading-none tracking-normal sm:text-5xl">
-                        {station.name}
-                      </CardTitle>
-                      <CardDescription className="text-base">
-                        {copy.stationCard.location}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-base leading-7 text-muted-foreground">
-                        {copy.stationCard.summary}
-                      </p>
-                    </CardContent>
-                    <CardFooter>
-                      <Button
-                        asChild
-                        size="lg"
-                        className="text-primary-foreground!"
-                      >
-                        <Link href={getStationPath(slug)}>
-                          {copy.cardCta}
-                          <ArrowRightIcon
-                            data-icon="inline-end"
-                            aria-hidden="true"
-                          />
-                        </Link>
-                      </Button>
-                    </CardFooter>
-                  </Card>
+                    <Card className="h-full overflow-hidden rounded-2xl pt-0 transition-shadow duration-300 group-hover:shadow-2xl">
+                      <div className="relative aspect-video overflow-hidden bg-muted">
+                        <Image
+                          src={station.cardImage}
+                          alt={copy.stationCard.imageAlt}
+                          fill
+                          sizes="(max-width: 1023px) 92vw, 46vw"
+                          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        />
+                      </div>
+                      <CardHeader>
+                        <Badge variant="secondary" className="w-fit font-mono">
+                          {copy.openBadge}
+                        </Badge>
+                        <CardTitle className="mt-3 font-header text-4xl leading-none tracking-normal sm:text-5xl">
+                          {station.name}
+                        </CardTitle>
+                        <CardDescription className="text-base">
+                          {copy.stationCard.location}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-base leading-7 text-muted-foreground">
+                          {copy.stationCard.summary}
+                        </p>
+                      </CardContent>
+                      <CardFooter>
+                        <Button
+                          asChild
+                          size="lg"
+                          className="text-primary-foreground!"
+                        >
+                          <span>
+                            {copy.cardCta}
+                            <ArrowRightIcon
+                              data-icon="inline-end"
+                              aria-hidden="true"
+                            />
+                          </span>
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  </Link>
                 );
               })}
 
