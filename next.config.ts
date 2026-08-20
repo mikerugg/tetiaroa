@@ -5,11 +5,6 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "www.tetiaroasociety.org",
-        pathname: "/sites/default/files/**",
-      },
-      {
-        protocol: "https",
         hostname: "upload.wikimedia.org",
         pathname: "/wikipedia/commons/**",
       },

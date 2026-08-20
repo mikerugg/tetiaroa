@@ -91,7 +91,7 @@ export function OurStoryPage() {
 
               <figure className="relative min-h-[38rem] overflow-hidden rounded-[2rem] bg-muted shadow-2xl lg:min-h-[52rem]">
                 <Image
-                  src="https://www.tetiaroasociety.org/sites/default/files/styles/hero_sm_square/public/2017-03/honoura.png.webp?itok=L-GNowVe"
+                  src="/story/honoura.webp"
                   alt={copy.inheritance.imageAlt}
                   fill
                   loading="eager"

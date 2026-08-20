@@ -54,7 +54,7 @@ const species: Species[] = [
     status: "recovering",
     sequence: "01 / 10",
     image:
-      "https://www.tetiaroasociety.org/sites/default/files/styles/hero_sm_square/public/2019-03/DSC09915.jpeg.webp?itok=995rcV0-",
+      "/wildlife/green-sea-turtle.webp",
     alt: "Green sea turtle underwater",
   },
   {

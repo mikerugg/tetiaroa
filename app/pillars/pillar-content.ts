@@ -114,7 +114,7 @@ const englishContent: Record<PillarSlug, PillarContent> = {
     heroCopy:
       "We study the whole system, remove what strains it, and then come back to see what changed.",
     heroImage:
-      "https://www.tetiaroasociety.org/sites/default/files/styles/hero_lg_tall/public/2024-07/research.jpeg.webp?itok=DFOUVcvJ",
+      "/pillars/research-conservation/lagoon-fieldwork.webp",
     heroImageAlt:
       "Researchers crossing the lagoon on their way to fieldwork on Tetiaroa",
     introTitle: "One atoll, one connected system.",
@@ -126,7 +126,7 @@ const englishContent: Record<PillarSlug, PillarContent> = {
     media: [
       {
         kind: "image",
-        src: "https://www.tetiaroasociety.org/sites/default/files/styles/16_9_ratio/public/2025-10/rat-eradication-graphic.jpg.webp?itok=_ub2LBSY",
+        src: "/pillars/research-conservation/rat-eradication.webp",
         alt: "Tetiaroa Atoll Restoration Program rat eradication fieldwork",
         caption: "TARP · removing invasive pressure across the motu",
       },
@@ -138,7 +138,7 @@ const englishContent: Record<PillarSlug, PillarContent> = {
       },
       {
         kind: "image",
-        src: "https://www.tetiaroasociety.org/sites/default/files/styles/16_9_ratio/public/2025-10/teaser-attract_1.jpg.webp?itok=ct1MADex",
+        src: "/pillars/research-conservation/seabird-restoration.webp",
         alt: "Seabird restoration work on Tetiaroa",
         caption: "ATTRACT · helping seabirds return",
       },
@@ -216,7 +216,7 @@ const englishContent: Record<PillarSlug, PillarContent> = {
     heroCopy:
       "You read a reef, carry a story, solve a real problem—and suddenly the island is a place worth protecting.",
     heroImage:
-      "https://www.tetiaroasociety.org/sites/default/files/2021-02/IMG_6446sm.jpg",
+      "/pillars/education-culture/field-course.jpg",
     heroImageAlt:
       "Students gathered outdoors for a lesson during a field course on Tetiaroa",
     introTitle: "Let the place lead the lesson.",
@@ -228,19 +228,19 @@ const englishContent: Record<PillarSlug, PillarContent> = {
     media: [
       {
         kind: "image",
-        src: "https://www.tetiaroasociety.org/sites/default/files/2021-02/frank%20with%20lakeside%20school%20studentssm.jpg",
+        src: "/pillars/education-culture/lakeside-students.jpg",
         alt: "Students learning about the atoll during a field course",
         caption: "Field course · learning from the atoll itself",
       },
       {
         kind: "image",
-        src: "https://www.tetiaroasociety.org/sites/default/files/2017-08/methods.png",
+        src: "/pillars/education-culture/methods.png",
         alt: "Students taking part in an education activity on Tetiaroa",
         caption: "Observe · question · test · share",
       },
       {
         kind: "image",
-        src: "https://www.tetiaroasociety.org/sites/default/files/inline-images/education-square.jpg",
+        src: "/pillars/education-culture/education-square.jpg",
         alt: "Place-based education on Tetiaroa",
         caption: "Culture and science · one connected lesson",
       },
@@ -329,7 +329,7 @@ const englishContent: Record<PillarSlug, PillarContent> = {
     media: [
       {
         kind: "image",
-        src: "https://www.tetiaroasociety.org/sites/default/files/styles/medium/public/2025-11/tops.jpg?itok=n7IwcV-O",
+        src: "/pillars/community-global-impact/ocean-innovation.jpg",
         alt: "Blue Climate Initiative ocean innovation gathering",
         caption: "Blue Climate Initiative · solutions for people, ocean, planet",
       },
@@ -423,7 +423,7 @@ const frenchContent: Record<PillarSlug, PillarContent> = {
     heroCopy:
       "Nous étudions le système entier, retirons ce qui le fragilise, puis revenons voir ce qui a changé.",
     heroImage:
-      "https://www.tetiaroasociety.org/sites/default/files/styles/hero_lg_tall/public/2024-07/research.jpeg.webp?itok=DFOUVcvJ",
+      "/pillars/research-conservation/lagoon-fieldwork.webp",
     heroImageAlt:
       "Des scientifiques traversent le lagon pour rejoindre leur terrain d’étude à Tetiaroa",
     introTitle: "Un atoll, un seul système vivant.",
@@ -435,7 +435,7 @@ const frenchContent: Record<PillarSlug, PillarContent> = {
     media: [
       {
         kind: "image",
-        src: "https://www.tetiaroasociety.org/sites/default/files/styles/16_9_ratio/public/2025-10/rat-eradication-graphic.jpg.webp?itok=_ub2LBSY",
+        src: "/pillars/research-conservation/rat-eradication.webp",
         alt: "Travail de dératisation du Programme de restauration de l’atoll de Tetiaroa",
         caption: "TARP · lever la pression des espèces invasives",
       },
@@ -447,7 +447,7 @@ const frenchContent: Record<PillarSlug, PillarContent> = {
       },
       {
         kind: "image",
-        src: "https://www.tetiaroasociety.org/sites/default/files/styles/16_9_ratio/public/2025-10/teaser-attract_1.jpg.webp?itok=ct1MADex",
+        src: "/pillars/research-conservation/seabird-restoration.webp",
         alt: "Travail de restauration des oiseaux marins à Tetiaroa",
         caption: "ATTRACT · accompagner le retour des oiseaux marins",
       },
@@ -525,7 +525,7 @@ const frenchContent: Record<PillarSlug, PillarContent> = {
     heroCopy:
       "On lit un récif, transmet une histoire, résout un vrai problème—et soudain l’île devient un lieu que l’on veut protéger.",
     heroImage:
-      "https://www.tetiaroasociety.org/sites/default/files/2021-02/IMG_6446sm.jpg",
+      "/pillars/education-culture/field-course.jpg",
     heroImageAlt:
       "Des élèves réunis en plein air pendant un séjour pédagogique à Tetiaroa",
     introTitle: "Laisser le lieu guider la leçon.",
@@ -537,19 +537,19 @@ const frenchContent: Record<PillarSlug, PillarContent> = {
     media: [
       {
         kind: "image",
-        src: "https://www.tetiaroasociety.org/sites/default/files/2021-02/frank%20with%20lakeside%20school%20studentssm.jpg",
+        src: "/pillars/education-culture/lakeside-students.jpg",
         alt: "Des élèves découvrent l’atoll pendant un séjour de terrain",
         caption: "Séjour de terrain · apprendre directement de l’atoll",
       },
       {
         kind: "image",
-        src: "https://www.tetiaroasociety.org/sites/default/files/2017-08/methods.png",
+        src: "/pillars/education-culture/methods.png",
         alt: "Des élèves participent à une activité pédagogique à Tetiaroa",
         caption: "Observer · questionner · tester · partager",
       },
       {
         kind: "image",
-        src: "https://www.tetiaroasociety.org/sites/default/files/inline-images/education-square.jpg",
+        src: "/pillars/education-culture/education-square.jpg",
         alt: "Programme éducatif ancré dans le territoire de Tetiaroa",
         caption: "Culture et science · une seule leçon",
       },
@@ -639,7 +639,7 @@ const frenchContent: Record<PillarSlug, PillarContent> = {
     media: [
       {
         kind: "image",
-        src: "https://www.tetiaroasociety.org/sites/default/files/styles/medium/public/2025-11/tops.jpg?itok=n7IwcV-O",
+        src: "/pillars/community-global-impact/ocean-innovation.jpg",
         alt: "Rencontre d’innovation océanique de la Blue Climate Initiative",
         caption: "Blue Climate Initiative · des solutions pour les humains, l’océan et la planète",
       },

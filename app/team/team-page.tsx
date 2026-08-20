@@ -29,8 +29,7 @@ import { SiteFooter } from "../site-footer";
 import { TopToolbar } from "../top-toolbar";
 import { people, type Person } from "./people-data";
 
-const heroImage =
-  "https://www.tetiaroasociety.org/sites/default/files/styles/hero_lg_xtall/public/2026-03/TSTeam2026March.jpg.webp?itok=t8YPphBY";
+const heroImage = "/team/team-march-2026.webp";
 
 const paperVars = {
   "--background": "var(--paper)",

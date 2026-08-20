@@ -133,12 +133,8 @@ export type StationContent = {
   metadataDescription: string;
 };
 
-const drupalImage = (path: string) =>
-  `https://www.tetiaroasociety.org/sites/default/files/styles/max_1300x1300/public/${path}`;
-
-/** Drupal originals, for images with no usable derivative at card size. */
-const siteFile = (path: string) =>
-  `https://www.tetiaroasociety.org/sites/default/files/${path}`;
+const stationImage = (fileName: string) =>
+  `/stations/bailey-field-station/${fileName}`;
 
 export const RAMS_PORTAL_URL = "https://rams.ucnrs.org";
 
@@ -155,10 +151,10 @@ export const stations: Record<StationSlug, StationContent> = {
       "The Bailey Field Station is where research on Tetiaroa actually happens. Reef, forest, brackish lakes, archaeological sites, and deep ocean water are all within a short walk or a short boat ride of the lab bench.",
     cardSummary:
       "Tetiaroa Society's first field station: LEED Platinum, beds for eighteen, wet and dry labs, and a whole atoll for a study site.",
-    heroImage: drupalImage("2024-09/ecostation-from-above.JPG.webp?itok=VtdjW0V8"),
+    heroImage: stationImage("aerial.webp"),
     heroImageAlt:
       "The Bailey Field Station seen from the air, set among palms on Motu Onetahi",
-    cardImage: drupalImage("2025-09/station2.jpg.webp?itok=hjxTEpWO"),
+    cardImage: stationImage("entrance.webp"),
     cardImageAlt:
       "The entrance and covered walkway of the Bailey Field Station",
     facts: [
@@ -178,7 +174,7 @@ export const stations: Record<StationSlug, StationContent> = {
       "It sits next to The Brando's staff village, inside the Onetahi community. Researchers eat at the staff cantina, ride the same bike paths, and are residents of a working island for the length of their stay.",
     ],
     originImage: {
-      src: drupalImage("2025-09/station3.jpg.webp?itok=b1D-gloo"),
+      src: stationImage("buildings-under-canopy.webp"),
       alt: "The field station buildings surrounded by dense green vegetation",
       caption: "The buildings sit under the existing canopy.",
     },
@@ -305,66 +301,62 @@ export const stations: Record<StationSlug, StationContent> = {
       "Photographs taken by the people working here.",
     gallery: [
       {
-        src: drupalImage("2025-09/lab.JPG.webp?itok=NwLIT_Ty"),
+        src: stationImage("dry-lab.webp"),
         alt: "Researchers at work in the station's dry lab",
         caption: "The dry lab, mid-project.",
       },
       {
-        src: drupalImage("2024-09/Aquarium300L.jpg.webp?itok=ISlQXejf"),
+        src: stationImage("aquarium-tanks.webp"),
         alt: "Three hundred litre aquarium tanks in the outdoor wet lab",
         caption: "300-litre tanks, fed by three separate water lines.",
       },
       {
-        src: drupalImage("2025-09/bunk.JPG.webp?itok=TYpqNHne"),
+        src: stationImage("bunk-room.webp"),
         alt: "A bunk room in the field station dormitory",
         caption: "One of five air-conditioned bedrooms.",
       },
       {
-        src: drupalImage(
-          "2025-09/meeting%20in%20the%20ecostation.jpg.webp?itok=BiAy36i8",
-        ),
+        src: stationImage("common-area.webp"),
         alt: "People gathered around a table in the station's common area",
         caption: "The common area, where teams plan the day.",
       },
       {
-        src: drupalImage("2024-09/aquarium.jpg.webp?itok=pLow2Xyp"),
+        src: stationImage("juvenile-turtle-care.webp"),
         alt: "A researcher caring for juvenile turtles in the laboratory",
         caption: "Juvenile honu under care in the lab.",
       },
       {
-        src: drupalImage("2024-09/growing-coral.jpg.webp?itok=5FQtjYqj"),
+        src: stationImage("coral-restoration.webp"),
         alt: "Coral fragments growing on a restoration frame",
         caption: "Coral grown out for restoration trials.",
       },
       {
-        src: drupalImage("2025-09/boat.JPG.webp?itok=7-PC6F8f"),
+        src: stationImage("work-boat.webp"),
         alt: "The Tetiaroa Society work boat loaded and ready to leave",
         caption: "A Society boat to quickly get around.",
       },
       {
-        src: drupalImage("2025-09/kayaks.jpg.webp?itok=mxwHnQJO"),
+        src: stationImage("kayaks.webp"),
         alt: "Kayaks stored at the field station ready for use",
         caption: "Kayaks, for a gentler pace.",
       },
       {
-        src: drupalImage("2024-09/research-in-the-forest.JPG.webp?itok=k1to0lSV"),
+        src: stationImage("forest-side.webp"),
         alt: "The research station buildings seen through the coastal forest",
         caption: "The station, from the forest side.",
       },
       {
-        src: drupalImage(
-          "2024-09/Loading%20male%20mosquito%20release%20buckets%20onto%20cart.jpg.webp?itok=b5WrRQ4F",
-        ),
+        src: stationImage("mosquito-release-buckets.webp"),
         alt: "Buckets of male mosquitoes being loaded onto a cart for release",
         caption: "Release buckets going out for the mosquito program.",
       },
       {
-        src: drupalImage("2024-09/rangers.png.webp?itok=rJdwl7nB"),
+        src: stationImage("rangers.webp"),
         alt: "Tetiaroa Society rangers heading out on a field mission",
         caption: "Rangers heading out.",
       },
       {
-        src: drupalImage("2025-09/space%20for%20thinking.jpg.webp?itok=125Zdtot"),
+        src: stationImage("quiet-workspace.webp"),
         alt: "A quiet shaded workspace at the field station",
         caption: "A quiet place to write up the day's notes.",
       },
@@ -380,7 +372,7 @@ export const stations: Record<StationSlug, StationContent> = {
     atollNote:
       "Everyone using the station signs the Station Code of Conduct and Conditions of Use, along with the Internal Regulation of the Atoll of Tetiaroa, on arrival.",
     atollImage: {
-      src: drupalImage("2025-09/station2.jpg.webp?itok=hjxTEpWO"),
+      src: stationImage("entrance.webp"),
       alt: "The entrance and covered walkway of the Bailey Field Station",
       caption: "Motu Onetahi, Tetiaroa Atoll.",
     },
@@ -514,7 +506,7 @@ export const stationsIndexCopy = {
   titleAccent: "The Bailey Field Station gives our research a home.",
   intro:
     "",
-  heroImage: siteFile("2024-09/ecostation-from-above.JPG"),
+  heroImage: stationImage("aerial.webp"),
   heroImageAlt:
     "The Bailey Field Station seen from the air, set among the palms on Motu Onetahi",
   heroPrimaryCta: "See the work",
@@ -544,39 +536,37 @@ export const stationsIndexCopy = {
   workIntro:"",
   work: [
     {
-      image: siteFile("2024-09/P5030071-small.jpeg"),
+      image: stationImage("seabird-nest.jpeg"),
       alt: "A brown booby standing over two eggs in a nest on the open ground",
       title: "Seabirds are coming back to the treated motus",
       copy: "Ground-nesting seabirds are the honest scorecard, and the numbers on the treated motus are climbing. You only know that because someone walks those beaches season after season, counting the same nests in the same places. That kind of record is a habit, and the station is what makes the habit possible.",
     },
     {
-      image: siteFile("2024-09/research-in-the-forest.JPG"),
+      image: stationImage("forest-side.webp"),
       alt: "The field station buildings standing among the island's coastal forest",
       title: "Rat eradication takes years, so we stay for years",
       copy: "The Tetiaroa Atoll Restoration Project has cleared rats from most of the atoll. Tiaraunu, Tauvini and Ahuroa still show signs, and another baiting round is coming. Eradication is won in the follow-up: the checking, the re-baiting, the unglamorous Tuesday in February. With beds and boats on site, we can keep showing up until the last motu is clean.",
     },
     {
-      image: siteFile("2024-07/TCA%20baiting-sm.png"),
+      image: stationImage("crazy-ant-baiting.png"),
       alt: "A team carrying bait buckets through the forest to treat yellow crazy ants",
       title: "We caught the crazy ants early",
       copy: "Yellow crazy ants make the IUCN's hundred worst invasive species list. They spray formic acid that blinds seabird chicks in the nest. We treated the last known infestations through to May 2025 and we're monitoring now to confirm they're gone. Catching an outbreak that early takes eyes on the ground every month.",
     },
     {
-      image: siteFile("2024-09/aquarium.jpg"),
+      image: stationImage("juvenile-turtle-care.webp"),
       alt: "A juvenile green turtle swimming among staghorn coral in a laboratory tank",
       title: "Turtles are studied a few steps from the reef",
       copy: "The outdoor wet lab runs on three water lines — fresh, surface seawater and deep ocean — feeding tanks and seawater tables a short walk from the lagoon. Green turtle monitoring happens alongside Te Mana o te Moana, and it happens here on the atoll. An animal can be cared for and released into the same water it came from.",
     },
     {
-      image: siteFile(
-        "2024-07/2-%20Male%20mosquito%20release%202%20-%20Photo%20credit%20Denis%20PINSON%20Archipel%20Production.jpg",
-      ),
+      image: stationImage("sterile-mosquito-release.jpg"),
       alt: "Three people releasing sterile male mosquitoes from buckets in the island forest",
       title: "A mosquito programme that needs a local partner",
       copy: "Institut Louis Malardé leads AeLIMIN+ for The Brando, releasing sterile male mosquitoes to suppress the Aedes species behind dengue and filariasis, mainly on Onetahi. We're a partner in that work. Programmes like it need people who live here, know the ground, and can turn up for release after release. That's the role a station plays.",
     },
     {
-      image: siteFile("2021-09/IMG_2304_0.jpg"),
+      image: stationImage("student-field-course.jpg"),
       alt: "A large group of students and Polynesian teachers holding woven palm baskets",
       title: "The teaching lab is where the next generation starts",
       copy: "The dry lab doubles as a classroom, and university field courses and school groups fill it. Students meet Polynesian teachers, handle real specimens, and stand on the reef they've been reading about. Tetiaroa's marae are protected under French Polynesian law and treated with the respect they're owed. Science and culture get taught here as one subject, because on this atoll they are.",
@@ -621,7 +611,7 @@ export const stationsIndexCopyFr: typeof stationsIndexCopy = {
   title: "La science vit ici",
   titleAccent: "La station Bailey donne un foyer à nos recherches.",
   intro: "",
-  heroImage: siteFile("2024-09/ecostation-from-above.JPG"),
+  heroImage: stationImage("aerial.webp"),
   heroImageAlt:
     "La station Bailey vue du ciel, posée parmi les cocotiers du motu Onetahi",
   heroPrimaryCta: "Voir le travail",
@@ -655,39 +645,37 @@ export const stationsIndexCopyFr: typeof stationsIndexCopy = {
   workIntro: "",
   work: [
     {
-      image: siteFile("2024-09/P5030071-small.jpeg"),
+      image: stationImage("seabird-nest.jpeg"),
       alt: "Un fou brun veillant sur deux œufs dans un nid à même le sol",
       title: "Les oiseaux marins reviennent sur les motu traités",
       copy: "Les oiseaux qui nichent au sol sont le vrai baromètre, et leur nombre augmente sur les motu traités. On ne le sait que parce que quelqu'un parcourt ces plages saison après saison et compte les mêmes nids aux mêmes endroits. Ce relevé tient de l'habitude, et c'est la station qui rend cette habitude possible.",
     },
     {
-      image: siteFile("2024-09/research-in-the-forest.JPG"),
+      image: stationImage("forest-side.webp"),
       alt: "Les bâtiments de la station parmi la forêt littorale de l'île",
       title: "Éradiquer les rats prend des années, alors nous restons des années",
       copy: "Le Tetiaroa Atoll Restoration Project a débarrassé la majeure partie de l'atoll de ses rats. Tiaraunu, Tauvini et Ahuroa montrent encore des signes de présence, et une nouvelle campagne d'appâtage est prévue. Une éradication se gagne dans le suivi : les contrôles, le réappâtage, le mardi sans gloire de février. Avec des lits et des bateaux sur place, nous pouvons revenir jusqu'au dernier motu.",
     },
     {
-      image: siteFile("2024-07/TCA%20baiting-sm.png"),
+      image: stationImage("crazy-ant-baiting.png"),
       alt: "Une équipe transportant des seaux d'appâts en forêt contre la fourmi folle jaune",
       title: "Nous avons pris les fourmis folles de vitesse",
       copy: "La fourmi folle jaune figure parmi les cent pires espèces envahissantes selon l'UICN. Elle projette un acide formique qui aveugle les poussins d'oiseaux marins au nid. Nous avons traité les derniers foyers connus jusqu'en mai 2025 et nous surveillons désormais pour confirmer leur disparition. Repérer un foyer aussi tôt suppose des yeux sur le terrain tous les mois.",
     },
     {
-      image: siteFile("2024-09/aquarium.jpg"),
+      image: stationImage("juvenile-turtle-care.webp"),
       alt: "Une jeune tortue verte nageant parmi les coraux dans un bac du laboratoire",
       title: "Les tortues sont étudiées à quelques pas du récif",
       copy: "Le laboratoire humide extérieur est alimenté par trois circuits — eau douce, eau de surface et eau océanique profonde — qui nourrissent les bacs et les tables à marée à quelques pas du lagon. Le suivi des tortues vertes se fait avec Te Mana o te Moana, et il se fait ici, sur l'atoll. Un animal peut être soigné puis relâché dans l'eau d'où il vient.",
     },
     {
-      image: siteFile(
-        "2024-07/2-%20Male%20mosquito%20release%202%20-%20Photo%20credit%20Denis%20PINSON%20Archipel%20Production.jpg",
-      ),
+      image: stationImage("sterile-mosquito-release.jpg"),
       alt: "Trois personnes relâchant des moustiques mâles stériles en forêt",
       title: "Un programme moustiques qui a besoin d'un partenaire sur place",
       copy: "L'Institut Louis Malardé pilote AeLIMIN+ pour le compte de The Brando, en relâchant des mâles stériles pour réduire les Aedes responsables de la dengue et de la filariose, principalement sur Onetahi. Nous sommes partenaires de ce travail. Un tel programme exige des gens qui vivent ici, connaissent le terrain et sont présents lâcher après lâcher. C'est exactement le rôle d'une station.",
     },
     {
-      image: siteFile("2021-09/IMG_2304_0.jpg"),
+      image: stationImage("student-field-course.jpg"),
       alt: "Un groupe d'élèves et d'enseignants polynésiens tenant des paniers tressés",
       title: "Le laboratoire pédagogique, là où commence la relève",
       copy: "Le laboratoire sec sert aussi de salle de classe, et les stages universitaires comme les groupes scolaires la remplissent. Les élèves rencontrent des enseignants polynésiens, manipulent de vrais spécimens et posent le pied sur le récif qu'ils étudiaient sur le papier. Les marae de Tetiaroa sont protégés par la loi polynésienne et traités avec le respect qui leur est dû. Ici, science et culture s'enseignent ensemble, parce que sur cet atoll elles ne font qu'un.",

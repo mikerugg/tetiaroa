@@ -52,8 +52,7 @@ const coolReefEntry: ImpactContentEntry = {
   latestUpdate: "2024-12-31",
   status: "Project archive",
   location: "Tetiaroa reef nursery",
-  heroImage:
-    "https://www.tetiaroasociety.org/sites/default/files/2026-03/coolreef-2.jpg",
+  heroImage: "/impact/cool-reef/hero.jpg",
   heroImageAlt: "Researchers checking coral growth in the Cool Reef project",
   metric: "2022-2024",
   tags: ["Coral development", "Thermal stress", "CRIOBE"],
@@ -73,20 +72,17 @@ const coolReefEntry: ImpactContentEntry = {
   ],
   gallery: [
     {
-      image:
-        "https://www.tetiaroasociety.org/sites/default/files/2026-03/Fragments-d-acropora-globiceps-control.png",
+      image: "/impact/cool-reef/control.png",
       alt: "Acropora globiceps coral fragments in normal conditions",
       caption: "Normal conditions",
     },
     {
-      image:
-        "https://www.tetiaroasociety.org/sites/default/files/2026-03/Fragments-d-acropora-globiceps-ombrage.png",
+      image: "/impact/cool-reef/shade.png",
       alt: "Acropora globiceps coral fragments under shade",
       caption: "Shade",
     },
     {
-      image:
-        "https://www.tetiaroasociety.org/sites/default/files/2026-03/Fragments-d-acropora-globiceps-refroidissement.png",
+      image: "/impact/cool-reef/cooling.png",
       alt: "Acropora globiceps coral fragments under cooling",
       caption: "Cooling",
     },

@@ -174,7 +174,7 @@ const sharedPillarImages = {
   research:
     "https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=1100&q=85&auto=format&fit=crop",
   education:
-    "https://www.tetiaroasociety.org/sites/default/files/2021-02/IMG_6446sm.jpg",
+    "/pillars/education-culture/field-course.jpg",
   community:
     "https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=1100&q=85&auto=format&fit=crop",
 };
