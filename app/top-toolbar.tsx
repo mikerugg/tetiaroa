@@ -121,10 +121,11 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
       <div className="hidden h-full min-w-0 items-center gap-[18px] text-sm text-foreground/85 min-[761px]:flex max-[860px]:gap-2.5 max-[420px]:gap-1.5 max-[860px]:text-[13px]">
         <Button
           asChild
+          variant="impact"
           size="sm"
           className={cn(
             toolbarButtonClass,
-            "border-toolbar-impact bg-toolbar-impact font-bold shadow-toolbar-impact hover:-translate-y-px hover:border-ink-light/70 hover:bg-toolbar-impact-hover hover:shadow-[0_6px_18px_rgb(0_0_0_/_0.28)] aria-[current=page]:-translate-y-px aria-[current=page]:border-ink-light/70 aria-[current=page]:bg-toolbar-impact-hover aria-[current=page]:shadow-[0_6px_18px_rgb(0_0_0_/_0.28)]",
+            "border-primary bg-lagoon-2 font-bold shadow-lagoon-2 hover:-translate-y-px hover:border-primary hover:bg-lagoon hover:shadow-[0_6px_18px_rgb(0_0_0_/_0.28)] aria-[current=page]:-translate-y-px aria-[current=page]:border-primary aria-[current=page]:bg-lagoon aria-[current=page]:shadow-[0_6px_18px_rgb(0_0_0_/_0.28)]",
           )}
         >
           <Link

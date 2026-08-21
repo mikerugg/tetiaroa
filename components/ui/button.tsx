@@ -9,13 +9,13 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/80",
+        default: "bg-lagoon-2 text-primary-foreground hover:bg-lagoon-2/80 hover:scale-[1.02] aria-expanded:bg-lagoon-2/80 aria-expanded:scale-[1.02]",
         outline:
           "border-border bg-background shadow-xs hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         impact:
-          "border-toolbar-impact bg-toolbar-impact text-ink-light! shadow-toolbar-impact hover:border-ink-light/70 hover:bg-toolbar-impact-hover hover:text-ink-light!",
+          "border-primary bg-lagoon-2 text-ink-light! shadow-lagoon-2 hover:border-primary hover:bg-lagoon hover:text-ink-light!",
         donate:
           "donate-lava text-ink-light! shadow-toolbar-donate transition-[filter,box-shadow,transform] duration-300 hover:-translate-y-px hover:text-ink-light! hover:brightness-110 hover:shadow-[0_6px_18px_rgb(0_0_0_/_0.28)]",
         ghost:

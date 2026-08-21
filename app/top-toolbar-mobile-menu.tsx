@@ -25,7 +25,7 @@ const menuOutlineLinkClass = cn(
 
 const menuImpactLinkClass = cn(
   menuLinkClass,
-  "rounded-md border-toolbar-impact/70 bg-toolbar-impact/20 text-ink-light shadow-[inset_3px_0_0_rgb(96_132_132_/_0.9),0_0_18px_rgb(96_132_132_/_0.18)] hover:-translate-y-px hover:border-toolbar-impact hover:bg-toolbar-impact/30 hover:text-ink-light hover:shadow-[inset_3px_0_0_rgb(96_132_132_/_1),0_6px_18px_rgb(0_0_0_/_0.24)] aria-[current=page]:-translate-y-px aria-[current=page]:border-toolbar-impact aria-[current=page]:bg-toolbar-impact/30 aria-[current=page]:text-ink-light aria-[current=page]:shadow-[inset_3px_0_0_rgb(96_132_132_/_1),0_6px_18px_rgb(0_0_0_/_0.24)]",
+  "rounded-md border-primary bg-lagoon-2/20 text-ink-light shadow-[inset_3px_0_0_var(--lagoon-2),0_0_18px_color-mix(in_oklch,var(--lagoon-2)_18%,transparent)] hover:-translate-y-px hover:border-primary hover:bg-lagoon/30 hover:text-ink-light hover:shadow-[inset_3px_0_0_var(--lagoon-2),0_6px_18px_rgb(0_0_0_/_0.24)] aria-[current=page]:-translate-y-px aria-[current=page]:border-primary aria-[current=page]:bg-lagoon/30 aria-[current=page]:text-ink-light aria-[current=page]:shadow-[inset_3px_0_0_var(--lagoon-2),0_6px_18px_rgb(0_0_0_/_0.24)]",
 );
 
 export function TopToolbarMobileMenu({

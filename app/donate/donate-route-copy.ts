@@ -9,7 +9,7 @@ export type DonateLocale = HomeLocale;
 
 export type DonateStatementCopy = {
   eyebrow: string;
-  /** Sits beneath the route-level `title`, which carries the membership ask. */
+  /** Sits beneath the route-level `title`, which carries the supporter ask. */
   paragraph: string;
   /** Anchors to the widget. Rendered below xl only, where the widget stacks. */
   ctaLabel: string;
@@ -75,14 +75,14 @@ export const donateRouteCopy: Record<DonateLocale, DonateRouteCopy> = {
     metadataTitle: "Donate | Tetiaroa Society",
     metadataDescription:
       "Our goal at Tetiaroa Society is simple: We want to ensure that Tetiaroa is protected and used as a model of sustainability for all to see.",
-    title: "Become a member of Tetiaroa Society",
+    title: "Become a supporter of Tetiaroa Society",
     experience: {
       embedTitleAttribute: "Tetiaroa Society secure donation form",
       statement: {
         eyebrow: "Donate",
         paragraph:
-          "You are funding an experiment in whether an island can outlast this century — by protecting the reefs, the turtles, the culture, and the kids who will watch over these atolls long after us. What works on Teti'aroa is designed to travel to every island and coastal community facing the same changing environment. That is what your donation supports.",
-        ctaLabel: "Become a member",
+          "You are funding an experiment in whether an island can outlast this century — by protecting the reefs, the turtles, the culture, and the kids who will watch over these atolls long after us. What works on Teti'aroa is designed to travel to every island and coastal community facing the same changing environment.",
+        ctaLabel: "Become a supporter",
       },
       moreWays: {
         title: "Other Ways to Donate",
@@ -145,16 +145,16 @@ export const donateRouteCopy: Record<DonateLocale, DonateRouteCopy> = {
     metadataTitle: "Faire un don | Tetiaroa Society",
     metadataDescription:
       "Notre objectif au sein de la Tetiaroa Society est simple : Nous voulons nous assurer que Tetiaroa est protegee et utilisee comme modele de developpement durable pour tous.",
-    title: "Devenez membre de Tetiaroa Society",
+    title: "Devenez un soutien de Tetiaroa Society",
     experience: {
       embedTitleAttribute: "Formulaire de don securise de Tetiaroa Society",
       // FR statement copy is a translation of the approved English and should be
       // reviewed by a native speaker before it is considered final.
       statement: {
-        eyebrow: "Adhésion",
+        eyebrow: "Faire un don",
         paragraph:
-          "Vous financez une expérience : celle de savoir si une île peut traverser ce siècle — les récifs, les tortues, la culture, et les enfants qui protégeront ces atolls bien après nous. Ce qui fonctionne à Tetiaroa est conçu pour servir à toutes les îles et communautés côtières confrontées au même environnement en mutation. Voilà ce que soutient votre adhésion.",
-        ctaLabel: "Devenir membre",
+          "Vous financez une expérience : celle de savoir si une île peut traverser ce siècle — les récifs, les tortues, la culture, et les enfants qui protégeront ces atolls bien après nous. Ce qui fonctionne à Tetiaroa est conçu pour servir à toutes les îles et communautés côtières confrontées au même environnement en mutation.",
+        ctaLabel: "Devenir un soutien",
       },
       moreWays: {
         title: "Autres façons de faire un don",
