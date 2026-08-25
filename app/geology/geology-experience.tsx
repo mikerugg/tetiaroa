@@ -162,6 +162,12 @@ export function GeologyExperience({ locale }: GeologyExperienceProps) {
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="h-auto rounded-full bg-background/30 px-5 py-3 backdrop-blur-sm">
+                <Link href={copy.cta.swacHref}>
+                  {copy.cta.swacLabel}
+                  <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="h-auto rounded-full bg-background/30 px-5 py-3 backdrop-blur-sm">
                 <a
                   href="https://recherche.upf.pf/"
                   target="_blank"

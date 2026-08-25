@@ -85,7 +85,7 @@ export function HomePillarCards({
                       sizes="(max-width: 1023px) 100vw, 42vw"
                     />
                     <div
-                      className="absolute inset-0 bg-[linear-gradient(180deg,rgb(2_14_22/.04)_30%,rgb(2_14_22/.84)_100%)]"
+                      className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_76%,rgb(2_14_22/.82)_100%)]"
                       aria-hidden="true"
                     />
                     <span className="absolute bottom-4 right-5 font-header text-7xl leading-none text-white/92">

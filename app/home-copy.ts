@@ -12,6 +12,7 @@ import {
   ENGLISH_HOME_PATH,
   ENGLISH_OUR_STORY_PATH,
   ENGLISH_STATIONS_PATH,
+  ENGLISH_SWAC_PATH,
   ENGLISH_TEAM_PATH,
   FRENCH_CONTACT_PATH,
   FRENCH_DONATE_PATH,
@@ -21,6 +22,7 @@ import {
   FRENCH_STATIONS_PATH,
   FRENCH_HOME_PATH,
   FRENCH_OUR_STORY_PATH,
+  FRENCH_SWAC_PATH,
   FRENCH_TEAM_PATH,
 } from "./language-links";
 
@@ -173,12 +175,10 @@ const sharedKidImages = {
 };
 
 const sharedPillarImages = {
-  research:
-    "https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=1100&q=85&auto=format&fit=crop",
+  research: "/pillars/research-conservation/lagoon-bird-monitoring.webp",
   education:
-    "/pillars/education-culture/field-course.jpg",
-  community:
-    "https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=1100&q=85&auto=format&fit=crop",
+    "/pillars/education-culture/field-course-homepage.webp",
+  community: "/pillars/community-global-impact/community-gathering.webp",
 };
 
 export const homeCopies: Record<HomeLocale, HomeCopy> = {
@@ -224,6 +224,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           title: "Projects",
           links: [
             { href: ENGLISH_IMPACT_PATH, label: "Impact Feed" },
+            { href: ENGLISH_SWAC_PATH, label: "Sea Water Air Conditioning" },
             { href: "/#honu-xr", label: "Honu XR" },
             { href: "/#sanctuary", label: "Turtle and shark sanctuary" },
             { href: "/#twin", label: "Digital twin" },
@@ -454,7 +455,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             "Reef, lagoon, motu, and species monitoring",
           ],
           image: sharedPillarImages.research,
-          alt: "Coral reef and lagoon habitat used for conservation research",
+          alt: "Person using binoculars to observe two seabirds from a shallow lagoon",
           href: "/pillars/research-conservation",
           cta: "Explore research and conservation",
         },
@@ -482,7 +483,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             "Honu, mosquito control, SWAC, and island resilience",
           ],
           image: sharedPillarImages.community,
-          alt: "Aerial view of a tropical atoll and lagoon",
+          alt: "Five people standing before a seated gathering in an open-air room",
           href: "/pillars/community-global-impact",
           cta: "Explore community and global impact",
         },
@@ -650,6 +651,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           title: "Projets",
           links: [
             { href: FRENCH_IMPACT_PATH, label: "Fil d'impact" },
+            { href: FRENCH_SWAC_PATH, label: "Climatisation à l'eau de mer" },
             { href: `${FRENCH_HOME_PATH}#honu-xr`, label: "Honu XR" },
             {
               href: `${FRENCH_HOME_PATH}#sanctuary`,
@@ -883,7 +885,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             "Suivi du récif, du lagon, des motu et des espèces",
           ],
           image: sharedPillarImages.research,
-          alt: "Récif corallien et habitat lagonaire étudiés pour la conservation",
+          alt: "Une personne observe deux oiseaux marins aux jumelles depuis un lagon peu profond",
           href: "/fr/pillars/research-conservation",
           cta: "Découvrir la recherche et la conservation",
         },
@@ -911,7 +913,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             "Honu, contrôle des moustiques, SWAC et résilience insulaire",
           ],
           image: sharedPillarImages.community,
-          alt: "Vue aérienne d'un atoll tropical et de son lagon",
+          alt: "Cinq personnes debout devant un groupe assis dans une salle ouverte sur la végétation",
           href: "/fr/pillars/community-global-impact",
           cta: "Découvrir la communauté et l’impact global",
         },

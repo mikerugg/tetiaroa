@@ -3,6 +3,12 @@
 @import "shadcn/tailwind.css";
 
 :root {
+  /*
+   * The top toolbar is `fixed ... h-14 md:h-16`, so any full-height section
+   * loses its top edge underneath it. Full-bleed media can happily run under
+   * the bar; anything that must stay readable should subtract this.
+   */
+  --toolbar-height: 3.5rem;
   --ink: oklch(0.1629 0.0147 179.37);
   --ink-2: oklch(0.1896 0.0153 180.75);
   --ink-light: oklch(1 0 0);
@@ -33,6 +39,17 @@
   --border: oklch(0.9585 0.0098 87.47 / 12%);
   --input: oklch(0.9585 0.0098 87.47 / 16%);
   --ring: var(--glow);
+  /*
+   * Data-mark colours, validated with the dataviz six-checks against the dark
+   * chart surface (#07100e). --glow is a UI accent, NOT a data colour: its
+   * chroma of 0.06 falls below the mark floor and reads gray in a fill, and at
+   * L 0.80 it sits outside the dark-mode lightness band. --series-cold is the
+   * nearest step on the same teal ramp that passes all six.
+   */
+  --series-cold: #16a99c;
+  --series-warm: #e24a2b;
+  --series-fresh: #8285dd;
+  --series-neutral: #d9ceaf;
   --chart-1: var(--glow);
   --chart-2: var(--sand);
   --chart-3: var(--coral);
@@ -47,6 +64,12 @@
   --sidebar-accent-foreground: var(--paper);
   --sidebar-border: oklch(0.9585 0.0098 87.47 / 12%);
   --sidebar-ring: var(--glow);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --toolbar-height: 4rem;
+  }
 }
 
 *,

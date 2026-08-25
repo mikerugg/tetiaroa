@@ -1,0 +1,420 @@
+/*
+ * Effects, keyframes and sticky machinery only. Ordinary layout, spacing,
+ * colour and typography live in Tailwind utilities on the components.
+ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  background: var(--background);
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.hero {
+  position: relative;
+  display: grid;
+  min-height: 100svh;
+  isolation: isolate;
+  overflow: hidden;
+  background: #04121b;
+}
+
+.heroVideo,
+.heroPosterFallback,
+.heroScrim,
+.heroDepthLines {
+  position: absolute;
+  inset: 0;
+}
+
+.heroPosterFallback {
+  z-index: 0;
+  background: url("/geology/atoll-foundation-poster.webp") center / cover no-repeat;
+}
+
+.heroVideo {
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroScrim {
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(2, 10, 16, 0.95) 0%, rgba(2, 10, 16, 0.74) 44%, rgba(2, 10, 16, 0.06) 80%),
+    linear-gradient(180deg, rgba(2, 10, 16, 0.7) 0%, transparent 28%, transparent 58%, rgba(2, 10, 16, 0.9) 100%);
+}
+
+/* Isobath ruling: the depth-contour motif the whole page is built on. */
+.heroDepthLines {
+  z-index: 2;
+  opacity: 0.3;
+  background-image: repeating-linear-gradient(
+    180deg,
+    transparent 0 62px,
+    rgba(89, 232, 220, 0.09) 62px 63px
+  );
+  mask-image: linear-gradient(90deg, transparent 0%, black 30%, black 72%, transparent 100%);
+  pointer-events: none;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 3;
+  align-self: end;
+  width: min(1280px, 100%);
+  padding: 9rem 6vw 10vh;
+}
+
+.heroCoordinates {
+  position: absolute;
+  top: 5.5rem;
+  right: 4vw;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  text-align: right;
+}
+
+.heroCoordinates p {
+  margin: 0;
+}
+
+.heroPlayback {
+  position: absolute;
+  right: 4vw;
+  bottom: 4vh;
+  z-index: 4;
+  height: auto;
+  border-color: rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  padding: 0.65rem 0.9rem;
+  color: var(--paper);
+  background: rgba(2, 10, 16, 0.38);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+}
+
+.heroPlayback:hover {
+  color: var(--paper);
+  background: rgba(2, 10, 16, 0.64);
+}
+
+/* ---------------------------------------------------------------- basics */
+
+.basicsPanel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  background: #041a24;
+  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.3);
+}
+
+.basicsSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Dashes travelling along a pipe read as flow without costing a frame budget. */
+.flowPipe {
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 13 11;
+  animation: swacFlow 1.4s linear infinite;
+}
+
+.flowPipeReverse {
+  animation-direction: reverse;
+}
+
+.flowPipeSlow {
+  animation-duration: 2.2s;
+}
+
+@keyframes swacFlow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+/* ------------------------------------------------------------------ dive */
+
+.diveSection {
+  position: relative;
+  background: #02090f;
+}
+
+.diveTrack {
+  position: relative;
+}
+
+/* Full viewport height so the scene has room to show the surface and the
+   motu. The toolbar overlaps the top of the canvas, which is fine for water;
+   the HUD pads itself clear of it below. */
+.diveSticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.diveCanvas {
+  position: absolute;
+  inset: 0;
+}
+
+/* The SVG column stands in for the canvas wherever WebGL cannot go. */
+.diveColumn {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.diveVignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 50% 45%,
+    transparent 30%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+.diveHud {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: calc(var(--toolbar-height) + clamp(0.75rem, 2vw, 1.25rem))
+    clamp(1.25rem, 4vw, 3rem) clamp(1.25rem, 4vw, 3rem);
+  pointer-events: none;
+}
+
+.diveHud a,
+.diveHud button {
+  pointer-events: auto;
+}
+
+.hudReadout {
+  font-variant-numeric: tabular-nums;
+}
+
+.diveSteps {
+  position: relative;
+  z-index: 2;
+  /* Pull the steps back over the sticky viewport they scroll against. */
+  margin-top: -100svh;
+}
+
+.diveStep {
+  display: flex;
+  min-height: 100svh;
+  align-items: center;
+  padding: 0 clamp(1.25rem, 6vw, 6rem);
+}
+
+.diveStepCard {
+  max-width: 34rem;
+  border: 1px solid rgba(89, 232, 220, 0.16);
+  border-radius: 1.25rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: rgba(2, 12, 19, 0.72);
+  backdrop-filter: blur(14px);
+}
+
+/* --------------------------------------------------------------- circuit */
+
+.circuitPanel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  background: #061821;
+  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.32);
+}
+
+.circuitSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.circuitPipe {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.circuitCasing {
+  fill: none;
+  stroke: rgba(233, 240, 236, 0.09);
+  stroke-width: 14;
+  stroke-linecap: round;
+}
+
+.circuitParticle {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.exchangerPlate {
+  transition: opacity 200ms linear;
+}
+
+.circuitNode {
+  cursor: pointer;
+}
+
+/* ----------------------------------------------------------------- meter */
+
+.meterPanel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  background: rgba(233, 240, 236, 0.03);
+}
+
+.meterDigits {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.drumGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(0.75rem, 1fr));
+  gap: 0.25rem;
+}
+
+/* ----------------------------------------------------------------- slope */
+
+.slopeStage {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  background: #041520;
+  cursor: ew-resize;
+  touch-action: pan-y;
+}
+
+.slopeLayer {
+  position: absolute;
+  inset: 0;
+}
+
+.slopeSvg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.slopeHandle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--glow);
+  box-shadow: 0 0 24px rgba(89, 232, 220, 0.6);
+  pointer-events: none;
+}
+
+.slopeGrip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  background: var(--glow);
+  color: #04121b;
+}
+
+/* ----------------------------------------------------------------- globe */
+
+.globeStage {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 34rem;
+  margin-inline: auto;
+  cursor: grab;
+  touch-action: none;
+}
+
+.globeStage:active {
+  cursor: grabbing;
+}
+
+.globeCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.globePin {
+  position: absolute;
+  translate: -50% -50%;
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------- closing */
+
+.closingSection {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.closingScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(2, 10, 16, 0.86) 0%,
+    rgba(2, 10, 16, 0.62) 45%,
+    rgba(2, 10, 16, 0.94) 100%
+  );
+}
+
+/* --------------------------------------------------------- reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .flowPipe {
+    animation: none;
+  }
+
+  .diveSticky {
+    position: relative;
+    height: auto;
+    min-height: 60svh;
+  }
+
+  .diveSteps {
+    margin-top: 0;
+  }
+
+  .diveStep {
+    min-height: auto;
+    padding-block: 3rem;
+  }
+
+}

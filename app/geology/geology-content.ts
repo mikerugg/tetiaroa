@@ -146,6 +146,8 @@ export type GeologyCopy = {
     body: string;
     researchLabel: string;
     researchHref: string;
+    swacLabel: string;
+    swacHref: string;
     gisLabel: string;
     donateLabel: string;
     donateHref: string;
@@ -593,6 +595,8 @@ export const geologyCopies: Record<GeologyLocale, GeologyCopy> = {
         "Coral growth, storms, sediment and sea-level change continue to reshape Tetiaroa. Explore the research that tracks those changes and supports the atoll's future.",
       researchLabel: "Explore the Impact Feed",
       researchHref: "/impact",
+      swacLabel: "The atoll cools itself with this slope",
+      swacHref: "/island/swac",
       gisLabel: "Open the Tetiaroa GIS observatory",
       donateLabel: "Fund the Work",
       donateHref: "/donate",
@@ -794,6 +798,8 @@ export const geologyCopies: Record<GeologyLocale, GeologyCopy> = {
         "La croissance du corail, les tempêtes, les sédiments et le niveau marin continuent de remodeler Tetiaroa. Découvrez les recherches qui suivent ces changements et contribuent à l'avenir de l'atoll.",
       researchLabel: "Explorer le fil d'impact",
       researchHref: "/fr/impact",
+      swacLabel: "L'atoll se climatise grâce à cette pente",
+      swacHref: "/fr/island/swac",
       gisLabel: "Ouvrir l'observatoire SIG de Tetiaroa",
       donateLabel: "Financer l'action",
       donateHref: "/fr/donate",

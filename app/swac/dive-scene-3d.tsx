@@ -1,0 +1,1417 @@
+"use client";
+
+import { useEffect, useMemo, useRef } from "react";
+import { Canvas, extend, useFrame } from "@react-three/fiber";
+import { shaderMaterial } from "@react-three/drei";
+import type { MotionValue } from "motion/react";
+import * as THREE from "three";
+import {
+  MAX_DIVE_DEPTH,
+  INTAKE_DEPTH,
+  lightAtDepth,
+} from "./swac-content";
+import {
+  SHELF_TOP_DEPTH,
+  UNITS_PER_METRE,
+  slopeAcross,
+  slopePoint,
+} from "./dive-coordinates";
+import { LagoonLife } from "./dive-marine-life";
+import {
+  GiantSquid,
+  SpermWhale,
+  SQUID_DEPTH,
+  WHALE_DEPTH,
+} from "./dive-deep-life";
+import { JELLY_DEPTH, JellyfishSchool } from "./dive-jellyfish";
+import { createStarfishGeometry } from "./dive-reef-geometry";
+import {
+  causticsFragmentShader,
+  causticsVertexShader,
+  snowFragmentShader,
+  snowVertexShader,
+} from "./dive-shaders";
+
+const COLUMN_UNITS = MAX_DIVE_DEPTH * UNITS_PER_METRE;
+const SNOW_COUNT = 900;
+const SNOW_COLUMN_HEIGHT = 90;
+
+/**
+ * Deterministic PRNG (mulberry32). The snow field must be identical on every
+ * render — Math.random() in a useMemo is both a React purity violation and a
+ * guarantee that the field reshuffles whenever the component happens to
+ * re-render.
+ */
+function createRandom(seed: number) {
+  let state = seed;
+  return () => {
+    state += 0x6d2b79f5;
+    let value = Math.imul(state ^ (state >>> 15), 1 | state);
+    value ^= value + Math.imul(value ^ (value >>> 7), 61 | value);
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const CausticsMaterial = shaderMaterial(
+  { uTime: 0, uIntensity: 1, uColor: new THREE.Color("#7ff5e6") },
+  causticsVertexShader,
+  causticsFragmentShader,
+);
+
+const SnowMaterial = shaderMaterial(
+  {
+    uTime: 0,
+    uStretch: 0,
+    uColumnHeight: SNOW_COLUMN_HEIGHT,
+    uCameraY: 0,
+    uColor: new THREE.Color("#cfe9e4"),
+    uOpacity: 0.5,
+  },
+  snowVertexShader,
+  snowFragmentShader,
+);
+
+extend({ CausticsMaterial, SnowMaterial });
+
+declare module "@react-three/fiber" {
+  interface ThreeElements {
+    causticsMaterial: ThreeElements["shaderMaterial"] & {
+      uTime?: number;
+      uIntensity?: number;
+      uColor?: THREE.Color;
+    };
+    snowMaterial: ThreeElements["shaderMaterial"] & {
+      uTime?: number;
+      uStretch?: number;
+      uColumnHeight?: number;
+      uCameraY?: number;
+      uColor?: THREE.Color;
+      uOpacity?: number;
+    };
+  }
+}
+
+/**
+ * Water colour through the column. Sampled rather than computed so the ramp
+ * matches what the SVG fallback paints.
+ */
+const DEPTH_COLOUR_STOPS: ReadonlyArray<readonly [number, string]> = [
+  [0, "#1fb6a6"],
+  [40, "#12849a"],
+  [200, "#0a3f66"],
+  [400, "#04203f"],
+  [MAX_DIVE_DEPTH, "#01070e"],
+];
+
+const scratchA = new THREE.Color();
+const scratchB = new THREE.Color();
+
+function sampleDepthColour(depth: number, target: THREE.Color) {
+  const stops = DEPTH_COLOUR_STOPS;
+
+  if (depth <= stops[0][0]) {
+    return target.set(stops[0][1]);
+  }
+
+  for (let i = 1; i < stops.length; i += 1) {
+    const [depthA, colourA] = stops[i - 1];
+    const [depthB, colourB] = stops[i];
+    if (depth <= depthB) {
+      const t = (depth - depthA) / (depthB - depthA);
+      scratchA.set(colourA);
+      scratchB.set(colourB);
+      return target.copy(scratchA).lerp(scratchB, t);
+    }
+  }
+
+  return target.set(stops[stops.length - 1][1]);
+}
+
+type SceneProps = {
+  /** Live depth in metres, driven by the page scroll. */
+  depth: MotionValue<number>;
+  velocity: MotionValue<number>;
+};
+
+function MarineSnow({ velocity }: Pick<SceneProps, "velocity">) {
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const stretch = useRef(0);
+
+  const { offsets, scales, speeds } = useMemo(() => {
+    const random = createRandom(0x5eed);
+    const offsets = new Float32Array(SNOW_COUNT * 3);
+    const scales = new Float32Array(SNOW_COUNT);
+    const speeds = new Float32Array(SNOW_COUNT);
+
+    for (let i = 0; i < SNOW_COUNT; i += 1) {
+      // Bias the field into a shell around the camera path rather than a cube,
+      // so density stays even as you descend.
+      const angle = random() * Math.PI * 2;
+      const radius = 1.2 + Math.pow(random(), 0.65) * 22;
+      offsets[i * 3] = Math.cos(angle) * radius;
+      offsets[i * 3 + 1] = (random() - 0.5) * SNOW_COLUMN_HEIGHT;
+      offsets[i * 3 + 2] = Math.sin(angle) * radius;
+      scales[i] = 0.012 + random() * 0.05;
+      speeds[i] = 0.4 + random() * 1.6;
+    }
+
+    return { offsets, scales, speeds };
+  }, []);
+
+  useFrame((state) => {
+    const material = materialRef.current;
+    if (!material) {
+      return;
+    }
+
+    // Velocity is in progress-units per second; scale it to something the
+    // vertex shader can stretch with, and ease it so it does not judder.
+    const raw = Math.min(Math.abs(velocity.get()), 3);
+    stretch.current += (raw - stretch.current) * 0.12;
+
+    material.uniforms.uTime.value = state.clock.elapsedTime;
+    material.uniforms.uStretch.value = stretch.current;
+    material.uniforms.uCameraY.value = state.camera.position.y;
+  });
+
+  return (
+    <instancedMesh args={[undefined, undefined, SNOW_COUNT]} frustumCulled={false}>
+      <planeGeometry args={[1, 1]}>
+        <instancedBufferAttribute
+          attach="attributes-aOffset"
+          args={[offsets, 3]}
+        />
+        <instancedBufferAttribute attach="attributes-aScale" args={[scales, 1]} />
+        <instancedBufferAttribute attach="attributes-aSpeed" args={[speeds, 1]} />
+      </planeGeometry>
+      <snowMaterial
+        ref={materialRef}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </instancedMesh>
+  );
+}
+
+function SeaSurface({ depth }: Pick<SceneProps, "depth">) {
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+
+  useFrame((state) => {
+    const material = materialRef.current;
+    if (!material) {
+      return;
+    }
+    const metres = depth.get();
+    material.uniforms.uTime.value = state.clock.elapsedTime;
+    // Caustics are gone long before the thermocline.
+    material.uniforms.uIntensity.value = Math.max(0, 1 - metres / 55);
+  });
+
+  return (
+    <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
+      <planeGeometry args={[140, 140, 1, 1]} />
+      <causticsMaterial
+        ref={materialRef}
+        transparent
+        depthWrite={false}
+        side={THREE.DoubleSide}
+        blending={THREE.AdditiveBlending}
+      />
+    </mesh>
+  );
+}
+
+/* ---------------------------------------------------------------------------
+ * The flank. Tetiaroa is a drowned volcano, so the seabed drops away from the
+ * reef and recedes as it goes. Everything below hangs off this one curve: the
+ * rock face, the pipe strapped to it, the anchors, and the camera.
+ * ------------------------------------------------------------------------- */
+
+/** The pipe sits just off the rock, between the camera and the face. */
+function pipePoint(metres: number, target: THREE.Vector3) {
+  slopePoint(metres, target);
+  target.x -= 1.55;
+  target.z += 1.35;
+  return target;
+}
+
+/**
+ * The whole pipe as ONE curve: a horizontal run in from the plant, a
+ * quarter-turn elbow at the reef edge, then the descent. Built as a single
+ * path because two meshes butted together is exactly how you get a visible
+ * break at the joint.
+ *
+ * The elbow radius is chosen so its bottom lands precisely on the descent
+ * curve at ELBOW_DEPTH, which makes the join continuous by construction
+ * rather than by eye.
+ */
+const ELBOW_DEPTH = 32;
+/** Height of the horizontal run. Dropped below the surface so the pipe leaves
+ *  frame under the depth readout rather than behind it. */
+const RUN_HEIGHT = -0.9;
+const ELBOW_H = 3.2;
+/** Vertical radius chosen so the elbow bottoms out exactly on pipePoint(ELBOW_DEPTH). */
+const ELBOW_V = ELBOW_DEPTH * UNITS_PER_METRE + RUN_HEIGHT;
+const SHORE_RUN_LENGTH = 14;
+
+function useSlopeCurve() {
+  return useMemo(() => {
+    const entry = pipePoint(0, new THREE.Vector3());
+    const points: THREE.Vector3[] = [];
+
+    // Horizontal run, heading out from under the shore.
+    const elbowStartX = entry.x + ELBOW_H;
+    const elbowStartZ = entry.z - 1.1;
+    for (let i = 0; i <= 8; i += 1) {
+      const u = i / 8;
+      points.push(
+        new THREE.Vector3(
+          elbowStartX + SHORE_RUN_LENGTH * (1 - u),
+          RUN_HEIGHT,
+          elbowStartZ - 7 * (1 - u),
+        ),
+      );
+    }
+
+    // Quarter turn, horizontal into vertical. Elliptical, because the drop and
+    // the reach are no longer equal.
+    for (let i = 1; i <= 10; i += 1) {
+      const a = (i / 10) * (Math.PI / 2);
+      points.push(
+        new THREE.Vector3(
+          entry.x + ELBOW_H * (1 - Math.sin(a)),
+          RUN_HEIGHT - ELBOW_V * (1 - Math.cos(a)),
+          entry.z - 1.1 * (1 - Math.sin(a)),
+        ),
+      );
+    }
+
+    // The descent proper, picking up exactly where the elbow lets go.
+    for (let i = 1; i <= 44; i += 1) {
+      const depth =
+        ELBOW_DEPTH + (i / 44) * (INTAKE_DEPTH - ELBOW_DEPTH);
+      points.push(pipePoint(depth, new THREE.Vector3()));
+    }
+
+    return new THREE.CatmullRomCurve3(points, false, "catmullrom", 0.4);
+  }, []);
+}
+
+/*
+ * The crest where the flank meets the lagoon. Both surfaces sample it through
+ * these, at identical lateral positions, so the seam is one welded line rather
+ * than two independently tessellated edges that happen to share a depth.
+ */
+const CREST_COLS = 26;
+const CREST_SPREAD = 2.1;
+
+function crestLateral(index: number) {
+  return (index - (CREST_COLS - 1) / 2) * CREST_SPREAD;
+}
+
+/** A little irregularity along the crest, so it is not a ruled line. */
+function crestRipple(lateral: number) {
+  return (
+    Math.sin(lateral * 0.42) * 0.36 + Math.sin(lateral * 1.07 + 1.4) * 0.17
+  );
+}
+
+/**
+ * The camera's frame at a given depth: where it sits, where it looks, and the
+ * horizontal axis across the frame. Derived from the same offsets DiveRig
+ * applies, so anything placed through it stays framed if the slope is retuned.
+ */
+function cameraFrame(depth: number) {
+  const slope = slopePoint(depth, new THREE.Vector3());
+  const pipe = pipePoint(depth, new THREE.Vector3());
+  const camera = new THREE.Vector3(
+    slope.x - 8.6,
+    slope.y + 0.9,
+    slope.z + 8.4,
+  );
+  const target = new THREE.Vector3(pipe.x + 1.6, pipe.y - 4.2, pipe.z - 2);
+  const direction = target.clone().sub(camera).normalize();
+  // Horizontal, so travelling along it holds depth constant.
+  const right = new THREE.Vector3()
+    .crossVectors(direction, new THREE.Vector3(0, 1, 0))
+    .normalize();
+  return { camera, direction, right };
+}
+
+/**
+ * A point at `depth` that lands inside the camera's view cone when the camera
+ * is `lead` metres shallower.
+ *
+ * The camera always looks downward, so anything at a fixed depth is only
+ * visible while you are above it. Placing deep animals by eye put them behind
+ * the viewer.
+ */
+function viewAnchor(depth: number, lead: number) {
+  const { camera, direction } = cameraFrame(Math.max(0, depth - lead));
+  const dy = -depth * UNITS_PER_METRE - camera.y;
+  return camera.clone().addScaledVector(direction, dy / direction.y);
+}
+
+/**
+ * A point at `depth` sitting a fraction of the way from the rock face towards
+ * the camera. Travelling along slopeAcross() from here holds both the depth
+ * and the distance from the wall constant, which is what stops a large animal
+ * swimming into the flank.
+ */
+function wallLane(depth: number, towardCamera: number) {
+  const slope = slopePoint(depth, new THREE.Vector3());
+  const { camera } = cameraFrame(depth);
+  const inboard = new THREE.Vector3(camera.x - slope.x, 0, camera.z - slope.z);
+  return slope.clone().addScaledVector(inboard, towardCamera);
+}
+
+/** The across-frame axis, which is the same at every depth. */
+function viewAxis() {
+  return cameraFrame(0).right;
+}
+
+/** Where the shore run terminates. The motu is placed from this, so the pipe
+ *  and the building it feeds can never drift apart. */
+function shoreRunEnd() {
+  const entry = pipePoint(0, new THREE.Vector3());
+  return new THREE.Vector3(
+    entry.x + ELBOW_H + SHORE_RUN_LENGTH,
+    RUN_HEIGHT,
+    entry.z - 1.1 - 7,
+  );
+}
+
+/**
+ * The sand lagoon on top of the reef shelf. Its seaward boundary is generated
+ * from slopePoint/slopeAcross at SHELF_TOP_DEPTH, so it ends exactly on the
+ * reef crest rather than sailing out over the drop.
+ */
+function SandLagoon() {
+  const geometry = useMemo(() => {
+    const cols = 34;
+    // Matches the flank's crest tessellation exactly; anything else leaves
+    // slivers of background showing through the join.
+    const rows = CREST_COLS;
+    // Far enough to meet the motu, which sits at the end of the shore run.
+    const reach = 16;
+    const random = createRandom(0x5a4d);
+
+    const edge = slopePoint(SHELF_TOP_DEPTH, new THREE.Vector3());
+    const across = slopeAcross(SHELF_TOP_DEPTH, new THREE.Vector3());
+    // Perpendicular to the crest, pointing AWAY from the camera. The viewer
+    // is on the ocean side of the rim, so the rock crest sits between them and
+    // the lagoon, and the sand runs on back towards the motu.
+    const inland = new THREE.Vector3(across.z, 0, -across.x);
+
+    const positions = new Float32Array(cols * rows * 3);
+    const colours = new Float32Array(cols * rows * 3);
+    const rock = new THREE.Color("#5f7167");
+    const sand = new THREE.Color("#a9a483");
+    const blended = new THREE.Color();
+
+    for (let c = 0; c < cols; c += 1) {
+      // u = 0 at the crest, 1 at the far side of the lagoon.
+      const u = c / (cols - 1);
+      // Full weight on the crest, gone a fifth of the way across.
+      const crestWeight = Math.max(0, 1 - u * 5);
+
+      for (let r = 0; r < rows; r += 1) {
+        const v = r / (rows - 1);
+        const lateral = crestLateral(r);
+
+        // The sand's own texture fades out at the crest, so the shared ripple
+        // is the only thing shaping the seam.
+        const sandWaves =
+          (Math.sin(u * 18 + v * 9) * 0.12 +
+            Math.sin(u * 6 - v * 14) * 0.08 +
+            (random() - 0.5) * 0.05) *
+          (1 - crestWeight);
+        // Shallows up towards the beach it runs into.
+        const shelving = Math.pow(u, 1.3) * 1.6;
+
+        const index = (c * rows + r) * 3;
+        positions[index] =
+          edge.x + across.x * lateral + inland.x * (u * reach);
+        positions[index + 1] =
+          edge.y + crestRipple(lateral) * crestWeight + sandWaves + shelving;
+        positions[index + 2] =
+          edge.z + across.z * lateral + inland.z * (u * reach);
+
+        // Carry the rock's colour a little way into the sand so the join is a
+        // transition rather than a hard cut.
+        blended.copy(rock).lerp(sand, Math.min(1, u * 4.5));
+        colours[index] = blended.r;
+        colours[index + 1] = blended.g;
+        colours[index + 2] = blended.b;
+      }
+    }
+
+    const indices: number[] = [];
+    for (let c = 0; c < cols - 1; c += 1) {
+      for (let r = 0; r < rows - 1; r += 1) {
+        const a = c * rows + r;
+        const b = a + 1;
+        const d = a + rows;
+        const e = d + 1;
+        indices.push(a, b, d, b, e, d);
+      }
+    }
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute("color", new THREE.BufferAttribute(colours, 3));
+    geo.setIndex(indices);
+    geo.computeVertexNormals();
+    return geo;
+  }, []);
+
+  return (
+    <mesh geometry={geometry}>
+      <meshStandardMaterial
+        vertexColors
+        roughness={0.97}
+        metalness={0}
+        side={THREE.DoubleSide}
+      />
+    </mesh>
+  );
+}
+
+/**
+ * A palm frond: a tapering blade that lifts off the crown and then droops.
+ * Built as a two-vertex-wide strip along an arc — the droop and the taper are
+ * what make a palm read as a palm rather than as a spiky ball.
+ */
+function createFrondGeometry() {
+  const segments = 10;
+  const positions: number[] = [];
+  const indices: number[] = [];
+
+  for (let i = 0; i <= segments; i += 1) {
+    const t = i / segments;
+    const x = t * 1.2;
+    const y = Math.sin(t * Math.PI * 0.5) * 0.32 - Math.pow(t, 2.2) * 0.78;
+    const halfWidth =
+      0.12 * Math.sin(Math.PI * Math.min(1, t * 1.3)) * (1 - t * 0.55);
+    positions.push(x, y, -halfWidth, x, y, halfWidth);
+  }
+
+  for (let i = 0; i < segments; i += 1) {
+    const a = i * 2;
+    indices.push(a, a + 2, a + 1, a + 1, a + 2, a + 3);
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(new Float32Array(positions), 3),
+  );
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+/** One palm: a leaning tapered trunk, nine drooping fronds, and coconuts. */
+function Palm({
+  position,
+  lean,
+  height,
+}: {
+  position: [number, number, number];
+  lean: [number, number];
+  height: number;
+}) {
+  const frond = useMemo(() => createFrondGeometry(), []);
+  const crown: [number, number, number] = [0.16, height, 0.05];
+
+  return (
+    <group position={position} rotation={[lean[0], 0, lean[1]]}>
+      {/* Trunk, in two tapering sections so it bends the way palms do */}
+      <mesh position={[0.02, height * 0.28, 0.01]} rotation={[0, 0, -0.05]}>
+        <cylinderGeometry args={[0.08, 0.13, height * 0.58, 7]} />
+        <meshStandardMaterial color="#957c57" roughness={0.92} flatShading />
+      </mesh>
+      <mesh position={[0.1, height * 0.78, 0.035]} rotation={[0, 0, -0.14]}>
+        <cylinderGeometry args={[0.055, 0.08, height * 0.46, 7]} />
+        <meshStandardMaterial color="#9c8360" roughness={0.92} flatShading />
+      </mesh>
+
+      {/* Coconuts under the crown */}
+      {[0, 1, 2].map((index) => {
+        const a = (index / 3) * Math.PI * 2;
+        return (
+          <mesh
+            key={a}
+            position={[
+              crown[0] + Math.cos(a) * 0.11,
+              crown[1] - 0.08,
+              crown[2] + Math.sin(a) * 0.11,
+            ]}
+          >
+            <sphereGeometry args={[0.062, 8, 6]} />
+            <meshStandardMaterial color="#6d5636" roughness={0.9} flatShading />
+          </mesh>
+        );
+      })}
+
+      {Array.from({ length: 9 }, (_, index) => {
+        const a = (index / 9) * Math.PI * 2 + 0.3;
+        // Alternate the lift so the crown is not a flat wheel.
+        const droop = index % 2 === 0 ? 0.16 : -0.06;
+        return (
+          <group key={a} position={crown} rotation={[0, -a, droop]}>
+            <mesh geometry={frond} scale={[1, 1, 1]}>
+              <meshStandardMaterial
+                color={index % 3 === 0 ? "#5d9150" : "#4f8347"}
+                roughness={0.88}
+                side={THREE.DoubleSide}
+                flatShading
+              />
+            </mesh>
+          </group>
+        );
+      })}
+    </group>
+  );
+}
+
+/** A motu across the lagoon: beach, a little scrub, and a handful of palms. */
+function IslandBeach() {
+  const end = useMemo(() => shoreRunEnd(), []);
+  const palms = useMemo(() => {
+    const random = createRandom(0x9a17);
+    return Array.from({ length: 7 }, (_, index) => ({
+      // Pushed out to the rim so the plant building keeps the middle.
+      position: [
+        Math.cos((index / 7) * Math.PI * 2) * (2.6 + random() * 1.4),
+        0.32,
+        Math.sin((index / 7) * Math.PI * 2) * (1.8 + random()),
+      ] as [number, number, number],
+      lean: [(random() - 0.5) * 0.22, (random() - 0.5) * 0.26] as [number, number],
+      height: 1.9 + random() * 1.1,
+    }));
+  }, []);
+
+  return (
+    <group position={[end.x, 0, end.z]}>
+      {/* Beach */}
+      {/* Reef pedestal. A cone, not a sphere: a sphere reads as a boulder
+          sitting in the water rather than as ground the motu is built on. */}
+      <mesh position={[0, -3.2, 0]} rotation={[Math.PI, 0, 0]} scale={[6.2, 1, 4.5]}>
+        <coneGeometry args={[1, 6.6, 22]} />
+        <meshStandardMaterial color="#848b6b" roughness={0.97} flatShading />
+      </mesh>
+      {/* Dry sand cap */}
+      <mesh position={[0, 0.16, 0]} scale={[4.9, 0.5, 3.5]}>
+        <sphereGeometry args={[1, 22, 14]} />
+        <meshStandardMaterial color="#e6dab4" roughness={0.95} />
+      </mesh>
+      {/* Scrub behind the sand */}
+      <mesh position={[-0.4, 0.12, -0.7]} scale={[3.2, 0.55, 1.9]}>
+        <sphereGeometry args={[1, 16, 10]} />
+        <meshStandardMaterial color="#5c7a4d" roughness={0.95} flatShading />
+      </mesh>
+      {/* Riser out of the seabed run, into the plant */}
+      <mesh position={[0, (RUN_HEIGHT + 0.62) / 2, 0]}>
+        <cylinderGeometry args={[0.3, 0.3, 0.62 - RUN_HEIGHT, 14]} />
+        <meshStandardMaterial color="#2c4a53" roughness={0.62} metalness={0.22} />
+      </mesh>
+
+      {/* The plant: where the seawater gives up its chill and turns around */}
+      <group position={[0, 0.62, 0]}>
+        <mesh position={[0, 0.3, 0]}>
+          <boxGeometry args={[1.6, 0.6, 1.15]} />
+          <meshStandardMaterial color="#cbd3cb" roughness={0.85} flatShading />
+        </mesh>
+        <mesh position={[0, 0.72, 0]} rotation={[0, Math.PI / 4, 0]}>
+          <coneGeometry args={[1.24, 0.46, 4]} />
+          <meshStandardMaterial color="#6c5a44" roughness={0.9} flatShading />
+        </mesh>
+      </group>
+
+      {palms.map((palm) => (
+        <Palm key={`${palm.position[0]}-${palm.position[2]}`} {...palm} />
+      ))}
+    </group>
+  );
+}
+
+/**
+ * Coral along the crest. Seated with the same crestLateral / crestRipple maths
+ * the lagoon and the flank use, so it sits on the seam rather than near it.
+ *
+ * Two instanced sets and two draw calls: mounds for the boulder corals, and
+ * clustered spikes for the branching ones. Colour is doing most of the work —
+ * an earlier pass used grey-brown heads and they read as rubble, not reef.
+ */
+const CORAL_PALETTE = ["#d98f7a", "#c66b8a", "#e0a86b", "#a8709c", "#cf7f66", "#dbb27f"];
+
+function CrestCorals() {
+  const moundRef = useRef<THREE.InstancedMesh>(null);
+  const branchRef = useRef<THREE.InstancedMesh>(null);
+
+  const { mounds, branches } = useMemo(() => {
+    const random = createRandom(0xc0a1);
+    const edge = slopePoint(SHELF_TOP_DEPTH, new THREE.Vector3());
+    const across = slopeAcross(SHELF_TOP_DEPTH, new THREE.Vector3());
+    const inland = new THREE.Vector3(across.z, 0, -across.x);
+    const halfSpan = (CREST_SPREAD * (CREST_COLS - 1)) / 2;
+    const reach = 16;
+
+    const mounds: Array<{ matrix: THREE.Matrix4; colour: THREE.Color }> = [];
+    const branches: Array<{ matrix: THREE.Matrix4; colour: THREE.Color }> = [];
+
+    /** Drops a point onto the lagoon surface, exactly as SandLagoon builds it. */
+    const seat = (lateral: number, band: number) => {
+      const u = band / reach;
+      const crestWeight = Math.max(0, 1 - u * 5);
+      return new THREE.Vector3(
+        edge.x + across.x * lateral + inland.x * band,
+        edge.y + crestRipple(lateral) * crestWeight + Math.pow(u, 1.3) * 1.6,
+        edge.z + across.z * lateral + inland.z * band,
+      );
+    };
+
+    for (let i = 0; i < 120; i += 1) {
+      const lateral = (random() - 0.5) * 2 * halfSpan;
+      // Biased hard towards the crest, thinning out into the lagoon.
+      const band = Math.pow(random(), 0.7) * 3.6;
+      const base = seat(lateral, band);
+      const colour = new THREE.Color(
+        CORAL_PALETTE[Math.floor(random() * CORAL_PALETTE.length)],
+      );
+
+      if (random() < 0.55) {
+        const width = 0.22 + random() * 0.34;
+        mounds.push({
+          matrix: new THREE.Matrix4().compose(
+            base.clone().setY(base.y + width * 0.28),
+            new THREE.Quaternion().setFromEuler(
+              new THREE.Euler(0, random() * Math.PI, 0),
+            ),
+            new THREE.Vector3(width, width * (0.5 + random() * 0.3), width * 0.85),
+          ),
+          colour,
+        });
+      } else {
+        // A cluster of spikes reads as staghorn without needing its own model.
+        const prongs = 4 + Math.floor(random() * 3);
+        for (let k = 0; k < prongs; k += 1) {
+          const a = (k / prongs) * Math.PI * 2 + random() * 0.5;
+          const spread = 0.1 + random() * 0.16;
+          const tall = 0.28 + random() * 0.4;
+          branches.push({
+            matrix: new THREE.Matrix4().compose(
+              new THREE.Vector3(
+                base.x + Math.cos(a) * spread,
+                base.y + tall * 0.5,
+                base.z + Math.sin(a) * spread,
+              ),
+              new THREE.Quaternion().setFromEuler(
+                new THREE.Euler(Math.cos(a) * 0.3, 0, -Math.sin(a) * 0.3),
+              ),
+              new THREE.Vector3(0.055, tall, 0.055),
+            ),
+            colour,
+          });
+        }
+      }
+    }
+
+    return { mounds, branches };
+  }, []);
+
+  useEffect(() => {
+    for (const [mesh, items] of [
+      [moundRef.current, mounds],
+      [branchRef.current, branches],
+    ] as const) {
+      if (!mesh) {
+        continue;
+      }
+      items.forEach((item, index) => {
+        mesh.setMatrixAt(index, item.matrix);
+        mesh.setColorAt(index, item.colour);
+      });
+      mesh.instanceMatrix.needsUpdate = true;
+      if (mesh.instanceColor) {
+        mesh.instanceColor.needsUpdate = true;
+      }
+    }
+  }, [mounds, branches]);
+
+  return (
+    <group>
+      <instancedMesh
+        ref={moundRef}
+        args={[undefined, undefined, mounds.length]}
+        frustumCulled={false}
+      >
+        <icosahedronGeometry args={[1, 0]} />
+        <meshStandardMaterial roughness={0.86} metalness={0.02} flatShading />
+      </instancedMesh>
+      <instancedMesh
+        ref={branchRef}
+        args={[undefined, undefined, branches.length]}
+        frustumCulled={false}
+      >
+        <coneGeometry args={[1, 1, 5]} />
+        <meshStandardMaterial roughness={0.84} metalness={0.02} flatShading />
+      </instancedMesh>
+    </group>
+  );
+}
+
+/*
+ * Life on the wall, zoned by depth. A tropical reef face is not uniformly
+ * covered: it changes with light, and the transitions are sharp enough to name.
+ *
+ *   22-60 m    shallow reef. Branching and table corals, macroalgae, bright.
+ *   60-130 m   plating zone. Corals flatten to catch what light is left.
+ *   90-250 m   mesophotic. Sponges and gorgonian fans take over from stony coral.
+ *   180-650 m  aphotic. Sea whips and black coral. Nothing photosynthesises.
+ *
+ * Everything is seated with wallPoint(), which reproduces SlopeTerrain's own
+ * vertex maths, so it sits on the rock rather than near it.
+ */
+const WALL_ROWS = 74;
+/**
+ * Coverage dial for the wall. One number, because the right answer is a
+ * judgement about how busy the frame looks, not five separate ones.
+ */
+const WALL_DENSITY = 0.15;
+
+/** The deterministic part of the flank's relief, evaluable at any point. */
+function wallRelief(depth: number, lateral: number) {
+  const r =
+    ((depth - SHELF_TOP_DEPTH) / (MAX_DIVE_DEPTH + 60 - SHELF_TOP_DEPTH)) *
+    (WALL_ROWS - 1);
+  const c = lateral / CREST_SPREAD + (CREST_COLS - 1) / 2;
+  const u = r * 0.16;
+  const v = c * 0.42;
+  return {
+    relief:
+      Math.sin(u * 1.6 + v * 0.9) * 0.85 +
+      Math.sin(u * 4.1 - v * 2.3) * 0.42 +
+      Math.sin(u * 9.4 + v * 5.7) * 0.16,
+    row: r,
+  };
+}
+
+/** A point on the rock face, plus the outward direction to grow away from it. */
+function wallPoint(depth: number, lateral: number) {
+  const centre = slopePoint(depth, new THREE.Vector3());
+  const across = slopeAcross(depth, new THREE.Vector3());
+  const seaward = new THREE.Vector3(-across.z, 0, across.x);
+  const { relief, row } = wallRelief(depth, lateral);
+  const shaped = relief * Math.min(1, row / 5);
+  const crestWeight = Math.max(0, 1 - row / 6);
+
+  const position = new THREE.Vector3(
+    centre.x + across.x * lateral + shaped * 0.55 + seaward.x * 0.18,
+    centre.y + shaped * 0.7 + crestRipple(lateral) * crestWeight,
+    centre.z + across.z * lateral - shaped * 0.35 + seaward.z * 0.18,
+  );
+
+  return { position, across, seaward };
+}
+
+type Placed = { matrix: THREE.Matrix4; colour: THREE.Color };
+
+function useReefWallLife() {
+  return useMemo(() => {
+    const random = createRandom(0x2ee1);
+    const halfSpan = (CREST_SPREAD * (CREST_COLS - 1)) / 2;
+
+    const plates: Placed[] = [];
+    const fans: Placed[] = [];
+    const sponges: Placed[] = [];
+    const whips: Placed[] = [];
+    const stars: Placed[] = [];
+    const algae: Placed[] = [];
+
+    const pick = (list: string[]) =>
+      new THREE.Color(list[Math.floor(random() * list.length)]);
+
+    const lateral = () => (random() - 0.5) * 2 * halfSpan;
+    /** Biased towards the shallow end of a band, the way cover actually thins. */
+    const between = (a: number, b: number, bias = 1) =>
+      a + Math.pow(random(), bias) * (b - a);
+
+    // Plate and table corals, flattening as the light goes.
+    for (let i = 0; i < Math.round(110 * WALL_DENSITY); i += 1) {
+      const depth = between(24, 130, 1.5);
+      const { position, seaward } = wallPoint(depth, lateral());
+      const width = 0.3 + random() * 0.55;
+      plates.push({
+        matrix: new THREE.Matrix4().compose(
+          position,
+          new THREE.Quaternion().setFromEuler(
+            new THREE.Euler(-0.34 + random() * 0.3, random() * Math.PI, seaward.x * 0.1),
+          ),
+          new THREE.Vector3(width, 0.05 + random() * 0.05, width * 0.9),
+        ),
+        colour: pick(
+          depth < 60
+            ? ["#c98a5f", "#b9764f", "#cf9a6d", "#a8804e"]
+            : ["#8f7a52", "#7c6b4a", "#9c8a63"],
+        ),
+      });
+    }
+
+    // Macroalgae. Photosynthetic, so it stops where useful light does.
+    for (let i = 0; i < Math.round(130 * WALL_DENSITY); i += 1) {
+      const depth = between(22, 95, 1.8);
+      const { position } = wallPoint(depth, lateral());
+      const tall = 0.16 + random() * 0.26;
+      algae.push({
+        matrix: new THREE.Matrix4().compose(
+          position.clone().setY(position.y + tall * 0.5),
+          new THREE.Quaternion().setFromEuler(
+            new THREE.Euler((random() - 0.5) * 0.5, random() * Math.PI, (random() - 0.5) * 0.5),
+          ),
+          new THREE.Vector3(0.11 + random() * 0.08, tall, 0.03),
+        ),
+        colour: pick(["#5f8a4e", "#4c7a44", "#6f9455", "#7d8f45"]),
+      });
+    }
+
+    // Sponges: barrels and tubes, happiest below the stony corals.
+    for (let i = 0; i < Math.round(90 * WALL_DENSITY); i += 1) {
+      const depth = between(60, 400, 1.2);
+      const { position } = wallPoint(depth, lateral());
+      const tall = 0.22 + random() * 0.4;
+      sponges.push({
+        matrix: new THREE.Matrix4().compose(
+          position.clone().setY(position.y + tall * 0.5),
+          new THREE.Quaternion().setFromEuler(
+            new THREE.Euler((random() - 0.5) * 0.4, random() * Math.PI, (random() - 0.5) * 0.4),
+          ),
+          new THREE.Vector3(0.13 + random() * 0.12, tall, 0.13 + random() * 0.12),
+        ),
+        colour: pick(["#b0693f", "#96513a", "#c08a55", "#8a5f6e"]),
+      });
+    }
+
+    // Gorgonian sea fans, set broadside to the current running along the slope.
+    for (let i = 0; i < Math.round(80 * WALL_DENSITY); i += 1) {
+      const depth = between(90, 260, 1.1);
+      const lat = lateral();
+      const { position, across } = wallPoint(depth, lat);
+      const size = 0.3 + random() * 0.45;
+      const facing = Math.atan2(across.x, across.z);
+      fans.push({
+        matrix: new THREE.Matrix4().compose(
+          position.clone().setY(position.y + size * 0.45),
+          new THREE.Quaternion().setFromEuler(
+            new THREE.Euler(0, facing + (random() - 0.5) * 0.5, (random() - 0.5) * 0.3),
+          ),
+          new THREE.Vector3(size, size, size),
+        ),
+        colour: pick(["#8f5a72", "#a8664f", "#7c5f8f", "#b5794f"]),
+      });
+    }
+
+    // Sea whips and black coral, well past any light.
+    for (let i = 0; i < Math.round(110 * WALL_DENSITY); i += 1) {
+      const depth = between(180, 680, 1);
+      const { position } = wallPoint(depth, lateral());
+      const tall = 0.4 + random() * 0.9;
+      whips.push({
+        matrix: new THREE.Matrix4().compose(
+          position.clone().setY(position.y + tall * 0.5),
+          new THREE.Quaternion().setFromEuler(
+            new THREE.Euler((random() - 0.5) * 0.55, random() * Math.PI, (random() - 0.5) * 0.55),
+          ),
+          new THREE.Vector3(0.022, tall, 0.022),
+        ),
+        colour: pick(["#9aa39a", "#7f8a86", "#b2a894", "#6f7a78"]),
+      });
+    }
+
+    // Starfish, lying flat against the rock rather than standing on it.
+    for (let i = 0; i < Math.round(90 * WALL_DENSITY); i += 1) {
+      const depth = between(24, 150, 1.4);
+      const { position, seaward } = wallPoint(depth, lateral());
+      const size = 0.16 + random() * 0.16;
+      const lie = new THREE.Quaternion().setFromUnitVectors(
+        new THREE.Vector3(0, 1, 0),
+        seaward,
+      );
+      lie.multiply(
+        new THREE.Quaternion().setFromAxisAngle(
+          new THREE.Vector3(0, 1, 0),
+          random() * Math.PI * 2,
+        ),
+      );
+      stars.push({
+        matrix: new THREE.Matrix4().compose(
+          position,
+          lie,
+          new THREE.Vector3(size, size, size),
+        ),
+        colour: pick(["#d4694a", "#c9543f", "#4f6f9c", "#d9a05b", "#a8455c"]),
+      });
+    }
+
+    return { plates, algae, sponges, fans, whips, stars };
+  }, []);
+}
+
+function InstancedSet({
+  items,
+  children,
+}: {
+  items: Placed[];
+  children: React.ReactNode;
+}) {
+  const ref = useRef<THREE.InstancedMesh>(null);
+
+  useEffect(() => {
+    const mesh = ref.current;
+    if (!mesh) {
+      return;
+    }
+    items.forEach((item, index) => {
+      mesh.setMatrixAt(index, item.matrix);
+      mesh.setColorAt(index, item.colour);
+    });
+    mesh.instanceMatrix.needsUpdate = true;
+    if (mesh.instanceColor) {
+      mesh.instanceColor.needsUpdate = true;
+    }
+  }, [items]);
+
+  return (
+    <instancedMesh
+      ref={ref}
+      args={[undefined, undefined, items.length]}
+      frustumCulled={false}
+    >
+      {children}
+    </instancedMesh>
+  );
+}
+
+function ReefWallLife() {
+  const { plates, algae, sponges, fans, whips, stars } = useReefWallLife();
+  const starGeometry = useMemo(() => createStarfishGeometry(), []);
+
+  return (
+    <group>
+      {/* Plate and table corals */}
+      <InstancedSet items={plates}>
+        <cylinderGeometry args={[1, 0.82, 1, 10]} />
+        <meshStandardMaterial roughness={0.88} metalness={0.02} flatShading />
+      </InstancedSet>
+
+      {/* Macroalgae blades */}
+      <InstancedSet items={algae}>
+        <coneGeometry args={[1, 1, 4]} />
+        <meshStandardMaterial
+          roughness={0.9}
+          side={THREE.DoubleSide}
+          flatShading
+        />
+      </InstancedSet>
+
+      {/* Barrel and tube sponges */}
+      <InstancedSet items={sponges}>
+        <cylinderGeometry args={[1, 0.7, 1, 9, 1, true]} />
+        <meshStandardMaterial
+          roughness={0.92}
+          side={THREE.DoubleSide}
+          flatShading
+        />
+      </InstancedSet>
+
+      {/* Gorgonian sea fans */}
+      <InstancedSet items={fans}>
+        <circleGeometry args={[1, 12, 0, Math.PI]} />
+        <meshStandardMaterial
+          roughness={0.85}
+          side={THREE.DoubleSide}
+          flatShading
+        />
+      </InstancedSet>
+
+      {/* Sea whips and black coral */}
+      <InstancedSet items={whips}>
+        <coneGeometry args={[1, 1, 4]} />
+        <meshStandardMaterial roughness={0.8} flatShading />
+      </InstancedSet>
+
+      {/* Starfish */}
+      <InstancedSet items={stars}>
+        <primitive object={starGeometry} attach="geometry" />
+        <meshStandardMaterial
+          roughness={0.82}
+          side={THREE.DoubleSide}
+          flatShading
+        />
+      </InstancedSet>
+    </group>
+  );
+}
+
+/** The rock face itself, as a displaced ribbon following the fall line. */
+function SlopeTerrain() {
+  const geometry = useMemo(() => {
+    const rows = 74;
+    const cols = CREST_COLS;
+    // The flank only starts where the reef wall does. Above this the lagoon
+    // stays open water, which is what the first scroll stop is describing.
+    const startDepth = SHELF_TOP_DEPTH;
+    const random = createRandom(0xf1a4);
+    const positions = new Float32Array(rows * cols * 3);
+
+    const centre = new THREE.Vector3();
+    const across = new THREE.Vector3();
+
+    for (let r = 0; r < rows; r += 1) {
+      const depth =
+        startDepth + (r / (rows - 1)) * (MAX_DIVE_DEPTH + 60 - startDepth);
+      slopePoint(depth, centre);
+      slopeAcross(depth, across);
+
+      for (let c = 0; c < cols; c += 1) {
+        const offset = crestLateral(c);
+        const u = r * 0.16;
+        const v = c * 0.42;
+
+        // Layered ridges plus a little grit, so it reads as basalt rather
+        // than as a bent plane.
+        const relief =
+          Math.sin(u * 1.6 + v * 0.9) * 0.85 +
+          Math.sin(u * 4.1 - v * 2.3) * 0.42 +
+          Math.sin(u * 9.4 + v * 5.7) * 0.16 +
+          (random() - 0.5) * 0.5;
+
+        // Fade the displacement out over the first few rows so the crest is a
+        // clean line the lagoon can butt up against. Left ragged, the two
+        // surfaces miss each other by up to ten metres.
+        const edgeFade = Math.min(1, r / 5);
+        const shaped = relief * edgeFade;
+        // The top rows hand their shaping over to the shared crest ripple,
+        // which the lagoon uses too, so the two stay welded but irregular.
+        const crestWeight = Math.max(0, 1 - r / 6);
+
+        const index = (r * cols + c) * 3;
+        positions[index] = centre.x + across.x * offset + shaped * 0.55;
+        positions[index + 1] =
+          centre.y + shaped * 0.7 + crestRipple(offset) * crestWeight;
+        positions[index + 2] = centre.z + across.z * offset - shaped * 0.35;
+      }
+    }
+
+    const indices: number[] = [];
+    for (let r = 0; r < rows - 1; r += 1) {
+      for (let c = 0; c < cols - 1; c += 1) {
+        const a = r * cols + c;
+        const b = a + 1;
+        const d = a + cols;
+        const e = d + 1;
+        indices.push(a, d, b, b, d, e);
+      }
+    }
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geo.setIndex(indices);
+    geo.computeVertexNormals();
+    return geo;
+  }, []);
+
+  return (
+    <mesh geometry={geometry} receiveShadow>
+      <meshStandardMaterial
+        color="#38534d"
+        roughness={0.94}
+        metalness={0.04}
+        flatShading
+        side={THREE.DoubleSide}
+      />
+    </mesh>
+  );
+}
+
+/** The pipe, its anchor collars, and the concrete ballast holding it down. */
+function IntakePipe({ curve }: { curve: THREE.CatmullRomCurve3 }) {
+  const tubeGeometry = useMemo(
+    () => new THREE.TubeGeometry(curve, 180, 0.3, 14, false),
+    [curve],
+  );
+
+  // Anchored every hundred metres, which is roughly how these are actually laid.
+  const anchors = useMemo(() => {
+    const marks: Array<{ position: THREE.Vector3; quaternion: THREE.Quaternion }> = [];
+    const up = new THREE.Vector3(0, 1, 0);
+    const ahead = new THREE.Vector3();
+    const behind = new THREE.Vector3();
+
+    for (let metres = 80; metres < INTAKE_DEPTH - 40; metres += 100) {
+      const position = pipePoint(metres, new THREE.Vector3());
+      pipePoint(metres + 8, ahead);
+      pipePoint(metres - 8, behind);
+      const tangent = ahead.clone().sub(behind).normalize();
+      const quaternion = new THREE.Quaternion().setFromUnitVectors(up, tangent);
+      marks.push({ position, quaternion });
+    }
+
+    return marks;
+  }, []);
+
+  // Cones on the shore run, pointing the way the water actually goes.
+  const arrows = useMemo(() => {
+    const up = new THREE.Vector3(0, 1, 0);
+    return [0.045, 0.085, 0.125].map((t) => {
+      const position = curve.getPointAt(t);
+      const tangent = curve.getTangentAt(t).multiplyScalar(-1);
+      return {
+        position,
+        quaternion: new THREE.Quaternion().setFromUnitVectors(up, tangent),
+      };
+    });
+  }, [curve]);
+
+  return (
+    <group>
+      <mesh geometry={tubeGeometry}>
+        <meshStandardMaterial color="#2c4a53" roughness={0.62} metalness={0.22} />
+      </mesh>
+
+      {arrows.map((arrow, index) => (
+        <mesh key={index} position={arrow.position} quaternion={arrow.quaternion}>
+          <coneGeometry args={[0.3, 0.7, 10]} />
+          <meshStandardMaterial
+            color="#59e8dc"
+            emissive="#59e8dc"
+            emissiveIntensity={0.7}
+            roughness={0.4}
+          />
+        </mesh>
+      ))}
+
+      {anchors.map((anchor, index) => (
+        <group
+          key={index}
+          position={anchor.position}
+          quaternion={anchor.quaternion}
+        >
+          {/* Banding */}
+          <mesh>
+            <cylinderGeometry args={[0.42, 0.42, 0.34, 16]} />
+            <meshStandardMaterial
+              color="#6f8790"
+              roughness={0.45}
+              metalness={0.55}
+            />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+}
+
+/**
+ * The intake itself: a screened bellmouth held clear of the seabed on a frame,
+ * so it draws clean water and not sediment. The pumps are ashore.
+ */
+function IntakeStructure({ curve }: { curve: THREE.CatmullRomCurve3 }) {
+  const position = useMemo(() => curve.getPointAt(1), [curve]);
+
+  const screenBars = useMemo(
+    () => Array.from({ length: 10 }, (_, index) => (index / 10) * Math.PI * 2),
+    [],
+  );
+
+  return (
+    <group position={position}>
+      {/* Bellmouth flare */}
+      <mesh position={[0, -0.55, 0]}>
+        <cylinderGeometry args={[1.15, 0.4, 1.15, 24, 1, true]} />
+        <meshStandardMaterial
+          color="#28434c"
+          roughness={0.5}
+          metalness={0.45}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      {/* Screen: what keeps the fish and the rubbish out */}
+      <group position={[0, -1.16, 0]}>
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[1.15, 0.07, 10, 34]} />
+          <meshStandardMaterial
+            color="#59e8dc"
+            emissive="#59e8dc"
+            emissiveIntensity={0.55}
+            roughness={0.35}
+            metalness={0.5}
+          />
+        </mesh>
+        {screenBars.map((angle) => (
+          <mesh
+            key={angle}
+            position={[0, 0, 0]}
+            rotation={[0, angle, Math.PI / 2]}
+          >
+            <cylinderGeometry args={[0.035, 0.035, 2.3, 6]} />
+            <meshStandardMaterial color="#7fa3ab" roughness={0.4} metalness={0.65} />
+          </mesh>
+        ))}
+      </group>
+
+      {/* Frame legs and concrete pad, holding the mouth off the bottom */}
+      {[0, 1, 2, 3].map((index) => {
+        const angle = (index / 4) * Math.PI * 2 + Math.PI / 4;
+        return (
+          <mesh
+            key={index}
+            position={[Math.cos(angle) * 1.25, -2.1, Math.sin(angle) * 1.25]}
+            rotation={[Math.cos(angle) * 0.22, 0, -Math.sin(angle) * 0.22]}
+          >
+            <cylinderGeometry args={[0.075, 0.075, 1.9, 8]} />
+            <meshStandardMaterial color="#5f7178" roughness={0.5} metalness={0.6} />
+          </mesh>
+        );
+      })}
+
+      <mesh position={[0, -3.1, 0]}>
+        <cylinderGeometry args={[2.1, 2.35, 0.42, 22]} />
+        <meshStandardMaterial color="#8d9188" roughness={0.95} />
+      </mesh>
+    </group>
+  );
+}
+
+function DiveRig({ depth, velocity }: SceneProps) {
+  const fogRef = useRef<THREE.FogExp2>(null);
+  const backgroundColour = useRef(new THREE.Color("#1fb6a6"));
+  const keyLightRef = useRef<THREE.DirectionalLight>(null);
+  const curve = useSlopeCurve();
+
+  const diveLightRef = useRef<THREE.PointLight>(null);
+  const scratchSlope = useRef(new THREE.Vector3());
+  const scratchPipe = useRef(new THREE.Vector3());
+
+  useFrame((state) => {
+    const metres = depth.get();
+
+    // The camera hangs off the same curve as the pipe, a few metres inboard,
+    // so the flank stays in frame the whole way down.
+    slopePoint(metres, scratchSlope.current);
+    pipePoint(metres, scratchPipe.current);
+
+    state.camera.position.set(
+      scratchSlope.current.x - 8.6,
+      // Only a little above the pipe: the HUD is claiming this depth, so the
+      // camera had better be at it.
+      scratchSlope.current.y + 0.9,
+      scratchSlope.current.z + 8.4 + Math.sin(state.clock.elapsedTime * 0.16) * 0.25,
+    );
+    // Aim down the wall rather than across it, so the drop is the subject.
+    state.camera.lookAt(
+      scratchPipe.current.x + 1.6,
+      scratchPipe.current.y - 4.2,
+      scratchPipe.current.z - 2,
+    );
+
+    // A dive light riding with the camera, so the rock face nearby actually
+    // reads. Without it the flank is a silhouette at every depth.
+    if (diveLightRef.current) {
+      diveLightRef.current.position.copy(state.camera.position);
+      // Near the surface the sun does the work and a full-power lamp just
+      // blows out the lagoon floor. It takes over as the daylight dies.
+      diveLightRef.current.intensity =
+        18 + (1 - lightAtDepth(metres)) * 105;
+    }
+
+    sampleDepthColour(metres, backgroundColour.current);
+    state.scene.background = backgroundColour.current;
+
+    if (fogRef.current) {
+      fogRef.current.color.copy(backgroundColour.current);
+      // Thicker with depth: visibility collapses below the thermocline.
+      fogRef.current.density = 0.016 + (metres / MAX_DIVE_DEPTH) * 0.055;
+    }
+
+    if (keyLightRef.current) {
+      // Surface light dies on the real attenuation curve.
+      keyLightRef.current.intensity = 0.15 + lightAtDepth(metres) * 3.2;
+    }
+  });
+
+  return (
+    <>
+      <fogExp2 ref={fogRef} attach="fog" args={["#0a3f66", 0.02]} />
+      <ambientLight intensity={0.55} />
+      <pointLight
+        ref={diveLightRef}
+        intensity={18}
+        distance={34}
+        decay={1.7}
+        color="#bfeff0"
+      />
+      <directionalLight
+        ref={keyLightRef}
+        position={[-6, 30, 8]}
+        intensity={2.6}
+        color="#cdfff6"
+      />
+      {/* A working light at the intake, the only thing lit down there. */}
+      <pointLight
+        position={pipePoint(INTAKE_DEPTH, new THREE.Vector3())}
+        intensity={26}
+        distance={22}
+        decay={1.6}
+        color="#59e8dc"
+      />
+
+      <SeaSurface depth={depth} />
+      <SandLagoon />
+      <CrestCorals />
+      <ReefWallLife />
+      <IslandBeach />
+      <SlopeTerrain />
+      <LagoonLife depth={depth} />
+      <JellyfishSchool
+        depth={depth}
+        anchor={viewAnchor(JELLY_DEPTH, 45)}
+        axis={viewAxis()}
+      />
+      {/* Short leads: fog below 600 m eats anything further out. */}
+      <SpermWhale
+        depth={depth}
+        anchor={wallLane(WHALE_DEPTH, 0.6)}
+        axis={slopeAcross(WHALE_DEPTH, new THREE.Vector3())}
+      />
+      <GiantSquid
+        depth={depth}
+        anchor={viewAnchor(SQUID_DEPTH, 35)}
+        axis={viewAxis()}
+      />
+
+      <IntakePipe curve={curve} />
+      <IntakeStructure curve={curve} />
+      <MarineSnow velocity={velocity} />
+    </>
+  );
+}
+
+export default function DiveScene3D({ depth, velocity }: SceneProps) {
+  return (
+    <Canvas
+      camera={{ position: [0, 0, 6], fov: 60, near: 0.1, far: 160 }}
+      dpr={[1, 1.75]}
+      gl={{ antialias: true, powerPreference: "high-performance" }}
+      style={{ position: "absolute", inset: 0 }}
+      aria-hidden="true"
+    >
+      <DiveRig depth={depth} velocity={velocity} />
+    </Canvas>
+  );
+}
+
+export { COLUMN_UNITS };
