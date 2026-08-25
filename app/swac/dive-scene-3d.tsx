@@ -1378,8 +1378,8 @@ function DiveRig({ depth, velocity }: SceneProps) {
       <LagoonLife depth={depth} />
       <JellyfishSchool
         depth={depth}
-        anchor={viewAnchor(JELLY_DEPTH, 45)}
-        axis={viewAxis()}
+        anchor={viewAnchor(JELLY_DEPTH, 25)}
+        axis={slopeAcross(JELLY_DEPTH, new THREE.Vector3())}
       />
       {/* Short leads: fog below 600 m eats anything further out. */}
       <SpermWhale

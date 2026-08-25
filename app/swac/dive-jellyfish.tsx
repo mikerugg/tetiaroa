@@ -3,30 +3,29 @@
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { UNITS_PER_METRE } from "./dive-coordinates";
 
 /*
- * A drift of bioluminescent jellyfish through the mesophotic, scattered in
- * both position and depth around 250 m.
+ * A drift of bioluminescent jellyfish through the mesophotic, with bell
+ * centres scattered from 275 to 325 metres.
  *
- * Built from cubes rather than lofted surfaces. That is the defining feature
- * of the reference: a chunky voxel dome of dark navy blocks, a bright ragged
- * column of oral arms beneath it, and blocky tentacles ending in glowing
- * nodes. A smooth mesh cannot get there no matter how it is shaded.
+ * Built from deliberately sparse geometry: a faceted bell, five polygonal
+ * oral arms, and triangular tentacles ending in glowing nodes. The silhouette
+ * stays organic while the broad planes make the low-poly construction clear.
  *
  * Each part is baked into a single merged geometry and then instanced, so the
  * whole school is four draw calls and only a handful of matrices move per
  * frame.
  */
 
-export const JELLY_DEPTH = 250;
+export const JELLY_MIN_DEPTH = 275;
+export const JELLY_MAX_DEPTH = 325;
+export const JELLY_DEPTH = (JELLY_MIN_DEPTH + JELLY_MAX_DEPTH) / 2;
 
 const COUNT = 14;
-/** Edge length of one voxel, in world units. */
-const CELL = 0.1;
-/** Bell radius, in cells. */
-const BELL_R = 7;
-/** Bell dome height, in cells. */
-const BELL_H = 4;
+const BELL_RADIUS = 0.7;
+const BELL_SEGMENTS = 12;
+const X_AXIS = new THREE.Vector3(1, 0, 0);
 
 function seeded(seed: number) {
   let state = seed;
@@ -38,46 +37,43 @@ function seeded(seed: number) {
   };
 }
 
-/** Accumulates axis-aligned boxes into one geometry. */
-function voxels() {
+/** A tiny triangle-soup builder. Unshared vertices keep every face crisp. */
+function facets() {
   const positions: number[] = [];
-  const indices: number[] = [];
 
-  const CORNERS: Array<[number, number, number]> = [
-    [-1, -1, -1],
-    [1, -1, -1],
-    [1, 1, -1],
-    [-1, 1, -1],
-    [-1, -1, 1],
-    [1, -1, 1],
-    [1, 1, 1],
-    [-1, 1, 1],
-  ];
-  // Outward-facing, verified per face rather than guessed.
-  const FACES = [
-    4, 5, 6, 4, 6, 7, // +z
-    1, 0, 3, 1, 3, 2, // -z
-    5, 1, 2, 5, 2, 6, // +x
-    0, 4, 7, 0, 7, 3, // -x
-    7, 6, 2, 7, 2, 3, // +y
-    0, 1, 5, 0, 5, 4, // -y
-  ];
-
-  const add = (
-    x: number,
-    y: number,
-    z: number,
-    sx: number,
-    sy = sx,
-    sz = sx,
+  const addTriangle = (
+    first: THREE.Vector3,
+    second: THREE.Vector3,
+    third: THREE.Vector3,
+    inside?: THREE.Vector3,
   ) => {
-    const base = positions.length / 3;
-    for (const [cx, cy, cz] of CORNERS) {
-      positions.push(x + (cx * sx) / 2, y + (cy * sy) / 2, z + (cz * sz) / 2);
+    let b = second;
+    let c = third;
+
+    if (inside) {
+      const centre = first.clone().add(second).add(third).multiplyScalar(1 / 3);
+      const normal = second
+        .clone()
+        .sub(first)
+        .cross(third.clone().sub(first));
+      if (normal.dot(centre.sub(inside)) < 0) {
+        b = third;
+        c = second;
+      }
     }
-    for (const index of FACES) {
-      indices.push(base + index);
-    }
+
+    positions.push(...first.toArray(), ...b.toArray(), ...c.toArray());
+  };
+
+  const addQuad = (
+    a: THREE.Vector3,
+    b: THREE.Vector3,
+    c: THREE.Vector3,
+    d: THREE.Vector3,
+    inside?: THREE.Vector3,
+  ) => {
+    addTriangle(a, b, c, inside);
+    addTriangle(b, d, c, inside);
   };
 
   const finish = () => {
@@ -86,96 +82,240 @@ function voxels() {
       "position",
       new THREE.BufferAttribute(new Float32Array(positions), 3),
     );
-    geometry.setIndex(indices);
     geometry.computeVertexNormals();
     return geometry;
   };
 
-  return { add, finish };
+  return { addTriangle, addQuad, finish };
 }
 
-/** Walks the disc of cells the bell occupies. */
-function overBell(visit: (i: number, j: number, distance: number) => void) {
-  for (let i = -BELL_R; i <= BELL_R; i += 1) {
-    for (let j = -BELL_R; j <= BELL_R; j += 1) {
-      const distance = Math.hypot(i, j);
-      if (distance > BELL_R + 0.35) {
-        continue;
-      }
-      visit(i, j, distance);
-    }
+type Facets = ReturnType<typeof facets>;
+
+function ring(
+  radius: number,
+  y: number,
+  segments: number,
+  phase = 0,
+  ripple = 0,
+) {
+  return Array.from({ length: segments }, (_, segment) => {
+    const angle = (segment / segments) * Math.PI * 2 + phase;
+    const edge = radius * (1 + Math.sin(segment * 2.73 + y * 9) * ripple);
+    return new THREE.Vector3(
+      Math.cos(angle) * edge,
+      y + Math.sin(segment * 1.91) * ripple * 0.08,
+      Math.sin(angle) * edge,
+    );
+  });
+}
+
+function connectRings(
+  geometry: Facets,
+  upper: readonly THREE.Vector3[],
+  lower: readonly THREE.Vector3[],
+  inside: THREE.Vector3,
+) {
+  for (let segment = 0; segment < upper.length; segment += 1) {
+    const next = (segment + 1) % upper.length;
+    geometry.addQuad(
+      upper[segment],
+      upper[next],
+      lower[segment],
+      lower[next],
+      inside,
+    );
+  }
+}
+
+/** Adds a coarse tapered tube along a mostly vertical path. */
+function appendTube(
+  geometry: Facets,
+  points: readonly THREE.Vector3[],
+  radii: readonly number[],
+  sides: number,
+  phase: number,
+) {
+  const rings = points.map((point, pointIndex) =>
+    ring(
+      radii[pointIndex],
+      point.y,
+      sides,
+      phase + pointIndex * 0.17,
+    ).map((vertex) => {
+      vertex.x += point.x;
+      vertex.z += point.z;
+      return vertex;
+    }),
+  );
+
+  for (let pointIndex = 0; pointIndex < rings.length - 1; pointIndex += 1) {
+    const centre = points[pointIndex]
+      .clone()
+      .add(points[pointIndex + 1])
+      .multiplyScalar(0.5);
+    connectRings(
+      geometry,
+      rings[pointIndex],
+      rings[pointIndex + 1],
+      centre,
+    );
+  }
+}
+
+function appendOctahedron(
+  geometry: Facets,
+  centre: THREE.Vector3,
+  radius: number,
+) {
+  const top = centre.clone().add(new THREE.Vector3(0, radius, 0));
+  const bottom = centre.clone().add(new THREE.Vector3(0, -radius, 0));
+  const equator = [
+    new THREE.Vector3(radius, 0, 0),
+    new THREE.Vector3(0, 0, radius),
+    new THREE.Vector3(-radius, 0, 0),
+    new THREE.Vector3(0, 0, -radius),
+  ].map((vertex) => vertex.add(centre));
+
+  for (let side = 0; side < equator.length; side += 1) {
+    const next = (side + 1) % equator.length;
+    geometry.addTriangle(top, equator[side], equator[next], centre);
+    geometry.addTriangle(bottom, equator[next], equator[side], centre);
+  }
+}
+
+function buildBell(geometry: Facets) {
+  const apex = new THREE.Vector3(0, 0.5, 0);
+  const profiles = [
+    ring(0.16, 0.46, BELL_SEGMENTS, 0, 0.025),
+    ring(0.39, 0.34, BELL_SEGMENTS, 0, 0.025),
+    ring(0.59, 0.17, BELL_SEGMENTS, 0, 0.025),
+    ring(BELL_RADIUS, 0, BELL_SEGMENTS, 0, 0.025),
+  ];
+  const inside = new THREE.Vector3(0, -0.18, 0);
+
+  for (let segment = 0; segment < BELL_SEGMENTS; segment += 1) {
+    const next = (segment + 1) % BELL_SEGMENTS;
+    geometry.addTriangle(
+      apex,
+      profiles[0][segment],
+      profiles[0][next],
+      inside,
+    );
+  }
+
+  for (let profile = 0; profile < profiles.length - 1; profile += 1) {
+    connectRings(
+      geometry,
+      profiles[profile],
+      profiles[profile + 1],
+      inside,
+    );
+  }
+}
+
+function buildUnderside(geometry: Facets) {
+  const centre = new THREE.Vector3(0, 0.045, 0);
+  const inner = ring(
+    0.24,
+    0.025,
+    BELL_SEGMENTS,
+    Math.PI / BELL_SEGMENTS,
+  );
+  const rim = ring(BELL_RADIUS * 0.96, -0.025, BELL_SEGMENTS, 0, 0.025);
+  const above = new THREE.Vector3(0, 0.35, 0);
+
+  for (let segment = 0; segment < BELL_SEGMENTS; segment += 1) {
+    const next = (segment + 1) % BELL_SEGMENTS;
+    geometry.addTriangle(
+      centre,
+      inner[next],
+      inner[segment],
+      above,
+    );
+  }
+  connectRings(geometry, inner, rim, above);
+}
+
+function buildOralArms(geometry: Facets, random: () => number) {
+  const arms = 5;
+
+  for (let arm = 0; arm < arms; arm += 1) {
+    const angle = (arm / arms) * Math.PI * 2 + 0.35;
+    const length = 1.35 + random() * 0.45;
+    const steps = 6;
+    const startRadius = 0.13 + random() * 0.025;
+    const points = Array.from({ length: steps }, (_, step) => {
+      const t = step / (steps - 1);
+      const curl = Math.sin(t * Math.PI * 1.4 + arm) * (0.035 + t * 0.08);
+      const spread = 0.16 + t * 0.1;
+      return new THREE.Vector3(
+        Math.cos(angle) * spread + Math.cos(angle + Math.PI / 2) * curl,
+        -0.04 - t * length,
+        Math.sin(angle) * spread + Math.sin(angle + Math.PI / 2) * curl,
+      );
+    });
+    const radii = points.map((_, step) =>
+      THREE.MathUtils.lerp(startRadius, 0.035, step / (steps - 1)),
+    );
+    appendTube(geometry, points, radii, 5, angle);
+  }
+}
+
+function buildTentacles(
+  geometry: Facets,
+  tips: Facets,
+  random: () => number,
+) {
+  const strands = 11;
+
+  for (let strand = 0; strand < strands; strand += 1) {
+    const angle =
+      (strand / strands) * Math.PI * 2 + (random() - 0.5) * 0.18;
+    const long = strand % 3 !== 0;
+    const length = long ? 2.7 + random() * 1.35 : 0.9 + random() * 0.35;
+    const steps = long ? 8 : 5;
+    const startDistance = 0.48 + random() * 0.14;
+    const bend = (random() - 0.5) * 0.26;
+    const wave = 0.045 + random() * 0.07;
+    const points = Array.from({ length: steps }, (_, step) => {
+      const t = step / (steps - 1);
+      const outward = startDistance + t * (0.12 + random() * 0.018);
+      const cross = Math.sin(t * Math.PI * 2 + strand * 1.7) * wave;
+      return new THREE.Vector3(
+        Math.cos(angle) * outward +
+          Math.cos(angle + Math.PI / 2) * cross +
+          bend * t * t,
+        -0.035 - t * length,
+        Math.sin(angle) * outward +
+          Math.sin(angle + Math.PI / 2) * cross -
+          bend * 0.35 * t * t,
+      );
+    });
+    const startWidth = long ? 0.026 : 0.036;
+    const radii = points.map((_, step) =>
+      THREE.MathUtils.lerp(startWidth, startWidth * 0.45, step / (steps - 1)),
+    );
+    appendTube(geometry, points, radii, 3, angle + Math.PI / 6);
+    appendOctahedron(
+      tips,
+      points[points.length - 1],
+      long ? 0.065 : 0.055,
+    );
   }
 }
 
 function buildJellyfish() {
   const random = seeded(0x9e11);
 
-  const shell = voxels();
-  const glow = voxels();
-  const trail = voxels();
-  const tips = voxels();
+  const shell = facets();
+  const glow = facets();
+  const trail = facets();
+  const tips = facets();
 
-  // --- Dome: a stepped shell of cubes, deliberately ragged at the crown ---
-  overBell((i, j, distance) => {
-    const top = Math.round(
-      BELL_H * Math.sqrt(Math.max(0, 1 - (distance / BELL_R) ** 2)),
-    );
-    const from = Math.max(1, top - (random() < 0.5 ? 1 : 0));
-    for (let k = from; k <= top; k += 1) {
-      // A few blocks pushed proud, which is what makes it look built.
-      const jut = random() < 0.12 ? CELL * 0.5 : 0;
-      shell.add(i * CELL, k * CELL + jut, j * CELL, CELL);
-    }
-  });
-
-  // --- Underside: the flat plate, and the brightest surface on the animal ---
-  overBell((i, j) => {
-    glow.add(i * CELL, 0, j * CELL, CELL);
-  });
-
-  // --- Oral arms: a ragged tapering column, brighter than the dome ---
-  const columnDepth = 17;
-  for (let level = 1; level <= columnDepth; level += 1) {
-    const t = level / columnDepth;
-    const radius = 3.4 * (1 - t) + 0.4;
-    for (let i = -4; i <= 4; i += 1) {
-      for (let j = -4; j <= 4; j += 1) {
-        if (Math.hypot(i, j) > radius) {
-          continue;
-        }
-        // Holes: the reference's column is broken up, not a solid cone.
-        if (random() < 0.32) {
-          continue;
-        }
-        glow.add(i * CELL, -level * CELL, j * CELL, CELL);
-      }
-    }
-  }
-
-  // --- Tentacles: blocky strands from the rim, some short, some very long ---
-  const strands = 11;
-  for (let s = 0; s < strands; s += 1) {
-    const angle = (s / strands) * Math.PI * 2 + random() * 0.35;
-    const ring = (BELL_R - 0.6 - random() * 2.2) * CELL;
-    let x = Math.cos(angle) * ring;
-    let z = Math.sin(angle) * ring;
-    // A third of them stop just below the bell; the rest stream a long way.
-    const long = s % 3 !== 0;
-    const length = long ? 26 + Math.floor(random() * 16) : 7 + Math.floor(random() * 5);
-    const width = CELL * (long ? 0.7 : 0.95);
-
-    for (let k = 1; k <= length; k += 1) {
-      // Wander, and drift outward as they fall.
-      x += (random() - 0.5) * CELL * 0.55 + Math.cos(angle) * CELL * 0.06;
-      z += (random() - 0.5) * CELL * 0.55 + Math.sin(angle) * CELL * 0.06;
-      if (random() < 0.1) {
-        continue;
-      }
-      trail.add(x, -k * CELL, z, width, CELL, width);
-    }
-
-    tips.add(x, -(length + 1) * CELL, z, CELL * 1.25);
-  }
+  buildBell(shell);
+  buildUnderside(glow);
+  buildOralArms(glow, random);
+  buildTentacles(trail, tips, random);
 
   return {
     shell: shell.finish(),
@@ -188,10 +328,22 @@ function buildJellyfish() {
 type Jelly = {
   home: THREE.Vector3;
   scale: number;
-  phase: number;
+  pulsePhase: number;
   pulseRate: number;
+  bobPhase: number;
+  bobRate: number;
+  bobAmplitude: number;
+  driftPhaseX: number;
+  driftPhaseZ: number;
   driftRate: number;
-  spin: number;
+  driftAmplitude: number;
+  swayPhaseX: number;
+  swayPhaseZ: number;
+  swayRate: number;
+  swayAmplitude: number;
+  yawPhase: number;
+  yawRate: number;
+  yawAmplitude: number;
 };
 
 export function JellyfishSchool({
@@ -215,19 +367,42 @@ export function JellyfishSchool({
 
   const school = useMemo<Jelly[]>(() => {
     const random = seeded(0x1e11);
-    return Array.from({ length: preview ? 1 : COUNT }, () => ({
-      home: new THREE.Vector3(
-        (random() - 0.5) * 26,
-        // Scattered through roughly 250 m plus or minus fifty.
-        (random() - 0.5) * 10,
-        (random() - 0.5) * 16,
-      ),
-      scale: 0.5 + random() * 0.75,
-      phase: random() * Math.PI * 2,
-      pulseRate: 0.45 + random() * 0.4,
-      driftRate: 0.1 + random() * 0.12,
-      spin: (random() - 0.5) * 0.25,
-    }));
+    const total = preview ? 1 : COUNT;
+
+    return Array.from({ length: total }, (_, index) => {
+      const bobAmplitude = 0.12 + random() * 0.12;
+      // Stratification prevents a seeded random clump while leaving enough
+      // room at either edge for the full bob to remain inside 275–325 m.
+      const depthSlot = (index + 0.1 + random() * 0.8) / total;
+      const homeDepth = 277.5 + depthSlot * 45;
+
+      return {
+        home: preview
+          ? new THREE.Vector3()
+          : new THREE.Vector3(
+              (random() - 0.5) * 15,
+              (JELLY_DEPTH - homeDepth) * UNITS_PER_METRE,
+              0.75 + random() * 2.25,
+            ),
+        scale: preview ? 1 : 0.32 + random() * 0.33,
+        pulsePhase: random() * Math.PI * 2,
+        pulseRate: 0.36 + random() * 0.32,
+        bobPhase: random() * Math.PI * 2,
+        bobRate: 0.13 + random() * 0.12,
+        bobAmplitude,
+        driftPhaseX: random() * Math.PI * 2,
+        driftPhaseZ: random() * Math.PI * 2,
+        driftRate: 0.045 + random() * 0.055,
+        driftAmplitude: 0.25 + random() * 0.35,
+        swayPhaseX: random() * Math.PI * 2,
+        swayPhaseZ: random() * Math.PI * 2,
+        swayRate: 0.18 + random() * 0.18,
+        swayAmplitude: 0.035 + random() * 0.055,
+        yawPhase: random() * Math.PI * 2,
+        yawRate: 0.035 + random() * 0.04,
+        yawAmplitude: 0.08 + random() * 0.17,
+      };
+    });
   }, [preview]);
 
   const bellDummy = useMemo(() => new THREE.Object3D(), []);
@@ -244,7 +419,7 @@ export function JellyfishSchool({
     }
 
     if (!preview) {
-      group.visible = Math.abs(depth.get() - JELLY_DEPTH) < 220;
+      group.visible = Math.abs(depth.get() - JELLY_DEPTH) < 130;
       if (!group.visible) {
         return;
       }
@@ -252,24 +427,41 @@ export function JellyfishSchool({
         group.position.copy(anchor);
       }
       if (axis) {
-        group.quaternion.setFromUnitVectors(new THREE.Vector3(1, 0, 0), axis);
+        group.quaternion.setFromUnitVectors(X_AXIS, axis);
       }
     }
 
     const time = state.clock.elapsedTime;
 
     school.forEach((jelly, index) => {
-      const pulse = Math.sin(time * jelly.pulseRate + jelly.phase);
-      const yaw = time * jelly.spin;
+      const pulseAngle = time * jelly.pulseRate + jelly.pulsePhase;
+      const pulse =
+        Math.sin(pulseAngle) * 0.72 +
+        Math.sin(pulseAngle * 2 - 0.8) * 0.28;
+      const yaw =
+        Math.sin(time * jelly.yawRate + jelly.yawPhase) * jelly.yawAmplitude;
       const x =
-        jelly.home.x + Math.cos(time * jelly.driftRate * 0.7) * 0.5;
+        jelly.home.x +
+        Math.sin(time * jelly.driftRate + jelly.driftPhaseX) *
+          jelly.driftAmplitude;
       const y =
         jelly.home.y +
-        Math.sin(time * jelly.driftRate + jelly.phase) * 0.9;
+        Math.sin(time * jelly.bobRate + jelly.bobPhase) * jelly.bobAmplitude;
+      const z =
+        jelly.home.z +
+        Math.cos(time * jelly.driftRate * 0.73 + jelly.driftPhaseZ) *
+          jelly.driftAmplitude *
+          0.55;
+      const swayX =
+        Math.sin(time * jelly.swayRate + jelly.swayPhaseX) *
+        jelly.swayAmplitude;
+      const swayZ =
+        Math.cos(time * jelly.swayRate * 0.83 + jelly.swayPhaseZ) *
+        jelly.swayAmplitude;
 
       // The bell squashes and spreads as it pumps.
-      bellDummy.position.set(x, y, jelly.home.z);
-      bellDummy.rotation.set(0, yaw, 0);
+      bellDummy.position.set(x, y, z);
+      bellDummy.rotation.set(swayX * 0.45, yaw, swayZ * 0.45);
       bellDummy.scale.set(
         jelly.scale * (1 - pulse * 0.1),
         jelly.scale * (1 + pulse * 0.16),
@@ -281,12 +473,8 @@ export function JellyfishSchool({
 
       // The trail keeps its length — squashing it with the bell would make
       // the tentacles concertina, which reads as rubber.
-      trailDummy.position.set(x, y, jelly.home.z);
-      trailDummy.rotation.set(
-        Math.sin(time * 0.35 + jelly.phase) * 0.06,
-        yaw,
-        Math.cos(time * 0.29 + jelly.phase) * 0.06,
-      );
+      trailDummy.position.set(x, y, z);
+      trailDummy.rotation.set(swayX * 1.45, yaw, swayZ * 1.45);
       trailDummy.scale.setScalar(jelly.scale);
       trailDummy.updateMatrix();
       trail.setMatrixAt(index, trailDummy.matrix);
@@ -303,7 +491,7 @@ export function JellyfishSchool({
 
   return (
     <group ref={groupRef}>
-      {/* Dome: dark navy blocks, lit mostly by their own faint glow */}
+      {/* Faceted dome, lit mostly by its own faint glow */}
       <instancedMesh
         ref={shellRef}
         args={[parts.shell, undefined, total]}
@@ -320,7 +508,7 @@ export function JellyfishSchool({
         />
       </instancedMesh>
 
-      {/* Underside plate and oral column: the bright core */}
+      {/* Underside membrane and polygonal oral arms: the bright core */}
       <instancedMesh
         ref={glowRef}
         args={[parts.glow, undefined, total]}

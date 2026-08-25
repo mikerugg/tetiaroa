@@ -218,7 +218,10 @@ function buildProfileLoftBody(
       const b = section * segments + ((segment + 1) % segments);
       const c = (section + 1) * segments + segment;
       const d = (section + 1) * segments + ((segment + 1) % segments);
-      indices.push(a, b, c, b, d, c);
+      // Sections advance along +X while ring angles advance from +Z toward
+      // +Y. Reverse the strip triangles so their normals face out from the
+      // body instead of into it.
+      indices.push(a, c, b, b, c, d);
     }
   }
 
@@ -678,6 +681,30 @@ function setReefOrbitPoint(
   return target;
 }
 
+/**
+ * Local reef-frame route: x travels across the wall, y is distance seaward,
+ * and z is a small depth offset. The long low-y run follows the shelf face;
+ * the high-y arc brings the turtle back past the viewer.
+ */
+const TURTLE_ROUTE = new THREE.CatmullRomCurve3(
+  [
+    new THREE.Vector3(0.2, 8.8, 0.05),
+    new THREE.Vector3(1.8, 9.25, 0.12),
+    new THREE.Vector3(3.4, 9, 0.08),
+    new THREE.Vector3(5, 7, -0.06),
+    new THREE.Vector3(5.5, 4.3, -0.12),
+    new THREE.Vector3(2.8, 4.1, 0.02),
+    new THREE.Vector3(-1, 4.1, 0.1),
+    new THREE.Vector3(-5.2, 4.25, -0.04),
+    new THREE.Vector3(-6.1, 5, -0.1),
+    new THREE.Vector3(-5.2, 7.4, 0.04),
+  ],
+  true,
+  "centripetal",
+  0.5,
+);
+TURTLE_ROUTE.arcLengthDivisions = 240;
+
 const GIANT_JACK_FORMATION = [
   { id: "leader", x: 0, y: 0, z: 0, scale: 1, tailPhase: 0 },
   {
@@ -697,6 +724,7 @@ const GIANT_JACK_FORMATION = [
     tailPhase: 2.7,
   },
 ] as const;
+const GIANT_JACK_PREVIEW_FORMATION = [GIANT_JACK_FORMATION[0]] as const;
 
 type DepthSignal = { get: () => number };
 
@@ -716,12 +744,15 @@ function FishSchool({ depth }: { depth: DepthSignal }) {
 
   const shoal = useMemo(() => {
     const random = seededRandom(0x5c4001);
-    return Array.from({ length: FISH_COUNT }, () => {
+    return Array.from({ length: FISH_COUNT }, (_, index) => {
       return {
         acrossRadius: 4.2 + random(),
         oceanRadius: 3.4 + random() * 0.5,
         height: -1.1 - random() * 2.4,
-        lagoonHeight: -0.72 - random() * 0.22,
+        // The shore run sits at y=-0.9; this keeps the complete fish envelope
+        // above the pipe while it crosses the lagoon.
+        lagoonHeight: -0.25 - random() * 0.04,
+        direction: index % 4 === 0 ? -1 : 1,
         phase: random() * Math.PI * 2,
         speed: 0.065 + random() * 0.04,
         surgeRate: 0.055 + random() * 0.04,
@@ -789,8 +820,10 @@ function FishSchool({ depth }: { depth: DepthSignal }) {
     shoal.forEach((fish, index) => {
       const angle =
         fish.phase +
-        time * fish.speed +
-        Math.sin(time * fish.surgeRate + fish.pathPhase) * fish.surgeAmount;
+        fish.direction *
+          (time * fish.speed +
+            Math.sin(time * fish.surgeRate + fish.pathPhase) *
+              fish.surgeAmount);
       const across =
         orbitAcrossBias +
         fish.acrossCentre +
@@ -821,9 +854,10 @@ function FishSchool({ depth }: { depth: DepthSignal }) {
       const nextTime = time + 0.18;
       const nextAngle =
         fish.phase +
-        nextTime * fish.speed +
-        Math.sin(nextTime * fish.surgeRate + fish.pathPhase) *
-          fish.surgeAmount;
+        fish.direction *
+          (nextTime * fish.speed +
+            Math.sin(nextTime * fish.surgeRate + fish.pathPhase) *
+              fish.surgeAmount);
       const nextAcross =
         orbitAcrossBias +
         fish.acrossCentre +
@@ -1007,105 +1041,331 @@ function FishSchool({ depth }: { depth: DepthSignal }) {
   );
 }
 
-/** Green turtle. Reverted to the stretched-sphere build. */
-function SeaTurtle() {
+const TURTLE_SHELL_SECTIONS: readonly ProfileLoftSection[] = [
+  { x: -1.04, top: 0.01, bottom: -0.03, halfWidth: 0.03 },
+  { x: -0.86, top: 0.19, bottom: -0.13, halfWidth: 0.38 },
+  { x: -0.55, top: 0.42, bottom: -0.18, halfWidth: 0.66 },
+  { x: -0.12, top: 0.61, bottom: -0.2, halfWidth: 0.78 },
+  { x: 0.28, top: 0.53, bottom: -0.19, halfWidth: 0.75 },
+  { x: 0.6, top: 0.37, bottom: -0.15, halfWidth: 0.58 },
+  { x: 0.82, top: 0.2, bottom: -0.08, halfWidth: 0.31 },
+  { x: 0.9, top: 0.035, bottom: 0.035, halfWidth: 0 },
+];
+
+const TURTLE_NECK_SECTIONS: readonly ProfileLoftSection[] = [
+  { x: 0.58, top: 0.12, bottom: -0.17, halfWidth: 0.21 },
+  { x: 0.82, top: 0.2, bottom: -0.14, halfWidth: 0.23 },
+  { x: 1.04, top: 0.23, bottom: -0.12, halfWidth: 0.22 },
+  { x: 1.16, top: 0.14, bottom: -0.06, halfWidth: 0.12 },
+];
+
+const TURTLE_HEAD_SECTIONS: readonly ProfileLoftSection[] = [
+  { x: 1.02, top: 0.22, bottom: -0.12, halfWidth: 0.21 },
+  { x: 1.25, top: 0.33, bottom: -0.18, halfWidth: 0.3 },
+  { x: 1.5, top: 0.29, bottom: -0.16, halfWidth: 0.27 },
+  { x: 1.66, top: 0.2, bottom: -0.1, halfWidth: 0.18 },
+];
+
+const TURTLE_FRONT_FLIPPER_SECTIONS: readonly ProfileLoftSection[] = [
+  { x: 0, top: 0.09, bottom: -0.09, halfWidth: 0.21 },
+  { x: 0.25, top: 0.12, bottom: -0.1, halfWidth: 0.29 },
+  { x: 0.62, top: 0.08, bottom: -0.11, halfWidth: 0.25 },
+  { x: 0.98, top: 0.015, bottom: -0.09, halfWidth: 0.15 },
+  { x: 1.24, top: -0.045, bottom: -0.045, halfWidth: 0 },
+];
+
+const TURTLE_REAR_FLIPPER_SECTIONS: readonly ProfileLoftSection[] = [
+  { x: 0, top: 0.065, bottom: -0.065, halfWidth: 0.15 },
+  { x: 0.2, top: 0.08, bottom: -0.07, halfWidth: 0.2 },
+  { x: 0.43, top: 0.025, bottom: -0.075, halfWidth: 0.14 },
+  { x: 0.64, top: -0.04, bottom: -0.04, halfWidth: 0 },
+];
+
+const TURTLE_SHELL_COLOURS = [
+  "#23483d",
+  "#2d5748",
+  "#386451",
+  "#47715a",
+  "#537b61",
+];
+const TURTLE_SKIN_COLOURS = [
+  "#354f31",
+  "#445f38",
+  "#526d3f",
+  "#607a46",
+  "#718951",
+];
+const TURTLE_UNDERSIDE_COLOURS = ["#233827", "#2c432d", "#354c33"];
+const TURTLE_SIDES = [1, -1] as const;
+
+/** Gives a deliberately coarse mesh a palette per triangle, not a smooth wash. */
+function colourTurtleFacets(
+  source: THREE.BufferGeometry,
+  palette: readonly string[],
+  seed: number,
+) {
+  const geometry = source.index ? source.toNonIndexed() : source.clone();
+  source.dispose();
+  const position = geometry.getAttribute("position");
+  const colours = new Float32Array(position.count * 3);
+  const random = seededRandom(seed);
+
+  for (let vertex = 0; vertex < position.count; vertex += 3) {
+    const colour = new THREE.Color(
+      palette[Math.floor(random() * palette.length)],
+    );
+    for (let corner = 0; corner < 3; corner += 1) {
+      const offset = (vertex + corner) * 3;
+      colours[offset] = colour.r;
+      colours[offset + 1] = colour.g;
+      colours[offset + 2] = colour.b;
+    }
+  }
+
+  geometry.setAttribute("color", new THREE.BufferAttribute(colours, 3));
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+function useSeaTurtleGeometries() {
+  return useMemo(
+    () => ({
+      shell: colourTurtleFacets(
+        buildProfileLoftBody(TURTLE_SHELL_SECTIONS, 8),
+        TURTLE_SHELL_COLOURS,
+        0x5e1101,
+      ),
+      neck: colourTurtleFacets(
+        buildProfileLoftBody(TURTLE_NECK_SECTIONS, 7),
+        TURTLE_SKIN_COLOURS,
+        0x5e1102,
+      ),
+      head: colourTurtleFacets(
+        buildProfileLoftBody(TURTLE_HEAD_SECTIONS, 6),
+        TURTLE_SKIN_COLOURS,
+        0x5e1103,
+      ),
+      plastron: colourTurtleFacets(
+        new THREE.IcosahedronGeometry(1, 1),
+        TURTLE_UNDERSIDE_COLOURS,
+        0x5e1104,
+      ),
+      frontFlipper: colourTurtleFacets(
+        buildProfileLoftBody(TURTLE_FRONT_FLIPPER_SECTIONS, 6),
+        TURTLE_SKIN_COLOURS,
+        0x5e1105,
+      ),
+      rearFlipper: colourTurtleFacets(
+        buildProfileLoftBody(TURTLE_REAR_FLIPPER_SECTIONS, 6),
+        TURTLE_SKIN_COLOURS,
+        0x5e1106,
+      ),
+      tail: colourTurtleFacets(
+        new THREE.ConeGeometry(0.1, 0.28, 4, 1),
+        TURTLE_SKIN_COLOURS,
+        0x5e1107,
+      ),
+      eye: new THREE.IcosahedronGeometry(1, 0),
+    }),
+    [],
+  );
+}
+
+/** Green turtle, built as a deliberately coarse faceted model. */
+export function SeaTurtle({ preview = false }: { preview?: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
-  const frontFlippers = useRef<THREE.Group>(null);
-  const rearFlippers = useRef<THREE.Group>(null);
+  const frontFlippers = useRef<Array<THREE.Group | null>>([]);
+  const rearFlippers = useRef<Array<THREE.Group | null>>([]);
+  const routeProgress = useRef(0.12);
   const ahead = useMemo(() => new THREE.Vector3(), []);
+  const routePoint = useMemo(() => new THREE.Vector3(), []);
+  const routeAhead = useMemo(() => new THREE.Vector3(), []);
   const reefFrame = useMemo(
     () => reefFrameAtDepth(TURTLE_DEPTH_METRES),
     [],
   );
+  const geometries = useSeaTurtleGeometries();
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const group = groupRef.current;
-    if (!group) {
+    if (!group || preview) {
       return;
     }
     const time = state.clock.elapsedTime;
-    const angle = time * 0.1;
-    const nextAngle = angle + 0.05;
-    const y = TURTLE_DEPTH_Y + Math.sin(time * 0.32) * 0.4;
+
+    // Cruise beside the reef, then surge briefly while leaving it and again
+    // on the homeward leg. Smooth envelopes avoid snapping between speeds.
+    const progress = routeProgress.current;
+    const departureSurge =
+      THREE.MathUtils.smoothstep(progress, 0.16, 0.21) *
+      (1 - THREE.MathUtils.smoothstep(progress, 0.29, 0.35));
+    const returnSurge =
+      THREE.MathUtils.smoothstep(progress, 0.72, 0.78) *
+      (1 - THREE.MathUtils.smoothstep(progress, 0.91, 0.97));
+    const surge = Math.max(departureSurge, returnSurge);
+    const routeSpeed = 0.009 + surge * 0.027;
+    routeProgress.current =
+      (routeProgress.current + Math.min(delta, 0.05) * routeSpeed) % 1;
+    const nextProgress = (routeProgress.current + 0.004 + surge * 0.002) % 1;
+
+    TURTLE_ROUTE.getPointAt(routeProgress.current, routePoint);
+    TURTLE_ROUTE.getPointAt(nextProgress, routeAhead);
+    const bob = Math.sin(time * 0.42) * 0.1;
+    const nextBob = Math.sin((time + 0.16) * 0.42) * 0.1;
 
     setReefOrbitPoint(
       group.position,
       reefFrame,
-      0.5 + Math.cos(angle) * 2.2,
-      6.5 + Math.sin(angle) * 1.7,
-      y,
+      routePoint.x,
+      routePoint.y,
+      TURTLE_DEPTH_Y + routePoint.z + bob,
     );
     setReefOrbitPoint(
       ahead,
       reefFrame,
-      0.5 + Math.cos(nextAngle) * 2.2,
-      6.5 + Math.sin(nextAngle) * 1.7,
-      y,
+      routeAhead.x,
+      routeAhead.y,
+      TURTLE_DEPTH_Y + routeAhead.z + nextBob,
     );
     group.lookAt(ahead);
     group.rotateY(NOSE_TOWARDS_POSITIVE_X);
+    group.rotateZ(Math.sin(time * 0.35) * 0.04);
 
     // Flippers row rather than flap: turtles fly, they do not paddle.
-    const stroke = Math.sin(time * 1.25) * 0.5;
-    if (frontFlippers.current) {
-      frontFlippers.current.rotation.z = stroke;
-    }
-    if (rearFlippers.current) {
-      rearFlippers.current.rotation.z = stroke * 0.25;
-    }
+    const stroke = Math.sin(time * 1.15);
+    frontFlippers.current.forEach((flipper, index) => {
+      if (!flipper) return;
+      const side = index === 0 ? 1 : -1;
+      flipper.rotation.x = side * (0.2 + stroke * 0.36);
+    });
+    rearFlippers.current.forEach((flipper, index) => {
+      if (!flipper) return;
+      const side = index === 0 ? 1 : -1;
+      flipper.rotation.x = side * (0.03 - stroke * 0.07);
+    });
   });
 
   return (
-    <group ref={groupRef} scale={0.34}>
-      {/* Carapace */}
-      <mesh scale={[1.05, 0.34, 0.86]}>
-        <sphereGeometry args={[1, 18, 12]} />
-        <meshStandardMaterial color="#5c6b46" roughness={0.85} flatShading />
+    <group ref={groupRef} scale={0.32}>
+      <mesh geometry={geometries.shell}>
+        <meshStandardMaterial
+          vertexColors
+          roughness={0.88}
+          metalness={0}
+          flatShading
+        />
       </mesh>
-      {/* Plastron */}
-      <mesh position={[0, -0.12, 0]} scale={[0.92, 0.16, 0.76]}>
-        <sphereGeometry args={[1, 14, 10]} />
-        <meshStandardMaterial color="#c3b78c" roughness={0.9} flatShading />
-      </mesh>
-      {/* Head */}
-      <mesh position={[1.02, 0.02, 0]} scale={[0.34, 0.24, 0.24]}>
-        <sphereGeometry args={[1, 12, 10]} />
-        <meshStandardMaterial color="#67764f" roughness={0.85} flatShading />
+      <mesh
+        geometry={geometries.plastron}
+        position={[-0.03, -0.17, 0]}
+        scale={[0.83, 0.15, 0.61]}
+      >
+        <meshStandardMaterial
+          vertexColors
+          roughness={0.9}
+          metalness={0}
+          flatShading
+        />
       </mesh>
 
-      <group ref={frontFlippers}>
-        {[1, -1].map((side) => (
-          <mesh
-            key={side}
-            position={[0.42, 0, side * 0.78]}
-            rotation={[0, side * -0.5, 0]}
-            scale={[0.72, 0.07, 0.28]}
-          >
-            <sphereGeometry args={[1, 10, 8]} />
-            <meshStandardMaterial color="#5c6b46" roughness={0.85} flatShading />
-          </mesh>
-        ))}
-      </group>
+      <mesh geometry={geometries.neck}>
+        <meshStandardMaterial
+          vertexColors
+          roughness={0.86}
+          metalness={0}
+          flatShading
+        />
+      </mesh>
+      <mesh geometry={geometries.head}>
+        <meshStandardMaterial
+          vertexColors
+          roughness={0.86}
+          metalness={0}
+          flatShading
+        />
+      </mesh>
 
-      <group ref={rearFlippers}>
-        {[1, -1].map((side) => (
-          <mesh
-            key={side}
-            position={[-0.72, 0, side * 0.56]}
-            rotation={[0, side * 0.6, 0]}
-            scale={[0.4, 0.06, 0.2]}
+      {TURTLE_SIDES.map((side, index) => (
+        <group
+          key={`front-${side}`}
+          ref={(node) => {
+            frontFlippers.current[index] = node;
+          }}
+          position={[0.32, -0.055, side * 0.58]}
+          rotation={[side === 1 ? 1 : -0.2, 0, 0]}
+        >
+          <group
+            rotation={[0, side === 1 ? -1 : 1.9, side * -0.05]}
           >
-            <sphereGeometry args={[1, 10, 8]} />
-            <meshStandardMaterial color="#5c6b46" roughness={0.85} flatShading />
+            <mesh geometry={geometries.frontFlipper}>
+              <meshStandardMaterial
+                vertexColors
+                roughness={0.88}
+                metalness={0}
+                flatShading
+              />
+            </mesh>
+          </group>
+        </group>
+      ))}
+
+      {TURTLE_SIDES.map((side, index) => (
+        <group
+          key={`rear-${side}`}
+          ref={(node) => {
+            rearFlippers.current[index] = node;
+          }}
+          position={[-0.71, -0.09, side * 0.48]}
+          rotation={[side * 0.03, 0, 0]}
+        >
+          <group rotation={[0, side * -1.72, side * 0.04]}>
+            <mesh geometry={geometries.rearFlipper}>
+              <meshStandardMaterial
+                vertexColors
+                roughness={0.88}
+                metalness={0}
+                flatShading
+              />
+            </mesh>
+          </group>
+        </group>
+      ))}
+
+      <mesh
+        geometry={geometries.tail}
+        position={[-1.08, -0.045, 0]}
+        rotation={[0, 0, Math.PI / 2]}
+      >
+        <meshStandardMaterial
+          vertexColors
+          roughness={0.88}
+          metalness={0}
+          flatShading
+        />
+      </mesh>
+
+      {TURTLE_SIDES.map((side) => (
+        <group key={`face-${side}`}>
+          <mesh
+            geometry={geometries.eye}
+            position={[1.43, 0.18, side * 0.258]}
+            scale={[0.05, 0.052, 0.02]}
+          >
+            <meshStandardMaterial
+              color="#061612"
+              roughness={0.5}
+              metalness={0}
+              flatShading
+            />
           </mesh>
-        ))}
-      </group>
+        </group>
+      ))}
     </group>
   );
 }
 
 /** Giant jack (uru'ati): French Polynesia's largest jackfish. */
-function BigFish() {
+export function GiantJack({ preview = false }: { preview?: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const fishRefs = useRef<Array<THREE.Group | null>>([]);
   const tailRefs = useRef<Array<THREE.Group | null>>([]);
@@ -1115,6 +1375,9 @@ function BigFish() {
     [],
   );
   const geometries = useGiantJackGeometries();
+  const formation = preview
+    ? GIANT_JACK_PREVIEW_FORMATION
+    : GIANT_JACK_FORMATION;
   const individualMotion = useMemo(() => {
     const random = seededRandom(0x6a4c4b);
     return GIANT_JACK_FORMATION.map((_, index) => ({
@@ -1136,33 +1399,35 @@ function BigFish() {
       return;
     }
     const time = state.clock.elapsedTime;
-    // Stay in open water between the camera and the reef face. The formation
-    // needs extra clearance because the two friends trail outside this ellipse.
-    const angle = time * 0.075 - 0.7;
-    const nextAngle = angle + 0.025;
-    const y = GIANT_JACK_DEPTH_Y + Math.sin(angle * 2 + 0.3) * 0.18;
-    const nextY =
-      GIANT_JACK_DEPTH_Y + Math.sin(nextAngle * 2 + 0.3) * 0.18;
+    if (!preview) {
+      // Stay in open water between the camera and the reef face. The formation
+      // needs extra clearance because the two friends trail outside this ellipse.
+      const angle = time * 0.075 - 0.7;
+      const nextAngle = angle + 0.025;
+      const y = GIANT_JACK_DEPTH_Y + Math.sin(angle * 2 + 0.3) * 0.18;
+      const nextY =
+        GIANT_JACK_DEPTH_Y + Math.sin(nextAngle * 2 + 0.3) * 0.18;
 
-    setReefOrbitPoint(
-      group.position,
-      reefFrame,
-      Math.cos(angle) * 1.35,
-      6.8 + Math.sin(angle) * 0.95,
-      y,
-    );
-    setReefOrbitPoint(
-      ahead,
-      reefFrame,
-      Math.cos(nextAngle) * 1.35,
-      6.8 + Math.sin(nextAngle) * 0.95,
-      nextY,
-    );
-    group.lookAt(ahead);
-    group.rotateY(NOSE_TOWARDS_POSITIVE_X);
-    group.rotateZ(Math.sin(time * 0.55) * 0.025);
+      setReefOrbitPoint(
+        group.position,
+        reefFrame,
+        Math.cos(angle) * 1.35,
+        6.8 + Math.sin(angle) * 0.95,
+        y,
+      );
+      setReefOrbitPoint(
+        ahead,
+        reefFrame,
+        Math.cos(nextAngle) * 1.35,
+        6.8 + Math.sin(nextAngle) * 0.95,
+        nextY,
+      );
+      group.lookAt(ahead);
+      group.rotateY(NOSE_TOWARDS_POSITIVE_X);
+      group.rotateZ(Math.sin(time * 0.55) * 0.025);
+    }
 
-    GIANT_JACK_FORMATION.forEach((fish, index) => {
+    formation.forEach((fish, index) => {
       const member = fishRefs.current[index];
       const tail = tailRefs.current[index];
       const motion = individualMotion[index];
@@ -1188,7 +1453,7 @@ function BigFish() {
 
   return (
     <group ref={groupRef} scale={0.42}>
-      {GIANT_JACK_FORMATION.map((fish, index) => (
+      {formation.map((fish, index) => (
         <group
           key={fish.id}
           ref={(node) => {
@@ -1438,7 +1703,7 @@ export function LagoonLife({ depth }: { depth: { get: () => number } }) {
     <group ref={groupRef}>
       <FishSchool depth={depth} />
       <SeaTurtle />
-      <BigFish />
+      <GiantJack />
       <LemonShark />
     </group>
   );

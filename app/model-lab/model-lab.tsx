@@ -6,6 +6,7 @@ import { Grid, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { GiantSquid, SpermWhale } from "@/app/swac/dive-deep-life";
 import { JellyfishSchool } from "@/app/swac/dive-jellyfish";
+import { GiantJack, SeaTurtle } from "@/app/swac/dive-marine-life";
 import {
   createAlgaeGeometry,
   createBarrelSpongeGeometry,
@@ -45,6 +46,8 @@ const MODELS = [
   "whale",
   "squid",
   "jellyfish",
+  "giant-jack",
+  "sea-turtle",
   ...Object.keys(GEOMETRY_MODELS),
 ] as const;
 export type ModelName = (typeof MODELS)[number];
@@ -59,6 +62,7 @@ const VIEWS = {
 export type ViewName = keyof typeof VIEWS;
 
 const stillDepth = { get: () => 0 };
+const TURTLE_QUARTER_VIEW = [0.72, 0.42, -0.72] as const;
 
 /** The bench has its own light chrome; the site's dark Button is invisible here. */
 function chipClass(active: boolean) {
@@ -84,6 +88,12 @@ function ModelSubject({ name }: { name: ModelName }) {
   }
   if (name === "jellyfish") {
     return <JellyfishSchool depth={stillDepth} preview />;
+  }
+  if (name === "giant-jack") {
+    return <GiantJack preview />;
+  }
+  if (name === "sea-turtle") {
+    return <SeaTurtle preview />;
   }
   return (
     <mesh geometry={geometry ?? undefined}>
@@ -141,8 +151,14 @@ function Rig({
     // which axis the model happens to be long on.
     const perspective = camera as THREE.PerspectiveCamera;
     const radius = size.length() / 2 || 1;
-    const distance = (radius / Math.sin((perspective.fov * Math.PI) / 360)) * 0.8;
-    const direction = new THREE.Vector3(...VIEWS[view]).normalize();
+    const framingScale = model === "sea-turtle" ? 0.45 : 0.8;
+    const distance =
+      (radius / Math.sin((perspective.fov * Math.PI) / 360)) * framingScale;
+    const viewDirection =
+      model === "sea-turtle" && view === "quarter"
+        ? TURTLE_QUARTER_VIEW
+        : VIEWS[view];
+    const direction = new THREE.Vector3(...viewDirection).normalize();
 
     // Order matters: OrbitControls derives its state from target and camera
     // position, so moving the camera and *then* calling update() reverts it.
