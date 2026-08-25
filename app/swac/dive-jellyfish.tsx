@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { UNITS_PER_METRE } from "./dive-coordinates";
@@ -14,8 +14,8 @@ import { UNITS_PER_METRE } from "./dive-coordinates";
  * stays organic while the broad planes make the low-poly construction clear.
  *
  * Each part is baked into a single merged geometry and then instanced, so the
- * whole school is four draw calls and only a handful of matrices move per
- * frame.
+ * whole school is four geometry draw calls. A small pool of point lights
+ * travels with the largest jellyfish to cast real cyan light onto nearby forms.
  */
 
 export const JELLY_MIN_DEPTH = 275;
@@ -23,6 +23,7 @@ export const JELLY_MAX_DEPTH = 325;
 export const JELLY_DEPTH = (JELLY_MIN_DEPTH + JELLY_MAX_DEPTH) / 2;
 
 const COUNT = 14;
+const TENTACLE_COUNT = 11;
 const BELL_RADIUS = 0.7;
 const BELL_SEGMENTS = 12;
 const X_AXIS = new THREE.Vector3(1, 0, 0);
@@ -266,11 +267,12 @@ function buildTentacles(
   tips: Facets,
   random: () => number,
 ) {
-  const strands = 11;
+  const tipPositions: THREE.Vector3[] = [];
 
-  for (let strand = 0; strand < strands; strand += 1) {
+  for (let strand = 0; strand < TENTACLE_COUNT; strand += 1) {
     const angle =
-      (strand / strands) * Math.PI * 2 + (random() - 0.5) * 0.18;
+      (strand / TENTACLE_COUNT) * Math.PI * 2 +
+      (random() - 0.5) * 0.18;
     const long = strand % 3 !== 0;
     const length = long ? 2.7 + random() * 1.35 : 0.9 + random() * 0.35;
     const steps = long ? 8 : 5;
@@ -296,12 +298,41 @@ function buildTentacles(
       THREE.MathUtils.lerp(startWidth, startWidth * 0.45, step / (steps - 1)),
     );
     appendTube(geometry, points, radii, 3, angle + Math.PI / 6);
-    appendOctahedron(
-      tips,
-      points[points.length - 1],
-      long ? 0.065 : 0.055,
-    );
+    const tip = points[points.length - 1];
+    const tipRadius = long ? 0.065 : 0.055;
+    appendOctahedron(tips, tip, tipRadius);
+    tipPositions.push(tip.clone());
   }
+
+  return tipPositions;
+}
+
+function createGlowTexture() {
+  const size = 48;
+  const data = new Uint8Array(size * size * 4);
+
+  for (let y = 0; y < size; y += 1) {
+    for (let x = 0; x < size; x += 1) {
+      const dx = (x + 0.5) / size - 0.5;
+      const dy = (y + 0.5) / size - 0.5;
+      const distance = Math.sqrt(dx * dx + dy * dy) * 2;
+      const falloff = Math.pow(Math.max(0, 1 - distance), 2.4);
+      const offset = (y * size + x) * 4;
+      data[offset] = 255;
+      data[offset + 1] = 255;
+      data[offset + 2] = 255;
+      data[offset + 3] = Math.round(falloff * 255);
+    }
+  }
+
+  const texture = new THREE.DataTexture(
+    data,
+    size,
+    size,
+    THREE.RGBAFormat,
+  );
+  texture.needsUpdate = true;
+  return texture;
 }
 
 function buildJellyfish() {
@@ -315,13 +346,14 @@ function buildJellyfish() {
   buildBell(shell);
   buildUnderside(glow);
   buildOralArms(glow, random);
-  buildTentacles(trail, tips, random);
+  const tipPositions = buildTentacles(trail, tips, random);
 
   return {
     shell: shell.finish(),
     glow: glow.finish(),
     trail: trail.finish(),
     tips: tips.finish(),
+    tipPositions,
   };
 }
 
@@ -362,6 +394,8 @@ export function JellyfishSchool({
   const glowRef = useRef<THREE.InstancedMesh>(null);
   const trailRef = useRef<THREE.InstancedMesh>(null);
   const tipRef = useRef<THREE.InstancedMesh>(null);
+  const tipGlowPointsRef = useRef<THREE.Points>(null);
+  const tipLightRefs = useRef<Array<THREE.PointLight | null>>([]);
 
   const parts = useMemo(() => buildJellyfish(), []);
 
@@ -405,8 +439,23 @@ export function JellyfishSchool({
     });
   }, [preview]);
 
+  const litJellies = useMemo(() => {
+    const candidates = school.map((jelly, index) => ({ index, jelly }));
+    candidates.sort((a, b) => b.jelly.scale - a.jelly.scale);
+    return candidates.slice(0, preview ? 1 : 4);
+  }, [preview, school]);
+
+  const tipGlowTexture = useMemo(() => createGlowTexture(), []);
+  const tipGlowPointData = useMemo(
+    () => new Float32Array(school.length * parts.tipPositions.length * 3),
+    [parts.tipPositions.length, school.length],
+  );
+  useEffect(() => () => tipGlowTexture.dispose(), [tipGlowTexture]);
+
   const bellDummy = useMemo(() => new THREE.Object3D(), []);
   const trailDummy = useMemo(() => new THREE.Object3D(), []);
+  const tipLightPosition = useMemo(() => new THREE.Vector3(), []);
+  const tipGlowPosition = useMemo(() => new THREE.Vector3(), []);
 
   useFrame((state) => {
     const group = groupRef.current;
@@ -414,9 +463,14 @@ export function JellyfishSchool({
     const glow = glowRef.current;
     const trail = trailRef.current;
     const tips = tipRef.current;
-    if (!group || !shell || !glow || !trail || !tips) {
+    const tipGlowPoints = tipGlowPointsRef.current;
+    if (!group || !shell || !glow || !trail || !tips || !tipGlowPoints) {
       return;
     }
+    const tipGlowAttribute = tipGlowPoints.geometry.getAttribute(
+      "position",
+    ) as THREE.BufferAttribute;
+    const tipGlowPositions = tipGlowAttribute.array as Float32Array;
 
     if (!preview) {
       group.visible = Math.abs(depth.get() - JELLY_DEPTH) < 130;
@@ -479,12 +533,33 @@ export function JellyfishSchool({
       trailDummy.updateMatrix();
       trail.setMatrixAt(index, trailDummy.matrix);
       tips.setMatrixAt(index, trailDummy.matrix);
+
+      parts.tipPositions.forEach((tip, tipIndex) => {
+        tipGlowPosition.copy(tip).applyMatrix4(trailDummy.matrix);
+        const offset =
+          (index * parts.tipPositions.length + tipIndex) * 3;
+        tipGlowPositions[offset] = tipGlowPosition.x;
+        tipGlowPositions[offset + 1] = tipGlowPosition.y;
+        tipGlowPositions[offset + 2] = tipGlowPosition.z;
+      });
+
+      const tipLight = tipLightRefs.current[index];
+      if (tipLight) {
+        // Long and short strands surround this centroid, so one local light
+        // illuminates the full tip cluster without multiplying 154 lights.
+        tipLightPosition.set(0, -2.55, 0).applyMatrix4(trailDummy.matrix);
+        tipLight.position.copy(tipLightPosition);
+        tipLight.distance = jelly.scale * 4;
+        tipLight.intensity =
+          (preview ? 6 : 5) * (0.88 + pulse * 0.12);
+      }
     });
 
     shell.instanceMatrix.needsUpdate = true;
     glow.instanceMatrix.needsUpdate = true;
     trail.instanceMatrix.needsUpdate = true;
     tips.instanceMatrix.needsUpdate = true;
+    tipGlowAttribute.needsUpdate = true;
   });
 
   const total = school.length;
@@ -535,7 +610,7 @@ export function JellyfishSchool({
         <meshStandardMaterial
           color="#0b3348"
           emissive="#4cc9f0"
-          emissiveIntensity={1.5}
+          emissiveIntensity={0.35}
           roughness={0.35}
           transparent
           opacity={0.72}
@@ -544,7 +619,7 @@ export function JellyfishSchool({
         />
       </instancedMesh>
 
-      {/* Glowing nodes at the tentacle ends */}
+      {/* Brilliant cores at the tentacle ends. */}
       <instancedMesh
         ref={tipRef}
         args={[parts.tips, undefined, total]}
@@ -553,11 +628,47 @@ export function JellyfishSchool({
         <meshStandardMaterial
           color="#cdf6ff"
           emissive="#a6f2ff"
-          emissiveIntensity={5}
+          emissiveIntensity={7}
           roughness={0.2}
           toneMapped={false}
         />
       </instancedMesh>
+
+      {/* A soft point sprite visualises the falloff around each real source. */}
+      <points ref={tipGlowPointsRef} frustumCulled={false}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            args={[tipGlowPointData, 3]}
+            usage={THREE.DynamicDrawUsage}
+          />
+        </bufferGeometry>
+        <pointsMaterial
+          map={tipGlowTexture}
+          color="#7af3ff"
+          size={preview ? 0.52 : 0.38}
+          sizeAttenuation
+          transparent
+          opacity={0.95}
+          alphaTest={0.01}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+          toneMapped={false}
+        />
+      </points>
+
+      {litJellies.map(({ jelly, index }) => (
+        <pointLight
+          key={index}
+          ref={(light) => {
+            tipLightRefs.current[index] = light;
+          }}
+          color="#69efff"
+          intensity={preview ? 6 : 5}
+          distance={jelly.scale * 4}
+          decay={2}
+        />
+      ))}
     </group>
   );
 }

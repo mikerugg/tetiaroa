@@ -23,7 +23,13 @@ import {
   SQUID_DEPTH,
   WHALE_DEPTH,
 } from "./dive-deep-life";
-import { JELLY_DEPTH, JellyfishSchool } from "./dive-jellyfish";
+import {
+  JELLY_DEPTH,
+  JELLY_MAX_DEPTH,
+  JELLY_MIN_DEPTH,
+  JellyfishSchool,
+} from "./dive-jellyfish";
+import { PipeIntake } from "./dive-intake";
 import { createStarfishGeometry } from "./dive-reef-geometry";
 import {
   causticsFragmentShader,
@@ -35,6 +41,25 @@ import {
 const COLUMN_UNITS = MAX_DIVE_DEPTH * UNITS_PER_METRE;
 const SNOW_COUNT = 900;
 const SNOW_COLUMN_HEIGHT = 90;
+const JELLY_LIGHT_FADE_DISTANCE = 55;
+const JELLY_LIGHT_MINIMUM = 0.025;
+
+function jellyLayerLightLevel(depth: number) {
+  const distanceFromLayer =
+    depth < JELLY_MIN_DEPTH
+      ? JELLY_MIN_DEPTH - depth
+      : depth > JELLY_MAX_DEPTH
+        ? depth - JELLY_MAX_DEPTH
+        : 0;
+  const proximity =
+    1 -
+    THREE.MathUtils.smoothstep(
+      distanceFromLayer,
+      0,
+      JELLY_LIGHT_FADE_DISTANCE,
+    );
+  return THREE.MathUtils.lerp(1, JELLY_LIGHT_MINIMUM, proximity);
+}
 
 /**
  * Deterministic PRNG (mulberry32). The snow field must be identical on every
@@ -620,13 +645,28 @@ function IslandBeach() {
 
       {/* The plant: where the seawater gives up its chill and turns around */}
       <group position={[0, 0.62, 0]}>
-        <mesh position={[0, 0.3, 0]}>
-          <boxGeometry args={[1.6, 0.6, 1.15]} />
-          <meshStandardMaterial color="#cbd3cb" roughness={0.85} flatShading />
+        {/* Keep the original block-and-roof silhouette, with sturdier proportions. */}
+        <mesh position={[0, 0.41, 0]}>
+          <boxGeometry args={[2.05, 0.78, 1.35]} />
+          <meshStandardMaterial color="#d0d5cc" roughness={0.88} flatShading />
         </mesh>
-        <mesh position={[0, 0.72, 0]} rotation={[0, Math.PI / 4, 0]}>
-          <coneGeometry args={[1.24, 0.46, 4]} />
-          <meshStandardMaterial color="#6c5a44" roughness={0.9} flatShading />
+        <mesh
+          position={[0, 1.01, 0]}
+          rotation={[0, Math.PI / 4, 0]}
+          scale={[1, 1, 0.7]}
+        >
+          <coneGeometry args={[1.45, 0.45, 4]} />
+          <meshStandardMaterial color="#78624c" roughness={0.9} flatShading />
+        </mesh>
+
+        {/* Two large facade marks survive the distant surface camera. */}
+        <mesh position={[-1.03, 0.37, 0.14]}>
+          <boxGeometry args={[0.035, 0.58, 0.36]} />
+          <meshStandardMaterial color="#35565a" roughness={0.82} />
+        </mesh>
+        <mesh position={[0.38, 0.5, 0.685]}>
+          <boxGeometry args={[0.64, 0.24, 0.035]} />
+          <meshStandardMaterial color="#496663" roughness={0.84} />
         </mesh>
       </group>
 
@@ -637,155 +677,21 @@ function IslandBeach() {
   );
 }
 
-/**
- * Coral along the crest. Seated with the same crestLateral / crestRipple maths
- * the lagoon and the flank use, so it sits on the seam rather than near it.
- *
- * Two instanced sets and two draw calls: mounds for the boulder corals, and
- * clustered spikes for the branching ones. Colour is doing most of the work —
- * an earlier pass used grey-brown heads and they read as rubble, not reef.
- */
-const CORAL_PALETTE = ["#d98f7a", "#c66b8a", "#e0a86b", "#a8709c", "#cf7f66", "#dbb27f"];
-
-function CrestCorals() {
-  const moundRef = useRef<THREE.InstancedMesh>(null);
-  const branchRef = useRef<THREE.InstancedMesh>(null);
-
-  const { mounds, branches } = useMemo(() => {
-    const random = createRandom(0xc0a1);
-    const edge = slopePoint(SHELF_TOP_DEPTH, new THREE.Vector3());
-    const across = slopeAcross(SHELF_TOP_DEPTH, new THREE.Vector3());
-    const inland = new THREE.Vector3(across.z, 0, -across.x);
-    const halfSpan = (CREST_SPREAD * (CREST_COLS - 1)) / 2;
-    const reach = 16;
-
-    const mounds: Array<{ matrix: THREE.Matrix4; colour: THREE.Color }> = [];
-    const branches: Array<{ matrix: THREE.Matrix4; colour: THREE.Color }> = [];
-
-    /** Drops a point onto the lagoon surface, exactly as SandLagoon builds it. */
-    const seat = (lateral: number, band: number) => {
-      const u = band / reach;
-      const crestWeight = Math.max(0, 1 - u * 5);
-      return new THREE.Vector3(
-        edge.x + across.x * lateral + inland.x * band,
-        edge.y + crestRipple(lateral) * crestWeight + Math.pow(u, 1.3) * 1.6,
-        edge.z + across.z * lateral + inland.z * band,
-      );
-    };
-
-    for (let i = 0; i < 120; i += 1) {
-      const lateral = (random() - 0.5) * 2 * halfSpan;
-      // Biased hard towards the crest, thinning out into the lagoon.
-      const band = Math.pow(random(), 0.7) * 3.6;
-      const base = seat(lateral, band);
-      const colour = new THREE.Color(
-        CORAL_PALETTE[Math.floor(random() * CORAL_PALETTE.length)],
-      );
-
-      if (random() < 0.55) {
-        const width = 0.22 + random() * 0.34;
-        mounds.push({
-          matrix: new THREE.Matrix4().compose(
-            base.clone().setY(base.y + width * 0.28),
-            new THREE.Quaternion().setFromEuler(
-              new THREE.Euler(0, random() * Math.PI, 0),
-            ),
-            new THREE.Vector3(width, width * (0.5 + random() * 0.3), width * 0.85),
-          ),
-          colour,
-        });
-      } else {
-        // A cluster of spikes reads as staghorn without needing its own model.
-        const prongs = 4 + Math.floor(random() * 3);
-        for (let k = 0; k < prongs; k += 1) {
-          const a = (k / prongs) * Math.PI * 2 + random() * 0.5;
-          const spread = 0.1 + random() * 0.16;
-          const tall = 0.28 + random() * 0.4;
-          branches.push({
-            matrix: new THREE.Matrix4().compose(
-              new THREE.Vector3(
-                base.x + Math.cos(a) * spread,
-                base.y + tall * 0.5,
-                base.z + Math.sin(a) * spread,
-              ),
-              new THREE.Quaternion().setFromEuler(
-                new THREE.Euler(Math.cos(a) * 0.3, 0, -Math.sin(a) * 0.3),
-              ),
-              new THREE.Vector3(0.055, tall, 0.055),
-            ),
-            colour,
-          });
-        }
-      }
-    }
-
-    return { mounds, branches };
-  }, []);
-
-  useEffect(() => {
-    for (const [mesh, items] of [
-      [moundRef.current, mounds],
-      [branchRef.current, branches],
-    ] as const) {
-      if (!mesh) {
-        continue;
-      }
-      items.forEach((item, index) => {
-        mesh.setMatrixAt(index, item.matrix);
-        mesh.setColorAt(index, item.colour);
-      });
-      mesh.instanceMatrix.needsUpdate = true;
-      if (mesh.instanceColor) {
-        mesh.instanceColor.needsUpdate = true;
-      }
-    }
-  }, [mounds, branches]);
-
-  return (
-    <group>
-      <instancedMesh
-        ref={moundRef}
-        args={[undefined, undefined, mounds.length]}
-        frustumCulled={false}
-      >
-        <icosahedronGeometry args={[1, 0]} />
-        <meshStandardMaterial roughness={0.86} metalness={0.02} flatShading />
-      </instancedMesh>
-      <instancedMesh
-        ref={branchRef}
-        args={[undefined, undefined, branches.length]}
-        frustumCulled={false}
-      >
-        <coneGeometry args={[1, 1, 5]} />
-        <meshStandardMaterial roughness={0.84} metalness={0.02} flatShading />
-      </instancedMesh>
-    </group>
-  );
-}
-
-/*
- * Life on the wall, zoned by depth. A tropical reef face is not uniformly
- * covered: it changes with light, and the transitions are sharp enough to name.
- *
- *   22-60 m    shallow reef. Branching and table corals, macroalgae, bright.
- *   60-130 m   plating zone. Corals flatten to catch what light is left.
- *   90-250 m   mesophotic. Sponges and gorgonian fans take over from stony coral.
- *   180-650 m  aphotic. Sea whips and black coral. Nothing photosynthesises.
- *
- * Everything is seated with wallPoint(), which reproduces SlopeTerrain's own
- * vertex maths, so it sits on the rock rather than near it.
- */
+/** Starfish are the reef wall's only remaining attached life. */
 const WALL_ROWS = 74;
-/**
- * Coverage dial for the wall. One number, because the right answer is a
- * judgement about how busy the frame looks, not five separate ones.
- */
-const WALL_DENSITY = 0.15;
+const WALL_BASE_DEPTH = MAX_DIVE_DEPTH + 60;
+/** Rare enough that finding one feels incidental, not decorative. */
+const STARFISH_COUNT = 10;
+const EXTRA_SHALLOW_STARFISH_COUNT = 4;
+const EXTRA_SHALLOW_STARFISH_MAX_DEPTH = 180;
+const STARFISH_EDGE_MARGIN = 0.45;
+/** Compresses more of the ordered depth bands into the upper reef. */
+const STARFISH_SHALLOW_BIAS = 1.9;
 
 /** The deterministic part of the flank's relief, evaluable at any point. */
 function wallRelief(depth: number, lateral: number) {
   const r =
-    ((depth - SHELF_TOP_DEPTH) / (MAX_DIVE_DEPTH + 60 - SHELF_TOP_DEPTH)) *
+    ((depth - SHELF_TOP_DEPTH) / (WALL_BASE_DEPTH - SHELF_TOP_DEPTH)) *
     (WALL_ROWS - 1);
   const c = lateral / CREST_SPREAD + (CREST_COLS - 1) / 2;
   const u = r * 0.16;
@@ -814,127 +720,25 @@ function wallPoint(depth: number, lateral: number) {
     centre.z + across.z * lateral - shaped * 0.35 + seaward.z * 0.18,
   );
 
-  return { position, across, seaward };
+  return { position, seaward };
 }
 
 type Placed = { matrix: THREE.Matrix4; colour: THREE.Color };
 
-function useReefWallLife() {
+function useReefWallStars() {
   return useMemo(() => {
     const random = createRandom(0x2ee1);
+    const shallowRandom = createRandom(0x51a113);
     const halfSpan = (CREST_SPREAD * (CREST_COLS - 1)) / 2;
-
-    const plates: Placed[] = [];
-    const fans: Placed[] = [];
-    const sponges: Placed[] = [];
-    const whips: Placed[] = [];
     const stars: Placed[] = [];
-    const algae: Placed[] = [];
+    const colours = ["#d4694a", "#c9543f", "#4f6f9c", "#d9a05b", "#a8455c"];
+    const depthSpan = WALL_BASE_DEPTH - SHELF_TOP_DEPTH;
 
-    const pick = (list: string[]) =>
-      new THREE.Color(list[Math.floor(random() * list.length)]);
-
-    const lateral = () => (random() - 0.5) * 2 * halfSpan;
-    /** Biased towards the shallow end of a band, the way cover actually thins. */
-    const between = (a: number, b: number, bias = 1) =>
-      a + Math.pow(random(), bias) * (b - a);
-
-    // Plate and table corals, flattening as the light goes.
-    for (let i = 0; i < Math.round(110 * WALL_DENSITY); i += 1) {
-      const depth = between(24, 130, 1.5);
-      const { position, seaward } = wallPoint(depth, lateral());
-      const width = 0.3 + random() * 0.55;
-      plates.push({
-        matrix: new THREE.Matrix4().compose(
-          position,
-          new THREE.Quaternion().setFromEuler(
-            new THREE.Euler(-0.34 + random() * 0.3, random() * Math.PI, seaward.x * 0.1),
-          ),
-          new THREE.Vector3(width, 0.05 + random() * 0.05, width * 0.9),
-        ),
-        colour: pick(
-          depth < 60
-            ? ["#c98a5f", "#b9764f", "#cf9a6d", "#a8804e"]
-            : ["#8f7a52", "#7c6b4a", "#9c8a63"],
-        ),
-      });
-    }
-
-    // Macroalgae. Photosynthetic, so it stops where useful light does.
-    for (let i = 0; i < Math.round(130 * WALL_DENSITY); i += 1) {
-      const depth = between(22, 95, 1.8);
-      const { position } = wallPoint(depth, lateral());
-      const tall = 0.16 + random() * 0.26;
-      algae.push({
-        matrix: new THREE.Matrix4().compose(
-          position.clone().setY(position.y + tall * 0.5),
-          new THREE.Quaternion().setFromEuler(
-            new THREE.Euler((random() - 0.5) * 0.5, random() * Math.PI, (random() - 0.5) * 0.5),
-          ),
-          new THREE.Vector3(0.11 + random() * 0.08, tall, 0.03),
-        ),
-        colour: pick(["#5f8a4e", "#4c7a44", "#6f9455", "#7d8f45"]),
-      });
-    }
-
-    // Sponges: barrels and tubes, happiest below the stony corals.
-    for (let i = 0; i < Math.round(90 * WALL_DENSITY); i += 1) {
-      const depth = between(60, 400, 1.2);
-      const { position } = wallPoint(depth, lateral());
-      const tall = 0.22 + random() * 0.4;
-      sponges.push({
-        matrix: new THREE.Matrix4().compose(
-          position.clone().setY(position.y + tall * 0.5),
-          new THREE.Quaternion().setFromEuler(
-            new THREE.Euler((random() - 0.5) * 0.4, random() * Math.PI, (random() - 0.5) * 0.4),
-          ),
-          new THREE.Vector3(0.13 + random() * 0.12, tall, 0.13 + random() * 0.12),
-        ),
-        colour: pick(["#b0693f", "#96513a", "#c08a55", "#8a5f6e"]),
-      });
-    }
-
-    // Gorgonian sea fans, set broadside to the current running along the slope.
-    for (let i = 0; i < Math.round(80 * WALL_DENSITY); i += 1) {
-      const depth = between(90, 260, 1.1);
-      const lat = lateral();
-      const { position, across } = wallPoint(depth, lat);
-      const size = 0.3 + random() * 0.45;
-      const facing = Math.atan2(across.x, across.z);
-      fans.push({
-        matrix: new THREE.Matrix4().compose(
-          position.clone().setY(position.y + size * 0.45),
-          new THREE.Quaternion().setFromEuler(
-            new THREE.Euler(0, facing + (random() - 0.5) * 0.5, (random() - 0.5) * 0.3),
-          ),
-          new THREE.Vector3(size, size, size),
-        ),
-        colour: pick(["#8f5a72", "#a8664f", "#7c5f8f", "#b5794f"]),
-      });
-    }
-
-    // Sea whips and black coral, well past any light.
-    for (let i = 0; i < Math.round(110 * WALL_DENSITY); i += 1) {
-      const depth = between(180, 680, 1);
-      const { position } = wallPoint(depth, lateral());
-      const tall = 0.4 + random() * 0.9;
-      whips.push({
-        matrix: new THREE.Matrix4().compose(
-          position.clone().setY(position.y + tall * 0.5),
-          new THREE.Quaternion().setFromEuler(
-            new THREE.Euler((random() - 0.5) * 0.55, random() * Math.PI, (random() - 0.5) * 0.55),
-          ),
-          new THREE.Vector3(0.022, tall, 0.022),
-        ),
-        colour: pick(["#9aa39a", "#7f8a86", "#b2a894", "#6f7a78"]),
-      });
-    }
-
-    // Starfish, lying flat against the rock rather than standing on it.
-    for (let i = 0; i < Math.round(90 * WALL_DENSITY); i += 1) {
-      const depth = between(24, 150, 1.4);
-      const { position, seaward } = wallPoint(depth, lateral());
-      const size = 0.16 + random() * 0.16;
+    const placeStar = (depth: number, sample: () => number) => {
+      const lateral =
+        (sample() - 0.5) * 2 * (halfSpan - STARFISH_EDGE_MARGIN);
+      const { position, seaward } = wallPoint(depth, lateral);
+      const size = 0.16 + sample() * 0.16;
       const lie = new THREE.Quaternion().setFromUnitVectors(
         new THREE.Vector3(0, 1, 0),
         seaward,
@@ -942,7 +746,7 @@ function useReefWallLife() {
       lie.multiply(
         new THREE.Quaternion().setFromAxisAngle(
           new THREE.Vector3(0, 1, 0),
-          random() * Math.PI * 2,
+          sample() * Math.PI * 2,
         ),
       );
       stars.push({
@@ -951,11 +755,38 @@ function useReefWallLife() {
           lie,
           new THREE.Vector3(size, size, size),
         ),
-        colour: pick(["#d4694a", "#c9543f", "#4f6f9c", "#d9a05b", "#a8455c"]),
+        colour: new THREE.Color(
+          colours[Math.floor(sample() * colours.length)],
+        ),
       });
+    };
+
+    for (let index = 0; index < STARFISH_COUNT; index += 1) {
+      // Keep one jittered sample in each ordered band, then curve the bands
+      // towards the shallows. Deep stars remain possible all the way down the
+      // wall, while the upper reef gets several more sightings.
+      const depthProgress = Math.pow(
+        (index + random()) / STARFISH_COUNT,
+        STARFISH_SHALLOW_BIAS,
+      );
+      const depth =
+        SHELF_TOP_DEPTH + depthProgress * depthSpan;
+      placeStar(depth, random);
     }
 
-    return { plates, algae, sponges, fans, whips, stars };
+    // Add a few more discoveries only to the upper wall. A separate seed
+    // leaves the existing full-depth scatter unchanged.
+    const shallowDepthSpan =
+      EXTRA_SHALLOW_STARFISH_MAX_DEPTH - SHELF_TOP_DEPTH;
+    for (let index = 0; index < EXTRA_SHALLOW_STARFISH_COUNT; index += 1) {
+      const depth =
+        SHELF_TOP_DEPTH +
+        ((index + shallowRandom()) / EXTRA_SHALLOW_STARFISH_COUNT) *
+          shallowDepthSpan;
+      placeStar(depth, shallowRandom);
+    }
+
+    return stars;
   }, []);
 }
 
@@ -995,63 +826,18 @@ function InstancedSet({
 }
 
 function ReefWallLife() {
-  const { plates, algae, sponges, fans, whips, stars } = useReefWallLife();
+  const stars = useReefWallStars();
   const starGeometry = useMemo(() => createStarfishGeometry(), []);
 
   return (
-    <group>
-      {/* Plate and table corals */}
-      <InstancedSet items={plates}>
-        <cylinderGeometry args={[1, 0.82, 1, 10]} />
-        <meshStandardMaterial roughness={0.88} metalness={0.02} flatShading />
-      </InstancedSet>
-
-      {/* Macroalgae blades */}
-      <InstancedSet items={algae}>
-        <coneGeometry args={[1, 1, 4]} />
-        <meshStandardMaterial
-          roughness={0.9}
-          side={THREE.DoubleSide}
-          flatShading
-        />
-      </InstancedSet>
-
-      {/* Barrel and tube sponges */}
-      <InstancedSet items={sponges}>
-        <cylinderGeometry args={[1, 0.7, 1, 9, 1, true]} />
-        <meshStandardMaterial
-          roughness={0.92}
-          side={THREE.DoubleSide}
-          flatShading
-        />
-      </InstancedSet>
-
-      {/* Gorgonian sea fans */}
-      <InstancedSet items={fans}>
-        <circleGeometry args={[1, 12, 0, Math.PI]} />
-        <meshStandardMaterial
-          roughness={0.85}
-          side={THREE.DoubleSide}
-          flatShading
-        />
-      </InstancedSet>
-
-      {/* Sea whips and black coral */}
-      <InstancedSet items={whips}>
-        <coneGeometry args={[1, 1, 4]} />
-        <meshStandardMaterial roughness={0.8} flatShading />
-      </InstancedSet>
-
-      {/* Starfish */}
-      <InstancedSet items={stars}>
-        <primitive object={starGeometry} attach="geometry" />
-        <meshStandardMaterial
-          roughness={0.82}
-          side={THREE.DoubleSide}
-          flatShading
-        />
-      </InstancedSet>
-    </group>
+    <InstancedSet items={stars}>
+      <primitive object={starGeometry} attach="geometry" />
+      <meshStandardMaterial
+        roughness={0.82}
+        side={THREE.DoubleSide}
+        flatShading
+      />
+    </InstancedSet>
   );
 }
 
@@ -1071,7 +857,7 @@ function SlopeTerrain() {
 
     for (let r = 0; r < rows; r += 1) {
       const depth =
-        startDepth + (r / (rows - 1)) * (MAX_DIVE_DEPTH + 60 - startDepth);
+        startDepth + (r / (rows - 1)) * (WALL_BASE_DEPTH - startDepth);
       slopePoint(depth, centre);
       slopeAcross(depth, across);
 
@@ -1142,6 +928,8 @@ function IntakePipe({ curve }: { curve: THREE.CatmullRomCurve3 }) {
     () => new THREE.TubeGeometry(curve, 180, 0.3, 14, false),
     [curve],
   );
+
+  useEffect(() => () => tubeGeometry.dispose(), [tubeGeometry]);
 
   // Anchored every hundred metres, which is roughly how these are actually laid.
   const anchors = useMemo(() => {
@@ -1221,67 +1009,9 @@ function IntakePipe({ curve }: { curve: THREE.CatmullRomCurve3 }) {
 function IntakeStructure({ curve }: { curve: THREE.CatmullRomCurve3 }) {
   const position = useMemo(() => curve.getPointAt(1), [curve]);
 
-  const screenBars = useMemo(
-    () => Array.from({ length: 10 }, (_, index) => (index / 10) * Math.PI * 2),
-    [],
-  );
-
   return (
     <group position={position}>
-      {/* Bellmouth flare */}
-      <mesh position={[0, -0.55, 0]}>
-        <cylinderGeometry args={[1.15, 0.4, 1.15, 24, 1, true]} />
-        <meshStandardMaterial
-          color="#28434c"
-          roughness={0.5}
-          metalness={0.45}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-
-      {/* Screen: what keeps the fish and the rubbish out */}
-      <group position={[0, -1.16, 0]}>
-        <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[1.15, 0.07, 10, 34]} />
-          <meshStandardMaterial
-            color="#59e8dc"
-            emissive="#59e8dc"
-            emissiveIntensity={0.55}
-            roughness={0.35}
-            metalness={0.5}
-          />
-        </mesh>
-        {screenBars.map((angle) => (
-          <mesh
-            key={angle}
-            position={[0, 0, 0]}
-            rotation={[0, angle, Math.PI / 2]}
-          >
-            <cylinderGeometry args={[0.035, 0.035, 2.3, 6]} />
-            <meshStandardMaterial color="#7fa3ab" roughness={0.4} metalness={0.65} />
-          </mesh>
-        ))}
-      </group>
-
-      {/* Frame legs and concrete pad, holding the mouth off the bottom */}
-      {[0, 1, 2, 3].map((index) => {
-        const angle = (index / 4) * Math.PI * 2 + Math.PI / 4;
-        return (
-          <mesh
-            key={index}
-            position={[Math.cos(angle) * 1.25, -2.1, Math.sin(angle) * 1.25]}
-            rotation={[Math.cos(angle) * 0.22, 0, -Math.sin(angle) * 0.22]}
-          >
-            <cylinderGeometry args={[0.075, 0.075, 1.9, 8]} />
-            <meshStandardMaterial color="#5f7178" roughness={0.5} metalness={0.6} />
-          </mesh>
-        );
-      })}
-
-      <mesh position={[0, -3.1, 0]}>
-        <cylinderGeometry args={[2.1, 2.35, 0.42, 22]} />
-        <meshStandardMaterial color="#8d9188" roughness={0.95} />
-      </mesh>
+      <PipeIntake />
     </group>
   );
 }
@@ -1323,9 +1053,11 @@ function DiveRig({ depth, velocity }: SceneProps) {
     if (diveLightRef.current) {
       diveLightRef.current.position.copy(state.camera.position);
       // Near the surface the sun does the work and a full-power lamp just
-      // blows out the lagoon floor. It takes over as the daylight dies.
+      // blows out the lagoon floor. It takes over as the daylight dies, then
+      // yields to the jellyfish while crossing their bioluminescent layer.
+      const fullIntensity = 18 + (1 - lightAtDepth(metres)) * 105;
       diveLightRef.current.intensity =
-        18 + (1 - lightAtDepth(metres)) * 105;
+        fullIntensity * jellyLayerLightLevel(metres);
     }
 
     sampleDepthColour(metres, backgroundColour.current);
@@ -1371,7 +1103,6 @@ function DiveRig({ depth, velocity }: SceneProps) {
 
       <SeaSurface depth={depth} />
       <SandLagoon />
-      <CrestCorals />
       <ReefWallLife />
       <IslandBeach />
       <SlopeTerrain />

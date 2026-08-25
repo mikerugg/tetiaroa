@@ -15,7 +15,7 @@ import * as THREE from "three";
  */
 
 export const WHALE_DEPTH = 550;
-export const SQUID_DEPTH = 830;
+export const SQUID_DEPTH = 725;
 
 export type Ring = {
   z: number;

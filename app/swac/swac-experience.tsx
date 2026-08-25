@@ -10,7 +10,6 @@ import { SwacMotionProvider } from "./motion-provider";
 import { SwacHero } from "./swac-hero";
 import { WhatIsSwac } from "./what-is-swac";
 import { TheDive } from "./the-dive";
-import { ThermalCircuit } from "./thermal-circuit";
 import { TheMeter } from "./the-meter";
 import { TheSlope } from "./the-slope";
 import { FeasibilityGlobe } from "./feasibility-globe";
@@ -63,10 +62,9 @@ export function SwacExperience({ locale }: SwacExperienceProps) {
       <TopToolbar copy={toolbarCopy} />
       <main className={styles.page}>
         <SwacHero copy={copy.hero} />
-        <WhatIsSwac copy={copy.basics} />
         <TheDive copy={copy.dive} />
-        <ThermalCircuit copy={copy.circuit} />
-        <TheMeter copy={copy.meter} />
+        <WhatIsSwac copy={copy.basics} />
+        <TheMeter copy={copy.meter} locale={locale} />
         <TheSlope copy={copy.slope} />
         <FeasibilityGlobe copy={copy.globe} />
 

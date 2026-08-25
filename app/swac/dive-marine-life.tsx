@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import {
@@ -30,128 +30,6 @@ import type { ReefFrame } from "./dive-coordinates";
 const NOSE_TOWARDS_NEGATIVE_Z = Math.PI;
 /** Bodies assembled from stretched spheres point their nose down +X. */
 const NOSE_TOWARDS_POSITIVE_X = -Math.PI / 2;
-
-type Ring = { z: number; r: number; yScale?: number };
-
-const LEMON_SHARK_BODY_RINGS: readonly Ring[] = [
-  { z: -1.25, r: 0.035, yScale: 0.85 },
-  { z: -1.05, r: 0.12, yScale: 0.85 },
-  { z: -0.7, r: 0.2, yScale: 0.95 },
-  { z: -0.3, r: 0.25, yScale: 1 },
-  { z: 0.1, r: 0.24, yScale: 1 },
-  { z: 0.5, r: 0.18, yScale: 1 },
-  { z: 0.9, r: 0.11, yScale: 1.05 },
-  { z: 1.2, r: 0.06, yScale: 1.15 },
-];
-
-/** Lofts a closed body through a series of elliptical cross-sections. */
-function buildBody(rings: readonly Ring[], segments = 12) {
-  const positions: number[] = [];
-  const indices: number[] = [];
-
-  rings.forEach((ring) => {
-    for (let s = 0; s < segments; s += 1) {
-      const a = (s / segments) * Math.PI * 2;
-      positions.push(
-        Math.cos(a) * ring.r,
-        Math.sin(a) * ring.r * (ring.yScale ?? 1),
-        ring.z,
-      );
-    }
-  });
-
-  for (let i = 0; i < rings.length - 1; i += 1) {
-    for (let s = 0; s < segments; s += 1) {
-      const a = i * segments + s;
-      const b = i * segments + ((s + 1) % segments);
-      const c = (i + 1) * segments + s;
-      const d = (i + 1) * segments + ((s + 1) % segments);
-      // Outward winding. (a, c, b) normals the faces inward, so front-face
-      // culling makes the body see-through and lights it from the inside.
-      indices.push(a, b, c, b, d, c);
-    }
-  }
-
-  // Caps, so the nose and tail root are closed.
-  const noseIndex = positions.length / 3;
-  positions.push(0, 0, rings[0].z);
-  for (let s = 0; s < segments; s += 1) {
-    indices.push(noseIndex, (s + 1) % segments, s);
-  }
-
-  const tailIndex = positions.length / 3;
-  const last = (rings.length - 1) * segments;
-  positions.push(0, 0, rings[rings.length - 1].z);
-  for (let s = 0; s < segments; s += 1) {
-    indices.push(tailIndex, last + s, last + ((s + 1) % segments));
-  }
-
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute(
-    "position",
-    new THREE.BufferAttribute(new Float32Array(positions), 3),
-  );
-  geometry.setIndex(indices);
-  geometry.computeVertexNormals();
-  return geometry;
-}
-
-/** A conforming lower-half skin that follows a lofted body end to end. */
-function buildLowerBodySurface(
-  rings: readonly Ring[],
-  segments = 7,
-  lift = 0.004,
-) {
-  const positions: number[] = [];
-  const indices: number[] = [];
-  const rowSize = segments + 1;
-
-  rings.forEach((ring) => {
-    const radius = ring.r + lift;
-    for (let segment = 0; segment <= segments; segment += 1) {
-      const angle = Math.PI + (segment / segments) * Math.PI;
-      positions.push(
-        Math.cos(angle) * radius,
-        Math.sin(angle) * radius * (ring.yScale ?? 1),
-        ring.z,
-      );
-    }
-  });
-
-  for (let ring = 0; ring < rings.length - 1; ring += 1) {
-    for (let segment = 0; segment < segments; segment += 1) {
-      const a = ring * rowSize + segment;
-      const b = a + 1;
-      const c = (ring + 1) * rowSize + segment;
-      const d = c + 1;
-      indices.push(a, b, c, b, d, c);
-    }
-  }
-
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute(
-    "position",
-    new THREE.BufferAttribute(new Float32Array(positions), 3),
-  );
-  geometry.setIndex(indices);
-  geometry.computeVertexNormals();
-  return geometry;
-}
-
-/** A flat fin, given its outline. Rendered double-sided, so no thickness. */
-function buildFin(points: Array<[number, number, number]>) {
-  const geometry = new THREE.BufferGeometry();
-  const positions: number[] = [];
-  for (let i = 1; i < points.length - 1; i += 1) {
-    positions.push(...points[0], ...points[i], ...points[i + 1]);
-  }
-  geometry.setAttribute(
-    "position",
-    new THREE.BufferAttribute(new Float32Array(positions), 3),
-  );
-  geometry.computeVertexNormals();
-  return geometry;
-}
 
 type ProfilePoint = readonly [z: number, y: number];
 type FinPoint = readonly [x: number, y: number, z: number];
@@ -190,6 +68,7 @@ type ProfileLoftSection = {
 function buildProfileLoftBody(
   sections: readonly ProfileLoftSection[],
   segments = 12,
+  alternateDiagonals = false,
 ) {
   const positions: number[] = [];
   const indices: number[] = [];
@@ -221,7 +100,11 @@ function buildProfileLoftBody(
       // Sections advance along +X while ring angles advance from +Z toward
       // +Y. Reverse the strip triangles so their normals face out from the
       // body instead of into it.
-      indices.push(a, c, b, b, c, d);
+      if (alternateDiagonals && (section + segment) % 2 === 1) {
+        indices.push(a, c, d, a, d, b);
+      } else {
+        indices.push(a, c, b, b, c, d);
+      }
     }
   }
 
@@ -658,6 +541,25 @@ const BUTTERFLY_FIN = "#a8c92a";
 const BUTTERFLY_BLACK = "#071426";
 const BUTTERFLY_IVORY = "#f4f0d8";
 const BUTTERFLY_AMBER = "#d89418";
+/** Offsets are proven against the route extrema to keep motion within 5–60 m. */
+const SMALL_FISH_DEPTH_OFFSET_MIN = -8.3;
+const SMALL_FISH_DEPTH_OFFSET_MAX = 24.4;
+/** The shallow elbow's stable across-wall coordinate from 22–60 metres. */
+const SMALL_FISH_PIPE_ACROSS = 0.568;
+const SMALL_FISH_PALETTES = [
+  {
+    body: new THREE.Color(BUTTERFLY_YELLOW),
+    fin: new THREE.Color(BUTTERFLY_FIN),
+  },
+  {
+    body: new THREE.Color("#9b67b6"),
+    fin: new THREE.Color("#6f4f98"),
+  },
+  {
+    body: new THREE.Color("#4f83c5"),
+    fin: new THREE.Color("#315fa5"),
+  },
+] as const;
 
 const TURTLE_DEPTH_METRES = 40;
 const GIANT_JACK_DEPTH_METRES = 80;
@@ -728,7 +630,113 @@ const GIANT_JACK_PREVIEW_FORMATION = [GIANT_JACK_FORMATION[0]] as const;
 
 type DepthSignal = { get: () => number };
 
-/** Masked butterflyfish working a loose circuit over the shallow reef. */
+/**
+ * A closed circuit around the shallow pipe. In this local reef frame, x runs
+ * across the wall, y runs out towards the camera, and z supplies a subtle
+ * shallow/deep contour around each fish's independently randomized depth lane.
+ *
+ * The near leg (y ~= 4.4) brings the fish back in front of the pipe. The deep
+ * leg (y ~= 1.2) runs between the pipe and reef face. Both crossovers happen
+ * at the far edges of the school, never through the pipe in the middle.
+ */
+const SMALL_FISH_ROUTE = new THREE.CatmullRomCurve3(
+  [
+    new THREE.Vector3(-6.4, 4.8, 18),
+    new THREE.Vector3(-2.8, 5.2, 15),
+    new THREE.Vector3(1.2, 5.3, 14),
+    new THREE.Vector3(5.9, 4.7, 19),
+    new THREE.Vector3(7, 3, 23),
+    new THREE.Vector3(6.5, 1.08, 27),
+    new THREE.Vector3(3.4, 0.95, 30),
+    new THREE.Vector3(0.15, 0.84, 33),
+    new THREE.Vector3(-3.3, 0.92, 35),
+    new THREE.Vector3(-6.5, 1.1, 31),
+    new THREE.Vector3(-7.1, 3, 24),
+  ],
+  true,
+  "centripetal",
+  0.5,
+);
+SMALL_FISH_ROUTE.arcLengthDivisions = 300;
+
+type SchoolFish = {
+  direction: -1 | 1;
+  phase: number;
+  speed: number;
+  surgeRate: number;
+  surgeAmount: number;
+  pathPhase: number;
+  acrossOffset: number;
+  oceanOffset: number;
+  acrossWander: number;
+  oceanWander: number;
+  driftRate: number;
+  driftAmount: number;
+  depthOffset: number;
+  depthWander: number;
+  depthRate: number;
+  depthPhase: number;
+  variant: 0 | 1 | 2;
+  rollRate: number;
+  rollAmplitude: number;
+  scale: number;
+  tailBeat: number;
+  tailPhase: number;
+  tailAmplitude: number;
+};
+
+function setSmallFishRoutePoint(
+  target: THREE.Vector3,
+  routePoint: THREE.Vector3,
+  frame: ReefFrame,
+  fish: SchoolFish,
+  time: number,
+  widthScale: number,
+) {
+  const progress = THREE.MathUtils.euclideanModulo(
+    fish.phase +
+      fish.direction *
+        (time * fish.speed +
+          Math.sin(time * fish.surgeRate + fish.pathPhase) * fish.surgeAmount),
+    1,
+  );
+  const routeAngle = progress * Math.PI * 2;
+  SMALL_FISH_ROUTE.getPointAt(progress, routePoint);
+
+  const across =
+    SMALL_FISH_PIPE_ACROSS +
+    (routePoint.x - SMALL_FISH_PIPE_ACROSS) * widthScale +
+    fish.acrossOffset +
+    Math.sin(routeAngle * 2 + fish.pathPhase) * fish.acrossWander +
+    Math.sin(time * fish.driftRate + fish.pathPhase) * fish.driftAmount;
+  const routeDepth =
+    routePoint.z +
+    fish.depthOffset +
+    Math.sin(time * fish.depthRate + fish.depthPhase) * fish.depthWander +
+    Math.sin(routeAngle * 2 - fish.depthPhase) * 0.1;
+  const behindWeight =
+    1 - THREE.MathUtils.smoothstep(routePoint.y, 1.25, 3);
+  const deepWallLift =
+    behindWeight * THREE.MathUtils.smoothstep(routeDepth, 45, 60) * 0.15;
+  // Deep wall facets project further seaward, so the wall-side leg eases out
+  // slightly below 45 m while remaining safely behind the pipe.
+  const ocean =
+    routePoint.y +
+      fish.oceanOffset +
+      Math.sin(routeAngle * 3 + fish.pathPhase) * fish.oceanWander +
+      deepWallLift;
+
+  setReefOrbitPoint(
+    target,
+    frame,
+    across,
+    ocean,
+    -routeDepth * UNITS_PER_METRE,
+  );
+  return progress;
+}
+
+/** Masked butterflyfish circling both sides of the shallow intake pipe. */
 function FishSchool({ depth }: { depth: DepthSignal }) {
   const aspect = useThree((state) => state.size.width / state.size.height);
   const bodyRef = useRef<THREE.InstancedMesh>(null);
@@ -745,30 +753,43 @@ function FishSchool({ depth }: { depth: DepthSignal }) {
   const shoal = useMemo(() => {
     const random = seededRandom(0x5c4001);
     return Array.from({ length: FISH_COUNT }, (_, index) => {
+      // Coprime shuffles distribute adjacent instances across the whole water
+      // column and across colour variants without creating visible sequences.
+      const depthRank = (index * 11 + 7) % FISH_COUNT;
+      const depthJitter = (random() - 0.5) * 0.16;
+      const variantRank = (index * 13 + 5) % FISH_COUNT;
+      const variant: 0 | 1 | 2 =
+        variantRank < 20 ? 0 : variantRank < 26 ? 1 : 2;
+
       return {
-        acrossRadius: 4.2 + random(),
-        oceanRadius: 3.4 + random() * 0.5,
-        height: -1.1 - random() * 2.4,
-        // The shore run sits at y=-0.9; this keeps the complete fish envelope
-        // above the pipe while it crosses the lagoon.
-        lagoonHeight: -0.25 - random() * 0.04,
-        direction: index % 4 === 0 ? -1 : 1,
-        phase: random() * Math.PI * 2,
-        speed: 0.065 + random() * 0.04,
-        surgeRate: 0.055 + random() * 0.04,
-        surgeAmount: 0.18 + random() * 0.16,
+        direction: index % 5 === 0 ? (-1 as const) : (1 as const),
+        phase: THREE.MathUtils.euclideanModulo(
+          index * 0.61803398875 + (random() - 0.5) * 0.06,
+          1,
+        ),
+        speed: 0.0085 + random() * 0.005,
+        surgeRate: 0.08 + random() * 0.07,
+        surgeAmount: 0.008 + random() * 0.009,
         pathPhase: random() * Math.PI * 2,
-        acrossWander: 0.12 + random() * 0.22,
-        oceanWander: 0.08 + random() * 0.1,
+        acrossOffset: (random() - 0.5) * 0.4,
+        oceanOffset: 0.035 + (random() - 0.5) * 0.05,
+        acrossWander: 0.04 + random() * 0.08,
+        oceanWander: 0.02 + random() * 0.015,
         driftRate: 0.06 + random() * 0.08,
-        driftAmount: 0.08 + random() * 0.18,
-        bobRate: 0.3 + random() * 0.5,
-        bobAmplitude: 0.035 + random() * 0.055,
+        driftAmount: 0.04 + random() * 0.08,
+        depthOffset:
+          THREE.MathUtils.lerp(
+            SMALL_FISH_DEPTH_OFFSET_MIN,
+            SMALL_FISH_DEPTH_OFFSET_MAX,
+            depthRank / (FISH_COUNT - 1),
+          ) + depthJitter,
+        depthWander: 0.18 + random() * 0.17,
+        depthRate: 0.12 + random() * 0.18,
+        depthPhase: random() * Math.PI * 2,
+        variant,
         rollRate: 0.3 + random() * 0.55,
         rollAmplitude: 0.018 + random() * 0.047,
         scale: 0.1 + random() * 0.08,
-        acrossCentre: (random() - 0.5) * 1.5,
-        oceanCentre: 1.85 + (random() - 0.5) * 0.3,
         tailBeat: 3.2 + random() * 2,
         tailPhase: random() * Math.PI * 2,
         tailAmplitude: 0.18 + random() * 0.14,
@@ -777,20 +798,39 @@ function FishSchool({ depth }: { depth: DepthSignal }) {
   }, []);
 
   // A fixed world-space orbit looks narrow on the wide desktop composition.
-  // Scale only the tangent axis so the school uses a similar share of every
-  // viewport without giving up any of its camera-side reef clearance.
+  // Scale only around the pipe's across-wall coordinate, so the school uses a
+  // similar share of every viewport without sliding its occlusion point away
+  // from the pipe itself.
   const orbitWidthScale = THREE.MathUtils.clamp(aspect / (16 / 9), 0.45, 1.5);
-  const ultrawideBlend = THREE.MathUtils.clamp(
-    (orbitWidthScale - 1) / 0.5,
-    0,
-    1,
-  );
-  const orbitAcrossBias = THREE.MathUtils.lerp(0.5, -1, ultrawideBlend);
 
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const tailJoint = useMemo(() => new THREE.Object3D(), []);
   const tailMatrix = useMemo(() => new THREE.Matrix4(), []);
   const ahead = useMemo(() => new THREE.Vector3(), []);
+  const routePoint = useMemo(() => new THREE.Vector3(), []);
+  const nextRoutePoint = useMemo(() => new THREE.Vector3(), []);
+
+  useLayoutEffect(() => {
+    const body = bodyRef.current;
+    const fins = finRef.current;
+    const tail = tailRef.current;
+    if (!body || !fins || !tail) {
+      return;
+    }
+
+    shoal.forEach((fish, index) => {
+      const palette = SMALL_FISH_PALETTES[fish.variant];
+      body.setColorAt(index, palette.body);
+      fins.setColorAt(index, palette.fin);
+      tail.setColorAt(index, palette.fin);
+    });
+
+    [body, fins, tail].forEach((mesh) => {
+      if (mesh.instanceColor) {
+        mesh.instanceColor.needsUpdate = true;
+      }
+    });
+  }, [shoal]);
 
   useFrame((state) => {
     const body = bodyRef.current;
@@ -818,83 +858,31 @@ function FishSchool({ depth }: { depth: DepthSignal }) {
     const time = state.clock.elapsedTime;
 
     shoal.forEach((fish, index) => {
-      const angle =
-        fish.phase +
-        fish.direction *
-          (time * fish.speed +
-            Math.sin(time * fish.surgeRate + fish.pathPhase) *
-              fish.surgeAmount);
-      const across =
-        orbitAcrossBias +
-        fish.acrossCentre +
-        (Math.cos(angle) * fish.acrossRadius +
-          Math.sin(angle * 2 + fish.pathPhase) * fish.acrossWander +
-          Math.sin(time * fish.driftRate + fish.pathPhase) *
-            fish.driftAmount) *
-          orbitWidthScale;
-      const ocean =
-        fish.oceanCentre +
-        Math.sin(angle) * fish.oceanRadius +
-        Math.sin(angle * 3 + fish.pathPhase) * fish.oceanWander;
-      const lagoonLift =
-        1 - THREE.MathUtils.smoothstep(ocean, 1.5, 4.5);
-      const bobble =
-        Math.sin(time * fish.bobRate + fish.phase * 1.7) *
-          fish.bobAmplitude *
-          THREE.MathUtils.lerp(1, 0.58, lagoonLift) +
-        Math.sin(angle * 2 - fish.pathPhase) * 0.018;
-      const y =
-        THREE.MathUtils.lerp(fish.height, fish.lagoonHeight, lagoonLift) +
-        bobble;
-
-      setReefOrbitPoint(dummy.position, reefFrame, across, ocean, y);
+      const progress = setSmallFishRoutePoint(
+        dummy.position,
+        routePoint,
+        reefFrame,
+        fish,
+        time,
+        orbitWidthScale,
+      );
 
       // Sample the same warped route a moment ahead so each fish steers into
       // its own speed changes and meanders instead of following a rigid oval.
       const nextTime = time + 0.18;
-      const nextAngle =
-        fish.phase +
-        fish.direction *
-          (nextTime * fish.speed +
-            Math.sin(nextTime * fish.surgeRate + fish.pathPhase) *
-              fish.surgeAmount);
-      const nextAcross =
-        orbitAcrossBias +
-        fish.acrossCentre +
-        (Math.cos(nextAngle) * fish.acrossRadius +
-          Math.sin(nextAngle * 2 + fish.pathPhase) * fish.acrossWander +
-          Math.sin(nextTime * fish.driftRate + fish.pathPhase) *
-            fish.driftAmount) *
-          orbitWidthScale;
-      const nextOcean =
-        fish.oceanCentre +
-        Math.sin(nextAngle) * fish.oceanRadius +
-        Math.sin(nextAngle * 3 + fish.pathPhase) * fish.oceanWander;
-      const nextLagoonLift =
-        1 - THREE.MathUtils.smoothstep(nextOcean, 1.5, 4.5);
-      const nextBobble =
-        Math.sin(nextTime * fish.bobRate + fish.phase * 1.7) *
-          fish.bobAmplitude *
-          THREE.MathUtils.lerp(1, 0.58, nextLagoonLift) +
-        Math.sin(nextAngle * 2 - fish.pathPhase) * 0.018;
-      const nextY =
-        THREE.MathUtils.lerp(
-          fish.height,
-          fish.lagoonHeight,
-          nextLagoonLift,
-        ) + nextBobble;
-      setReefOrbitPoint(
+      setSmallFishRoutePoint(
         ahead,
+        nextRoutePoint,
         reefFrame,
-        nextAcross,
-        nextOcean,
-        nextY,
+        fish,
+        nextTime,
+        orbitWidthScale,
       );
       dummy.lookAt(ahead);
       dummy.rotateY(NOSE_TOWARDS_NEGATIVE_Z);
       dummy.rotateZ(
         Math.sin(time * fish.rollRate + fish.pathPhase) * fish.rollAmplitude +
-          Math.sin(angle * 2 + fish.pathPhase) * 0.015,
+          Math.sin(progress * Math.PI * 4 + fish.pathPhase) * 0.015,
       );
 
       dummy.scale.setScalar(fish.scale);
@@ -940,7 +928,7 @@ function FishSchool({ depth }: { depth: DepthSignal }) {
         frustumCulled={false}
       >
         <meshStandardMaterial
-          color={BUTTERFLY_YELLOW}
+          color="#ffffff"
           roughness={0.74}
           metalness={0}
           flatShading
@@ -952,7 +940,7 @@ function FishSchool({ depth }: { depth: DepthSignal }) {
         frustumCulled={false}
       >
         <meshStandardMaterial
-          color={BUTTERFLY_FIN}
+          color="#ffffff"
           roughness={0.76}
           metalness={0}
           side={THREE.DoubleSide}
@@ -965,7 +953,7 @@ function FishSchool({ depth }: { depth: DepthSignal }) {
         frustumCulled={false}
       >
         <meshStandardMaterial
-          color={BUTTERFLY_FIN}
+          color="#ffffff"
           roughness={0.76}
           metalness={0}
           side={THREE.DoubleSide}
@@ -1041,29 +1029,28 @@ function FishSchool({ depth }: { depth: DepthSignal }) {
   );
 }
 
-const TURTLE_SHELL_SECTIONS: readonly ProfileLoftSection[] = [
-  { x: -1.04, top: 0.01, bottom: -0.03, halfWidth: 0.03 },
-  { x: -0.86, top: 0.19, bottom: -0.13, halfWidth: 0.38 },
-  { x: -0.55, top: 0.42, bottom: -0.18, halfWidth: 0.66 },
-  { x: -0.12, top: 0.61, bottom: -0.2, halfWidth: 0.78 },
-  { x: 0.28, top: 0.53, bottom: -0.19, halfWidth: 0.75 },
-  { x: 0.6, top: 0.37, bottom: -0.15, halfWidth: 0.58 },
-  { x: 0.82, top: 0.2, bottom: -0.08, halfWidth: 0.31 },
-  { x: 0.9, top: 0.035, bottom: 0.035, halfWidth: 0 },
-];
-
 const TURTLE_NECK_SECTIONS: readonly ProfileLoftSection[] = [
-  { x: 0.58, top: 0.12, bottom: -0.17, halfWidth: 0.21 },
-  { x: 0.82, top: 0.2, bottom: -0.14, halfWidth: 0.23 },
-  { x: 1.04, top: 0.23, bottom: -0.12, halfWidth: 0.22 },
-  { x: 1.16, top: 0.14, bottom: -0.06, halfWidth: 0.12 },
+  { x: 0.62, top: 0.15, bottom: -0.18, halfWidth: 0.25 },
+  { x: 0.82, top: 0.26, bottom: -0.18, halfWidth: 0.27 },
+  { x: 1, top: 0.32, bottom: -0.16, halfWidth: 0.25 },
+  { x: 1.11, top: 0.28, bottom: -0.12, halfWidth: 0.21 },
 ];
 
 const TURTLE_HEAD_SECTIONS: readonly ProfileLoftSection[] = [
-  { x: 1.02, top: 0.22, bottom: -0.12, halfWidth: 0.21 },
-  { x: 1.25, top: 0.33, bottom: -0.18, halfWidth: 0.3 },
-  { x: 1.5, top: 0.29, bottom: -0.16, halfWidth: 0.27 },
-  { x: 1.66, top: 0.2, bottom: -0.1, halfWidth: 0.18 },
+  { x: 0.98, top: 0.28, bottom: -0.14, halfWidth: 0.21 },
+  { x: 1.09, top: 0.38, bottom: -0.18, halfWidth: 0.28 },
+  { x: 1.23, top: 0.34, bottom: -0.17, halfWidth: 0.27 },
+  { x: 1.34, top: 0.25, bottom: -0.12, halfWidth: 0.2 },
+  { x: 1.4, top: 0.17, bottom: -0.08, halfWidth: 0.12 },
+];
+
+const TURTLE_PLASTRON_SECTIONS: readonly ProfileLoftSection[] = [
+  { x: -1.02, top: -0.05, bottom: -0.12, halfWidth: 0.08 },
+  { x: -0.76, top: -0.08, bottom: -0.24, halfWidth: 0.36 },
+  { x: -0.34, top: -0.12, bottom: -0.3, halfWidth: 0.55 },
+  { x: 0.14, top: -0.12, bottom: -0.3, halfWidth: 0.57 },
+  { x: 0.55, top: -0.09, bottom: -0.24, halfWidth: 0.4 },
+  { x: 0.82, top: -0.05, bottom: -0.11, halfWidth: 0.08 },
 ];
 
 const TURTLE_FRONT_FLIPPER_SECTIONS: readonly ProfileLoftSection[] = [
@@ -1082,24 +1069,56 @@ const TURTLE_REAR_FLIPPER_SECTIONS: readonly ProfileLoftSection[] = [
 ];
 
 const TURTLE_SHELL_COLOURS = [
+  "#19382f",
   "#23483d",
-  "#2d5748",
-  "#386451",
-  "#47715a",
-  "#537b61",
+  "#2f5849",
+  "#3c6653",
+  "#4b715b",
 ];
 const TURTLE_SKIN_COLOURS = [
-  "#354f31",
-  "#445f38",
-  "#526d3f",
-  "#607a46",
-  "#718951",
+  "#293e2b",
+  "#384d30",
+  "#4b6038",
+  "#607342",
+  "#79874e",
 ];
-const TURTLE_UNDERSIDE_COLOURS = ["#233827", "#2c432d", "#354c33"];
+const TURTLE_UNDERSIDE_COLOURS = [
+  "#273322",
+  "#354029",
+  "#414a2e",
+  "#4c5433",
+];
 const TURTLE_SIDES = [1, -1] as const;
 
+/** Deforms an icosahedron into the reference's broad, high carapace. */
+function buildTurtleShellGeometry() {
+  const geometry = new THREE.IcosahedronGeometry(1, 1);
+  geometry.rotateX(-0.08);
+  geometry.rotateZ(0.12);
+  const position = geometry.getAttribute("position");
+
+  for (let vertex = 0; vertex < position.count; vertex += 1) {
+    const x = position.getX(vertex);
+    const y = position.getY(vertex);
+    const z = position.getZ(vertex);
+    const lengthScale = x < 0 ? 1.16 : 0.98;
+    const rearPoint =
+      x < 0 ? -0.14 * -x * (1 - Math.min(1, Math.abs(y))) : 0;
+
+    position.setXYZ(
+      vertex,
+      x * lengthScale + rearPoint - 0.04,
+      0.02 + y * (y >= 0 ? 0.8 : 0.27),
+      z * 0.72,
+    );
+  }
+
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
 /** Gives a deliberately coarse mesh a palette per triangle, not a smooth wash. */
-function colourTurtleFacets(
+function colourFacets(
   source: THREE.BufferGeometry,
   palette: readonly string[],
   seed: number,
@@ -1127,11 +1146,59 @@ function colourTurtleFacets(
   return geometry;
 }
 
+/** Keeps turtle facets related to the form instead of assigning camouflage. */
+function colourTurtleFacets(
+  source: THREE.BufferGeometry,
+  palette: readonly string[],
+  seed: number,
+) {
+  const geometry = source.index ? source.toNonIndexed() : source.clone();
+  source.dispose();
+  const position = geometry.getAttribute("position");
+  const colours = new Float32Array(position.count * 3);
+  const random = seededRandom(seed);
+  const a = new THREE.Vector3();
+  const b = new THREE.Vector3();
+  const c = new THREE.Vector3();
+  const ab = new THREE.Vector3();
+  const ac = new THREE.Vector3();
+  const normal = new THREE.Vector3();
+
+  for (let vertex = 0; vertex < position.count; vertex += 3) {
+    a.fromBufferAttribute(position, vertex);
+    b.fromBufferAttribute(position, vertex + 1);
+    c.fromBufferAttribute(position, vertex + 2);
+    ab.subVectors(b, a);
+    ac.subVectors(c, a);
+    normal.crossVectors(ab, ac).normalize();
+
+    const formLight = THREE.MathUtils.clamp(
+      0.5 + normal.y * 0.34 + normal.x * 0.12 + (random() - 0.5) * 0.2,
+      0,
+      1,
+    );
+    const colour = new THREE.Color(
+      palette[Math.round(formLight * (palette.length - 1))],
+    );
+
+    for (let corner = 0; corner < 3; corner += 1) {
+      const offset = (vertex + corner) * 3;
+      colours[offset] = colour.r;
+      colours[offset + 1] = colour.g;
+      colours[offset + 2] = colour.b;
+    }
+  }
+
+  geometry.setAttribute("color", new THREE.BufferAttribute(colours, 3));
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
 function useSeaTurtleGeometries() {
   return useMemo(
     () => ({
       shell: colourTurtleFacets(
-        buildProfileLoftBody(TURTLE_SHELL_SECTIONS, 8),
+        buildTurtleShellGeometry(),
         TURTLE_SHELL_COLOURS,
         0x5e1101,
       ),
@@ -1146,7 +1213,7 @@ function useSeaTurtleGeometries() {
         0x5e1103,
       ),
       plastron: colourTurtleFacets(
-        new THREE.IcosahedronGeometry(1, 1),
+        buildProfileLoftBody(TURTLE_PLASTRON_SECTIONS, 7, true),
         TURTLE_UNDERSIDE_COLOURS,
         0x5e1104,
       ),
@@ -1165,6 +1232,7 @@ function useSeaTurtleGeometries() {
         TURTLE_SKIN_COLOURS,
         0x5e1107,
       ),
+      eyeSocket: new THREE.IcosahedronGeometry(1, 0),
       eye: new THREE.IcosahedronGeometry(1, 0),
     }),
     [],
@@ -1255,11 +1323,7 @@ export function SeaTurtle({ preview = false }: { preview?: boolean }) {
           flatShading
         />
       </mesh>
-      <mesh
-        geometry={geometries.plastron}
-        position={[-0.03, -0.17, 0]}
-        scale={[0.83, 0.15, 0.61]}
-      >
+      <mesh geometry={geometries.plastron}>
         <meshStandardMaterial
           vertexColors
           roughness={0.9}
@@ -1295,7 +1359,11 @@ export function SeaTurtle({ preview = false }: { preview?: boolean }) {
           rotation={[side === 1 ? 1 : -0.2, 0, 0]}
         >
           <group
-            rotation={[0, side === 1 ? -1 : 1.9, side * -0.05]}
+            rotation={[
+              0,
+              side === 1 ? -0.7 : 1.9,
+              side === 1 ? -0.6 : 0.05,
+            ]}
           >
             <mesh geometry={geometries.frontFlipper}>
               <meshStandardMaterial
@@ -1333,8 +1401,9 @@ export function SeaTurtle({ preview = false }: { preview?: boolean }) {
 
       <mesh
         geometry={geometries.tail}
-        position={[-1.08, -0.045, 0]}
+        position={[-1.13, -0.045, 0]}
         rotation={[0, 0, Math.PI / 2]}
+        scale={0.62}
       >
         <meshStandardMaterial
           vertexColors
@@ -1347,9 +1416,21 @@ export function SeaTurtle({ preview = false }: { preview?: boolean }) {
       {TURTLE_SIDES.map((side) => (
         <group key={`face-${side}`}>
           <mesh
+            geometry={geometries.eyeSocket}
+            position={[1.19, 0.23, side * 0.223]}
+            scale={[0.067, 0.062, 0.017]}
+          >
+            <meshStandardMaterial
+              color="#24372a"
+              roughness={0.78}
+              metalness={0}
+              flatShading
+            />
+          </mesh>
+          <mesh
             geometry={geometries.eye}
-            position={[1.43, 0.18, side * 0.258]}
-            scale={[0.05, 0.052, 0.02]}
+            position={[1.195, 0.232, side * 0.234]}
+            scale={[0.045, 0.043, 0.013]}
           >
             <meshStandardMaterial
               color="#061612"
@@ -1520,12 +1601,239 @@ export function GiantJack({ preview = false }: { preview?: boolean }) {
   );
 }
 
-/**
- * Lemon shark. The tells are the blunt snout, the yellow-brown back over a
- * pale belly, and the two dorsal fins of almost equal size — which is what
- * separates one from "a big fish".
- */
-function LemonShark() {
+type SharkFinPoint = readonly [x: number, y: number];
+
+const SHARK_BODY_SECTIONS: readonly ProfileLoftSection[] = [
+  { x: -1.42, top: 0.07, bottom: -0.07, halfWidth: 0.08 },
+  { x: -1.2, top: 0.13, bottom: -0.11, halfWidth: 0.14 },
+  { x: -0.84, top: 0.23, bottom: -0.19, halfWidth: 0.22 },
+  { x: -0.44, top: 0.31, bottom: -0.25, halfWidth: 0.3 },
+  { x: 0.04, top: 0.35, bottom: -0.28, halfWidth: 0.34 },
+  { x: 0.5, top: 0.33, bottom: -0.27, halfWidth: 0.36 },
+  { x: 0.9, top: 0.26, bottom: -0.23, halfWidth: 0.31 },
+  { x: 1.24, top: 0.15, bottom: -0.16, halfWidth: 0.21 },
+  { x: 1.52, top: -0.005, bottom: -0.065, halfWidth: 0.025 },
+];
+
+const SHARK_BACK_COLOURS = [
+  "#81713f",
+  "#927f46",
+  "#a28d50",
+  "#b19b5a",
+  "#bba866",
+];
+const SHARK_FLANK_COLOURS = [
+  "#5f5b39",
+  "#6c6540",
+  "#7b7145",
+  "#897b49",
+  "#97874f",
+];
+const SHARK_BELLY_COLOURS = [
+  "#958d69",
+  "#a49a72",
+  "#b2a67b",
+  "#beb388",
+];
+const SHARK_SIDES = [1, -1] as const;
+
+const SHARK_FIRST_DORSAL: readonly SharkFinPoint[] = [
+  [0.5, 0.23],
+  [0.2, 0.37],
+  [-0.18, 0.89],
+  [-0.27, 0.42],
+  [-0.38, 0.2],
+];
+const SHARK_SECOND_DORSAL: readonly SharkFinPoint[] = [
+  [-0.62, 0.16],
+  [-0.75, 0.25],
+  [-0.96, 0.49],
+  [-1.01, 0.22],
+  [-1.08, 0.11],
+];
+const SHARK_ANAL_FIN: readonly SharkFinPoint[] = [
+  [-0.61, -0.14],
+  [-0.87, -0.36],
+  [-1.08, -0.1],
+];
+const SHARK_PECTORAL_FIN: readonly SharkFinPoint[] = [
+  [0.56, 0.11],
+  [0.27, 0.38],
+  [-0.55, 0.94],
+  [-0.14, 0.19],
+];
+const SHARK_PELVIC_FIN: readonly SharkFinPoint[] = [
+  [-0.5, 0.07],
+  [-0.69, 0.2],
+  [-1.03, 0.46],
+  [-0.81, 0.09],
+];
+const SHARK_TAIL: readonly SharkFinPoint[] = [
+  [0, 0.08],
+  [-0.78, 0.82],
+  [-0.62, 0.22],
+  [-0.33, 0.02],
+  [-0.68, -0.43],
+  [0, -0.07],
+];
+
+/** Closes a fin into a low-poly wedge, thick at its buried root and thin outside. */
+function buildTaperedFin(
+  points: readonly SharkFinPoint[],
+  rootHalfThickness: number,
+  tipHalfThickness: number,
+) {
+  const shape = new THREE.Shape();
+  shape.moveTo(points[0][0], points[0][1]);
+  points.slice(1).forEach(([x, y]) => shape.lineTo(x, y));
+  shape.closePath();
+
+  const geometry = new THREE.ExtrudeGeometry(shape, {
+    depth: rootHalfThickness * 2,
+    steps: 1,
+    bevelEnabled: false,
+    curveSegments: 1,
+  });
+  geometry.translate(0, 0, -rootHalfThickness);
+
+  // Every outline starts and ends on the body, so that closing edge is the
+  // root. Perpendicular distance from it gives one taper rule that works for
+  // dorsal, paired, anal, and both caudal lobes without changing silhouettes.
+  const [rootStartX, rootStartY] = points[0];
+  const [rootEndX, rootEndY] = points[points.length - 1];
+  const rootDx = rootEndX - rootStartX;
+  const rootDy = rootEndY - rootStartY;
+  const rootLength = Math.hypot(rootDx, rootDy) || 1;
+  const distanceFromRoot = (x: number, y: number) =>
+    Math.abs(rootDx * (y - rootStartY) - rootDy * (x - rootStartX)) /
+    rootLength;
+  const maximumDistance = Math.max(
+    ...points.map(([x, y]) => distanceFromRoot(x, y)),
+    0.001,
+  );
+  const position = geometry.getAttribute("position");
+
+  for (let vertex = 0; vertex < position.count; vertex += 1) {
+    const distance = distanceFromRoot(
+      position.getX(vertex),
+      position.getY(vertex),
+    );
+    const progress = THREE.MathUtils.clamp(
+      distance / maximumDistance,
+      0,
+      1,
+    );
+    const rootWeight = Math.pow(
+      1 - THREE.MathUtils.smoothstep(progress, 0, 1),
+      1.25,
+    );
+    const halfThickness = THREE.MathUtils.lerp(
+      tipHalfThickness,
+      rootHalfThickness,
+      rootWeight,
+    );
+    const side = position.getZ(vertex) < 0 ? -1 : 1;
+    position.setZ(vertex, side * halfThickness);
+  }
+
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+/** One connected body, with related palettes selected per broad triangle. */
+function colourSharkBodyFacets(source: THREE.BufferGeometry) {
+  const geometry = source.index ? source.toNonIndexed() : source.clone();
+  source.dispose();
+  const position = geometry.getAttribute("position");
+  const colours = new Float32Array(position.count * 3);
+  const random = seededRandom(0x5a4b11);
+
+  for (let vertex = 0; vertex < position.count; vertex += 3) {
+    const centreY =
+      (position.getY(vertex) +
+        position.getY(vertex + 1) +
+        position.getY(vertex + 2)) /
+      3;
+    const palette =
+      centreY > 0.09
+        ? SHARK_BACK_COLOURS
+        : centreY < -0.09
+          ? SHARK_BELLY_COLOURS
+          : SHARK_FLANK_COLOURS;
+    const colour = new THREE.Color(
+      palette[Math.floor(random() * palette.length)],
+    );
+
+    for (let corner = 0; corner < 3; corner += 1) {
+      const offset = (vertex + corner) * 3;
+      colours[offset] = colour.r;
+      colours[offset + 1] = colour.g;
+      colours[offset + 2] = colour.b;
+    }
+  }
+
+  geometry.setAttribute("color", new THREE.BufferAttribute(colours, 3));
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+function useLemonSharkGeometries() {
+  return useMemo(
+    () => ({
+      body: colourSharkBodyFacets(
+        buildProfileLoftBody(SHARK_BODY_SECTIONS, 8, true),
+      ),
+      firstDorsal: colourFacets(
+        buildTaperedFin(SHARK_FIRST_DORSAL, 0.055, 0.005),
+        SHARK_BACK_COLOURS,
+        0x5a4b12,
+      ),
+      secondDorsal: colourFacets(
+        buildTaperedFin(SHARK_SECOND_DORSAL, 0.04, 0.004),
+        SHARK_BACK_COLOURS,
+        0x5a4b13,
+      ),
+      anal: colourFacets(
+        buildTaperedFin(SHARK_ANAL_FIN, 0.032, 0.003),
+        SHARK_BELLY_COLOURS,
+        0x5a4b14,
+      ),
+      pectoral: colourFacets(
+        buildTaperedFin(SHARK_PECTORAL_FIN, 0.056, 0.005),
+        SHARK_BACK_COLOURS,
+        0x5a4b15,
+      ),
+      pelvic: colourFacets(
+        buildTaperedFin(SHARK_PELVIC_FIN, 0.03, 0.004),
+        SHARK_FLANK_COLOURS,
+        0x5a4b16,
+      ),
+      tail: colourFacets(
+        buildTaperedFin(SHARK_TAIL, 0.065, 0.006),
+        SHARK_BACK_COLOURS,
+        0x5a4b17,
+      ),
+      faceDetails: buildWrappedSideMarkings(
+        [
+          [
+            [1.43, -0.075],
+            [0.72, -0.14],
+            [0.38, -0.13],
+            [0.74, -0.102],
+          ],
+        ],
+        SHARK_BODY_SECTIONS,
+        0.006,
+        0,
+      ),
+      eye: new THREE.IcosahedronGeometry(1, 0),
+    }),
+    [],
+  );
+}
+
+/** Angular lemon-olive shark rebuilt around the supplied low-poly silhouette. */
+export function LemonShark({ preview = false }: { preview?: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const tailRef = useRef<THREE.Group>(null);
   const ahead = useMemo(() => new THREE.Vector3(), []);
@@ -1533,72 +1841,11 @@ function LemonShark() {
     () => reefFrameAtDepth(SHARK_DEPTH_METRES),
     [],
   );
-
-  const bodyGeometry = useMemo(
-    () => buildBody(LEMON_SHARK_BODY_RINGS, 14),
-    [],
-  );
-  const bellyGeometry = useMemo(
-    () => buildLowerBodySurface(LEMON_SHARK_BODY_RINGS),
-    [],
-  );
-
-  const dorsalOne = useMemo(
-    () =>
-      buildFin([
-        [0, 0.16, -0.34],
-        [0, 0.54, 0.0],
-        [0, 0.14, 0.16],
-      ]),
-    [],
-  );
-  // Nearly the same size as the first, which is the lemon shark's signature.
-  const dorsalTwo = useMemo(
-    () =>
-      buildFin([
-        [0, 0.14, 0.52],
-        [0, 0.46, 0.78],
-        [0, 0.12, 0.9],
-      ]),
-    [],
-  );
-  const pectoral = useMemo(
-    () =>
-      buildFin([
-        [0.14, -0.1, -0.42],
-        [0.62, -0.24, -0.1],
-        [0.2, -0.12, 0.02],
-      ]),
-    [],
-  );
-  // One continuous heterocercal fin: the upper lobe remains the long one,
-  // while the centre panel joins both lobes across the peduncle.
-  const caudal = useMemo(
-    () =>
-      buildFinSet([
-        [
-          [0, 0.04, 1.14],
-          [0, 0.52, 1.78],
-          [0, 0.06, 1.5],
-        ],
-        [
-          [0, 0.04, 1.14],
-          [0, 0.06, 1.5],
-          [0, -0.02, 1.44],
-          [0, -0.04, 1.14],
-        ],
-        [
-          [0, -0.04, 1.14],
-          [0, -0.26, 1.46],
-          [0, -0.02, 1.44],
-        ],
-      ]),
-    [],
-  );
+  const geometries = useLemonSharkGeometries();
 
   useFrame((state) => {
     const group = groupRef.current;
-    if (!group) {
+    if (!group || preview) {
       return;
     }
     const time = state.clock.elapsedTime;
@@ -1623,63 +1870,112 @@ function LemonShark() {
       y,
     );
     group.lookAt(ahead);
-    group.rotateY(NOSE_TOWARDS_NEGATIVE_Z);
+    group.rotateY(NOSE_TOWARDS_POSITIVE_X);
+    group.rotateZ(Math.sin(time * 0.31) * 0.025);
 
     if (tailRef.current) {
-      tailRef.current.rotation.y = Math.sin(time * 1.7) * 0.38;
+      tailRef.current.rotation.y = Math.sin(time * 1.7) * 0.3;
     }
   });
 
-  const skin = "#b9a469";
-  const belly = "#e6dcbb";
-
   return (
-    <group ref={groupRef} scale={0.62}>
-      <mesh geometry={bodyGeometry}>
-        <meshStandardMaterial color={skin} roughness={0.78} flatShading />
-      </mesh>
-      {/* Pale underside follows the same rings from snout to peduncle. */}
-      <mesh geometry={bellyGeometry}>
+    <group ref={groupRef} scale={0.52}>
+      <mesh geometry={geometries.body}>
         <meshStandardMaterial
-          color={belly}
-          roughness={0.8}
+          vertexColors
+          roughness={0.82}
+          metalness={0.01}
+          flatShading
+        />
+      </mesh>
+
+      {[geometries.firstDorsal, geometries.secondDorsal, geometries.anal].map(
+        (geometry, index) => (
+          <mesh key={index} geometry={geometry}>
+            <meshStandardMaterial
+              vertexColors
+              roughness={0.82}
+              metalness={0.01}
+              flatShading
+            />
+          </mesh>
+        ),
+      )}
+
+      {SHARK_SIDES.map((side) => (
+        <group key={`paired-fins-${side}`}>
+          <mesh
+            geometry={geometries.pectoral}
+            position={[0, -0.06, 0]}
+            rotation={[side * (Math.PI / 2 + 0.16), 0, 0]}
+          >
+            <meshStandardMaterial
+              vertexColors
+              roughness={0.82}
+              metalness={0.01}
+              flatShading
+            />
+          </mesh>
+          <mesh
+            geometry={geometries.pelvic}
+            position={[0, -0.08, 0]}
+            rotation={[side * (Math.PI / 2 + 0.1), 0, 0]}
+          >
+            <meshStandardMaterial
+              vertexColors
+              roughness={0.82}
+              metalness={0.01}
+              flatShading
+            />
+          </mesh>
+        </group>
+      ))}
+
+      <mesh geometry={geometries.faceDetails}>
+        <meshStandardMaterial
+          color="#5b5639"
+          roughness={0.86}
+          metalness={0}
           side={THREE.DoubleSide}
           flatShading
         />
       </mesh>
 
-      {[dorsalOne, dorsalTwo].map((geometry, index) => (
-        <mesh key={index} geometry={geometry}>
-          <meshStandardMaterial
-            color={skin}
-            roughness={0.78}
-            side={THREE.DoubleSide}
-            flatShading
-          />
-        </mesh>
+      {SHARK_SIDES.map((side) => (
+        <group key={`shark-eye-${side}`}>
+          <mesh
+            geometry={geometries.eye}
+            position={[1.08, 0.075, side * 0.263]}
+            scale={[0.05, 0.052, 0.022]}
+          >
+            <meshStandardMaterial
+              color="#080a08"
+              roughness={0.42}
+              metalness={0.02}
+              flatShading
+            />
+          </mesh>
+          <mesh
+            geometry={geometries.eye}
+            position={[1.1, 0.095, side * 0.282]}
+            scale={[0.012, 0.012, 0.008]}
+          >
+            <meshStandardMaterial
+              color="#d8d3ae"
+              roughness={0.48}
+              metalness={0}
+              flatShading
+            />
+          </mesh>
+        </group>
       ))}
 
-      {[1, -1].map((side) => (
-        <mesh
-          key={side}
-          geometry={pectoral}
-          scale={[side, 1, 1]}
-        >
+      <group ref={tailRef} position={[-1.32, 0, 0]}>
+        <mesh geometry={geometries.tail}>
           <meshStandardMaterial
-            color={skin}
-            roughness={0.78}
-            side={THREE.DoubleSide}
-            flatShading
-          />
-        </mesh>
-      ))}
-
-      <group ref={tailRef} position={[0, 0, 1.2]}>
-        <mesh geometry={caudal} position={[0, 0, -1.2]}>
-          <meshStandardMaterial
-            color={skin}
-            roughness={0.78}
-            side={THREE.DoubleSide}
+            vertexColors
+            roughness={0.82}
+            metalness={0.01}
             flatShading
           />
         </mesh>

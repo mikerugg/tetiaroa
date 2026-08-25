@@ -13,6 +13,8 @@ const MODELS = new Set([
   "jellyfish",
   "giant-jack",
   "sea-turtle",
+  "shark",
+  "pipe-intake",
   "starfish",
   "coral-branching",
   "coral-mound",

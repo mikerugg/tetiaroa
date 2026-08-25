@@ -117,6 +117,18 @@ test("the ledger saves 85 percent and converts to fuel", () => {
   assert.equal(calculateLedger(-500).conventionalKwh, 0);
 });
 
+test("the default resort ledger matches the published meter", () => {
+  const result = calculateLedger(2500);
+
+  assert.equal(result.conventionalKwh, 3_750_000);
+  assert.equal(result.swacKwh, 562_500);
+  assert.equal(result.savedKwh, 3_187_500);
+  assert.equal(result.reductionPercent, 85);
+  assert.ok(Math.abs(result.litresDiesel - 885_416.6666666666) < 1e-6);
+  assert.ok(Math.abs(result.drums - 4_427.083333333333) < 1e-9);
+  assert.ok(Math.abs(result.tonnesCo2 - 2_372.9166666666665) < 1e-9);
+});
+
 test("the ledger scales linearly with load", () => {
   const one = calculateLedger(500);
   const two = calculateLedger(1000);

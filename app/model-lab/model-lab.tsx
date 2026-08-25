@@ -6,7 +6,12 @@ import { Grid, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { GiantSquid, SpermWhale } from "@/app/swac/dive-deep-life";
 import { JellyfishSchool } from "@/app/swac/dive-jellyfish";
-import { GiantJack, SeaTurtle } from "@/app/swac/dive-marine-life";
+import { PipeIntake } from "@/app/swac/dive-intake";
+import {
+  GiantJack,
+  LemonShark,
+  SeaTurtle,
+} from "@/app/swac/dive-marine-life";
 import {
   createAlgaeGeometry,
   createBarrelSpongeGeometry,
@@ -48,6 +53,8 @@ const MODELS = [
   "jellyfish",
   "giant-jack",
   "sea-turtle",
+  "shark",
+  "pipe-intake",
   ...Object.keys(GEOMETRY_MODELS),
 ] as const;
 export type ModelName = (typeof MODELS)[number];
@@ -62,7 +69,20 @@ const VIEWS = {
 export type ViewName = keyof typeof VIEWS;
 
 const stillDepth = { get: () => 0 };
-const TURTLE_QUARTER_VIEW = [0.72, 0.42, -0.72] as const;
+const TURTLE_VIEWS = {
+  side: [0, 0, -1],
+  front: [1, 0, 0],
+  back: [-1, 0, 0],
+  top: [0, 1, 0],
+  quarter: [0.28, 0.34, -1],
+} as const;
+const SHARK_VIEWS = {
+  side: [0, 0, -1],
+  front: [1, 0, 0],
+  back: [-1, 0, 0],
+  top: [0, 1, 0],
+  quarter: [0.18, 0.32, -1],
+} as const;
 
 /** The bench has its own light chrome; the site's dark Button is invisible here. */
 function chipClass(active: boolean) {
@@ -94,6 +114,12 @@ function ModelSubject({ name }: { name: ModelName }) {
   }
   if (name === "sea-turtle") {
     return <SeaTurtle preview />;
+  }
+  if (name === "shark") {
+    return <LemonShark preview />;
+  }
+  if (name === "pipe-intake") {
+    return <PipeIntake preview />;
   }
   return (
     <mesh geometry={geometry ?? undefined}>
@@ -151,13 +177,28 @@ function Rig({
     // which axis the model happens to be long on.
     const perspective = camera as THREE.PerspectiveCamera;
     const radius = size.length() / 2 || 1;
-    const framingScale = model === "sea-turtle" ? 0.45 : 0.8;
+    const turtleFramingScale =
+      view === "top"
+        ? 0.76
+        : view === "front" || view === "back"
+          ? 0.68
+          : view === "quarter"
+            ? 0.52
+            : 0.54;
+    const framingScale =
+      model === "sea-turtle"
+        ? turtleFramingScale
+        : model === "shark"
+          ? 0.55
+          : 0.8;
     const distance =
       (radius / Math.sin((perspective.fov * Math.PI) / 360)) * framingScale;
     const viewDirection =
-      model === "sea-turtle" && view === "quarter"
-        ? TURTLE_QUARTER_VIEW
-        : VIEWS[view];
+      model === "sea-turtle"
+        ? TURTLE_VIEWS[view]
+        : model === "shark"
+          ? SHARK_VIEWS[view]
+          : VIEWS[view];
     const direction = new THREE.Vector3(...viewDirection).normalize();
 
     // Order matters: OrbitControls derives its state from target and camera

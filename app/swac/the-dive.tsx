@@ -306,7 +306,7 @@ export function TheDive({ copy }: TheDiveProps) {
               <article key={stop.id} className={styles.diveStep}>
                 <motion.div
                   ref={stop.id === "surface" ? lagoonCardRef : undefined}
-                  className={styles.diveStepCard}
+                  className={cn(styles.diveStepCard, "max-w-[22.67rem]")}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{
                     opacity: hasPassedThermocline ? 0 : 1,

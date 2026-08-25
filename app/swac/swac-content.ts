@@ -461,11 +461,6 @@ export type SwacCopy = {
     titleLead: string;
     titleAccent: string;
     description: string;
-    coordinates: string;
-    place: string;
-    begin: string;
-    pause: string;
-    play: string;
     videoLabel: string;
     posterAlt: string;
     posterSrc: string;
@@ -479,9 +474,13 @@ export type SwacCopy = {
     depthLabel: string;
     plantLabel: string;
     buildingsLabel: string;
+    wetLabOptionalLabel: string;
+    wetLabLabel: string;
     coldLabel: string;
     warmLabel: string;
     chilledLabel: string;
+    warmedFreshLabel: string;
+    statPrefix: string;
     statValue: string;
     statLabel: string;
     steps: BasicStep[];
@@ -630,15 +629,10 @@ const englishCopy: SwacCopy = {
   },
   hero: {
     eyebrow: "Tetiaroa · Sea water air conditioning",
-    titleLead: "The cold was",
+    titleLead: "The cold is",
     titleAccent: "already there",
     description:
-      "Air conditioning has one job: move heat somewhere colder. In the tropics that somewhere is hard to find, until you look down. Nine hundred metres under Tetiaroa the Pacific sits at five degrees. We pump it up, borrow the chill, and send it back.",
-    coordinates: "17°00′S 149°34′W",
-    place: "Tetiaroa Atoll, French Polynesia",
-    begin: "Take the pipe down",
-    pause: "Pause",
-    play: "Play",
+      "Cooling requires you to move heat from one place to another. In the tropics, that usually requires an immense amount of energy... until you look down. Nine hundred metres under Teti'aroa, the Pacific sits at five degrees.",
     videoLabel: "Aerial footage of Tetiaroa atoll and its lagoon",
     posterAlt: "Tetiaroa atoll from the air, reef and lagoon",
     posterSrc: "/geology/atoll-foundation-poster.webp",
@@ -649,14 +643,18 @@ const englishCopy: SwacCopy = {
     definition:
       "Sea water air conditioning replaces the part of an air conditioner that makes cold. Instead of a compressor burning electricity to chill water, a pipe runs out to where the ocean is already cold and brings that cold ashore. The seawater never enters a building and never mixes with anything. It passes a titanium plate, hands over its chill, and goes home. Everything downstream is ordinary air conditioning.",
     diagramLabel:
-      "A cross-section showing a pipe running from a shore plant down to 900 metres, a heat exchanger on land, a chilled water loop feeding buildings, and a return pipe discharging warmed seawater at depth.",
+      "A cross-section showing a pipe running from a shore plant down to 900 metres, a heat exchanger on land, an optional deep-water branch serving the Ecostation wet lab, a freshwater usage loop carrying chilled water to buildings and warmed water back, and a return pipe discharging warmed seawater at depth.",
     seaLabel: "Sea level",
     depthLabel: "900 m · 5 °C",
     plantLabel: "Plant",
     buildingsLabel: "Buildings",
+    wetLabOptionalLabel: "Optional",
+    wetLabLabel: "Ecostation wet lab",
     coldLabel: "Cold seawater in",
     warmLabel: "Warmed seawater out",
-    chilledLabel: "Chilled fresh water",
+    chilledLabel: "Chilled fresh water supply",
+    warmedFreshLabel: "Warmed fresh water return",
+    statPrefix: "Up to",
     statValue: "90%",
     statLabel: "Less electricity than a conventional chiller",
     steps: [
@@ -664,29 +662,27 @@ const englishCopy: SwacCopy = {
         id: "intake",
         number: "01",
         title: "Reach the cold",
-        body:
-          "A pipe runs down the island's slope to around nine hundred metres, where the Pacific holds five degrees all year round.",
+        body: "From a cold water source, pump the water to the heat exchanger",
       },
       {
         id: "exchange",
         number: "02",
         title: "Trade the chill",
         body:
-          "Ashore, seawater and fresh water pass on opposite faces of a titanium plate. Heat crosses the metal. The two waters never touch.",
+          "The seawater passes thru a heat exchanger. It sucks the heat out of a fresh water loop. The two loops never make physical contact.",
       },
       {
         id: "distribute",
         number: "03",
-        title: "Cool the rooms",
+        title: "Cool the buildings",
         body:
-          "Chilled fresh water circles a closed loop to the same fan coils any hotel already owns. Nothing downstream needs reinventing.",
+          "Chilled fresh water circulates thru a closed loop cooling rooms, systems, servers, etc.",
       },
       {
         id: "return",
         number: "04",
-        title: "Send it back",
-        body:
-          "The seawater leaves a few degrees warmer and returns to a depth where it matches the water around it.",
+        title: "Warm water returned",
+        body: "The warmed seawater is returned to the warm upper layers of its source",
       },
     ],
   },
@@ -694,7 +690,7 @@ const englishCopy: SwacCopy = {
     eyebrow: "The descent",
     title: "Nine hundred metres, straight down",
     intro:
-      "Follow the intake pipe from the reef to its mouth. The readings on the left trace a real ocean profile. Watch for the point where the temperature falls off a cliff.",
+      "Follow the pipe all the way down to where the water sits near freezing.",
     instructions: "Scroll to descend",
     stopLabel: "Depth stop",
     depthLabel: "Depth",
@@ -707,7 +703,7 @@ const englishCopy: SwacCopy = {
       "A cross-section of the water column beside Tetiaroa, from the reef at the surface down to the intake pipe mouth at 900 metres, with temperature falling from 28 to 5 degrees.",
     payoffTitle: "And then it becomes energy efficient cooling",
     payoffBody:
-      "The seawater never enters a building. It gives up its chill across a titanium plate and goes straight back to the ocean. What reaches the rooms is fresh water, cooled through the metal.",
+      "The cold seawater flows across a heat exchanger, absorbing the heat from anything from air conditioning to server cooling, and then pumps the heated water back into the warm, upper layers of the ocean.",
     stops: [
       {
         id: "surface",
@@ -715,7 +711,7 @@ const englishCopy: SwacCopy = {
         eyebrow: "0 metres",
         title: "The lagoon",
         body:
-          "Twenty-eight degrees, and perfect for swimming. Just not for cooling. Push heat into water this warm and it has nowhere to go.",
+          "Twenty-eight degrees. Perfect for swimming, but not for cooling. We need to dive deeper.",
         readout: "Warm mixed layer",
       },
       {
@@ -724,7 +720,7 @@ const englishCopy: SwacCopy = {
         eyebrow: "40 metres",
         title: "The reef wall",
         body:
-          "The last of the branching coral. Past here the slope tips over and runs. This is the outer flank of a volcano, and it has been sinking quietly for millions of years.",
+          "As we descend down the reef wall, the sealife changes and becomes less frequent. The water begins to cool and the amount of light starts to decrease.",
         readout: "Still 28 °C",
       },
       {
@@ -742,7 +738,7 @@ const englishCopy: SwacCopy = {
         eyebrow: "400 metres",
         title: "Through the thermocline",
         body:
-          "The ocean's dividing line. Above it, sun-warmed water that mixes with the surface. Below it, a different ocean entirely. Nineteen degrees vanish in three hundred metres.",
+          "The ocean's dividing line. Above it, sun-warmed water that mixes with the surface. Below it, a different ocean entirely.",
         readout: "The boundary",
       },
       {
@@ -751,7 +747,7 @@ const englishCopy: SwacCopy = {
         eyebrow: "900 metres",
         title: "The intake",
         body:
-          "Five degrees. Every day, every season, through every cyclone the atoll has ever taken. This water sank near the poles and crossed the Pacific to get here. All we had to do was reach it.",
+          "Every day, every season, the water here sits near 5 degrees. Now that we have reached it, this ice cold water can be pumped to the surface.",
         readout: "Intake depth",
       },
     ],
@@ -848,13 +844,13 @@ const englishCopy: SwacCopy = {
     resetLabel: "Reset",
     kwhLabel: "kWh",
     annualLabel: "Per year",
-    dieselLabel: "Diesel not burned",
+    dieselLabel: "Diesel equivalent",
     drumsLabel: "200-litre drums",
-    co2Label: "CO₂ avoided",
+    co2Label: "Direct CO₂ equivalent",
     reductionLabel: "Electricity saved",
     loadLabel: "Cooling load",
     caveat:
-      "The maths here assumes a seasonal chiller efficiency of 3.0, a system efficiency of 20 for SWAC including pumping, 4,500 equivalent full-load cooling hours a year, and island diesel generation at 3.6 kWh per litre. Change any of those and the gap moves. The shape of it stays.",
+      "These figures come from a model, not site meters. It assumes a seasonal COP of 3.0 for a conventional chiller and a whole-system COP of 20 for SWAC, including pumping and distribution, over 4,500 equivalent full-load hours a year. Diesel is used only as a comparison: one litre represents 3.6 kWh of delivered electricity and, if burned, 2.68 kg of CO₂.",
     presets: [
       { id: "villa", label: "One villa", kw: 15 },
       { id: "hotel", label: "Small hotel", kw: 700 },
@@ -1192,15 +1188,10 @@ const frenchCopy: SwacCopy = {
   },
   hero: {
     eyebrow: "Tetiaroa · Climatisation à l'eau de mer",
-    titleLead: "Le froid était",
+    titleLead: "Le froid est",
     titleAccent: "déjà là",
     description:
-      "Une climatisation n'a qu'une tâche : déplacer la chaleur vers un endroit plus froid. Sous les tropiques, cet endroit est introuvable, sauf si l'on regarde vers le bas. À neuf cents mètres sous Tetiaroa, le Pacifique se tient à cinq degrés. Nous le remontons, lui empruntons sa fraîcheur, et le renvoyons.",
-    coordinates: "17°00′S 149°34′O",
-    place: "Atoll de Tetiaroa, Polynésie française",
-    begin: "Suivre la conduite",
-    pause: "Pause",
-    play: "Lecture",
+      "Pour refroidir, il faut déplacer la chaleur d’un endroit à un autre. Sous les tropiques, cela exige généralement une immense quantité d’énergie… jusqu’à ce qu’on regarde sous nos pieds. À neuf cents mètres sous Teti'aroa, l’eau du Pacifique est à cinq degrés.",
     videoLabel: "Images aériennes de l'atoll de Tetiaroa et de son lagon",
     posterAlt: "L'atoll de Tetiaroa vu du ciel, récif et lagon",
     posterSrc: "/geology/atoll-foundation-poster.webp",
@@ -1211,44 +1202,48 @@ const frenchCopy: SwacCopy = {
     definition:
       "La climatisation à l'eau de mer remplace la partie d'un climatiseur qui fabrique le froid. Au lieu d'un compresseur qui brûle de l'électricité pour refroidir de l'eau, une conduite va chercher le froid là où l'océan est déjà froid et le ramène à terre. L'eau de mer n'entre jamais dans un bâtiment et ne se mélange à rien. Elle longe une plaque de titane, cède sa fraîcheur, et repart. Tout le reste est de la climatisation ordinaire.",
     diagramLabel:
-      "Une coupe montrant une conduite reliant une centrale à terre à 900 mètres de profondeur, un échangeur de chaleur sur la côte, une boucle d'eau glacée desservant les bâtiments, et une conduite de rejet restituant l'eau de mer réchauffée en profondeur.",
+      "Une coupe montrant une conduite reliant une centrale à terre à 900 mètres de profondeur, un échangeur de chaleur sur la côte, une dérivation optionnelle de l’eau océanique profonde vers le laboratoire humide de l’Ecostation, un circuit fermé d’eau douce acheminant l’eau refroidie vers les bâtiments et ramenant l’eau réchauffée, ainsi qu’une conduite de rejet restituant en profondeur l’eau de mer réchauffée.",
     seaLabel: "Niveau de la mer",
     depthLabel: "900 m · 5 °C",
     plantLabel: "Centrale",
     buildingsLabel: "Bâtiments",
+    wetLabOptionalLabel: "En option",
+    wetLabLabel: "Laboratoire humide de l’Ecostation",
     coldLabel: "Eau de mer froide",
     warmLabel: "Eau de mer réchauffée",
-    chilledLabel: "Eau douce glacée",
+    chilledLabel: "Départ d’eau douce refroidie",
+    warmedFreshLabel: "Retour d’eau douce réchauffée",
+    statPrefix: "Jusqu’à",
     statValue: "90 %",
-    statLabel: "D'électricité en moins qu'un groupe froid classique",
+    statLabel: "D’électricité en moins qu’un groupe froid classique",
     steps: [
       {
         id: "intake",
         number: "01",
-        title: "Atteindre le froid",
+        title: "Aller chercher le froid",
         body:
-          "Une conduite descend le talus de l'île jusque vers neuf cents mètres, là où le Pacifique se tient à cinq degrés toute l'année.",
+          "Depuis une source d’eau froide, l’eau est pompée jusqu’à l’échangeur thermique.",
       },
       {
         id: "exchange",
         number: "02",
-        title: "Céder la fraîcheur",
+        title: "Transmettre le froid",
         body:
-          "À terre, l'eau de mer et l'eau douce longent les deux faces d'une plaque de titane. La chaleur traverse le métal. Les deux eaux ne se touchent jamais.",
+          "L’eau de mer traverse un échangeur thermique. Elle absorbe la chaleur d’un circuit d’eau douce. Les deux circuits n’entrent jamais en contact.",
       },
       {
         id: "distribute",
         number: "03",
-        title: "Rafraîchir les chambres",
+        title: "Refroidir les bâtiments",
         body:
-          "L'eau douce glacée tourne en circuit fermé vers les mêmes ventilo-convecteurs que possède déjà n'importe quel hôtel. Rien en aval n'est à réinventer.",
+          "L’eau douce refroidie circule en circuit fermé pour refroidir les pièces, les équipements, les serveurs, etc.",
       },
       {
         id: "return",
         number: "04",
-        title: "La renvoyer",
+        title: "Restituer l’eau réchauffée",
         body:
-          "L'eau de mer repart quelques degrés plus chaude, restituée à une profondeur où elle rejoint l'eau environnante.",
+          "L’eau de mer réchauffée est restituée aux couches supérieures, plus chaudes, de son milieu d’origine.",
       },
     ],
   },
@@ -1256,7 +1251,7 @@ const frenchCopy: SwacCopy = {
     eyebrow: "La descente",
     title: "Neuf cents mètres, à la verticale",
     intro:
-      "Suivez la conduite depuis le récif jusqu'à sa prise d'eau. Les valeurs à gauche suivent un profil océanique réel. Guettez le moment où la température bascule.",
+      "Suivez la conduite jusqu'en bas, là où l'eau frôle le point de congélation.",
     instructions: "Faites défiler pour descendre",
     stopLabel: "Palier",
     depthLabel: "Profondeur",
@@ -1269,7 +1264,7 @@ const frenchCopy: SwacCopy = {
       "Une coupe de la colonne d'eau au large de Tetiaroa, du récif en surface jusqu'à la prise d'eau à 900 mètres, la température passant de 28 à 5 degrés.",
     payoffTitle: "Et puis elle rafraîchit une chambre",
     payoffBody:
-      "L'eau de mer n'entre jamais dans un bâtiment. Elle cède sa fraîcheur à travers une plaque de titane et repart aussitôt à l'océan. Ce qui arrive dans les chambres, c'est de l'eau douce, refroidie au travers du métal.",
+      "L’eau de mer froide traverse un échangeur thermique et absorbe la chaleur à évacuer, qu’il s’agisse de climatiser une pièce ou de refroidir des serveurs. Une fois réchauffée, elle est pompée vers les couches supérieures, plus chaudes, de l’océan.",
     stops: [
       {
         id: "surface",
@@ -1277,7 +1272,7 @@ const frenchCopy: SwacCopy = {
         eyebrow: "0 mètre",
         title: "Le lagon",
         body:
-          "Vingt-huit degrés, parfait pour la baignade. Beaucoup moins pour la climatisation. Une eau aussi chaude n'a nulle part où mettre la chaleur qu'on lui confie.",
+          "Vingt-huit degrés. Parfait pour se baigner, mais pas pour refroidir. Il faut descendre plus bas.",
         readout: "Couche de mélange",
       },
       {
@@ -1286,7 +1281,7 @@ const frenchCopy: SwacCopy = {
         eyebrow: "40 mètres",
         title: "Le tombant",
         body:
-          "Les derniers coraux branchus. Passé ce point, la pente bascule et file. C'est le flanc externe d'un volcan, et il s'enfonce tranquillement depuis des millions d'années.",
+          "À mesure que nous descendons le long du tombant, la vie marine change et se fait plus rare. L'eau commence à refroidir et la lumière à diminuer.",
         readout: "Toujours 28 °C",
       },
       {
@@ -1304,7 +1299,7 @@ const frenchCopy: SwacCopy = {
         eyebrow: "400 mètres",
         title: "La thermocline",
         body:
-          "La ligne de partage de l'océan. Au-dessus, une eau brassée et réchauffée par le soleil. En dessous, un tout autre océan. Dix-neuf degrés disparaissent en trois cents mètres.",
+          "La ligne de partage de l'océan. Au-dessus, une eau brassée et réchauffée par le soleil. En dessous, un tout autre océan.",
         readout: "La frontière",
       },
       {
@@ -1313,7 +1308,7 @@ const frenchCopy: SwacCopy = {
         eyebrow: "900 mètres",
         title: "La prise d'eau",
         body:
-          "Cinq degrés. Chaque jour, chaque saison, à travers chaque cyclone encaissé par l'atoll. Cette eau a plongé près des pôles et traversé le Pacifique pour arriver ici. Il suffisait d'aller la chercher.",
+          "Jour après jour, en toute saison, l’eau reste ici autour de 5 degrés. Maintenant que nous l’avons atteinte, nous pouvons pomper cette eau glaciale jusqu’à la surface.",
         readout: "Profondeur de captage",
       },
     ],
@@ -1410,13 +1405,13 @@ const frenchCopy: SwacCopy = {
     resetLabel: "Réinitialiser",
     kwhLabel: "kWh",
     annualLabel: "Par an",
-    dieselLabel: "Gazole non brûlé",
+    dieselLabel: "Équivalent gazole",
     drumsLabel: "Fûts de 200 litres",
-    co2Label: "CO₂ évité",
+    co2Label: "Équivalent CO₂ direct",
     reductionLabel: "Électricité économisée",
     loadLabel: "Charge de froid",
     caveat:
-      "Le calcul retient un rendement saisonnier de 3,0 pour le groupe froid, de 20 pour le SWAC pompage compris, 4 500 heures annuelles équivalent pleine charge, et une production diesel insulaire à 3,6 kWh par litre. Changez l'une de ces valeurs et l'écart bouge. Sa forme, elle, reste la même.",
+      "Ces chiffres proviennent d’un modèle, pas de mesures sur site. Le calcul retient un COP saisonnier de 3,0 pour un groupe froid classique et un COP global de 20 pour le système SWAC, pompage et distribution compris, sur 4 500 heures équivalentes à pleine charge par an. Le gazole sert uniquement de référence : un litre représente 3,6 kWh d’électricité fournie et, s’il est brûlé, 2,68 kg de CO₂.",
     presets: [
       { id: "villa", label: "Une villa", kw: 15 },
       { id: "hotel", label: "Petit hôtel", kw: 700 },
