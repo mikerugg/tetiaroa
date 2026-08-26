@@ -15,6 +15,7 @@ const MODELS = new Set([
   "sea-turtle",
   "shark",
   "pipe-intake",
+  "submersible",
   "starfish",
   "coral-branching",
   "coral-mound",

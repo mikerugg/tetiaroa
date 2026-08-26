@@ -7,6 +7,7 @@ import * as THREE from "three";
 import { GiantSquid, SpermWhale } from "@/app/swac/dive-deep-life";
 import { JellyfishSchool } from "@/app/swac/dive-jellyfish";
 import { PipeIntake } from "@/app/swac/dive-intake";
+import { Submersible } from "@/app/swac/dive-submersible";
 import {
   GiantJack,
   LemonShark,
@@ -55,6 +56,7 @@ const MODELS = [
   "sea-turtle",
   "shark",
   "pipe-intake",
+  "submersible",
   ...Object.keys(GEOMETRY_MODELS),
 ] as const;
 export type ModelName = (typeof MODELS)[number];
@@ -120,6 +122,9 @@ function ModelSubject({ name }: { name: ModelName }) {
   }
   if (name === "pipe-intake") {
     return <PipeIntake preview />;
+  }
+  if (name === "submersible") {
+    return <Submersible depth={stillDepth} preview />;
   }
   return (
     <mesh geometry={geometry ?? undefined}>
@@ -190,7 +195,9 @@ function Rig({
         ? turtleFramingScale
         : model === "shark"
           ? 0.55
-          : 0.8;
+          : model === "submersible"
+            ? 0.68
+            : 0.8;
     const distance =
       (radius / Math.sin((perspective.fov * Math.PI) / 360)) * framingScale;
     const viewDirection =

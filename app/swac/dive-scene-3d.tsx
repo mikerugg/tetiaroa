@@ -30,6 +30,10 @@ import {
   JellyfishSchool,
 } from "./dive-jellyfish";
 import { PipeIntake } from "./dive-intake";
+import {
+  SUBMERSIBLE_DEPTH,
+  Submersible,
+} from "./dive-submersible";
 import { createStarfishGeometry } from "./dive-reef-geometry";
 import {
   causticsFragmentShader,
@@ -43,6 +47,8 @@ const SNOW_COUNT = 900;
 const SNOW_COLUMN_HEIGHT = 90;
 const JELLY_LIGHT_FADE_DISTANCE = 55;
 const JELLY_LIGHT_MINIMUM = 0.025;
+const SUBMERSIBLE_LIGHT_FADE_START = 125;
+const SUBMERSIBLE_LIGHT_FADE_END = 158;
 
 function jellyLayerLightLevel(depth: number) {
   const distanceFromLayer =
@@ -59,6 +65,27 @@ function jellyLayerLightLevel(depth: number) {
       JELLY_LIGHT_FADE_DISTANCE,
     );
   return THREE.MathUtils.lerp(1, JELLY_LIGHT_MINIMUM, proximity);
+}
+
+/**
+ * The diver yields their lamp to the sub's inspection lights, then keeps it
+ * down until the jellyfish have passed. This envelope hands control back while
+ * the existing jelly envelope is already at its minimum, avoiding a flash of
+ * white light between the two encounters.
+ */
+function submersibleApproachLightLevel(depth: number) {
+  const approach = THREE.MathUtils.smoothstep(
+    depth,
+    SUBMERSIBLE_LIGHT_FADE_START,
+    SUBMERSIBLE_LIGHT_FADE_END,
+  );
+  const jellyHandoff =
+    1 - THREE.MathUtils.smoothstep(depth, JELLY_MIN_DEPTH, JELLY_MAX_DEPTH);
+  return THREE.MathUtils.lerp(
+    1,
+    JELLY_LIGHT_MINIMUM,
+    approach * jellyHandoff,
+  );
 }
 
 /**
@@ -1021,6 +1048,24 @@ function DiveRig({ depth, velocity }: SceneProps) {
   const backgroundColour = useRef(new THREE.Color("#1fb6a6"));
   const keyLightRef = useRef<THREE.DirectionalLight>(null);
   const curve = useSlopeCurve();
+  const submersibleAxis = useMemo(
+    () => slopeAcross(SUBMERSIBLE_DEPTH, new THREE.Vector3()),
+    [],
+  );
+  const submersibleAnchor = useMemo(
+    () =>
+      viewAnchor(SUBMERSIBLE_DEPTH, 0).addScaledVector(
+        submersibleAxis,
+        0.65,
+      ),
+    [submersibleAxis],
+  );
+  const submersibleInspectionTarget = useMemo(
+    // This lower section sits on the camera's sightline during the encounter,
+    // so the pool of light remains visible while the sub turns toward it.
+    () => pipePoint(SUBMERSIBLE_DEPTH + 32, new THREE.Vector3()),
+    [],
+  );
 
   const diveLightRef = useRef<THREE.PointLight>(null);
   const scratchSlope = useRef(new THREE.Vector3());
@@ -1054,10 +1099,14 @@ function DiveRig({ depth, velocity }: SceneProps) {
       diveLightRef.current.position.copy(state.camera.position);
       // Near the surface the sun does the work and a full-power lamp just
       // blows out the lagoon floor. It takes over as the daylight dies, then
-      // yields to the jellyfish while crossing their bioluminescent layer.
+      // yields first to the sub's inspection lamps and then to the jellyfish.
       const fullIntensity = 18 + (1 - lightAtDepth(metres)) * 105;
       diveLightRef.current.intensity =
-        fullIntensity * jellyLayerLightLevel(metres);
+        fullIntensity *
+        Math.min(
+          submersibleApproachLightLevel(metres),
+          jellyLayerLightLevel(metres),
+        );
     }
 
     sampleDepthColour(metres, backgroundColour.current);
@@ -1107,6 +1156,12 @@ function DiveRig({ depth, velocity }: SceneProps) {
       <IslandBeach />
       <SlopeTerrain />
       <LagoonLife depth={depth} />
+      <Submersible
+        depth={depth}
+        anchor={submersibleAnchor}
+        axis={submersibleAxis}
+        inspectionTarget={submersibleInspectionTarget}
+      />
       <JellyfishSchool
         depth={depth}
         anchor={viewAnchor(JELLY_DEPTH, 25)}
