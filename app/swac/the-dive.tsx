@@ -82,6 +82,7 @@ type TheDiveProps = {
 };
 
 export function TheDive({ copy }: TheDiveProps) {
+  const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const lagoonCardRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
@@ -92,7 +93,11 @@ export function TheDive({ copy }: TheDiveProps) {
     () => false,
   );
   const [depth, setDepth] = useState(0);
+  const shouldLoadScene = useInView(sectionRef, { once: true });
+  const sceneActive = useInView(trackRef);
   const lagoonCardInView = useInView(lagoonCardRef);
+  const shouldRenderScene =
+    canRender3D && prefersReducedMotion !== true && shouldLoadScene;
 
   const { scrollYProgress } = useScroll({
     target: trackRef,
@@ -154,7 +159,7 @@ export function TheDive({ copy }: TheDiveProps) {
   const inThermocline = depth >= THERMOCLINE_TOP && depth <= THERMOCLINE_BASE;
 
   return (
-    <section id="descent" className={styles.diveSection}>
+    <section ref={sectionRef} id="descent" className={styles.diveSection}>
       <header className="mx-auto flex max-w-4xl flex-col gap-5 px-4 py-24 text-center sm:px-6 lg:py-32">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary">
           {copy.eyebrow}
@@ -169,52 +174,58 @@ export function TheDive({ copy }: TheDiveProps) {
 
       <div ref={trackRef} className={styles.diveTrack}>
         <div className={styles.diveSticky}>
-          {canRender3D && !prefersReducedMotion ? (
-            <div className={styles.diveCanvas}>
-              <DiveScene3D depth={depthValue} velocity={velocity} />
-            </div>
-          ) : (
-            <motion.div
-              className={styles.diveColumn}
-              style={{ background: fallbackBackground }}
-              aria-hidden="true"
+          {/* Keep the lightweight column underneath the Canvas so a slow
+              dynamic import never leaves a blank frame. */}
+          <motion.div
+            className={styles.diveColumn}
+            style={{ background: fallbackBackground }}
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 400 800"
+              preserveAspectRatio="xMidYMid slice"
+              className="size-full"
             >
-              <svg
-                viewBox="0 0 400 800"
-                preserveAspectRatio="xMidYMid slice"
-                className="size-full"
-              >
-                <g opacity="0.5">
-                  {Array.from({ length: 16 }, (_, i) => (
-                    <line
-                      key={i}
-                      x1="0"
-                      x2="400"
-                      y1={i * 50}
-                      y2={i * 50 + 6}
-                      stroke="rgba(233,240,236,0.08)"
-                      strokeWidth="1"
-                    />
-                  ))}
-                </g>
-                <rect
-                  x="262"
-                  y="0"
-                  width="17"
-                  height="800"
-                  fill="rgba(10,26,34,0.85)"
-                  rx="8"
-                />
-                <rect
-                  x="262"
-                  y="0"
-                  width="4"
-                  height="800"
-                  fill="rgba(233,240,236,0.09)"
-                />
-              </svg>
-            </motion.div>
-          )}
+              <g opacity="0.5">
+                {Array.from({ length: 16 }, (_, i) => (
+                  <line
+                    key={i}
+                    x1="0"
+                    x2="400"
+                    y1={i * 50}
+                    y2={i * 50 + 6}
+                    stroke="rgba(233,240,236,0.08)"
+                    strokeWidth="1"
+                  />
+                ))}
+              </g>
+              <rect
+                x="262"
+                y="0"
+                width="17"
+                height="800"
+                fill="rgba(10,26,34,0.85)"
+                rx="8"
+              />
+              <rect
+                x="262"
+                y="0"
+                width="4"
+                height="800"
+                fill="rgba(233,240,236,0.09)"
+              />
+            </svg>
+          </motion.div>
+
+          {shouldRenderScene ? (
+            <div className={styles.diveCanvas}>
+              <DiveScene3D
+                active={sceneActive}
+                depth={depthValue}
+                velocity={velocity}
+              />
+            </div>
+          ) : null}
 
           <div className={styles.diveVignette} aria-hidden="true" />
 

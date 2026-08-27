@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRightIcon, CheckIcon, ExternalLinkIcon } from "lucide-react";
+import { ArrowRightIcon, CheckIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { homeCopies } from "@/app/home-copy";
@@ -15,18 +15,6 @@ import { TheSlope } from "./the-slope";
 import { FeasibilityGlobe } from "./feasibility-globe";
 import { swacCopies, type SwacLocale } from "./swac-content";
 import styles from "./swac.module.css";
-
-const sourceHrefs = {
-  society: {
-    en: "https://www.tetiaroasociety.org/island/swac",
-    fr: "https://www.tetiaroasociety.org/fr/island/swac",
-  },
-  makai: "https://www.makai.com/ocean-engineering/seawater-air-conditioning/",
-  nrel: "https://www.nrel.gov/water/marine-energy-resource-assessment",
-  otec: "https://www.ocean-energy-systems.org/",
-  honolulu: "https://files.hawaii.gov/dbedt/erp/Publications/SWAC-EIS.pdf",
-  cornell: "https://energyandsustainability.fs.cornell.edu/util/cooling/production/lsc/default.cfm",
-} as const;
 
 type SwacExperienceProps = {
   locale: SwacLocale;
@@ -47,15 +35,6 @@ export function SwacExperience({ locale }: SwacExperienceProps) {
         : "Read this page in English",
   };
 
-  const sources = [
-    { label: copy.sources.labels.society, href: sourceHrefs.society[locale] },
-    { label: copy.sources.labels.makai, href: sourceHrefs.makai },
-    { label: copy.sources.labels.nrel, href: sourceHrefs.nrel },
-    { label: copy.sources.labels.otec, href: sourceHrefs.otec },
-    { label: copy.sources.labels.honolulu, href: sourceHrefs.honolulu },
-    { label: copy.sources.labels.cornell, href: sourceHrefs.cornell },
-  ];
-
   return (
     <SwacMotionProvider>
       <DocumentLanguage lang={locale} />
@@ -67,81 +46,6 @@ export function SwacExperience({ locale }: SwacExperienceProps) {
         <TheMeter copy={copy.meter} locale={locale} />
         <TheSlope copy={copy.slope} />
         <FeasibilityGlobe copy={copy.globe} />
-
-        <section className="bg-background px-4 py-24 sm:px-6 lg:px-10 lg:py-32">
-          <div className="mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-            <div className="flex flex-col gap-5">
-              <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary">
-                {copy.hard.eyebrow}
-              </p>
-              <h2 className="font-header text-5xl leading-[0.9] text-foreground sm:text-7xl">
-                {copy.hard.title}
-              </h2>
-              <p className="max-w-lg text-base leading-7 text-muted-foreground">
-                {copy.hard.intro}
-              </p>
-            </div>
-            <ol className="flex flex-col">
-              {copy.hard.items.map((item, index) => (
-                <li
-                  key={item.title}
-                  className="flex gap-5 border-t border-border py-6 last:border-b"
-                >
-                  <span className="font-header text-4xl leading-none text-primary/40">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <div className="flex min-w-0 flex-1 flex-col gap-2">
-                    <h3 className="font-display text-2xl leading-tight text-foreground">
-                      {item.title}
-                    </h3>
-                    <p className="text-base leading-7 text-muted-foreground">
-                      {item.body}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-
-        <section className="bg-background px-4 py-24 sm:px-6 lg:px-10 lg:py-32">
-          <div className="mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-[0.72fr_1.28fr]">
-            <div className="flex flex-col gap-5">
-              <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary">
-                {copy.sources.eyebrow}
-              </p>
-              <h2 className="font-header text-5xl leading-[0.9] text-foreground sm:text-7xl">
-                {copy.sources.title}
-              </h2>
-              <p className="max-w-lg text-base leading-7 text-muted-foreground">
-                {copy.sources.intro}
-              </p>
-            </div>
-            <ol className="flex flex-col">
-              {sources.map((source, index) => (
-                <li key={source.href}>
-                  <a
-                    href={source.href}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="group flex min-h-24 items-center gap-5 border-t border-border py-5 text-foreground transition-colors hover:text-primary last:border-b"
-                  >
-                    <span className="font-header text-4xl text-primary/40">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="min-w-0 flex-1 text-base leading-6">
-                      {source.label}
-                    </span>
-                    <ExternalLinkIcon
-                      className="size-5 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                      aria-hidden="true"
-                    />
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
 
         <section className={styles.closingSection}>
           <div

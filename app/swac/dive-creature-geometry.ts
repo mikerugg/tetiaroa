@@ -79,6 +79,15 @@ export function loft(
   return geometry;
 }
 
+/** Shared by visibility and animation gates so their depth boundaries agree. */
+export function isWithinDepthBand(
+  value: number,
+  centre: number,
+  band: number,
+) {
+  return Math.abs(value - centre) < band;
+}
+
 /** Fades a creature in only while the camera is near its authored depth. */
 export function useDepthBand(
   depth: { get: () => number },
@@ -89,7 +98,7 @@ export function useDepthBand(
   useFrame(() => {
     const group = ref.current;
     if (group) {
-      group.visible = Math.abs(depth.get() - centre) < band;
+      group.visible = isWithinDepthBand(depth.get(), centre, band);
     }
   });
   return ref;

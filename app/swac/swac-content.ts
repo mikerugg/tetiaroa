@@ -581,25 +581,6 @@ export type SwacCopy = {
     closeLabel: string;
     sites: FeasibilitySite[];
   };
-  hard: {
-    eyebrow: string;
-    title: string;
-    intro: string;
-    items: Array<{ title: string; body: string }>;
-  };
-  sources: {
-    eyebrow: string;
-    title: string;
-    intro: string;
-    labels: {
-      society: string;
-      makai: string;
-      nrel: string;
-      otec: string;
-      honolulu: string;
-      cornell: string;
-    };
-  };
   cta: {
     eyebrow: string;
     title: string;
@@ -629,8 +610,8 @@ const englishCopy: SwacCopy = {
   },
   hero: {
     eyebrow: "Tetiaroa · Sea water air conditioning",
-    titleLead: "The cold is",
-    titleAccent: "already there",
+    titleLead: "A deep dive",
+    titleAccent: "into SWAC",
     description:
       "Cooling requires you to move heat from one place to another. In the tropics, that usually requires an immense amount of energy... until you look down. Nine hundred metres under Teti'aroa, the Pacific sits at five degrees.",
     videoLabel: "Aerial footage of Tetiaroa atoll and its lagoon",
@@ -1112,48 +1093,6 @@ const englishCopy: SwacCopy = {
         note: "Deep water close to shore and some of the highest power prices in the hemisphere.",
       },
     ],
-  },
-  hard: {
-    eyebrow: "What we have learned",
-    title: "The four questions that decide it",
-    intro:
-      "None of the hard parts are physics. They are decisions, and every one of them has caught a project out somewhere. Here is what running a plant for a decade has taught us to ask first.",
-    items: [
-      {
-        title: "The pipe is the project",
-        body:
-          "Almost the entire cost sits in the marine pipeline, and it is spent before the first kilowatt-hour is saved. Route it well and you buy forty years of nearly free cooling. Route it badly and you buy a salvage operation. Survey work earns its money here several times over.",
-      },
-      {
-        title: "The seabed decides",
-        body:
-          "You need deep water close in, a slope stable enough to anchor on, and a path that stays clear of reef worth protecting. Those three rarely line up by accident. Finding the corridor where they do is the first thing worth paying for.",
-      },
-      {
-        title: "Plan for the day it stops",
-        body:
-          "One pipe. A cyclone, a slip on the slope, a dragged anchor. Every serious installation keeps conventional chillers standing by, and sizing that backup honestly is what separates a design that runs from one that reads well on paper.",
-      },
-      {
-        title: "The discharge is the licence",
-        body:
-          "Water going back is warmer and richer in nutrients than the water around it. Return it at the wrong depth and you fertilise a reef that was doing fine. Getting it right takes modelling, monitoring and years of follow-up, and it is the first thing any regulator will ask about.",
-      },
-    ],
-  },
-  sources: {
-    eyebrow: "Sources",
-    title: "Where the numbers come from",
-    intro:
-      "Figures on this page come from public reporting and from general SWAC engineering literature. Site-specific performance data for the atoll's plant is not ours to publish, and anything described as an estimate is exactly that.",
-    labels: {
-      society: "Tetiaroa Society — the atoll, its research stations and infrastructure",
-      makai: "Makai Ocean Engineering — seawater air conditioning system design and pipeline engineering",
-      nrel: "NREL — ocean thermal resource assessment and deep seawater cooling potential",
-      otec: "Ocean Energy Systems — deep ocean water applications and district cooling reviews",
-      honolulu: "Honolulu Seawater Air Conditioning — project record and environmental review",
-      cornell: "Cornell University — Lake Source Cooling project documentation and monitoring",
-    },
   },
   cta: {
     eyebrow: "Tetiaroa Society",
@@ -1673,48 +1612,6 @@ const frenchCopy: SwacCopy = {
         note: "De l'eau profonde près du rivage et parmi les tarifs électriques les plus élevés de l'hémisphère.",
       },
     ],
-  },
-  hard: {
-    eyebrow: "Ce que nous avons appris",
-    title: "Les quatre questions qui décident",
-    intro:
-      "Aucune des difficultés n'est physique. Ce sont des décisions, et chacune a piégé un projet quelque part. Voici ce que dix ans d'exploitation nous ont appris à demander en premier.",
-    items: [
-      {
-        title: "La conduite, c'est le projet",
-        body:
-          "La quasi-totalité du coût réside dans la conduite marine, et elle se paie avant le premier kilowattheure économisé. Bien tracée, elle vous achète quarante ans de froid presque gratuit. Mal tracée, elle vous achète un chantier de renflouage. Les études de tracé se remboursent ici plusieurs fois.",
-      },
-      {
-        title: "C'est le fond qui décide",
-        body:
-          "Il vous faut de l'eau profonde près du rivage, une pente assez stable pour y ancrer, et un tracé qui évite le récif qui mérite d'être protégé. Ces trois conditions s'alignent rarement par hasard. Trouver le couloir où elles coïncident est la première chose qui vaut d'être payée.",
-      },
-      {
-        title: "Prévoir le jour où elle s'arrête",
-        body:
-          "Une seule conduite. Un cyclone, un glissement sur la pente, une ancre qui ripe. Toute installation sérieuse garde des groupes froids classiques en secours, et dimensionner honnêtement ce secours sépare une conception qui tourne d'une conception qui se lit bien.",
-      },
-      {
-        title: "Le rejet, c'est le permis",
-        body:
-          "L'eau restituée est plus chaude et plus riche en nutriments que celle qui l'entoure. Rendue à la mauvaise profondeur, elle fertilise un récif qui se portait très bien. Y parvenir demande de la modélisation, du suivi et des années de contrôle, et c'est la première chose que tout régulateur vous demandera.",
-      },
-    ],
-  },
-  sources: {
-    eyebrow: "Sources",
-    title: "D'où viennent les chiffres",
-    intro:
-      "Les valeurs de cette page proviennent de publications accessibles et de la littérature technique générale sur le SWAC. Les données de performance propres à la centrale de l'atoll ne nous appartiennent pas, et tout ce qui est présenté comme une estimation en est bien une.",
-    labels: {
-      society: "Tetiaroa Society — l'atoll, ses stations de recherche et ses infrastructures",
-      makai: "Makai Ocean Engineering — conception des systèmes de climatisation à l'eau de mer et ingénierie des conduites",
-      nrel: "NREL — évaluation de la ressource thermique océanique et du potentiel de froid par eau profonde",
-      otec: "Ocean Energy Systems — applications de l'eau océanique profonde et revues des réseaux de froid",
-      honolulu: "Honolulu Seawater Air Conditioning — dossier de projet et étude d'impact",
-      cornell: "Université Cornell — documentation et suivi du projet Lake Source Cooling",
-    },
   },
   cta: {
     eyebrow: "Tetiaroa Society",

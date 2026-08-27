@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRightIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -265,7 +265,14 @@ export default function HomeExperience({
                 {copy.swac.stat}
               </Badge>
             </div>
-            <div className={styles.scanPanel}>
+            <Link
+              href={copy.swac.href}
+              aria-label={copy.swac.cta}
+              className={cn(
+                styles.scanPanel,
+                "group block outline-none focus-visible:ring-3 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              )}
+            >
               <Image
                 src={copy.swac.image}
                 alt={copy.swac.imageAlt}
@@ -274,21 +281,19 @@ export default function HomeExperience({
                 className={styles.mediaImage}
                 sizes="(max-width: 960px) 100vw, 46vw"
               />
-              <Button
-                asChild
-                variant="impact"
-                size="lg"
-                className="absolute bottom-5 left-1/2 h-auto -translate-x-1/2 whitespace-nowrap px-4 py-3 sm:px-5"
+              <span
+                className={cn(
+                  buttonVariants({ variant: "impact", size: "lg" }),
+                  "pointer-events-none absolute bottom-5 left-1/2 h-auto -translate-x-1/2 whitespace-nowrap px-4 py-3 group-hover:border-primary group-hover:bg-lagoon group-hover:text-ink-light! group-focus-visible:border-primary group-focus-visible:bg-lagoon group-focus-visible:text-ink-light! sm:px-5",
+                )}
               >
-                <Link href={copy.swac.href}>
-                  {copy.swac.cta}
-                  <ArrowUpRightIcon
-                    data-icon="inline-end"
-                    aria-hidden="true"
-                  />
-                </Link>
-              </Button>
-            </div>
+                {copy.swac.cta}
+                <ArrowUpRightIcon
+                  data-icon="inline-end"
+                  aria-hidden="true"
+                />
+              </span>
+            </Link>
           </div>
 
           <div className={styles.impactFeedCtaWrap}>

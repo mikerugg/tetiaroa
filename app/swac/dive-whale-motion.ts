@@ -3,6 +3,11 @@ export const WHALE_TURN_RADIUS = 1.25;
 export const WHALE_MOUTH_CYCLE_SECONDS = 11.3;
 export const WHALE_MOUTH_CLOSED_ANGLE = 0.035;
 export const WHALE_MOUTH_OPEN_ANGLE = 0.16;
+export const WHALE_ENCOUNTER_START_DEPTH = 460;
+export const WHALE_ENCOUNTER_RESET_DEPTH = 430;
+export const WHALE_ENCOUNTER_FREEZE_DEPTH = 760;
+export const WHALE_ENCOUNTER_MAX_DELTA_SECONDS = 0.1;
+export const WHALE_ENCOUNTER_START_ALONG = -0.45;
 
 // Keep the turn inside the old nine-unit endpoint while leaving enough room
 // for the whale to describe a visible arc instead of pivoting in place.
@@ -16,6 +21,51 @@ export type WhaleSwimFrame = {
   tangentAlong: number;
   tangentOutward: number;
 };
+
+export type WhaleEncounterClock = {
+  time: number;
+  started: boolean;
+};
+
+export const INITIAL_WHALE_ENCOUNTER_CLOCK: WhaleEncounterClock = {
+  time: 0,
+  started: false,
+};
+
+/**
+ * Advances the whale only while its encounter is in view. The separate reset
+ * threshold gives reverse scrolling some hysteresis, and the freeze threshold
+ * stops an offscreen tab or long pause from advancing the encounter.
+ */
+export function advanceWhaleEncounterClock(
+  clock: WhaleEncounterClock,
+  depth: number,
+  deltaSeconds: number,
+): WhaleEncounterClock {
+  if (depth < WHALE_ENCOUNTER_RESET_DEPTH) {
+    return INITIAL_WHALE_ENCOUNTER_CLOCK;
+  }
+
+  if (!clock.started) {
+    return depth >= WHALE_ENCOUNTER_START_DEPTH
+      ? { time: 0, started: true }
+      : clock;
+  }
+
+  if (depth >= WHALE_ENCOUNTER_FREEZE_DEPTH) {
+    return clock;
+  }
+
+  const safeDelta = Number.isFinite(deltaSeconds)
+    ? Math.min(WHALE_ENCOUNTER_MAX_DELTA_SECONDS, Math.max(0, deltaSeconds))
+    : 0;
+
+  if (safeDelta === 0) {
+    return clock;
+  }
+
+  return { time: clock.time + safeDelta, started: true };
+}
 
 const ORBIT_SAMPLE_COUNT = 512;
 
@@ -174,5 +224,9 @@ export function whaleSwimFrameAtDistance(distance: number): WhaleSwimFrame {
 }
 
 export function whaleSwimFrameAtTime(time: number) {
-  return whaleSwimFrameAtDistance(time * WHALE_CRUISE_SPEED);
+  const startDistance =
+    WHALE_STRAIGHT_SPAN / 2 + WHALE_ENCOUNTER_START_ALONG;
+  return whaleSwimFrameAtDistance(
+    startDistance + time * WHALE_CRUISE_SPEED,
+  );
 }

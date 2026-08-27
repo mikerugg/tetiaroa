@@ -9,6 +9,7 @@ import {
   reefFrameAtDepth,
 } from "./dive-coordinates";
 import type { ReefFrame } from "./dive-coordinates";
+import { isWithinDepthBand } from "./dive-creature-geometry";
 
 /*
  * The lagoon at the top of the descent. Everything is built from primitives
@@ -564,9 +565,17 @@ const SMALL_FISH_PALETTES = [
 const TURTLE_DEPTH_METRES = 40;
 const GIANT_JACK_DEPTH_METRES = 80;
 const SHARK_DEPTH_METRES = 120;
+const LAGOON_LIFE_MAX_DEPTH = 175;
 const TURTLE_DEPTH_Y = -TURTLE_DEPTH_METRES * UNITS_PER_METRE;
 const GIANT_JACK_DEPTH_Y = -GIANT_JACK_DEPTH_METRES * UNITS_PER_METRE;
 const SHARK_DEPTH_Y = -SHARK_DEPTH_METRES * UNITS_PER_METRE;
+
+function isLagoonLifeActive(depth: number) {
+  // Descent depth is clamped at the surface, so a surface-centred band keeps
+  // the existing 0 <= depth < 175 contract while sharing exact edge semantics
+  // with the deeper animals.
+  return isWithinDepthBand(depth, 0, LAGOON_LIFE_MAX_DEPTH);
+}
 
 function setReefOrbitPoint(
   target: THREE.Vector3,
@@ -1240,7 +1249,13 @@ function useSeaTurtleGeometries() {
 }
 
 /** Green turtle, built as a deliberately coarse faceted model. */
-export function SeaTurtle({ preview = false }: { preview?: boolean }) {
+export function SeaTurtle({
+  depth,
+  preview = false,
+}: {
+  depth?: { get: () => number };
+  preview?: boolean;
+}) {
   const groupRef = useRef<THREE.Group>(null);
   const frontFlippers = useRef<Array<THREE.Group | null>>([]);
   const rearFlippers = useRef<Array<THREE.Group | null>>([]);
@@ -1256,7 +1271,11 @@ export function SeaTurtle({ preview = false }: { preview?: boolean }) {
 
   useFrame((state, delta) => {
     const group = groupRef.current;
-    if (!group || preview) {
+    if (
+      !group ||
+      preview ||
+      (depth && !isLagoonLifeActive(depth.get()))
+    ) {
       return;
     }
     const time = state.clock.elapsedTime;
@@ -1446,7 +1465,13 @@ export function SeaTurtle({ preview = false }: { preview?: boolean }) {
 }
 
 /** Giant jack (uru'ati): French Polynesia's largest jackfish. */
-export function GiantJack({ preview = false }: { preview?: boolean }) {
+export function GiantJack({
+  depth,
+  preview = false,
+}: {
+  depth?: { get: () => number };
+  preview?: boolean;
+}) {
   const groupRef = useRef<THREE.Group>(null);
   const fishRefs = useRef<Array<THREE.Group | null>>([]);
   const tailRefs = useRef<Array<THREE.Group | null>>([]);
@@ -1477,6 +1502,9 @@ export function GiantJack({ preview = false }: { preview?: boolean }) {
   useFrame((state) => {
     const group = groupRef.current;
     if (!group) {
+      return;
+    }
+    if (!preview && depth && !isLagoonLifeActive(depth.get())) {
       return;
     }
     const time = state.clock.elapsedTime;
@@ -1833,7 +1861,13 @@ function useLemonSharkGeometries() {
 }
 
 /** Angular lemon-olive shark rebuilt around the supplied low-poly silhouette. */
-export function LemonShark({ preview = false }: { preview?: boolean }) {
+export function LemonShark({
+  depth,
+  preview = false,
+}: {
+  depth?: { get: () => number };
+  preview?: boolean;
+}) {
   const groupRef = useRef<THREE.Group>(null);
   const tailRef = useRef<THREE.Group>(null);
   const ahead = useMemo(() => new THREE.Vector3(), []);
@@ -1845,7 +1879,11 @@ export function LemonShark({ preview = false }: { preview?: boolean }) {
 
   useFrame((state) => {
     const group = groupRef.current;
-    if (!group || preview) {
+    if (
+      !group ||
+      preview ||
+      (depth && !isLagoonLifeActive(depth.get()))
+    ) {
       return;
     }
     const time = state.clock.elapsedTime;
@@ -1991,16 +2029,16 @@ export function LagoonLife({ depth }: { depth: { get: () => number } }) {
   useFrame(() => {
     const group = groupRef.current;
     if (group) {
-      group.visible = depth.get() < 175;
+      group.visible = isLagoonLifeActive(depth.get());
     }
   });
 
   return (
     <group ref={groupRef}>
       <FishSchool depth={depth} />
-      <SeaTurtle />
-      <GiantJack />
-      <LemonShark />
+      <SeaTurtle depth={depth} />
+      <GiantJack depth={depth} />
+      <LemonShark depth={depth} />
     </group>
   );
 }

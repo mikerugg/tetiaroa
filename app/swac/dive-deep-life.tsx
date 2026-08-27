@@ -3,7 +3,11 @@
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { loft, useDepthBand } from "./dive-creature-geometry";
+import {
+  isWithinDepthBand,
+  loft,
+  useDepthBand,
+} from "./dive-creature-geometry";
 
 /*
  * Deep-ocean life below the sperm whale's foraging band. Bodies are authored
@@ -11,6 +15,7 @@ import { loft, useDepthBand } from "./dive-creature-geometry";
  */
 
 export const SQUID_DEPTH = 725;
+const SQUID_VISIBILITY_BAND = 230;
 
 type Buffers = { positions: number[]; indices: number[] };
 
@@ -79,7 +84,11 @@ export function GiantSquid({
   axis?: THREE.Vector3;
   preview?: boolean;
 }) {
-  const groupRef = useDepthBand(depth, SQUID_DEPTH, preview ? Infinity : 230);
+  const groupRef = useDepthBand(
+    depth,
+    SQUID_DEPTH,
+    preview ? Infinity : SQUID_VISIBILITY_BAND,
+  );
   const driftRef = useRef<THREE.Group>(null);
   const armsRef = useRef<THREE.Group>(null);
 
@@ -129,6 +138,12 @@ export function GiantSquid({
   useFrame((state) => {
     const drift = driftRef.current;
     if (!drift) {
+      return;
+    }
+    if (
+      !preview &&
+      !isWithinDepthBand(depth.get(), SQUID_DEPTH, SQUID_VISIBILITY_BAND)
+    ) {
       return;
     }
     const time = state.clock.elapsedTime;

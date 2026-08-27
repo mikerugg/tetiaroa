@@ -45,6 +45,8 @@ const JELLY_LIGHT_FADE_DISTANCE = 55;
 const JELLY_LIGHT_MINIMUM = 0.025;
 const SUBMERSIBLE_LIGHT_FADE_START = 125;
 const SUBMERSIBLE_LIGHT_FADE_END = 158;
+const SURFACE_EFFECT_MAX_DEPTH = 60;
+const INTAKE_LIGHT_REVEAL_DISTANCE = 240;
 
 function jellyLayerLightLevel(depth: number) {
   const distanceFromLayer =
@@ -243,21 +245,27 @@ function MarineSnow({ velocity }: Pick<SceneProps, "velocity">) {
 }
 
 function SeaSurface({ depth }: Pick<SceneProps, "depth">) {
+  const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
 
   useFrame((state) => {
+    const mesh = meshRef.current;
     const material = materialRef.current;
-    if (!material) {
+    if (!mesh || !material) {
       return;
     }
     const metres = depth.get();
+    mesh.visible = metres < SURFACE_EFFECT_MAX_DEPTH;
+    if (!mesh.visible) {
+      return;
+    }
     material.uniforms.uTime.value = state.clock.elapsedTime;
     // Caustics are gone long before the thermocline.
     material.uniforms.uIntensity.value = Math.max(0, 1 - metres / 55);
   });
 
   return (
-    <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
+    <mesh ref={meshRef} position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
       <planeGeometry args={[140, 140, 1, 1]} />
       <causticsMaterial
         ref={materialRef}
@@ -1079,6 +1087,7 @@ function DiveRig({ depth, velocity }: SceneProps) {
   );
 
   const diveLightRef = useRef<THREE.PointLight>(null);
+  const intakeLightRef = useRef<THREE.PointLight>(null);
   const scratchSlope = useRef(new THREE.Vector3());
   const scratchPipe = useRef(new THREE.Vector3());
 
@@ -1133,6 +1142,11 @@ function DiveRig({ depth, velocity }: SceneProps) {
       // Surface light dies on the real attenuation curve.
       keyLightRef.current.intensity = 0.15 + lightAtDepth(metres) * 3.2;
     }
+
+    if (intakeLightRef.current) {
+      intakeLightRef.current.visible =
+        metres > INTAKE_DEPTH - INTAKE_LIGHT_REVEAL_DISTANCE;
+    }
   });
 
   return (
@@ -1154,6 +1168,7 @@ function DiveRig({ depth, velocity }: SceneProps) {
       />
       {/* A working light at the intake, the only thing lit down there. */}
       <pointLight
+        ref={intakeLightRef}
         position={pipePoint(INTAKE_DEPTH, new THREE.Vector3())}
         intensity={26}
         distance={22}
@@ -1197,11 +1212,16 @@ function DiveRig({ depth, velocity }: SceneProps) {
   );
 }
 
-export default function DiveScene3D({ depth, velocity }: SceneProps) {
+export default function DiveScene3D({
+  depth,
+  velocity,
+  active,
+}: SceneProps & { active: boolean }) {
   return (
     <Canvas
       camera={{ position: [0, 0, 6], fov: 60, near: 0.1, far: 160 }}
-      dpr={[1, 1.75]}
+      dpr={[1, 1.5]}
+      frameloop={active ? "always" : "never"}
       gl={{ antialias: true, powerPreference: "high-performance" }}
       style={{ position: "absolute", inset: 0 }}
       aria-hidden="true"

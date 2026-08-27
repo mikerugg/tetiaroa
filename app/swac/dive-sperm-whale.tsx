@@ -3,9 +3,14 @@
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useDepthBand } from "./dive-creature-geometry";
 import {
+  isWithinDepthBand,
+  useDepthBand,
+} from "./dive-creature-geometry";
+import {
+  INITIAL_WHALE_ENCOUNTER_CLOCK,
   WHALE_MOUTH_CYCLE_SECONDS,
+  advanceWhaleEncounterClock,
   whaleMouthAngleAtTime,
   whaleSwimFrameAtTime,
 } from "./dive-whale-motion";
@@ -16,6 +21,7 @@ import {
  */
 
 export const WHALE_DEPTH = 550;
+const WHALE_VISIBILITY_BAND = 210;
 
 const WORLD_UP = new THREE.Vector3(0, 1, 0);
 const WHALE_FACET_PALETTE = {
@@ -322,11 +328,16 @@ export function SpermWhale({
   axis?: THREE.Vector3;
   preview?: boolean;
 }) {
-  const groupRef = useDepthBand(depth, WHALE_DEPTH, preview ? Infinity : 210);
+  const groupRef = useDepthBand(
+    depth,
+    WHALE_DEPTH,
+    preview ? Infinity : WHALE_VISIBILITY_BAND,
+  );
   const swimRef = useRef<THREE.Group>(null);
   const jawRef = useRef<THREE.Group>(null);
   const flukeRef = useRef<THREE.Group>(null);
   const flipperRefs = useRef<Array<THREE.Group | null>>([]);
+  const encounterClockRef = useRef({ ...INITIAL_WHALE_ENCOUNTER_CLOCK });
   const ahead = useMemo(() => new THREE.Vector3(), []);
   const swimAxis = useMemo(
     () => axis?.clone().normalize() ?? new THREE.Vector3(),
@@ -431,12 +442,31 @@ export function SpermWhale({
 
   const eyeSocket = useMemo(() => eyeSocketGeometry(), []);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const swim = swimRef.current;
     if (!swim) {
       return;
     }
-    const time = state.clock.elapsedTime;
+    const currentDepth = depth.get();
+    if (!preview) {
+      encounterClockRef.current = advanceWhaleEncounterClock(
+        encounterClockRef.current,
+        currentDepth,
+        delta,
+      );
+      if (
+        !isWithinDepthBand(
+          currentDepth,
+          WHALE_DEPTH,
+          WHALE_VISIBILITY_BAND,
+        )
+      ) {
+        return;
+      }
+    }
+    const time = preview
+      ? state.clock.elapsedTime
+      : encounterClockRef.current.time;
     if (!preview && anchor && axis) {
       const frame = whaleSwimFrameAtTime(time);
 

@@ -1,6 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  INITIAL_WHALE_ENCOUNTER_CLOCK,
+  WHALE_CRUISE_SPEED,
+  WHALE_ENCOUNTER_FREEZE_DEPTH,
+  WHALE_ENCOUNTER_MAX_DELTA_SECONDS,
+  WHALE_ENCOUNTER_RESET_DEPTH,
+  WHALE_ENCOUNTER_START_ALONG,
+  WHALE_ENCOUNTER_START_DEPTH,
   WHALE_LAP_LENGTH,
   WHALE_MOUTH_CLOSED_ANGLE,
   WHALE_MOUTH_CYCLE_SECONDS,
@@ -9,8 +16,10 @@ import {
   WHALE_STRAIGHT_SPAN,
   WHALE_TURN_LENGTH,
   WHALE_TURN_RADIUS,
+  advanceWhaleEncounterClock,
   whaleMouthAngleAtTime,
   whaleSwimFrameAtDistance,
+  whaleSwimFrameAtTime,
 } from "./dive-whale-motion.ts";
 
 const EPSILON = 1e-8;
@@ -142,6 +151,115 @@ test("whale route stays in open water with a unit heading", () => {
       "unit tangent",
     );
   }
+});
+
+test("encounter-local route starts near centre and crosses it at cruise speed", () => {
+  const start = whaleSwimFrameAtTime(0);
+  assertClose(start.along, WHALE_ENCOUNTER_START_ALONG, "encounter start");
+  assertClose(start.outward, 0, "encounter starts on straight");
+  assertClose(start.tangentAlong, 1, "encounter faces centre");
+  assertClose(start.tangentOutward, 0, "encounter starts without a turn");
+
+  const centreTime = Math.abs(WHALE_ENCOUNTER_START_ALONG) / WHALE_CRUISE_SPEED;
+  assertClose(centreTime, 0.9, "centre timing");
+  assertClose(whaleSwimFrameAtTime(centreTime).along, 0, "centre crossing");
+});
+
+test("encounter clock starts, clamps frame gaps, and freezes past the encounter", () => {
+  const waiting = advanceWhaleEncounterClock(
+    INITIAL_WHALE_ENCOUNTER_CLOCK,
+    WHALE_ENCOUNTER_START_DEPTH - 1,
+    0.05,
+  );
+  assert.deepEqual(waiting, INITIAL_WHALE_ENCOUNTER_CLOCK);
+
+  const started = advanceWhaleEncounterClock(
+    waiting,
+    WHALE_ENCOUNTER_START_DEPTH,
+    0.05,
+  );
+  assert.deepEqual(started, { time: 0, started: true });
+
+  const advanced = advanceWhaleEncounterClock(started, 550, 0.04);
+  assertClose(advanced.time, 0.04, "ordinary frame advances locally");
+
+  const clamped = advanceWhaleEncounterClock(advanced, 550, 3);
+  assertClose(
+    clamped.time,
+    0.04 + WHALE_ENCOUNTER_MAX_DELTA_SECONDS,
+    "long frame is clamped",
+  );
+
+  const frozen = advanceWhaleEncounterClock(
+    clamped,
+    WHALE_ENCOUNTER_FREEZE_DEPTH,
+    0.08,
+  );
+  assert.deepEqual(frozen, clamped);
+
+  const resumed = advanceWhaleEncounterClock(
+    frozen,
+    WHALE_ENCOUNTER_FREEZE_DEPTH - 1,
+    0.02,
+  );
+  assertClose(resumed.time, clamped.time + 0.02, "reverse scroll resumes");
+});
+
+test("direct mid-descent entry starts locally and deep entry waits frozen", () => {
+  const midDescent = advanceWhaleEncounterClock(
+    INITIAL_WHALE_ENCOUNTER_CLOCK,
+    550,
+    0.08,
+  );
+  assert.deepEqual(midDescent, { time: 0, started: true });
+  assertClose(
+    advanceWhaleEncounterClock(midDescent, 550, 0.02).time,
+    0.02,
+    "mid-descent entry advances on its next frame",
+  );
+
+  const deepEntry = advanceWhaleEncounterClock(
+    INITIAL_WHALE_ENCOUNTER_CLOCK,
+    WHALE_ENCOUNTER_FREEZE_DEPTH,
+    0.08,
+  );
+  assert.deepEqual(deepEntry, { time: 0, started: true });
+  assertClose(
+    advanceWhaleEncounterClock(
+      deepEntry,
+      WHALE_ENCOUNTER_FREEZE_DEPTH - 1,
+      0.02,
+    ).time,
+    0.02,
+    "reverse entry resumes from the local start",
+  );
+});
+
+test("encounter clock resets only below its hysteresis threshold", () => {
+  const running = { time: 2.4, started: true };
+  const held = advanceWhaleEncounterClock(
+    running,
+    WHALE_ENCOUNTER_RESET_DEPTH,
+    0.02,
+  );
+  assertClose(held.time, 2.42, "reset threshold remains active");
+
+  const reset = advanceWhaleEncounterClock(
+    held,
+    WHALE_ENCOUNTER_RESET_DEPTH - 0.001,
+    0.02,
+  );
+  assert.deepEqual(reset, INITIAL_WHALE_ENCOUNTER_CLOCK);
+});
+
+test("encounter clock ignores invalid or backwards frame deltas", () => {
+  const running = { time: 1.2, started: true };
+  assert.deepEqual(advanceWhaleEncounterClock(running, 550, -0.5), running);
+  assert.deepEqual(advanceWhaleEncounterClock(running, 550, Number.NaN), running);
+  assert.deepEqual(
+    advanceWhaleEncounterClock(running, 550, Number.POSITIVE_INFINITY),
+    running,
+  );
 });
 
 test("whale mouth eases through a bounded gape and closes cleanly", () => {
