@@ -845,53 +845,6 @@
   }
 }
 
-/* ----------------------------------------------------------------- slope */
-
-.slopeStage {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 1.25rem;
-  background: #041520;
-  cursor: ew-resize;
-  touch-action: pan-y;
-}
-
-.slopeLayer {
-  position: absolute;
-  inset: 0;
-}
-
-.slopeSvg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.slopeHandle {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--glow);
-  box-shadow: 0 0 24px rgba(89, 232, 220, 0.6);
-  pointer-events: none;
-}
-
-.slopeGrip {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-  display: grid;
-  place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 999px;
-  background: var(--glow);
-  color: #04121b;
-}
-
 /* ----------------------------------------------------------------- globe */
 
 .globeStage {

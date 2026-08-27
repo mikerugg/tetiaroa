@@ -354,99 +354,6 @@ export function temperatureToRamp(celsius: number): number {
 }
 
 // ---------------------------------------------------------------------------
-// The slope. Why it works here, in one comparison.
-// Profiles are [kilometres from shore, metres depth], simplified from published
-// bathymetry. Shape is faithful; every vertex is not.
-// ---------------------------------------------------------------------------
-
-export type SlopeProfile = {
-  id: "atoll" | "shelf";
-  /** Kilometres of pipe needed to reach INTAKE_DEPTH. */
-  distanceToDepthKm: number;
-  points: ReadonlyArray<readonly [number, number]>;
-};
-
-export const slopeProfiles: Record<"atoll" | "shelf", SlopeProfile> = {
-  atoll: {
-    id: "atoll",
-    distanceToDepthKm: 2,
-    points: [
-      [0, 0],
-      [0.25, 25],
-      [0.5, 120],
-      [0.85, 330],
-      [1.3, 610],
-      [2, 900],
-      [3.2, 1450],
-      [5, 2050],
-    ],
-  },
-  shelf: {
-    id: "shelf",
-    distanceToDepthKm: 138,
-    points: [
-      [0, 0],
-      [25, 22],
-      [55, 42],
-      [85, 68],
-      [112, 95],
-      [126, 140],
-      [132, 420],
-      [138, 900],
-      [148, 1650],
-    ],
-  },
-};
-
-/** Linear interpolation along a profile. Used by the slope readout. */
-export function depthAtDistance(
-  profile: SlopeProfile,
-  distanceKm: number,
-): number {
-  const points = profile.points;
-  const d = clampNumber(distanceKm, points[0][0], points[points.length - 1][0]);
-
-  for (let i = 1; i < points.length; i += 1) {
-    const [x0, y0] = points[i - 1];
-    const [x1, y1] = points[i];
-    if (d <= x1) {
-      const t = x1 === x0 ? 0 : (d - x0) / (x1 - x0);
-      return y0 + t * (y1 - y0);
-    }
-  }
-
-  return points[points.length - 1][1];
-}
-
-// ---------------------------------------------------------------------------
-// What to do when the shelf is long. A long shelf is not a dead end, it is a
-// different technology. Each of these is built and running somewhere.
-// ---------------------------------------------------------------------------
-
-export const alternativeIds = [
-  "swac",
-  "lake",
-  "warmShelf",
-  "coldShelf",
-  "aquifer",
-  "mine",
-  "district",
-] as const;
-
-export type AlternativeId = (typeof alternativeIds)[number];
-
-export type Alternative = {
-  id: AlternativeId;
-  geography: string;
-  technology: string;
-  summary: string;
-  detail: string;
-  example: string;
-  /** Rough share of conventional chiller electricity still required. */
-  remainingEnergy: number;
-};
-
-// ---------------------------------------------------------------------------
 // Copy
 // ---------------------------------------------------------------------------
 
@@ -537,29 +444,6 @@ export type SwacCopy = {
     loadLabel: string;
     caveat: string;
     presets: LedgerPreset[];
-  };
-  slope: {
-    eyebrow: string;
-    title: string;
-    intro: string;
-    dragLabel: string;
-    atollLabel: string;
-    atollCaption: string;
-    shelfLabel: string;
-    shelfCaption: string;
-    depthMarker: string;
-    pipeLabel: string;
-    geologyLabel: string;
-    geologyHref: string;
-    visualDescription: string;
-    alternativesEyebrow: string;
-    alternativesTitle: string;
-    alternativesIntro: string;
-    geographyLabel: string;
-    technologyLabel: string;
-    exampleLabel: string;
-    remainingLabel: string;
-    alternatives: Alternative[];
   };
   globe: {
     eyebrow: string;
@@ -839,103 +723,6 @@ const englishCopy: SwacCopy = {
       { id: "hospital", label: "A hospital", kw: 5000 },
     ],
   },
-  slope: {
-    eyebrow: "Why here",
-    title: "It comes down to slope",
-    intro:
-      "Tetiaroa is the drowned summit of a volcano. The seabed falls away from the reef so fast that nine hundred metres of depth sits two kilometres offshore. Drag the marker and compare that with a continental shelf, drawn at the same scale.",
-    dragLabel: "Drag to compare",
-    atollLabel: "Tetiaroa",
-    atollCaption: "900 m deep, about 2 km out",
-    shelfLabel: "A continental shelf",
-    shelfCaption: "900 m deep, about 138 km out",
-    depthMarker: "900 m — intake depth",
-    pipeLabel: "Pipe required",
-    geologyLabel: "How the atoll got this shape",
-    geologyHref: "/island/geology",
-    visualDescription:
-      "Two seabed profiles at the same scale. Tetiaroa's volcanic flank reaches 900 metres depth within about 2 kilometres of shore; a continental shelf reaches the same depth about 138 kilometres out.",
-    alternativesEyebrow: "If your shelf is long",
-    alternativesTitle: "Cold water, other routes",
-    alternativesIntro:
-      "A long shelf does not rule out cold water. It rules out this particular pipe. Nearly every coastline has a version of the same trick available, and most of them are already running somewhere. Pick the ground you are standing on.",
-    geographyLabel: "Your geography",
-    technologyLabel: "What works instead",
-    exampleLabel: "Already built",
-    remainingLabel: "Electricity still needed",
-    alternatives: [
-      {
-        id: "swac",
-        geography: "A steep volcanic island",
-        technology: "Sea water air conditioning",
-        summary: "The system on this page. Deep cold at the end of a short pipe.",
-        detail:
-          "Volcanic islands and atolls are the ideal case. The seabed drops away almost at once, the pipe stays short, and the capital cost lands inside what a single large customer can carry. Most of the world's operating plants sit on islands for exactly this reason.",
-        example: "Tetiaroa · Bora Bora · Papeete hospital",
-        remainingEnergy: 0.15,
-      },
-      {
-        id: "lake",
-        geography: "A deep lake nearby",
-        technology: "Lake source cooling",
-        summary: "The same physics in fresh water, and you need far less depth.",
-        detail:
-          "A deep temperate lake stratifies. Below the thermocline it holds water near 4 °C all summer, sometimes only seventy metres down. That is a much shorter and much cheaper pipe than any ocean equivalent, which is why the resulting systems are among the largest anywhere.",
-        example: "Cornell University, Cayuga Lake · Toronto, Lake Ontario",
-        remainingEnergy: 0.13,
-      },
-      {
-        id: "warmShelf",
-        geography: "A long shelf, warm sea",
-        technology: "Seawater condenser cooling",
-        summary: "Stop chasing cold water. Use the sea to throw heat away instead.",
-        detail:
-          "You keep the chiller, but you stop dumping its heat into 35 °C air and dump it into 26 °C seawater. That one change takes twenty to thirty per cent off the bill, with a pipe measured in hundreds of metres. It is the unglamorous answer, and it is available to most tropical coastal cities today.",
-        example: "Hong Kong's district seawater cooling scheme",
-        remainingEnergy: 0.75,
-      },
-      {
-        id: "coldShelf",
-        geography: "A long shelf, cold sea",
-        technology: "Direct free cooling",
-        summary: "Up north the surface water is already cold enough. Skip the depth.",
-        detail:
-          "Above roughly 55 degrees of latitude the sea near the surface spends most of the year below the temperature a building needs. No deep pipe, no thermocline, and no refrigeration cycle for much of the year. A heat exchanger and a pump will do, which is why Nordic district cooling is the cheapest to run in the world.",
-        example: "Stockholm · Helsinki",
-        remainingEnergy: 0.12,
-      },
-      {
-        id: "aquifer",
-        geography: "Flat, inland, with an aquifer",
-        technology: "Aquifer thermal energy storage",
-        summary: "Bank the winter. Spend it in August.",
-        detail:
-          "Two wells into a shallow aquifer. In winter you pump groundwater up, let the cold air chill it, and push it back into a cold zone underground. In summer you draw that stored cold out again. The ground is the storage tank, and it works nowhere near the sea. The Netherlands alone runs thousands of them.",
-        example: "The Netherlands · Belgium",
-        remainingEnergy: 0.25,
-      },
-      {
-        id: "mine",
-        geography: "A flooded mine or quarry",
-        technology: "Mine water cooling",
-        summary: "Old workings fill with water that holds one temperature forever.",
-        detail:
-          "Abandoned coal and mineral workings hold enormous volumes of water at a constant temperature, already plumbed by the shafts dug to reach the ore. Former mining towns tend to have exactly the density and industrial land use that district cooling wants, which is a rare and welcome coincidence.",
-        example: "Heerlen, Netherlands · Springhill, Nova Scotia",
-        remainingEnergy: 0.22,
-      },
-      {
-        id: "district",
-        geography: "A dense city on any coast",
-        technology: "A shared trunk main",
-        summary: "One pipe, many buildings. Density is what makes a long pipe affordable.",
-        detail:
-          "The pipe costs the same whether it serves one hotel or forty office towers. At enough density, an intake no single building could ever justify becomes ordinary civic infrastructure. This is what Honolulu spent two decades trying to build, and why it kept coming so close.",
-        example: "Honolulu's proposed scheme · Toronto's network",
-        remainingEnergy: 0.15,
-      },
-    ],
-  },
   globe: {
     eyebrow: "Elsewhere",
     title: "Who else has the slope",
@@ -1098,10 +885,10 @@ const englishCopy: SwacCopy = {
     eyebrow: "Tetiaroa Society",
     title: "Bring us your coastline",
     body:
-      "Tetiaroa has run a deep-water cooling system through a decade of tropical weather, and the Society's scientists have been measuring what it does to the reef the entire time. That combination is rare: a working plant and the research to go with it. If your island is burning diesel to stay cool, we would like to look at your bathymetry.",
+      "Tetiaroa has run a deep-water cooling system through a decade of tropical weather, and the Society's scientists have been measuring what it does to the reef the entire time. That combination is rare: a working plant and the research to go with it.",
     expertiseLabel: "What we bring",
     expertise: [
-      "Route survey and slope stability on live volcanic flanks",
+      "Route surveys and slope stability assessments",
       "Discharge modelling and reef monitoring, before and after",
       "Plant sizing for loads that triple between noon and midnight",
       "Ten years of operating data across cyclone seasons",
@@ -1358,103 +1145,6 @@ const frenchCopy: SwacCopy = {
       { id: "hospital", label: "Un hôpital", kw: 5000 },
     ],
   },
-  slope: {
-    eyebrow: "Pourquoi ici",
-    title: "Tout tient à la pente",
-    intro:
-      "Tetiaroa est le sommet noyé d'un volcan. Le fond s'éloigne du récif si vite que neuf cents mètres de profondeur se trouvent à deux kilomètres au large. Tirez le repère et comparez avec un plateau continental, dessiné à la même échelle.",
-    dragLabel: "Tirez pour comparer",
-    atollLabel: "Tetiaroa",
-    atollCaption: "900 m de fond, à environ 2 km",
-    shelfLabel: "Un plateau continental",
-    shelfCaption: "900 m de fond, à environ 138 km",
-    depthMarker: "900 m — profondeur de captage",
-    pipeLabel: "Conduite nécessaire",
-    geologyLabel: "Comment l'atoll a pris cette forme",
-    geologyHref: "/fr/island/geology",
-    visualDescription:
-      "Deux profils de fond marin à la même échelle. Le flanc volcanique de Tetiaroa atteint 900 mètres de profondeur à environ 2 kilomètres du rivage ; un plateau continental atteint la même profondeur à environ 138 kilomètres.",
-    alternativesEyebrow: "Si votre plateau est long",
-    alternativesTitle: "L'eau froide, par d'autres chemins",
-    alternativesIntro:
-      "Un plateau étendu n'exclut pas l'eau froide. Il exclut cette conduite-là. Presque tout littoral dispose d'une variante du même tour de main, et la plupart tournent déjà quelque part. Choisissez le sol sur lequel vous vous tenez.",
-    geographyLabel: "Votre géographie",
-    technologyLabel: "Ce qui marche à la place",
-    exampleLabel: "Déjà construit",
-    remainingLabel: "Électricité encore nécessaire",
-    alternatives: [
-      {
-        id: "swac",
-        geography: "Une île volcanique escarpée",
-        technology: "Climatisation à l'eau de mer",
-        summary: "Le système décrit ici. Du froid profond au bout d'une conduite courte.",
-        detail:
-          "Îles volcaniques et atolls sont le cas idéal. Le fond plonge presque aussitôt, la conduite reste courte, et l'investissement tient dans ce qu'un seul gros client peut porter. La plupart des centrales en service dans le monde sont insulaires pour cette raison précise.",
-        example: "Tetiaroa · Bora Bora · Hôpital de Papeete",
-        remainingEnergy: 0.15,
-      },
-      {
-        id: "lake",
-        geography: "Un lac profond à proximité",
-        technology: "Climatisation par eau de lac",
-        summary: "La même physique en eau douce, et bien moins de profondeur.",
-        detail:
-          "Un lac tempéré profond se stratifie. Sous la thermocline, il garde une eau proche de 4 °C tout l'été, parfois à soixante-dix mètres seulement. La conduite est bien plus courte et bien moins chère que n'importe quel équivalent océanique, et les installations qui en résultent comptent parmi les plus grandes du monde.",
-        example: "Université Cornell, lac Cayuga · Toronto, lac Ontario",
-        remainingEnergy: 0.13,
-      },
-      {
-        id: "warmShelf",
-        geography: "Plateau étendu, mer chaude",
-        technology: "Condenseurs à l'eau de mer",
-        summary: "Cessez de chercher du froid. Servez-vous de la mer pour évacuer la chaleur.",
-        detail:
-          "Vous gardez le groupe froid, mais vous cessez de rejeter sa chaleur dans un air à 35 °C pour la rejeter dans une eau de mer à 26 °C. Ce seul changement retire vingt à trente pour cent de la facture, avec une conduite de quelques centaines de mètres. C'est la réponse sans panache, et elle est à portée de la plupart des villes côtières tropicales dès aujourd'hui.",
-        example: "Le réseau d'eau de mer de Hong Kong",
-        remainingEnergy: 0.75,
-      },
-      {
-        id: "coldShelf",
-        geography: "Plateau étendu, mer froide",
-        technology: "Free cooling direct",
-        summary: "Au nord, l'eau de surface est déjà assez froide. Oubliez la profondeur.",
-        detail:
-          "Au-delà d'environ 55 degrés de latitude, la mer proche de la surface passe la majeure partie de l'année sous la température dont un bâtiment a besoin. Pas de conduite profonde, pas de thermocline, et pas de cycle frigorifique une bonne partie de l'année. Un échangeur et une pompe suffisent, ce qui fait des réseaux de froid nordiques les moins coûteux du monde à exploiter.",
-        example: "Stockholm · Helsinki",
-        remainingEnergy: 0.12,
-      },
-      {
-        id: "aquifer",
-        geography: "Plaine intérieure, avec aquifère",
-        technology: "Stockage thermique en aquifère",
-        summary: "Mettez l'hiver de côté. Dépensez-le en août.",
-        detail:
-          "Deux forages dans un aquifère peu profond. L'hiver, on remonte l'eau souterraine, l'air froid la refroidit, et on la réinjecte dans une zone froide. L'été, on ressort ce froid stocké. Le sous-sol fait office de réservoir, et cela fonctionne très loin de la mer. Les Pays-Bas à eux seuls en exploitent des milliers.",
-        example: "Pays-Bas · Belgique",
-        remainingEnergy: 0.25,
-      },
-      {
-        id: "mine",
-        geography: "Une mine ou une carrière noyée",
-        technology: "Climatisation par eau de mine",
-        summary: "Les anciens travaux se remplissent d'une eau qui garde une seule température, pour toujours.",
-        detail:
-          "Les exploitations abandonnées retiennent d'énormes volumes d'eau à température constante, déjà desservis par les puits creusés pour atteindre le minerai. Les anciennes villes minières ont souvent exactement la densité bâtie et l'usage industriel qu'un réseau de froid recherche, heureuse coïncidence.",
-        example: "Heerlen, Pays-Bas · Springhill, Nouvelle-Écosse",
-        remainingEnergy: 0.22,
-      },
-      {
-        id: "district",
-        geography: "Une ville dense, sur n'importe quelle côte",
-        technology: "Une conduite maîtresse partagée",
-        summary: "Une conduite, beaucoup de bâtiments. C'est la densité qui rend une longue conduite abordable.",
-        detail:
-          "La conduite coûte le même prix qu'elle desserve un hôtel ou quarante tours de bureaux. À densité suffisante, un captage qu'aucun bâtiment ne pourrait justifier seul devient une infrastructure urbaine ordinaire. C'est ce que Honolulu a tenté pendant vingt ans, et la raison pour laquelle le projet a si souvent frôlé le but.",
-        example: "Le projet de Honolulu · Le réseau de Toronto",
-        remainingEnergy: 0.15,
-      },
-    ],
-  },
   globe: {
     eyebrow: "Ailleurs",
     title: "Qui d'autre a la pente",
@@ -1617,10 +1307,10 @@ const frenchCopy: SwacCopy = {
     eyebrow: "Tetiaroa Society",
     title: "Apportez-nous votre littoral",
     body:
-      "Tetiaroa exploite un système de froid en eau profonde depuis dix ans de météo tropicale, et les scientifiques de la Society mesurent depuis le début ce qu'il fait au récif. Cette combinaison est rare : une centrale qui tourne et la recherche qui va avec. Si votre île brûle du gazole pour rester au frais, nous aimerions regarder votre bathymétrie.",
+      "Tetiaroa exploite un système de froid en eau profonde depuis dix ans de météo tropicale, et les scientifiques de la Society mesurent depuis le début ce qu'il fait au récif. Cette combinaison est rare : une centrale qui tourne et la recherche qui va avec.",
     expertiseLabel: "Ce que nous apportons",
     expertise: [
-      "Étude de tracé et stabilité de pente sur flanc volcanique",
+      "Études de tracé et évaluations de la stabilité des pentes",
       "Modélisation du rejet et suivi du récif, avant et après",
       "Dimensionnement pour des charges qui triplent entre midi et minuit",
       "Dix ans de données d'exploitation en saison cyclonique",

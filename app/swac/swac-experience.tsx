@@ -11,7 +11,6 @@ import { SwacHero } from "./swac-hero";
 import { WhatIsSwac } from "./what-is-swac";
 import { TheDive } from "./the-dive";
 import { TheMeter } from "./the-meter";
-import { TheSlope } from "./the-slope";
 import { FeasibilityGlobe } from "./feasibility-globe";
 import { swacCopies, type SwacLocale } from "./swac-content";
 import styles from "./swac.module.css";
@@ -44,7 +43,6 @@ export function SwacExperience({ locale }: SwacExperienceProps) {
         <TheDive copy={copy.dive} />
         <WhatIsSwac copy={copy.basics} />
         <TheMeter copy={copy.meter} locale={locale} />
-        <TheSlope copy={copy.slope} />
         <FeasibilityGlobe copy={copy.globe} />
 
         <section className={styles.closingSection}>
