@@ -1,5 +1,8 @@
 export const WHALE_CRUISE_SPEED = 0.5;
 export const WHALE_TURN_RADIUS = 1.25;
+export const WHALE_MOUTH_CYCLE_SECONDS = 11.3;
+export const WHALE_MOUTH_CLOSED_ANGLE = 0.035;
+export const WHALE_MOUTH_OPEN_ANGLE = 0.16;
 
 // Keep the turn inside the old nine-unit endpoint while leaving enough room
 // for the whale to describe a visible arc instead of pivoting in place.
@@ -15,6 +18,36 @@ export type WhaleSwimFrame = {
 };
 
 const ORBIT_SAMPLE_COUNT = 512;
+
+function smoothstep(progress: number) {
+  const clamped = Math.min(1, Math.max(0, progress));
+  return clamped * clamped * (3 - 2 * clamped);
+}
+
+/**
+ * A deliberate gape rather than a constant fish-like chomp: rest closed,
+ * ease open, hold briefly, then close a little more slowly.
+ */
+export function whaleMouthAngleAtTime(time: number) {
+  const phase =
+    (((time % WHALE_MOUTH_CYCLE_SECONDS) + WHALE_MOUTH_CYCLE_SECONDS) %
+      WHALE_MOUTH_CYCLE_SECONDS) /
+    WHALE_MOUTH_CYCLE_SECONDS;
+  let openness = 0;
+
+  if (phase >= 0.55 && phase < 0.7) {
+    openness = smoothstep((phase - 0.55) / 0.15);
+  } else if (phase >= 0.7 && phase < 0.78) {
+    openness = 1;
+  } else if (phase >= 0.78 && phase < 0.96) {
+    openness = 1 - smoothstep((phase - 0.78) / 0.18);
+  }
+
+  return (
+    WHALE_MOUTH_CLOSED_ANGLE +
+    (WHALE_MOUTH_OPEN_ANGLE - WHALE_MOUTH_CLOSED_ANGLE) * openness
+  );
+}
 
 function orbitPoint(angle: number) {
   const sine = Math.sin(angle);

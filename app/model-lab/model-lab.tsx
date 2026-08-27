@@ -4,7 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Grid, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
-import { GiantSquid, SpermWhale } from "@/app/swac/dive-deep-life";
+import { GiantSquid } from "@/app/swac/dive-deep-life";
+import { SpermWhale } from "@/app/swac/dive-sperm-whale";
 import { JellyfishSchool } from "@/app/swac/dive-jellyfish";
 import { PipeIntake } from "@/app/swac/dive-intake";
 import { Submersible } from "@/app/swac/dive-submersible";
@@ -84,6 +85,12 @@ const SHARK_VIEWS = {
   back: [-1, 0, 0],
   top: [0, 1, 0],
   quarter: [0.18, 0.32, -1],
+} as const;
+const WHALE_VIEWS = {
+  ...VIEWS,
+  // Mostly lateral, with just enough height and nose angle to match the
+  // supplied low-poly reference instead of foreshortening the whole animal.
+  quarter: [1, 0.3, 0.34],
 } as const;
 
 /** The bench has its own light chrome; the site's dark Button is invisible here. */
@@ -190,22 +197,32 @@ function Rig({
           : view === "quarter"
             ? 0.52
             : 0.54;
+    const whaleFramingScale =
+      view === "top"
+        ? 1.05
+        : view === "front" || view === "back"
+          ? 0.65
+          : 0.48;
     const framingScale =
-      model === "sea-turtle"
-        ? turtleFramingScale
-        : model === "shark"
-          ? 0.55
-          : model === "submersible"
-            ? 0.68
-            : 0.8;
+      model === "whale"
+        ? whaleFramingScale
+        : model === "sea-turtle"
+          ? turtleFramingScale
+          : model === "shark"
+            ? 0.55
+            : model === "submersible"
+              ? 0.68
+              : 0.8;
     const distance =
       (radius / Math.sin((perspective.fov * Math.PI) / 360)) * framingScale;
     const viewDirection =
-      model === "sea-turtle"
-        ? TURTLE_VIEWS[view]
-        : model === "shark"
-          ? SHARK_VIEWS[view]
-          : VIEWS[view];
+      model === "whale"
+        ? WHALE_VIEWS[view]
+        : model === "sea-turtle"
+          ? TURTLE_VIEWS[view]
+          : model === "shark"
+            ? SHARK_VIEWS[view]
+            : VIEWS[view];
     const direction = new THREE.Vector3(...viewDirection).normalize();
 
     // Order matters: OrbitControls derives its state from target and camera

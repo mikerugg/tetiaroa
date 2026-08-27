@@ -2,10 +2,14 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   WHALE_LAP_LENGTH,
+  WHALE_MOUTH_CLOSED_ANGLE,
+  WHALE_MOUTH_CYCLE_SECONDS,
+  WHALE_MOUTH_OPEN_ANGLE,
   WHALE_ROUTE_HALF_EXTENT,
   WHALE_STRAIGHT_SPAN,
   WHALE_TURN_LENGTH,
   WHALE_TURN_RADIUS,
+  whaleMouthAngleAtTime,
   whaleSwimFrameAtDistance,
 } from "./dive-whale-motion.ts";
 
@@ -137,5 +141,41 @@ test("whale route stays in open water with a unit heading", () => {
       1,
       "unit tangent",
     );
+  }
+});
+
+test("whale mouth eases through a bounded gape and closes cleanly", () => {
+  assertClose(
+    whaleMouthAngleAtTime(0),
+    WHALE_MOUTH_CLOSED_ANGLE,
+    "cycle starts closed",
+  );
+  assertClose(
+    whaleMouthAngleAtTime(WHALE_MOUTH_CYCLE_SECONDS * 0.7),
+    WHALE_MOUTH_OPEN_ANGLE,
+    "opening reaches full gape",
+  );
+  assertClose(
+    whaleMouthAngleAtTime(WHALE_MOUTH_CYCLE_SECONDS * 0.78),
+    WHALE_MOUTH_OPEN_ANGLE,
+    "full gape holds",
+  );
+  assertClose(
+    whaleMouthAngleAtTime(WHALE_MOUTH_CYCLE_SECONDS),
+    WHALE_MOUTH_CLOSED_ANGLE,
+    "cycle closes without a seam",
+  );
+  assertClose(
+    whaleMouthAngleAtTime(-WHALE_MOUTH_CYCLE_SECONDS),
+    WHALE_MOUTH_CLOSED_ANGLE,
+    "negative time wraps cleanly",
+  );
+
+  for (let sample = 0; sample <= 1_000; sample += 1) {
+    const angle = whaleMouthAngleAtTime(
+      (sample / 1_000) * WHALE_MOUTH_CYCLE_SECONDS,
+    );
+    assert.ok(angle >= WHALE_MOUTH_CLOSED_ANGLE - EPSILON);
+    assert.ok(angle <= WHALE_MOUTH_OPEN_ANGLE + EPSILON);
   }
 });

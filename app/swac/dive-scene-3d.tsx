@@ -17,12 +17,8 @@ import {
   slopePoint,
 } from "./dive-coordinates";
 import { LagoonLife } from "./dive-marine-life";
-import {
-  GiantSquid,
-  SpermWhale,
-  SQUID_DEPTH,
-  WHALE_DEPTH,
-} from "./dive-deep-life";
+import { GiantSquid, SQUID_DEPTH } from "./dive-deep-life";
+import { SpermWhale, WHALE_DEPTH } from "./dive-sperm-whale";
 import {
   JELLY_DEPTH,
   JELLY_MAX_DEPTH,
