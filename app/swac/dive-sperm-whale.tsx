@@ -365,7 +365,7 @@ export function SpermWhale({
     () =>
       slab(
         [
-          [-0.003, 0, 0.02],
+          [-0.003, 0, 0],
           [-0.018, 0, 0.1],
           [-0.055, 0, 0.58],
           [-0.025, 0, 0.7],
@@ -491,7 +491,7 @@ export function SpermWhale({
           <meshStandardMaterial vertexColors roughness={0.84} flatShading />
         </mesh>
 
-        <group position={[0, -0.425, 0.48]}>
+        <group position={[0, -0.39, 0.48]}>
           <mesh
             geometry={mouthInterior}
             position={[0, 0.003, 0]}
