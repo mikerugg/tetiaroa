@@ -1,5 +1,5 @@
-import type { CSSProperties } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowUpRightIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,6 @@ import { HomepageInitialScrollReset } from "./homepage-client";
 import { DepthScene } from "./depth-scene";
 import { SanctuaryVideo } from "./sanctuary-video";
 import { LanternExperience } from "./lantern-experience";
-import { ScanPanel } from "./scan-panel";
 import styles from "./home-experience.module.css";
 import { FrenchVersionPrompt } from "./french-version-prompt";
 import { SitePopup } from "./site-popup/site-popup";
@@ -241,51 +240,55 @@ export default function HomeExperience({
           </div>
         </section>
 
-        <section className={`${styles.band} ${styles.twinBand}`} id="twin">
+        <section className={`${styles.band} ${styles.swacBand}`} id="swac">
           <div className={`${styles.depthWatermark} font-header`} aria-hidden="true">
-            &minus;40
+            &minus;900
           </div>
           <div className={styles.bandGrid}>
             <div className={styles.bandText}>
               <div className={`${styles.bandKicker} font-mono`}>
-                {copy.twin.kicker}
+                {copy.swac.kicker}
               </div>
               <h2 className={`${styles.bandTitle} font-header`}>
-                {copy.twin.title}
+                {copy.swac.title}
               </h2>
               <p className={styles.bandCopy}>
-                {copy.twin.copy}
+                {copy.swac.copy}
               </p>
               <Badge
                 variant="outline"
-                className={cn(styles.statChip, "h-auto font-mono")}
+                className={cn(
+                  styles.statChip,
+                  "h-auto max-w-full whitespace-normal text-center font-mono",
+                )}
               >
-                {copy.twin.stat}
+                {copy.swac.stat}
               </Badge>
             </div>
-            <ScanPanel>
+            <div className={styles.scanPanel}>
               <Image
-                src="https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=1400&q=85&auto=format&fit=crop"
-                alt={copy.twin.imageAlt}
+                src={copy.swac.image}
+                alt={copy.swac.imageAlt}
                 fill
+                unoptimized
                 className={styles.mediaImage}
                 sizes="(max-width: 960px) 100vw, 46vw"
               />
-              <div className={styles.scanGrid} aria-hidden="true" />
-              <div className={styles.scanLine} aria-hidden="true" />
-              <div className={styles.scanReadouts}>
-                {copy.twin.readouts.map((readout) => (
-                  <Badge
-                    key={readout.label}
-                    variant="secondary"
-                    className={cn(styles.readout, "h-auto font-mono")}
-                    style={{ "--at": readout.at } as CSSProperties}
-                  >
-                    {readout.label}
-                  </Badge>
-                ))}
-              </div>
-            </ScanPanel>
+              <Button
+                asChild
+                variant="impact"
+                size="lg"
+                className="absolute bottom-5 left-1/2 h-auto -translate-x-1/2 whitespace-nowrap px-4 py-3 sm:px-5"
+              >
+                <Link href={copy.swac.href}>
+                  {copy.swac.cta}
+                  <ArrowUpRightIcon
+                    data-icon="inline-end"
+                    aria-hidden="true"
+                  />
+                </Link>
+              </Button>
+            </div>
           </div>
 
           <div className={styles.impactFeedCtaWrap}>

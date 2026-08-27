@@ -756,16 +756,14 @@
 }
 
 /* Light dies with depth: media loses red, warmth, and brightness as you sink.
-   The Honu XR panel is exempt — it carries its own floodlights. */
-.bandMedia,
-.scanPanel {
+   The Honu XR and SWAC panels keep their own lighting. */
+.bandMedia {
   filter: saturate(calc(1 - var(--depth01, 0) * 0.6))
     brightness(calc(1 - var(--depth01, 0) * 0.42))
     hue-rotate(calc(var(--depth01, 0) * 14deg));
 }
 
-.bandMedia::after,
-.scanPanel::after {
+.bandMedia::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -783,16 +781,14 @@
 }
 
 @media (max-width: 720px) {
-  .bandMedia,
-  .scanPanel {
+  .bandMedia {
     filter: none;
   }
 }
 
-/* ---- digital twin scan ---- */
+/* ---- SWAC image card ---- */
 
 .scanPanel {
-  --scan: 0;
   position: relative;
   aspect-ratio: 4 / 4.4;
   border-radius: 22px;
@@ -800,54 +796,9 @@
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
 }
 
-.scanGrid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(91, 232, 212, 0.45) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(91, 232, 212, 0.45) 1px, transparent 1px);
-  background-size: 34px 34px;
-  mix-blend-mode: screen;
-  clip-path: inset(0 0 calc((1 - var(--scan)) * 100%) 0);
-}
-
-.scanLine {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(var(--scan) * 100%);
-  height: 2px;
-  background: var(--cyan);
-  box-shadow: 0 0 18px 2px rgba(91, 232, 212, 0.8);
-}
-
-.scanReadouts {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.readout {
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--cyan);
-  background: rgba(2, 10, 16, 0.55);
-  border-radius: 6px;
-  padding: 6px 10px;
-  opacity: clamp(0, (var(--scan) - var(--at, 0.3)) * 9, 1);
-  transform: translateY(
-    calc((1 - clamp(0, (var(--scan) - var(--at, 0.3)) * 9, 1)) * 8px)
-  );
-}
-
 /* ---- impact feed cta ---- */
 
-.twinBand {
+.swacBand {
   padding-bottom: calc(var(--viewport-height-unit, 1vh) * 8);
 }
 

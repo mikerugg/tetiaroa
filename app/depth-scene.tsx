@@ -29,7 +29,7 @@ const SUB_HIDDEN_RANGE = {
 const BEAM_SECTION_IDS = new Set([
   "honu-xr",
   "sanctuary",
-  "twin",
+  "swac",
   "pillars",
   "lanterns",
   "donation-levels",

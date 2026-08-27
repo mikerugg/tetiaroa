@@ -28,11 +28,6 @@ import {
 
 export type HomeLocale = "en" | "fr";
 
-type ScanReadout = {
-  label: string;
-  at: number;
-};
-
 type KidProgram = {
   badge: string;
   title: string;
@@ -105,13 +100,15 @@ export type HomeCopy = {
     stats: [string, string];
     caption: string;
   };
-  twin: {
+  swac: {
     kicker: string;
     title: string;
     copy: string;
     stat: string;
+    cta: string;
+    href: string;
+    image: string;
     imageAlt: string;
-    readouts: ScanReadout[];
   };
   impactFeedCta: {
     label: string;
@@ -227,7 +224,6 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             { href: ENGLISH_SWAC_PATH, label: "Sea Water Air Conditioning" },
             { href: "/#honu-xr", label: "Honu XR" },
             { href: "/#sanctuary", label: "Turtle and shark sanctuary" },
-            { href: "/#twin", label: "Digital twin" },
           ],
         },
         {
@@ -323,11 +319,11 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         transmission: "−5 to −20 m — nests and nurseries in view",
       },
       {
-        id: "twin",
-        depth: 40,
-        label: "Data",
+        id: "swac",
+        depth: 900,
+        label: "SWAC",
         color: "#071f33",
-        transmission: "−40 m — scanning. the twin is in sync",
+        transmission: "−900 m — intake water at 5 °C",
       },
       {
         id: "pillars",
@@ -422,18 +418,17 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       stats: ["214 nests / 2025 season", "3 km of protected reef edge"],
       caption: "honu to ma'o · sanctuary sequence · −5 to −20 m",
     },
-    twin: {
-      kicker: "Project 03 — digital twin + biocode",
-      title: "Foundational Data.",
+    swac: {
+      kicker: "Project 03 — Teti'aroa's SWAC",
+      title: "Our island reimagines air conditioning",
       copy:
-        "Every reef head, every current, every one of 167 species — scanned, sequenced, and rebuilt as a living digital twin. When the real Tetiaroa changes, the twin sees it first.",
-      stat: "167 species in the biocode",
-      imageAlt: "Branching coral being mapped",
-      readouts: [
-        { label: "reef health — indexed", at: 0.3 },
-        { label: "species DNA — cataloged", at: 0.52 },
-        { label: "ecosystem signals — synced", at: 0.74 },
-      ],
+        "Air conditioning burns energy making something the ocean already has. Our groundbreaking SWAC reaches 900 metres down for five-degree seawater and pumps that chilly water to the surface. Up to 90% less electricity—a breakthrough with consequences far beyond one island.",
+      stat: "up to 90% less electricity",
+      cta: "See our Interactive SWAC Demos",
+      href: ENGLISH_SWAC_PATH,
+      image: "/swac/key-project-03.gif",
+      imageAlt:
+        "Honu submersible illuminating the SWAC deep-water intake pipe",
     },
     impactFeedCta: {
       label: "See All Our Projects on the Impact Feed",
@@ -657,7 +652,6 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
               href: `${FRENCH_HOME_PATH}#sanctuary`,
               label: "Sanctuaire tortues et requins",
             },
-            { href: `${FRENCH_HOME_PATH}#twin`, label: "Jumeau numérique" },
           ],
         },
         {
@@ -753,11 +747,11 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         transmission: "−5 à −20 m — nids et nurseries en vue",
       },
       {
-        id: "twin",
-        depth: 40,
-        label: "Données",
+        id: "swac",
+        depth: 900,
+        label: "SWAC",
         color: "#071f33",
-        transmission: "−40 m — scan en cours. le jumeau est synchronisé",
+        transmission: "−900 m — eau captée à 5 °C",
       },
       {
         id: "pillars",
@@ -821,7 +815,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
     dive: {
       eyebrow: "Te Mau Tia'i — les gardiens",
       title: "Plongez plus loin.",
-      copy: "Un atoll. Cent mètres d'histoire. Faites défiler pour plonger.",
+      copy: "Un atoll. Mille mètres d'histoire. Faites défiler pour plonger.",
       cue: "plonger",
     },
     honu: {
@@ -852,18 +846,17 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       stats: ["214 nids / saison 2025", "3 km de bord récifal protégé"],
       caption: "honu vers ma'o · séquence du sanctuaire · −5 à −20 m",
     },
-    twin: {
-      kicker: "Projet 03 — jumeau numérique + biocode",
-      title: "Données fondatrices.",
+    swac: {
+      kicker: "Projet 03 — le SWAC de Teti'aroa",
+      title: "Notre île réinvente la climatisation",
       copy:
-        "Chaque tête de corail, chaque courant, chacune des 167 espèces — scannés, séquencés et reconstruits en jumeau numérique vivant. Quand le vrai Tetiaroa change, le jumeau le voit en premier.",
-      stat: "167 espèces dans le biocode",
-      imageAlt: "Corail ramifié en cours de cartographie",
-      readouts: [
-        { label: "santé du récif — indexée", at: 0.3 },
-        { label: "ADN des espèces — catalogué", at: 0.52 },
-        { label: "signaux de l'écosystème — synchronisés", at: 0.74 },
-      ],
+        "La climatisation engloutit de l’énergie pour produire un froid que l’océan offre déjà. Notre SWAC révolutionnaire va chercher, à 900 mètres de profondeur, une eau de mer à cinq degrés et la pompe jusqu’en surface. Jusqu’à 90 % d’électricité en moins — une percée dont la portée dépasse largement une seule île.",
+      stat: "jusqu'à 90 % d'électricité en moins",
+      cta: "Explorez nos démos SWAC",
+      href: FRENCH_SWAC_PATH,
+      image: "/swac/key-project-03.gif",
+      imageAlt:
+        "Le submersible Honu éclaire la conduite de captage en eau profonde du SWAC",
     },
     impactFeedCta: {
       label: "Voir tous nos projets dans le fil d'impact",

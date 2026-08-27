@@ -4,7 +4,11 @@ import { MailIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { ENGLISH_CONTACT_PATH, ENGLISH_DONATE_PATH } from "./language-links";
+import {
+  ENGLISH_CONTACT_PATH,
+  ENGLISH_DONATE_PATH,
+  ENGLISH_SWAC_PATH,
+} from "./language-links";
 
 type FooterLink = {
   href: string;
@@ -135,7 +139,7 @@ const defaultCopy: SiteFooterCopy = {
         { href: "/impact", label: "Impact Feed" },
         { href: "/#honu-xr", label: "Honu XR" },
         { href: "/#sanctuary", label: "Turtle and shark sanctuary" },
-        { href: "/#twin", label: "Digital twin" },
+        { href: ENGLISH_SWAC_PATH, label: "Sea Water Air Conditioning" },
       ],
     },
     {
