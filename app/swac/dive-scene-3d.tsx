@@ -1052,13 +1052,28 @@ function DiveRig({ depth, velocity }: SceneProps) {
     () => slopeAcross(SUBMERSIBLE_DEPTH, new THREE.Vector3()),
     [],
   );
+  const submersibleFrame = useMemo(
+    () => cameraFrame(SUBMERSIBLE_DEPTH),
+    [],
+  );
+  const submersibleBack = useMemo(
+    () =>
+      new THREE.Vector3(
+        submersibleFrame.direction.x,
+        0,
+        submersibleFrame.direction.z,
+      ).normalize(),
+    [submersibleFrame],
+  );
   const submersibleAnchor = useMemo(
     () =>
-      viewAnchor(SUBMERSIBLE_DEPTH, 0).addScaledVector(
-        submersibleAxis,
-        0.65,
-      ),
-    [submersibleAxis],
+      viewAnchor(SUBMERSIBLE_DEPTH, 0)
+        // Set the sub deeper into the shot, then carry it screen-right. From
+        // here its pipe-facing bow is nearly perpendicular to the camera,
+        // giving the inspection a clear side profile.
+        .addScaledVector(submersibleBack, 4)
+        .addScaledVector(submersibleFrame.right, 2),
+    [submersibleBack, submersibleFrame],
   );
   const submersibleInspectionTarget = useMemo(
     // This lower section sits on the camera's sightline during the encounter,

@@ -10,20 +10,21 @@ import {
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-export const SUBMERSIBLE_DEPTH = 175;
+export const SUBMERSIBLE_DEPTH = 225;
 
 const MODEL_SCALE = 0.45;
+const LIVE_MODEL_SCALE = MODEL_SCALE * 3;
 const PREVIEW_LIFT = 0.34;
-const VISIBILITY_BAND = 70;
-const INSPECTION_TURN_START = 140;
-const INSPECTION_TURN_END = 168;
-const INSPECTION_RETURN_START = 205;
-const INSPECTION_RETURN_END = 235;
-const BOW_LIGHT_FADE_IN_START = 110;
-const BOW_LIGHT_FADE_IN_END = 135;
-const BOW_LIGHT_FADE_OUT_START = 225;
-const BOW_LIGHT_FADE_OUT_END = 245;
-const BOW_LIGHT_INTENSITY = 320;
+const HIDE_AFTER_DEPTH = SUBMERSIBLE_DEPTH + 100;
+const INSPECTION_TURN_START = 190;
+const INSPECTION_TURN_END = 218;
+const INSPECTION_RETURN_START = 255;
+const INSPECTION_RETURN_END = 285;
+const BOW_LIGHT_FADE_IN_START = 160;
+const BOW_LIGHT_FADE_IN_END = 185;
+const BOW_LIGHT_FADE_OUT_START = 275;
+const BOW_LIGHT_FADE_OUT_END = 295;
+const BOW_LIGHT_INTENSITY = 370;
 const Y_AXIS = new THREE.Vector3(0, 1, 0);
 
 type Point = [x: number, y: number, z: number];
@@ -635,8 +636,11 @@ export function Submersible({
     const time = state.clock.elapsedTime;
     const metres = depth.get();
     if (!preview) {
-      group.visible =
-        Math.abs(metres - SUBMERSIBLE_DEPTH) < VISIBILITY_BAND;
+      // At 300% scale the bow enters the lower edge of the frustum well before
+      // the old symmetric depth band began. Keep it mounted throughout the
+      // approach, then hide it only after it has passed safely behind camera.
+      // This also makes reverse scrolling reveal it while it is still offscreen.
+      group.visible = metres < HIDE_AFTER_DEPTH;
       if (!group.visible) {
         return;
       }
@@ -702,9 +706,11 @@ export function Submersible({
             BOW_LIGHT_FADE_OUT_END,
           ));
     if (portLightRef.current) {
+      portLightRef.current.visible = bowLightLevel > 0.001;
       portLightRef.current.intensity = BOW_LIGHT_INTENSITY * bowLightLevel;
     }
     if (starboardLightRef.current) {
+      starboardLightRef.current.visible = bowLightLevel > 0.001;
       starboardLightRef.current.intensity =
         BOW_LIGHT_INTENSITY * bowLightLevel;
     }
@@ -720,7 +726,7 @@ export function Submersible({
     <group
       ref={groupRef}
       position={[0, preview ? PREVIEW_LIFT : 0, 0]}
-      scale={MODEL_SCALE}
+      scale={preview ? MODEL_SCALE : LIVE_MODEL_SCALE}
     >
       <mesh geometry={geometries.hull}>
         <meshStandardMaterial

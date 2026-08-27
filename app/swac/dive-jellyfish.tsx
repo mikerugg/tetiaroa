@@ -7,7 +7,7 @@ import { UNITS_PER_METRE } from "./dive-coordinates";
 
 /*
  * A drift of bioluminescent jellyfish through the mesophotic, with bell
- * centres scattered from 275 to 325 metres.
+ * centres scattered from 300 to 375 metres.
  *
  * Built from deliberately sparse geometry: a faceted bell, five polygonal
  * oral arms, and triangular tentacles ending in glowing nodes. The silhouette
@@ -18,11 +18,12 @@ import { UNITS_PER_METRE } from "./dive-coordinates";
  * travels with the largest jellyfish to cast real cyan light onto nearby forms.
  */
 
-export const JELLY_MIN_DEPTH = 275;
-export const JELLY_MAX_DEPTH = 325;
+export const JELLY_MIN_DEPTH = 300;
+export const JELLY_MAX_DEPTH = 375;
 export const JELLY_DEPTH = (JELLY_MIN_DEPTH + JELLY_MAX_DEPTH) / 2;
 
 const COUNT = 14;
+const DEPTH_EDGE_MARGIN = 2.5;
 const TENTACLE_COUNT = 11;
 const BELL_RADIUS = 0.7;
 const BELL_SEGMENTS = 12;
@@ -406,9 +407,13 @@ export function JellyfishSchool({
     return Array.from({ length: total }, (_, index) => {
       const bobAmplitude = 0.12 + random() * 0.12;
       // Stratification prevents a seeded random clump while leaving enough
-      // room at either edge for the full bob to remain inside 275–325 m.
+      // room at either edge for the full bob to remain inside the layer.
       const depthSlot = (index + 0.1 + random() * 0.8) / total;
-      const homeDepth = 277.5 + depthSlot * 45;
+      const homeDepth =
+        JELLY_MIN_DEPTH +
+        DEPTH_EDGE_MARGIN +
+        depthSlot *
+          (JELLY_MAX_DEPTH - JELLY_MIN_DEPTH - DEPTH_EDGE_MARGIN * 2);
 
       return {
         home: preview

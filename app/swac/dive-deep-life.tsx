@@ -3,6 +3,7 @@
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { whaleSwimFrameAtTime } from "./dive-whale-motion";
 
 /*
  * The deep. A sperm whale in the foraging band and a giant squid below it,
@@ -16,6 +17,8 @@ import * as THREE from "three";
 
 export const WHALE_DEPTH = 550;
 export const SQUID_DEPTH = 725;
+
+const WORLD_UP = new THREE.Vector3(0, 1, 0);
 
 export type Ring = {
   z: number;
@@ -203,6 +206,14 @@ export function SpermWhale({
   const flukeRef = useRef<THREE.Group>(null);
   const flipperRefs = useRef<Array<THREE.Group | null>>([]);
   const ahead = useMemo(() => new THREE.Vector3(), []);
+  const swimAxis = useMemo(
+    () => axis?.clone().normalize() ?? new THREE.Vector3(),
+    [axis],
+  );
+  const outward = useMemo(
+    () => new THREE.Vector3().crossVectors(swimAxis, WORLD_UP).normalize(),
+    [swimAxis],
+  );
 
   const body = useMemo(
     () =>
@@ -277,24 +288,22 @@ export function SpermWhale({
     }
     const time = state.clock.elapsedTime;
     if (!preview && anchor && axis) {
-    // Straight passes across the frame: in from one side, out the far side,
-    // turn, and back. The axis runs along the slope, so both the depth and the
-    // distance from the rock stay constant and it cannot swim into the wall.
-    // Tighter, so it holds the middle of the frame for longer between passes.
-    const span = 18;
-    // A sperm whale cruises at about 1.5 m/s. One unit is ten metres, so even
-    // this is a brisk animal — the previous 2.4 was 24 m/s.
-    const speed = 0.5;
-    const phase = (time * speed) % (span * 2);
-    const outbound = phase < span;
-    const offset = outbound ? phase - span / 2 : span * 1.5 - phase;
-    const heading = outbound ? 1 : -1;
+      // The old triangle wave flipped the whale's heading at each endpoint.
+      // Each endpoint now has a compact loop through open water. It brings the
+      // whale back to the same lane with the opposite tangent, so neither its
+      // position nor its heading snaps when the return pass begins.
+      const frame = whaleSwimFrameAtTime(time);
 
-    swim.position.copy(anchor)
-      .addScaledVector(axis, offset)
-      .setY(anchor.y + Math.sin(time * 0.22) * 0.7);
-    ahead.copy(swim.position).addScaledVector(axis, heading * 2);
-    swim.lookAt(ahead);
+      swim.position
+        .copy(anchor)
+        .addScaledVector(swimAxis, frame.along)
+        .addScaledVector(outward, frame.outward)
+        .setY(anchor.y + Math.sin(time * 0.22) * 0.7);
+      ahead
+        .copy(swim.position)
+        .addScaledVector(swimAxis, frame.tangentAlong * 2)
+        .addScaledVector(outward, frame.tangentOutward * 2);
+      swim.lookAt(ahead);
     }
 
     if (flukeRef.current) {
@@ -320,7 +329,7 @@ export function SpermWhale({
 
   return (
     <group ref={groupRef}>
-      <group ref={swimRef} scale={1.6}>
+      <group ref={swimRef} scale={2.5}>
         <mesh geometry={body}>
           <meshStandardMaterial color={skin} roughness={0.9} flatShading />
         </mesh>
