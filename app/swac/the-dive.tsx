@@ -94,7 +94,9 @@ function probeSceneSupport() {
 
   try {
     gl = probe.getContext("webgl2", {
-      alpha: false,
+      // Three r185 requests an alpha-capable context internally even when the
+      // renderer paints an opaque background, so the probe must match it.
+      alpha: true,
       antialias: !compact,
       powerPreference: compact ? "default" : "high-performance",
       stencil: false,
