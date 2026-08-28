@@ -249,6 +249,7 @@
 .diveSticky {
   position: sticky;
   top: 0;
+  height: 100vh;
   height: 100svh;
   overflow: hidden;
 }
@@ -301,11 +302,13 @@
   position: relative;
   z-index: 2;
   /* Pull the steps back over the sticky viewport they scroll against. */
+  margin-top: -100vh;
   margin-top: -100svh;
 }
 
 .diveStep {
   display: flex;
+  min-height: 100vh;
   min-height: 100svh;
   align-items: center;
   padding: 0 clamp(1.25rem, 6vw, 6rem);
@@ -911,6 +914,7 @@
   .diveSticky {
     position: relative;
     height: auto;
+    min-height: 60vh;
     min-height: 60svh;
   }
 

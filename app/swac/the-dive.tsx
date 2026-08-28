@@ -1,6 +1,13 @@
 "use client";
 
-import { useMemo, useRef, useState, useSyncExternalStore } from "react";
+import {
+  Component,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
 import dynamic from "next/dynamic";
 import NumberFlow, { NumberFlowGroup } from "@number-flow/react";
 import {
@@ -26,54 +33,83 @@ import {
   temperatureAtDepth,
   type SwacCopy,
 } from "./swac-content";
+import {
+  COMPACT_DIVE_SCENE_MAX_WIDTH,
+  decideDiveSceneSupport,
+  type DiveSceneSupportDecision,
+} from "./dive-scene-support";
 import styles from "./swac.module.css";
 
 // Client-only: WebGL cannot be prerendered, and `ssr: false` is illegal in a
 // Server Component, so the gate and the import both live in here.
 const DiveScene3D = dynamic(() => import("./dive-scene-3d"), { ssr: false });
 
+class DiveSceneFallbackBoundary extends Component<
+  { children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
+
 const THERMOCLINE_CARD_EXIT_DEPTH = 475;
 
 /**
- * Whether this browser should be handed a 180 kB WebGL scene at all. This is a
- * read of an external system rather than React state, so it goes through
- * useSyncExternalStore: probing in an effect and calling setState would cause
- * exactly the cascading render the lint rule is there to prevent.
+ * Whether this browser should be handed the WebGL scene, and at what quality.
+ * This is a read of an external system rather than React state, so it goes
+ * through useSyncExternalStore: probing in an effect and calling setState
+ * would cause exactly the cascading render the lint rule is there to prevent.
  *
  * The answer cannot change for the life of the document, so there is nothing
  * to subscribe to and the snapshot is cached after the first probe.
  */
 const subscribeToNothing = () => () => {};
 
-let sceneSupport: boolean | null = null;
+const serverSceneSupport: DiveSceneSupportDecision = {
+  supported: false,
+  quality: null,
+  reason: "webgl2-unavailable",
+};
+
+let sceneSupport: DiveSceneSupportDecision | null = null;
 
 function probeSceneSupport() {
   if (sceneSupport !== null) {
     return sceneSupport;
   }
 
-  // Viewport width is the real proxy for "this is not a phone". Pointer type is
-  // not: touchscreen laptops report a coarse pointer and would wrongly fall
-  // back, and some desktop browsers report none at all.
-  if (!window.matchMedia("(min-width: 1024px)").matches) {
-    sceneSupport = false;
-    return sceneSupport;
-  }
-
-  // Bail on devices advertising very little memory rather than pushing a whole
-  // scene onto them.
   const memory = (navigator as Navigator & { deviceMemory?: number })
     .deviceMemory;
-  if (typeof memory === "number" && memory < 4) {
-    sceneSupport = false;
-    return sceneSupport;
+  const viewportWidth = window.innerWidth;
+  const compact = viewportWidth <= COMPACT_DIVE_SCENE_MAX_WIDTH;
+  const probe = document.createElement("canvas");
+  let gl: WebGL2RenderingContext | null = null;
+
+  try {
+    gl = probe.getContext("webgl2", {
+      alpha: false,
+      antialias: !compact,
+      powerPreference: compact ? "default" : "high-performance",
+      stencil: false,
+    });
+  } catch {
+    // Safari can throw when WebGL is disabled by browser or device policy.
   }
 
-  const probe = document.createElement("canvas");
-  const gl = probe.getContext("webgl2");
   gl?.getExtension("WEBGL_lose_context")?.loseContext();
 
-  sceneSupport = Boolean(gl);
+  sceneSupport = decideDiveSceneSupport({
+    viewportWidth,
+    hasWebGL2: Boolean(gl),
+    deviceMemory: memory,
+  });
   return sceneSupport;
 }
 
@@ -86,18 +122,20 @@ export function TheDive({ copy }: TheDiveProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const lagoonCardRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
-  const canRender3D = useSyncExternalStore(
+  const sceneSupport = useSyncExternalStore(
     subscribeToNothing,
     probeSceneSupport,
     // The server has no GPU to ask, so it always renders the SVG column.
-    () => false,
+    () => serverSceneSupport,
   );
   const [depth, setDepth] = useState(0);
   const shouldLoadScene = useInView(sectionRef, { once: true });
   const sceneActive = useInView(trackRef);
   const lagoonCardInView = useInView(lagoonCardRef);
   const shouldRenderScene =
-    canRender3D && prefersReducedMotion !== true && shouldLoadScene;
+    sceneSupport.supported &&
+    prefersReducedMotion !== true &&
+    shouldLoadScene;
 
   const { scrollYProgress } = useScroll({
     target: trackRef,
@@ -218,13 +256,18 @@ export function TheDive({ copy }: TheDiveProps) {
           </motion.div>
 
           {shouldRenderScene ? (
-            <div className={styles.diveCanvas}>
-              <DiveScene3D
-                active={sceneActive}
-                depth={depthValue}
-                velocity={velocity}
-              />
-            </div>
+            <DiveSceneFallbackBoundary>
+              <div className={styles.diveCanvas}>
+                <DiveScene3D
+                  active={sceneActive}
+                  depth={depthValue}
+                  quality={
+                    sceneSupport.supported ? sceneSupport.quality : "compact"
+                  }
+                  velocity={velocity}
+                />
+              </div>
+            </DiveSceneFallbackBoundary>
           ) : null}
 
           <div className={styles.diveVignette} aria-hidden="true" />

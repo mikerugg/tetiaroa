@@ -37,9 +37,11 @@ import {
   snowFragmentShader,
   snowVertexShader,
 } from "./dive-shaders";
+import type { DiveSceneQuality } from "./dive-scene-support";
 
 const COLUMN_UNITS = MAX_DIVE_DEPTH * UNITS_PER_METRE;
-const SNOW_COUNT = 900;
+const FULL_SNOW_COUNT = 900;
+const COMPACT_SNOW_COUNT = 450;
 const SNOW_COLUMN_HEIGHT = 90;
 const JELLY_LIGHT_FADE_DISTANCE = 55;
 const JELLY_LIGHT_MINIMUM = 0.025;
@@ -183,17 +185,20 @@ type SceneProps = {
   velocity: MotionValue<number>;
 };
 
-function MarineSnow({ velocity }: Pick<SceneProps, "velocity">) {
+function MarineSnow({
+  count,
+  velocity,
+}: Pick<SceneProps, "velocity"> & { count: number }) {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const stretch = useRef(0);
 
   const { offsets, scales, speeds } = useMemo(() => {
     const random = createRandom(0x5eed);
-    const offsets = new Float32Array(SNOW_COUNT * 3);
-    const scales = new Float32Array(SNOW_COUNT);
-    const speeds = new Float32Array(SNOW_COUNT);
+    const offsets = new Float32Array(count * 3);
+    const scales = new Float32Array(count);
+    const speeds = new Float32Array(count);
 
-    for (let i = 0; i < SNOW_COUNT; i += 1) {
+    for (let i = 0; i < count; i += 1) {
       // Bias the field into a shell around the camera path rather than a cube,
       // so density stays even as you descend.
       const angle = random() * Math.PI * 2;
@@ -206,7 +211,7 @@ function MarineSnow({ velocity }: Pick<SceneProps, "velocity">) {
     }
 
     return { offsets, scales, speeds };
-  }, []);
+  }, [count]);
 
   useFrame((state) => {
     const material = materialRef.current;
@@ -225,7 +230,7 @@ function MarineSnow({ velocity }: Pick<SceneProps, "velocity">) {
   });
 
   return (
-    <instancedMesh args={[undefined, undefined, SNOW_COUNT]} frustumCulled={false}>
+    <instancedMesh args={[undefined, undefined, count]} frustumCulled={false}>
       <planeGeometry args={[1, 1]}>
         <instancedBufferAttribute
           attach="attributes-aOffset"
@@ -1047,7 +1052,11 @@ function IntakeStructure({ curve }: { curve: THREE.CatmullRomCurve3 }) {
   );
 }
 
-function DiveRig({ depth, velocity }: SceneProps) {
+function DiveRig({
+  depth,
+  quality,
+  velocity,
+}: SceneProps & { quality: DiveSceneQuality }) {
   const fogRef = useRef<THREE.FogExp2>(null);
   const backgroundColour = useRef(new THREE.Color("#1fb6a6"));
   const keyLightRef = useRef<THREE.DirectionalLight>(null);
@@ -1207,7 +1216,10 @@ function DiveRig({ depth, velocity }: SceneProps) {
 
       <IntakePipe curve={curve} />
       <IntakeStructure curve={curve} />
-      <MarineSnow velocity={velocity} />
+      <MarineSnow
+        count={quality === "compact" ? COMPACT_SNOW_COUNT : FULL_SNOW_COUNT}
+        velocity={velocity}
+      />
     </>
   );
 }
@@ -1216,17 +1228,26 @@ export default function DiveScene3D({
   depth,
   velocity,
   active,
-}: SceneProps & { active: boolean }) {
+  quality,
+}: SceneProps & { active: boolean; quality: DiveSceneQuality }) {
+  const compact = quality === "compact";
+
   return (
     <Canvas
       camera={{ position: [0, 0, 6], fov: 60, near: 0.1, far: 160 }}
-      dpr={[1, 1.5]}
+      dpr={compact ? 1 : [1, 1.5]}
       frameloop={active ? "always" : "never"}
-      gl={{ antialias: true, powerPreference: "high-performance" }}
-      style={{ position: "absolute", inset: 0 }}
+      gl={{
+        alpha: false,
+        antialias: !compact,
+        powerPreference: compact ? "default" : "high-performance",
+        stencil: false,
+      }}
+      style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
+      data-dive-scene-quality={quality}
       aria-hidden="true"
     >
-      <DiveRig depth={depth} velocity={velocity} />
+      <DiveRig depth={depth} quality={quality} velocity={velocity} />
     </Canvas>
   );
 }
