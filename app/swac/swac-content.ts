@@ -883,7 +883,7 @@ const englishCopy: SwacCopy = {
   },
   cta: {
     eyebrow: "Tetiaroa Society",
-    title: "Bring us your coastline",
+    title: "Bring us your project",
     body:
       "Tetiaroa has run a deep-water cooling system through a decade of tropical weather, and the Society's scientists have been measuring what it does to the reef the entire time. That combination is rare: a working plant and the research to go with it.",
     expertiseLabel: "What we bring",
@@ -1305,7 +1305,7 @@ const frenchCopy: SwacCopy = {
   },
   cta: {
     eyebrow: "Tetiaroa Society",
-    title: "Apportez-nous votre littoral",
+    title: "Apportez-nous votre projet",
     body:
       "Tetiaroa exploite un système de froid en eau profonde depuis dix ans de météo tropicale, et les scientifiques de la Society mesurent depuis le début ce qu'il fait au récif. Cette combinaison est rare : une centrale qui tourne et la recherche qui va avec.",
     expertiseLabel: "Ce que nous apportons",
