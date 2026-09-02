@@ -526,16 +526,16 @@ function ProjectRow({
       <Link
         href={project.href}
         aria-labelledby={titleId}
-        className="group grid outline-none transition-colors hover:bg-muted/30 focus-visible:ring-3 focus-visible:ring-ring/50 md:grid-cols-[minmax(260px,40%)_minmax(0,1fr)]"
+        className="group grid outline-none transition-colors hover:bg-muted/30 focus-visible:ring-3 focus-visible:ring-ring/50 md:grid-cols-[30%_minmax(0,1fr)]"
       >
-        <div className="relative min-h-60 overflow-hidden bg-muted md:min-h-56">
+        <div className="relative aspect-[4/3] w-full self-start overflow-hidden bg-muted">
           <Image
             src={project.image}
             alt={project.alt}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            className="object-cover"
             priority={priority}
-            sizes="(max-width: 768px) calc(100vw - 32px), (max-width: 1200px) 40vw, 470px"
+            sizes="(max-width: 768px) calc(100vw - 32px), (max-width: 1540px) 30vw, 438px"
           />
         </div>
 

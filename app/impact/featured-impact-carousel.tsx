@@ -14,6 +14,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  useCarousel,
 } from "@/components/ui/carousel";
 import type {
   ImpactFeedItem,
@@ -58,7 +59,6 @@ export function FeaturedImpactCarousel({
   }
 
   const copy = featuredCopy[locale];
-  const hasMultipleProjects = projects.length > 1;
 
   return (
     <section
@@ -66,30 +66,16 @@ export function FeaturedImpactCarousel({
       className="mx-auto max-w-[1540px] px-4 py-4 sm:px-6 md:px-8 lg:px-10"
     >
       <div className="overflow-hidden rounded-2xl bg-card/70 p-4 ring-1 ring-foreground/10 sm:p-5">
+        <h2 id="featured-impact-heading" className="font-display text-2xl">
+          {copy.heading}
+        </h2>
+
         <Carousel
           opts={{ align: "start", containScroll: "trimSnaps", dragFree: true }}
           aria-label={copy.carouselLabel}
+          className="mt-4"
         >
-          <div className="flex items-center justify-between gap-4">
-            <h2 id="featured-impact-heading" className="font-display text-2xl">
-              {copy.heading}
-            </h2>
-
-            {hasMultipleProjects ? (
-              <div className="flex shrink-0 gap-2">
-                <CarouselPrevious
-                  className="static"
-                  aria-label={copy.previousLabel}
-                />
-                <CarouselNext
-                  className="static"
-                  aria-label={copy.nextLabel}
-                />
-              </div>
-            ) : null}
-          </div>
-
-          <CarouselContent className="-ml-3 mt-4">
+          <CarouselContent className="-ml-3">
             {projects.map((project, index) => (
               <CarouselItem
                 key={project.id}
@@ -129,8 +115,44 @@ export function FeaturedImpactCarousel({
               </CarouselItem>
             ))}
           </CarouselContent>
+
+          <FeaturedCarouselNavigation
+            previousLabel={copy.previousLabel}
+            nextLabel={copy.nextLabel}
+          />
         </Carousel>
       </div>
     </section>
+  );
+}
+
+function FeaturedCarouselNavigation({
+  previousLabel,
+  nextLabel,
+}: {
+  previousLabel: string;
+  nextLabel: string;
+}) {
+  const { canScrollPrev, canScrollNext } = useCarousel();
+
+  return (
+    <>
+      {canScrollPrev ? (
+        <CarouselPrevious
+          variant="outline"
+          size="icon-lg"
+          className="left-2 size-15 border-foreground/80 bg-primary/80 text-foreground shadow-lg hover:bg-background [&_svg:not([class*='size-'])]:size-6"
+          aria-label={previousLabel}
+        />
+      ) : null}
+      {canScrollNext ? (
+        <CarouselNext
+          variant="outline"
+          size="icon-lg"
+          className="right-2 size-15 border-foreground/80 bg-primary/80 text-foreground shadow-lg hover:bg-background [&_svg:not([class*='size-'])]:size-6"
+          aria-label={nextLabel}
+        />
+      ) : null}
+    </>
   );
 }
