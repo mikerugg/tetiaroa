@@ -130,6 +130,10 @@ function getAffiliations(entry: ImpactContentEntry): ImpactAffiliation[] {
   }));
 }
 
+function getCategories(entry: ImpactContentEntry) {
+  return [...new Set([entry.category, ...entry.secondaryCategories])];
+}
+
 function ImpactEntryInfoCard({
   entry,
   copy,
@@ -137,6 +141,7 @@ function ImpactEntryInfoCard({
   showLocation,
 }: ImpactEntryInfoCardProps) {
   const affiliations = getAffiliations(entry);
+  const categories = getCategories(entry);
   const hasAffiliations = affiliations.length > 0;
   const articleTitle = entry.iplacesTitle ?? entry.title;
 
@@ -280,6 +285,27 @@ function ImpactEntryInfoCard({
                   </time>
                 </dd>
               </div>
+            </div>
+          </>
+        ) : null}
+        {categories.length ? (
+          <>
+            <Separator />
+            <div>
+              <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                {copy.categoriesLabel}
+              </dt>
+              <dd className="mt-2 flex flex-wrap gap-2">
+                {categories.map((category) => (
+                  <Badge
+                    key={category}
+                    variant="outline"
+                    className="h-auto max-w-full justify-start whitespace-normal break-words text-left"
+                  >
+                    <span className="min-w-0 break-words">{category}</span>
+                  </Badge>
+                ))}
+              </dd>
             </div>
           </>
         ) : null}

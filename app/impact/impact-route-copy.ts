@@ -50,6 +50,7 @@ export const impactRouteCopy: Record<
     authorsLabel: string;
     orcidProfileLabel: string;
     dataciteAffiliationLabel: string;
+    categoriesLabel: string;
     tagsLabel: string;
     galleryLabel: string;
     teamLabel: string;
@@ -77,6 +78,7 @@ export const impactRouteCopy: Record<
     orcidProfileLabel: "ORCID profile (opens in a new tab)",
     dataciteAffiliationLabel:
       "View affiliation in DataCite Commons (opens in a new tab)",
+    categoriesLabel: "Categories",
     tagsLabel: "Tags",
     galleryLabel: "Gallery",
     teamLabel: "Team",
@@ -103,6 +105,7 @@ export const impactRouteCopy: Record<
     orcidProfileLabel: "Profil ORCID (s’ouvre dans un nouvel onglet)",
     dataciteAffiliationLabel:
       "Voir l’affiliation dans DataCite Commons (s’ouvre dans un nouvel onglet)",
+    categoriesLabel: "Catégories",
     tagsLabel: "Mots-clés",
     galleryLabel: "Galerie",
     teamLabel: "Équipe",
