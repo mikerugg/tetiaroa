@@ -93,6 +93,7 @@ export type ImpactContentEntry = {
   heroImage: string;
   heroImageAlt: string;
   metric: string;
+  isFeatured: boolean;
   tags: string[];
   body: ImpactBodyBlock[];
   htmlPackage?: ImpactHtmlPackage;
@@ -126,6 +127,7 @@ export type ImpactFeedItem = {
   image: string;
   alt: string;
   metric: string;
+  isFeatured: boolean;
   tags: string[];
   href: string;
   actionLabel: string;
@@ -161,6 +163,7 @@ export function toImpactFeedItem(entry: ImpactContentEntry): ImpactFeedItem {
     image: entry.heroImage,
     alt: entry.heroImageAlt,
     metric: entry.metric,
+    isFeatured: entry.isFeatured,
     tags: entry.tags,
     href: getImpactHref(entry),
     actionLabel: getImpactActionLabel(entry),

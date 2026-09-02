@@ -120,6 +120,7 @@ const impactEntryProjection = `
     caption
   },
   "program": program->{title, "slug": slug.current},
+  "isFeatured": "featured-post" in topics[]->slug.current,
   "topics": topics[]->{title, "slug": slug.current},
   "team": team[]->{name, role},
   "authors": iplacesSource.authors[]{name, orcid},

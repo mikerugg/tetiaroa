@@ -81,6 +81,7 @@ type SanityImpactEntry = {
   metric?: string | null;
   projectDates?: string | null;
   affiliation?: string | null;
+  isFeatured?: boolean | null;
   tags?: string[] | null;
   body?: ImpactBodyBlock[] | null;
   htmlPackage?: (Partial<ImpactHtmlPackage> & { removed?: boolean }) | null;
@@ -417,6 +418,7 @@ function normalizeSanityEntry(entry: SanityImpactEntry): ImpactContentEntry | nu
     heroImage: entry.heroImage ?? defaultHeroImage,
     heroImageAlt: entry.heroImageAlt ?? entry.title,
     metric: normalizeMetric(entry.metric, entry.entryType),
+    isFeatured: entry.isFeatured === true,
     tags: normalizeTags(entry),
     body: entry.body ?? [],
     htmlPackage: normalizeHtmlPackage(entry.htmlPackage),

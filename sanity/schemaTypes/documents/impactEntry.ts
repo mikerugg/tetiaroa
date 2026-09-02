@@ -80,10 +80,13 @@ export const impactEntry = defineType({
       of: [
         defineArrayMember({
           type: "string",
-          options: { list: categoryOptions },
         }),
       ],
-      options: { layout: "tags" },
+      options: {
+        list: categoryOptions,
+        layout: "grid",
+      },
+      validation: (rule) => rule.unique(),
     }),
     defineField({
       name: "publishedAt",

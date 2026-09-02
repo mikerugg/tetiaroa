@@ -11,8 +11,8 @@ import {
 import { SiteFooter } from "../site-footer";
 import { TopToolbar } from "../top-toolbar";
 import { getImpactEntriesByLanguage } from "@/lib/sanity/impact";
+import { getRandomizedFeaturedImpactItems } from "@/lib/impact/featured";
 import { parseImpactFilters } from "@/lib/impact/filters";
-import { computeImpactStats } from "@/lib/impact/stats";
 import { toImpactFeedItem } from "@/lib/impact/types";
 import { ImpactFeed } from "./impact-feed";
 
@@ -37,15 +37,15 @@ export default async function ImpactPage({
 }) {
   const entries = await getImpactEntriesByLanguage("en");
   const impactProjects = entries.map(toImpactFeedItem);
-  const stats = computeImpactStats(entries);
   const initialFilters = parseImpactFilters(await searchParams);
+  const featuredProjects = getRandomizedFeaturedImpactItems(impactProjects);
 
   return (
     <>
       <TopToolbar copy={getImpactToolbarCopy("en")} />
       <ImpactFeed
         projects={impactProjects}
-        stats={stats}
+        featuredProjects={featuredProjects}
         initialFilters={initialFilters}
         locale="en"
       />

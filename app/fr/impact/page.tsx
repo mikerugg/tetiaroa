@@ -12,8 +12,8 @@ import {
   impactRouteCopy,
 } from "@/app/impact/impact-route-copy";
 import { getImpactEntriesByLanguage } from "@/lib/sanity/impact";
+import { getRandomizedFeaturedImpactItems } from "@/lib/impact/featured";
 import { parseImpactFilters } from "@/lib/impact/filters";
-import { computeImpactStats } from "@/lib/impact/stats";
 import { toImpactFeedItem } from "@/lib/impact/types";
 
 const copy = impactRouteCopy.fr;
@@ -37,15 +37,15 @@ export default async function FrenchImpactPage({
 }) {
   const entries = await getImpactEntriesByLanguage("fr");
   const impactProjects = entries.map(toImpactFeedItem);
-  const stats = computeImpactStats(entries);
   const initialFilters = parseImpactFilters(await searchParams);
+  const featuredProjects = getRandomizedFeaturedImpactItems(impactProjects);
 
   return (
     <>
       <TopToolbar copy={getImpactToolbarCopy("fr")} />
       <ImpactFeed
         projects={impactProjects}
-        stats={stats}
+        featuredProjects={featuredProjects}
         initialFilters={initialFilters}
         locale="fr"
       />

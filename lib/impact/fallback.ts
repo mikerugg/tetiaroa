@@ -17,6 +17,7 @@ type FallbackSeed = {
   heroImage: string;
   heroImageAlt: string;
   metric: string;
+  isFeatured?: boolean;
   tags: string[];
 };
 
@@ -55,7 +56,8 @@ const coolReefEntry: ImpactContentEntry = {
   heroImage: "/impact/cool-reef/hero.jpg",
   heroImageAlt: "Researchers checking coral growth in the Cool Reef project",
   metric: "2022-2024",
-  tags: ["Coral development", "Thermal stress", "CRIOBE"],
+  isFeatured: true,
+  tags: ["Featured Post", "Coral development", "Thermal stress", "CRIOBE"],
   body: [
     paragraph(
       "cool-reef-1",
@@ -119,7 +121,8 @@ const fallbackSeeds: FallbackSeed[] = [
       "https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=1400&q=85&auto=format&fit=crop",
     heroImageAlt: "A close view of branching coral in clear tropical water",
     metric: "9 reef lines",
-    tags: ["Coral recovery", "Lagoon health", "Field data"],
+    isFeatured: true,
+    tags: ["Featured Post", "Coral recovery", "Lagoon health", "Field data"],
   },
   {
     id: "ora-hoa-classroom",
@@ -135,7 +138,8 @@ const fallbackSeeds: FallbackSeed[] = [
       "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1400&q=85&auto=format&fit=crop",
     heroImageAlt: "Students gathered outdoors for a collaborative lesson",
     metric: "K-12 pathway",
-    tags: ["Students", "Cultural learning", "Field kits"],
+    isFeatured: true,
+    tags: ["Featured Post", "Students", "Cultural learning", "Field kits"],
   },
   {
     id: "honu-xr",
@@ -267,6 +271,7 @@ function seedToEntry(seed: FallbackSeed): ImpactContentEntry {
     heroImage: seed.heroImage,
     heroImageAlt: seed.heroImageAlt,
     metric: seed.metric,
+    isFeatured: seed.isFeatured ?? false,
     tags: seed.tags,
     body: [paragraph(`${seed.id}-body`, seed.summary)],
   };

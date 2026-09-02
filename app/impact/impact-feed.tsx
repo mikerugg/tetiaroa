@@ -1,17 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowUpRightIcon,
-  FishIcon,
-  HandshakeIcon,
-  MicroscopeIcon,
   SearchIcon,
-  WavesIcon,
   XIcon,
-  type LucideIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -45,7 +40,6 @@ import {
   type ImpactFeedItem,
   type ImpactLanguage,
 } from "@/lib/impact/types";
-import type { ImpactStats } from "@/lib/impact/stats";
 import {
   formatOrder,
   topicDefinitions,
@@ -55,10 +49,11 @@ import {
   type TopicFilter,
   type TopicValue,
 } from "@/lib/impact/filters";
+import { FeaturedImpactCarousel } from "./featured-impact-carousel";
 
 type ImpactFeedProps = {
   projects: ImpactFeedItem[];
-  stats: ImpactStats;
+  featuredProjects: ImpactFeedItem[];
   initialFilters: ImpactFeedFilters;
   locale?: ImpactLanguage;
 };
@@ -84,22 +79,6 @@ const feedCopy: Record<
     sortLabels: Record<SortMode, string>;
     emptyTitle: string;
     emptyDescription: string;
-    stats: {
-      heading: string;
-      primary: {
-        years: { label: string; description: (since: number) => string };
-        projects: { label: string; description: string };
-        species: { label: string; description: string };
-        partners: { label: string; description: string };
-      };
-      secondary: {
-        entries: string;
-        updatedThisYear: string;
-        profiles: string;
-        reports: string;
-        films: string;
-      };
-    };
   }
 > = {
   en: {
@@ -111,6 +90,7 @@ const feedCopy: Record<
     filterAria: "Filter impact entries by topic",
     showTopic: (topic) => `Show ${topic} impact entries`,
     topics: {
+      news: "News",
       conservation: "Conservation",
       research: "Research",
       wildlife: "Wildlife",
@@ -143,34 +123,6 @@ const feedCopy: Record<
     emptyTitle: "No entries found",
     emptyDescription:
       "No entries match this combination. Try a different search or filter.",
-    stats: {
-      heading: "Tetiaroa Society's Impact",
-      primary: {
-        years: {
-          label: "Years of fieldwork",
-          description: (since) => `Continuous science on the atoll since ${since}`,
-        },
-        projects: {
-          label: "Research projects",
-          description: "From coral nurseries to seabird recovery",
-        },
-        species: {
-          label: "Species & habitats",
-          description: "Documented in a living guide to the atoll",
-        },
-        partners: {
-          label: "Partner institutions",
-          description: "Universities, labs, and NGOs worldwide",
-        },
-      },
-      secondary: {
-        entries: "Impact entries",
-        updatedThisYear: "Updated this year",
-        profiles: "People profiled",
-        reports: "Published reports",
-        films: "Films & videos",
-      },
-    },
   },
   fr: {
     title: "Fil d'impact",
@@ -181,6 +133,7 @@ const feedCopy: Record<
     filterAria: "Filtrer les entrées d'impact par thème",
     showTopic: (topic) => `Afficher les entrées ${topic}`,
     topics: {
+      news: "Actualités",
       conservation: "Conservation",
       research: "Recherche",
       wildlife: "Faune",
@@ -213,35 +166,6 @@ const feedCopy: Record<
     emptyTitle: "Aucune entrée trouvée",
     emptyDescription:
       "Aucune entrée ne correspond à cette combinaison. Essayez une autre recherche ou un autre filtre.",
-    stats: {
-      heading: "L'impact de Tetiaroa Society",
-      primary: {
-        years: {
-          label: "Années de terrain",
-          description: (since) =>
-            `Une présence scientifique continue depuis ${since}`,
-        },
-        projects: {
-          label: "Projets de recherche",
-          description: "Des pépinières de corail au retour des oiseaux marins",
-        },
-        species: {
-          label: "Espèces et habitats",
-          description: "Documentés dans un guide vivant de l'atoll",
-        },
-        partners: {
-          label: "Institutions partenaires",
-          description: "Universités, laboratoires et ONG du monde entier",
-        },
-      },
-      secondary: {
-        entries: "Entrées d'impact",
-        updatedThisYear: "Mises à jour cette année",
-        profiles: "Portraits publiés",
-        reports: "Rapports publiés",
-        films: "Films et vidéos",
-      },
-    },
   },
 };
 
@@ -309,7 +233,7 @@ function sortProjects(projects: ImpactFeedItem[], sortMode: SortMode) {
 
 export function ImpactFeed({
   projects,
-  stats,
+  featuredProjects,
   initialFilters,
   locale = "en",
 }: ImpactFeedProps) {
@@ -393,52 +317,6 @@ export function ImpactFeed({
     setQuery("");
   };
 
-  const primaryStats = [
-    {
-      value: stats.yearsOfFieldwork,
-      label: copy.stats.primary.years.label,
-      description: copy.stats.primary.years.description(stats.fieldworkSince),
-      icon: WavesIcon,
-    },
-    {
-      value: stats.researchProjects,
-      label: copy.stats.primary.projects.label,
-      description: copy.stats.primary.projects.description,
-      icon: MicroscopeIcon,
-    },
-    {
-      value: stats.speciesDocumented,
-      label: copy.stats.primary.species.label,
-      description: copy.stats.primary.species.description,
-      icon: FishIcon,
-    },
-    {
-      value: stats.partnerInstitutions,
-      label: copy.stats.primary.partners.label,
-      description: copy.stats.primary.partners.description,
-      icon: HandshakeIcon,
-      suffix: "+",
-    },
-  ] satisfies Array<{
-    value: number;
-    label: string;
-    description: string;
-    icon: LucideIcon;
-    suffix?: string;
-  }>;
-
-  const secondaryStats: Array<{
-    value: number;
-    label: string;
-    suffix?: string;
-  }> = [
-    { value: stats.totalEntries, label: copy.stats.secondary.entries },
-    { value: stats.updatedThisYear, label: copy.stats.secondary.updatedThisYear },
-    { value: stats.peopleProfiled, label: copy.stats.secondary.profiles },
-    { value: stats.publishedReports, label: copy.stats.secondary.reports },
-    { value: stats.films, label: copy.stats.secondary.films, suffix: "+" },
-  ];
-
   return (
     <div className="relative overflow-hidden bg-background text-foreground">
       <section className="relative isolate overflow-hidden border-b border-border pt-14 md:pt-16">
@@ -461,57 +339,9 @@ export function ImpactFeed({
         </div>
       </section>
 
-      <section
-        aria-label={copy.stats.heading}
-        className="border-b border-border bg-card/70 backdrop-blur-md"
-      >
-        <div className="mx-auto max-w-[1540px] px-5 py-8 sm:px-8 md:px-9 lg:px-10 lg:py-10">
-          <h2 className="font-display text-3xl font-normal leading-tight">
-            {copy.stats.heading}
-          </h2>
+      <FeaturedImpactCarousel projects={featuredProjects} locale={locale} />
 
-          <div className="mt-7 grid grid-cols-2 gap-x-5 gap-y-7 sm:gap-7 lg:grid-cols-4 lg:gap-0">
-            {primaryStats.map((stat, index) => (
-              <div
-                key={stat.label}
-                className="flex min-w-0 flex-col gap-2.5 sm:gap-3 lg:border-l lg:border-border lg:px-8 lg:first:border-l-0 lg:first:pl-0 lg:last:pr-0"
-              >
-                <div className="grid size-10 place-items-center rounded-sm bg-secondary text-secondary-foreground sm:size-11">
-                  <stat.icon aria-hidden="true" />
-                </div>
-                <div className="font-display text-4xl leading-none text-foreground sm:text-5xl xl:text-6xl">
-                  <CountUpValue
-                    value={stat.value}
-                    suffix={stat.suffix}
-                    delay={index * 120}
-                  />
-                </div>
-                <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-foreground/90 sm:text-[11px] sm:tracking-[0.16em]">
-                  {stat.label}
-                </div>
-                <p className="text-sm leading-6 text-muted-foreground max-[420px]:text-[13px] max-[420px]:leading-5">
-                  {stat.description}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8 flex flex-wrap items-baseline gap-x-9 gap-y-4 border-t border-border pt-6">
-            {secondaryStats.map((stat) => (
-              <div key={stat.label} className="flex items-baseline gap-2.5">
-                <span className="font-display text-2xl leading-none text-foreground">
-                  <CountUpValue value={stat.value} suffix={stat.suffix} />
-                </span>
-                <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                  {stat.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <main className="mx-auto max-w-[1540px] px-4 py-6 sm:px-6 md:px-8 lg:px-10">
+      <main className="mx-auto max-w-[1540px] px-4 pb-6 pt-0 sm:px-6 md:px-8 lg:px-10">
         <section className="min-w-0" aria-labelledby="feed-heading">
           <div className="flex flex-col gap-4 pb-4">
             <div className="relative w-full md:max-w-md">
@@ -677,82 +507,6 @@ export function ImpactFeed({
         </section>
       </main>
     </div>
-  );
-}
-
-const COUNT_UP_DURATION_MS = 1400;
-
-function CountUpValue({
-  value,
-  suffix,
-  delay = 0,
-}: {
-  value: number;
-  suffix?: string;
-  delay?: number;
-}) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const [display, setDisplay] = useState(value);
-  const hasAnimated = useRef(false);
-
-  useEffect(() => {
-    const node = ref.current;
-    if (
-      !node ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      return;
-    }
-
-    let frame = 0;
-    let timeout = 0;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting || hasAnimated.current) {
-          return;
-        }
-
-        hasAnimated.current = true;
-        observer.disconnect();
-
-        timeout = window.setTimeout(() => {
-          const start = performance.now();
-
-          const tick = (now: number) => {
-            const progress = Math.min(
-              (now - start) / COUNT_UP_DURATION_MS,
-              1,
-            );
-            const eased = 1 - Math.pow(1 - progress, 3);
-            setDisplay(Math.round(eased * value));
-
-            if (progress < 1) {
-              frame = requestAnimationFrame(tick);
-            }
-          };
-
-          setDisplay(0);
-          frame = requestAnimationFrame(tick);
-        }, delay);
-      },
-      { threshold: 0.5 },
-    );
-
-    observer.observe(node);
-
-    return () => {
-      observer.disconnect();
-      window.clearTimeout(timeout);
-      cancelAnimationFrame(frame);
-    };
-  }, [delay, value]);
-
-  return (
-    <span ref={ref}>
-      {display}
-      {suffix}
-    </span>
   );
 }
 

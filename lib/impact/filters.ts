@@ -1,6 +1,7 @@
 import type { ImpactCategory, ImpactEntryType } from "./types";
 
 export const topicDefinitions = [
+  { value: "news", categories: ["News"] },
   {
     value: "conservation",
     categories: ["Conservation", "TARP", "Biosecurity"],
