@@ -438,7 +438,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       eyebrow: "Pillars of Tetiaroa",
       title: "Three responsibilities, one atoll.",
       copy:
-        "Research shows us what is changing, education turns that knowledge into care, and global collaboration carries what works beyond the reef, so each pillar strengthens the other two.",
+        "Research shows us how our world is changing, education turns that knowledge into action and care, and global collaboration carries what works beyond the island, out into the world.",
       items: [
         {
           title: "Research and Conservation",
@@ -866,7 +866,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       eyebrow: "Les piliers de Tetiaroa",
       title: "Trois responsabilités, un seul atoll.",
       copy:
-        "La recherche révèle les changements, l’éducation transforme ce savoir en soin, et la collaboration porte les solutions au-delà du récif, alors chaque pilier renforce les deux autres.",
+        "La recherche nous montre comment notre monde évolue, l’éducation transforme ces connaissances en actions et en attention au vivant, et la collaboration internationale diffuse ce qui fonctionne au-delà de l’île, à travers le monde.",
       items: [
         {
           title: "Recherche et conservation",
