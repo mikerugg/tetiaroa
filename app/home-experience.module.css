@@ -780,6 +780,15 @@
     );
 }
 
+/* Keep the Project 02 footage at its native color and brightness. */
+.bandMedia.sanctuaryMedia {
+  filter: none;
+}
+
+.bandMedia.sanctuaryMedia::after {
+  content: none;
+}
+
 @media (max-width: 720px) {
   .bandMedia {
     filter: none;
