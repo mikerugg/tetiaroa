@@ -16,7 +16,6 @@ import { homeCopies, type HomeLocale } from "./home-copy";
 import { ENGLISH_DONATE_PATH, FRENCH_DONATE_PATH } from "./language-links";
 import { HomepageInitialScrollReset } from "./homepage-client";
 import { DepthScene } from "./depth-scene";
-import { SanctuaryVideo } from "./sanctuary-video";
 import { LanternExperience } from "./lantern-experience";
 import styles from "./home-experience.module.css";
 import { FrenchVersionPrompt } from "./french-version-prompt";
@@ -200,12 +199,10 @@ export default function HomeExperience({
           </div>
           <div className={styles.sanctuaryGrid}>
             <div className={`${styles.bandMedia} ${styles.sanctuaryMedia}`}>
-              <SanctuaryVideo
+              <SproutBackgroundVideo
                 className={styles.mediaVideo}
-                clips={[
-                  homeVideoSources.turtleClip,
-                  homeVideoSources.lemonShark,
-                ]}
+                embedUrl={homeVideoSources.sanctuary.embedUrl}
+                title={homeVideoSources.sanctuary.title}
               />
               <Badge
                 variant="secondary"

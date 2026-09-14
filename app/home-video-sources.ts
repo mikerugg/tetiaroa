@@ -4,6 +4,11 @@ export type SproutVideoSource = {
 };
 
 export const homeVideoSources = {
+  sanctuary: {
+    embedUrl:
+      "https://videos.sproutvideo.com/embed/aa9ad3b41319e4c720/b71040ae92412507",
+    title: "Sea turtle and lemon shark sanctuary at Tetiaroa",
+  },
   societyFilm: {
     embedUrl:
       "https://videos.sproutvideo.com/embed/729adab61f1fefc9f8/f4bfbfcb9a151af2",
