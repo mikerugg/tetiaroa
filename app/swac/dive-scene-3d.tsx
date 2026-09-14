@@ -1103,6 +1103,21 @@ function DiveRig({
   useFrame((state) => {
     const metres = depth.get();
 
+    // Keep an 80-degree horizontal view on phones so encounters fit between
+    // the instruments and caption. Reproject only when the viewport changes.
+    if (state.camera instanceof THREE.PerspectiveCamera) {
+      const aspect = state.size.width / Math.max(1, state.size.height);
+      const fov = state.size.width < 640
+        ? THREE.MathUtils.radToDeg(
+            2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(40)) / aspect),
+          )
+        : 60;
+      if (state.camera.fov !== fov) {
+        state.camera.fov = fov;
+        state.camera.updateProjectionMatrix();
+      }
+    }
+
     // The camera hangs off the same curve as the pipe, a few metres inboard,
     // so the flank stays in frame the whole way down.
     slopePoint(metres, scratchSlope.current);

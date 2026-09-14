@@ -39,6 +39,11 @@
   z-index: 5;
 }
 
+/* Keep Project 02 above the fixed depth vignette as it crosses the viewport. */
+.page .sanctuaryBand {
+  z-index: 5;
+}
+
 /* ---- fixed scenery ---- */
 
 .backdrop {

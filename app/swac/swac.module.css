@@ -243,22 +243,6 @@
   position: relative;
 }
 
-/* Full viewport height so the scene has room to show the surface and the
-   motu. The toolbar overlaps the top of the canvas, which is fine for water;
-   the HUD pads itself clear of it below. */
-.diveSticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  height: 100svh;
-  overflow: hidden;
-}
-
-.diveCanvas {
-  position: absolute;
-  inset: 0;
-}
-
 /* The SVG column stands in for the canvas wherever WebGL cannot go. */
 .diveColumn {
   position: absolute;

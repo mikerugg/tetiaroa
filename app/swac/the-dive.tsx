@@ -197,6 +197,11 @@ export function TheDive({ copy }: TheDiveProps) {
   const pressure = pressureAtDepth(depth);
   const light = lightAtDepth(depth) * 100;
   const inThermocline = depth >= THERMOCLINE_TOP && depth <= THERMOCLINE_BASE;
+  const mobileStop = copy.stops.reduce((nearest, stop) =>
+    Math.abs(stop.depth - depth) < Math.abs(nearest.depth - depth)
+      ? stop
+      : nearest,
+  );
 
   return (
     <section ref={sectionRef} id="descent" className={styles.diveSection}>
@@ -213,7 +218,7 @@ export function TheDive({ copy }: TheDiveProps) {
       </header>
 
       <div ref={trackRef} className={styles.diveTrack}>
-        <div className={styles.diveSticky}>
+        <div className={cn(styles.diveSticky, "sticky top-0 h-svh overflow-hidden max-sm:grid max-sm:grid-rows-[auto_minmax(0,1fr)_auto] max-sm:pt-[calc(var(--toolbar-height)+0.75rem)]")}>
           {/* Keep the lightweight column underneath the Canvas so a slow
               dynamic import never leaves a blank frame. */}
           <motion.div
@@ -259,7 +264,7 @@ export function TheDive({ copy }: TheDiveProps) {
 
           {shouldRenderScene ? (
             <DiveSceneFallbackBoundary>
-              <div className={styles.diveCanvas}>
+              <div className="absolute inset-0 max-sm:relative max-sm:row-start-2 max-sm:min-h-0">
                 <DiveScene3D
                   active={sceneActive}
                   depth={depthValue}
@@ -274,80 +279,115 @@ export function TheDive({ copy }: TheDiveProps) {
 
           <div className={styles.diveVignette} aria-hidden="true" />
 
-          <div className={styles.diveHud}>
-            <div className="flex flex-col items-end gap-3">
-              <motion.div
-                animate={{ opacity: inThermocline ? 1 : 0, y: inThermocline ? 0 : -8 }}
-                transition={{ duration: 0.4 }}
-              >
-                <Badge variant="secondary" className="gap-1.5 font-mono text-[10px] uppercase tracking-[0.16em]">
-                  <ThermometerSnowflakeIcon className="size-3" aria-hidden="true" />
-                  {copy.thermoclineLabel}
-                </Badge>
-              </motion.div>
+          <div className="hidden sm:block">
+            <div className={styles.diveHud}>
+              <div className="flex flex-col items-end gap-3">
+                <motion.div
+                  animate={{ opacity: inThermocline ? 1 : 0, y: inThermocline ? 0 : -8 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <Badge variant="secondary" className="gap-1.5 font-mono text-[10px] uppercase tracking-[0.16em]">
+                    <ThermometerSnowflakeIcon className="size-3" aria-hidden="true" />
+                    {copy.thermoclineLabel}
+                  </Badge>
+                </motion.div>
 
-              <NumberFlowGroup>
-                <div className="flex flex-col gap-3 rounded-2xl border border-primary/15 bg-background/45 p-4 backdrop-blur-md sm:p-5">
-                  <div className="flex flex-col gap-0.5">
-                    <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
-                      {copy.depthLabel}
-                    </span>
-                    <span className={cn(styles.hudReadout, "font-header text-5xl leading-none text-foreground sm:text-6xl")}>
-                      <NumberFlow value={depth} suffix=" m" />
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-x-5 gap-y-2 border-t border-border pt-3">
-                    <Readout label={copy.temperatureLabel}>
-                      <NumberFlow
-                        value={temperature}
-                        format={{ maximumFractionDigits: 1, minimumFractionDigits: 1 }}
-                        suffix=" °C"
-                      />
-                    </Readout>
-                    <Readout label={copy.pressureLabel}>
-                      <NumberFlow
-                        value={pressure}
-                        format={{ maximumFractionDigits: 0 }}
-                        suffix=" bar"
-                      />
-                    </Readout>
-                    <Readout label={copy.lightLabel}>
-                      <NumberFlow
-                        value={light}
-                        format={{ maximumFractionDigits: 2 }}
-                        suffix=" %"
-                      />
-                    </Readout>
-                    <div className="flex flex-col gap-1">
-                      <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
-                        {copy.thermoclineLabel}
+                <NumberFlowGroup>
+                  <div className="flex flex-col gap-3 rounded-2xl border border-primary/15 bg-background/45 p-4 backdrop-blur-md sm:p-5">
+                    <div className="flex flex-col gap-0.5">
+                      <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
+                        {copy.depthLabel}
                       </span>
-                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                        <motion.div
-                          className="h-full rounded-full bg-primary"
-                          animate={{ opacity: inThermocline ? 1 : 0.25 }}
-                          style={{
-                            width: `${Math.min(100, (depth / THERMOCLINE_BASE) * 100)}%`,
-                          }}
+                      <span className={cn(styles.hudReadout, "font-header text-5xl leading-none text-foreground sm:text-6xl")}>
+                        <NumberFlow value={depth} suffix=" m" />
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-x-5 gap-y-2 border-t border-border pt-3">
+                      <Readout label={copy.temperatureLabel}>
+                        <NumberFlow
+                          value={temperature}
+                          format={{ maximumFractionDigits: 1, minimumFractionDigits: 1 }}
+                          suffix=" °C"
                         />
+                      </Readout>
+                      <Readout label={copy.pressureLabel}>
+                        <NumberFlow
+                          value={pressure}
+                          format={{ maximumFractionDigits: 0 }}
+                          suffix=" bar"
+                        />
+                      </Readout>
+                      <Readout label={copy.lightLabel}>
+                        <NumberFlow
+                          value={light}
+                          format={{ maximumFractionDigits: 2 }}
+                          suffix=" %"
+                        />
+                      </Readout>
+                      <div className="flex flex-col gap-1">
+                        <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+                          {copy.thermoclineLabel}
+                        </span>
+                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                          <motion.div
+                            className="h-full rounded-full bg-primary"
+                            animate={{ opacity: inThermocline ? 1 : 0.25 }}
+                            style={{
+                              width: `${Math.min(100, (depth / THERMOCLINE_BASE) * 100)}%`,
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </NumberFlowGroup>
-            </div>
+                </NumberFlowGroup>
+              </div>
 
-            {/* Bottom right: the step cards own the left half of the frame. */}
-            <p
-              aria-hidden={!lagoonCardInView}
-              className={cn(
-                "self-end text-right font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-opacity duration-200 motion-reduce:transition-none",
-                lagoonCardInView ? "opacity-100" : "opacity-0",
-              )}
-            >
-              {copy.instructions}
-            </p>
+              {/* Bottom right: the step cards own the left half of the frame. */}
+              <p
+                aria-hidden={!lagoonCardInView}
+                className={cn(
+                  "self-end text-right font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-opacity duration-200 motion-reduce:transition-none",
+                  lagoonCardInView ? "opacity-100" : "opacity-0",
+                )}
+              >
+                {copy.instructions}
+              </p>
+            </div>
+          </div>
+
+          <div className="relative row-start-1 mx-4 grid grid-cols-2 gap-x-6 gap-y-2 rounded-xl border border-primary/15 bg-background/80 px-4 py-3 sm:hidden">
+            <Readout label={copy.depthLabel}>
+              <span className="font-header text-3xl leading-none">{depth} m</span>
+            </Readout>
+            <Readout label={copy.temperatureLabel}>
+              <span className="font-header text-3xl leading-none">{temperature.toFixed(1)} °C</span>
+            </Readout>
+            <div className="[@media(max-height:640px)]:sr-only">
+              <Readout label={copy.pressureLabel}>{Math.round(pressure)} bar</Readout>
+            </div>
+            <div className="[@media(max-height:640px)]:sr-only">
+              <Readout label={copy.lightLabel}>{light.toFixed(2)} %</Readout>
+            </div>
+          </div>
+
+          {/* All captions share one grid cell, reserving the tallest caption's
+              space so changing depth never resizes the camera viewport. The
+              original articles below remain the accessible reading order. */}
+          <div aria-hidden="true" className="relative row-start-3 grid bg-background/90 px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:hidden motion-reduce:hidden">
+            {copy.stops.map((stop) => (
+              <div key={stop.id} className={cn("col-start-1 row-start-1 flex flex-col gap-2", stop.id !== mobileStop.id && "invisible")}>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-primary">
+                  {stop.eyebrow} · {stop.readout}
+                </p>
+                <p className="font-display text-[1.75rem] leading-[1.08] text-foreground">{stop.title}</p>
+                <p className="text-sm leading-[1.5] text-foreground/80">{stop.body}</p>
+                <p className={cn("pt-1 font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground", stop.id !== "surface" && "invisible")}>
+                  {copy.instructions}
+                </p>
+              </div>
+            ))}
           </div>
 
         </div>
@@ -362,7 +402,7 @@ export function TheDive({ copy }: TheDiveProps) {
               <article key={stop.id} className={styles.diveStep}>
                 <motion.div
                   ref={stop.id === "surface" ? lagoonCardRef : undefined}
-                  className={cn(styles.diveStepCard, "max-w-[22.67rem]")}
+                  className={cn(styles.diveStepCard, "max-w-[22.67rem] max-sm:motion-safe:sr-only")}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{
                     opacity: hasPassedThermocline ? 0 : 1,
