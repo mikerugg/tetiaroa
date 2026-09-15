@@ -219,10 +219,6 @@ export function DepthScene({
       reading.textContent = `−${Math.max(Math.round(depthNow), 0)} m`;
       const depth01 = clamp(depthNow / MAX_DEPTH, 0, 1);
 
-      document.documentElement.style.setProperty(
-        "--depth01",
-        depth01.toFixed(3),
-      );
       vignette.style.opacity = String(depth01 * 0.85);
 
       const nearest = t < 0.5 ? index : next;
@@ -443,7 +439,6 @@ export function DepthScene({
       canvasObserver.disconnect();
       window.removeEventListener("scroll", onScroll);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-      document.documentElement.style.removeProperty("--depth01");
       delete document.documentElement.dataset.depthStop;
     };
   }, [stops]);

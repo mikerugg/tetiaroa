@@ -760,46 +760,6 @@
   -webkit-backdrop-filter: blur(4px);
 }
 
-/* Light dies with depth: media loses red, warmth, and brightness as you sink.
-   The Honu XR and SWAC panels keep their own lighting. */
-.bandMedia {
-  filter: saturate(calc(1 - var(--depth01, 0) * 0.6))
-    brightness(calc(1 - var(--depth01, 0) * 0.42))
-    hue-rotate(calc(var(--depth01, 0) * 14deg));
-}
-
-.bandMedia::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(
-      120% 100% at 50% 40%,
-      rgba(7, 28, 52, 0) 45%,
-      rgba(4, 16, 32, calc(var(--depth01, 0) * 0.55)) 100%
-    ),
-    linear-gradient(
-      rgba(10, 36, 64, calc(var(--depth01, 0) * 0.38)),
-      rgba(10, 36, 64, calc(var(--depth01, 0) * 0.38))
-    );
-}
-
-/* Keep the Project 02 footage at its native color and brightness. */
-.bandMedia.sanctuaryMedia {
-  filter: none;
-}
-
-.bandMedia.sanctuaryMedia::after {
-  content: none;
-}
-
-@media (max-width: 720px) {
-  .bandMedia {
-    filter: none;
-  }
-}
-
 /* ---- SWAC image card ---- */
 
 .scanPanel {

@@ -198,7 +198,13 @@ export default function HomeExperience({
             &minus;5/20
           </div>
           <div className={styles.sanctuaryGrid}>
-            <div className={`${styles.bandMedia} ${styles.sanctuaryMedia}`}>
+            <div
+              className={cn(
+                styles.bandMedia,
+                styles.sanctuaryMedia,
+                "isolate transform-gpu",
+              )}
+            >
               <SproutBackgroundVideo
                 className={styles.mediaVideo}
                 embedUrl={homeVideoSources.sanctuary.embedUrl}
