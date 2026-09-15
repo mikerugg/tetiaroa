@@ -62,7 +62,7 @@ export default function HomeExperience({
       <HomepageInitialScrollReset />
       <HomepageViewportFrame className={styles.page}>
         <DepthScene stops={copy.depthStops} ariaLabel={copy.depthAriaLabel} />
-        <TopToolbar copy={copy.toolbar} />
+        <TopToolbar copy={copy.toolbar} homepageLayout />
         {copy.locale === "en" ? <FrenchVersionPrompt /> : null}
         <SitePopup locale={copy.locale} />
 
@@ -135,9 +135,6 @@ export default function HomeExperience({
         </section>
 
         <section className={styles.deep} id="honu-xr">
-          <div className={`${styles.depthWatermark} font-header`} aria-hidden="true">
-            &minus;104
-          </div>
           <div className={styles.deepInner}>
             <div className={styles.deepHead}>
               <div className={styles.deepText}>
@@ -174,7 +171,7 @@ export default function HomeExperience({
                   width={1318}
                   height={1030}
                   className={styles.deepRenderImage}
-                  sizes="(max-width: 960px) 80vw, 480px"
+                  sizes="(width < 1024px) 80vw, 480px"
                 />
                 <figcaption className={`${styles.deepRenderCaption} font-mono`}>
                   {copy.honu.renderCaption}
@@ -197,9 +194,6 @@ export default function HomeExperience({
         </section>
 
         <section className={`${styles.band} ${styles.sanctuaryBand}`} id="sanctuary">
-          <div className={`${styles.depthWatermark} font-header`} aria-hidden="true">
-            &minus;5/20
-          </div>
           <div className={styles.sanctuaryGrid}>
             <div
               className={cn(
@@ -223,7 +217,9 @@ export default function HomeExperience({
 
             <div className={styles.sanctuaryText}>
               <div className={`${styles.bandKicker} font-mono`}>
-                {copy.sanctuary.kicker}
+                {copy.sanctuary.kickerLine1}
+                <br />
+                {copy.sanctuary.kickerLine2}
               </div>
               <h2 className={`${styles.bandTitle} font-header`}>
                 {copy.sanctuary.title}
@@ -244,16 +240,72 @@ export default function HomeExperience({
               </div>
             </div>
           </div>
+          <aside className="mx-auto max-w-[1320px]" aria-labelledby="guardians-title">
+            <a className={styles.logoCallout} href={copy.sanctuary.guardians.href}>
+              <div className="relative my-3 aspect-3/2 overflow-hidden rounded-md">
+                <Image
+                  src="/stations/bailey-field-station/rangers.webp"
+                  alt={copy.sanctuary.guardians.imageAlt}
+                  fill
+                  className="object-cover"
+                  sizes="(width < 640px) 86vw, (width < 1024px) 320px, 380px"
+                />
+              </div>
+              <div className={styles.logoCalloutCopy}>
+                <div className={cn(styles.logoCalloutEyebrow, "font-mono")}>
+                  {copy.sanctuary.guardians.eyebrow}
+                </div>
+                <h3 id="guardians-title" className={cn(styles.logoCalloutTitle, "font-display")}>
+                  {copy.sanctuary.guardians.title}
+                </h3>
+                <p>{copy.sanctuary.guardians.copy}</p>
+                <span className={cn(styles.logoCalloutAction, "font-mono")}>
+                  {copy.sanctuary.guardians.cta}
+                  <ArrowUpRightIcon className={styles.logoCalloutActionIcon} aria-hidden="true" />
+                </span>
+              </div>
+            </a>
+          </aside>
+        </section>
+
+        <section className={styles.band} id="restoration" aria-labelledby="restoration-title">
+          <div className="mx-auto grid max-w-[1240px] items-start gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-[clamp(32px,5vw,80px)]">
+            <div className="relative aspect-4/3 overflow-hidden rounded-[22px]">
+              <Image
+                src="/pillars/research-conservation/seabird-restoration.webp"
+                alt={copy.restoration.imageAlt}
+                fill
+                className="object-cover"
+                sizes="(width < 1024px) 86vw, 40vw"
+              />
+            </div>
+            <div>
+              <div className={cn(styles.bandKicker, "font-mono")}>
+                {copy.restoration.kickerLine1}
+                <br />
+                {copy.restoration.kickerLine2}
+              </div>
+              <h2 id="restoration-title" className={cn(styles.bandTitle, "font-header")}>
+                {copy.restoration.title}
+              </h2>
+              <div className="flex flex-col gap-5">
+                {copy.restoration.paragraphs.map((paragraph) => (
+                  <p key={paragraph} className={styles.bandCopy}>
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
         </section>
 
         <section className={`${styles.band} ${styles.swacBand}`} id="swac">
-          <div className={`${styles.depthWatermark} font-header`} aria-hidden="true">
-            &minus;900
-          </div>
           <div className={styles.bandGrid}>
             <div className={styles.bandText}>
               <div className={`${styles.bandKicker} font-mono`}>
-                {copy.swac.kicker}
+                {copy.swac.kickerLine1}
+                <br />
+                {copy.swac.kickerLine2}
               </div>
               <h2 className={`${styles.bandTitle} font-header`}>
                 {copy.swac.title}
@@ -285,12 +337,12 @@ export default function HomeExperience({
                 fill
                 unoptimized
                 className={styles.mediaImage}
-                sizes="(max-width: 960px) 100vw, 46vw"
+                sizes="(width < 1024px) 100vw, 46vw"
               />
               <span
                 className={cn(
                   buttonVariants({ variant: "impact", size: "lg" }),
-                  "pointer-events-none absolute bottom-5 left-1/2 h-auto -translate-x-1/2 whitespace-nowrap px-4 py-3 group-hover:border-primary group-hover:bg-lagoon group-hover:text-ink-light! group-focus-visible:border-primary group-focus-visible:bg-lagoon group-focus-visible:text-ink-light! sm:px-5",
+                  "pointer-events-none absolute bottom-5 left-1/2 h-auto -translate-x-1/2 whitespace-nowrap px-4 py-3 group-hover:border-primary group-hover:bg-lagoon group-hover:text-ink-light! group-focus-visible:border-primary group-focus-visible:bg-lagoon group-focus-visible:text-ink-light! lg:px-5",
                 )}
               >
                 {copy.swac.cta}
@@ -300,35 +352,6 @@ export default function HomeExperience({
                 />
               </span>
             </Link>
-          </div>
-        </section>
-
-        <section className={styles.band} id="restoration" aria-labelledby="restoration-title">
-          <div className="mx-auto grid max-w-[1240px] items-start gap-10 min-[961px]:grid-cols-[0.95fr_1.05fr] min-[961px]:gap-[clamp(32px,5vw,80px)]">
-            <div className="relative aspect-4/3 overflow-hidden rounded-[22px]">
-              <Image
-                src="/pillars/research-conservation/seabird-restoration.webp"
-                alt={copy.restoration.imageAlt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 960px) 86vw, 40vw"
-              />
-            </div>
-            <div>
-              <div className={cn(styles.bandKicker, "font-mono")}>
-                {copy.restoration.kicker}
-              </div>
-              <h2 id="restoration-title" className={cn(styles.bandTitle, "font-header")}>
-                {copy.restoration.title}
-              </h2>
-              <div className="flex flex-col gap-5">
-                {copy.restoration.paragraphs.map((paragraph) => (
-                  <p key={paragraph} className={styles.bandCopy}>
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
-            </div>
           </div>
 
           <div className={styles.impactFeedCtaWrap}>
@@ -350,7 +373,7 @@ export default function HomeExperience({
         </section>
 
         <section className={styles.pillars} id="pillars">
-          <div className="relative mx-auto max-w-[1380px] xl:pr-32">
+          <div className="relative mx-auto max-w-[1380px] lg:pr-[clamp(0px,calc(50vw-560px),128px)]">
             <HomePillarCards
               copy={copy.pillars.copy}
               eyebrow={copy.pillars.eyebrow}
@@ -378,7 +401,7 @@ export default function HomeExperience({
               {copy.kids.copy}
             </p>
 
-            <div className={cn(styles.kidCards, "grid-cols-1 min-[641px]:grid-cols-2")}>
+            <div className={cn(styles.kidCards, "grid-cols-1 lg:grid-cols-2")}>
               {visibleKidPrograms.map((program) => (
                 <Card
                   key={program.title}
@@ -395,7 +418,7 @@ export default function HomeExperience({
                         program.imageFit === "contain" &&
                           styles.mediaImageContain,
                       )}
-                      sizes="(max-width: 700px) 100vw, 320px"
+                      sizes="(width < 1024px) 100vw, 320px"
                     />
                   </div>
                   <CardHeader className={styles.kidBody}>
@@ -437,7 +460,7 @@ export default function HomeExperience({
                 embedUrl={homeVideoSources.turtleCare.embedUrl}
                 title={homeVideoSources.turtleCare.title}
                 poster="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1600&q=80&auto=format&fit=crop"
-                posterSizes="(max-width: 960px) 100vw, 1180px"
+                posterSizes="(width < 1024px) 100vw, 1180px"
               />
               <Badge
                 variant="secondary"
@@ -458,7 +481,7 @@ export default function HomeExperience({
                     alt={copy.kids.logoCallout.alt}
                     fill
                     className={styles.logoCalloutMarkImage}
-                    sizes="(max-width: 720px) 180px, 220px"
+                    sizes="(width < 1024px) 180px, 220px"
                   />
                 </div>
                 <div className={styles.logoCalloutCopy}>
@@ -498,7 +521,7 @@ export default function HomeExperience({
           />
         </section>
 
-        <SiteFooter copy={copy.footer} />
+        <SiteFooter copy={copy.footer} homepageLayout />
       </HomepageViewportFrame>
     </>
   );

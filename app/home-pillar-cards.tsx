@@ -39,11 +39,11 @@ export function HomePillarCards({
           <p className="font-mono text-sm font-bold uppercase tracking-[0.22em] text-primary">
             {eyebrow}
           </p>
-          <h2 className="font-header text-5xl uppercase leading-[0.92] text-foreground sm:text-7xl lg:text-8xl">
+          <h2 className="font-header text-5xl uppercase leading-[0.92] text-foreground lg:text-8xl">
             {title}
           </h2>
         </div>
-        <p className="max-w-2xl text-base leading-7 text-foreground/78 sm:text-lg sm:leading-8 lg:mx-auto">
+        <p className="max-w-2xl text-base leading-7 text-foreground/78 lg:text-lg lg:leading-8 lg:mx-auto">
           {copy}
         </p>
       </header>
@@ -92,9 +92,9 @@ export function HomePillarCards({
                       {String(index + 1).padStart(2, "0")}
                     </span>
                   </div>
-                  <CardHeader className="gap-4 px-6 pt-7 sm:px-8">
+                  <CardHeader className="gap-4 px-6 pt-7 lg:px-8">
                     <CardTitle>
-                      <h3 className="font-header text-3xl uppercase leading-[0.94] text-foreground sm:text-4xl">
+                      <h3 className="font-header text-3xl uppercase leading-[0.94] text-foreground lg:text-4xl">
                         {pillar.title}
                       </h3>
                     </CardTitle>
@@ -102,7 +102,7 @@ export function HomePillarCards({
                       {pillar.copy}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="px-6 pb-2 sm:px-8">
+                  <CardContent className="px-6 pb-2 lg:px-8">
                     <ul className="flex flex-col">
                       {pillar.areas.map((area, areaIndex) => (
                         <li
@@ -117,7 +117,7 @@ export function HomePillarCards({
                       ))}
                     </ul>
                   </CardContent>
-                  <CardFooter className="mt-auto border-t border-border px-6 py-5 sm:px-8">
+                  <CardFooter className="mt-auto border-t border-border px-6 py-5 lg:px-8">
                     <span className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-primary">
                       {pillar.cta}
                       <ArrowUpRightIcon

@@ -23,7 +23,7 @@
   }
 }
 
-@media (min-width: 768px) {
+@media (width >= 1024px) {
   .page {
     --site-header-height: 4rem;
   }
@@ -236,20 +236,6 @@
     visibility 0.35s ease;
 }
 
-.gaugeReading {
-  font-size: 13px;
-  letter-spacing: 0.14em;
-  color: var(--cyan);
-  border: 1px solid rgba(91, 232, 212, 0.35);
-  border-radius: 999px;
-  padding: 6px 12px;
-  min-width: 76px;
-  text-align: center;
-  background: rgba(2, 10, 16, 0.4);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-
 .gaugeTrack {
   display: flex;
   flex-direction: column;
@@ -372,7 +358,7 @@
   );
 }
 
-@media (min-width: 861px) {
+@media (width >= 1024px) {
   .homeHeroTitle {
     margin-top: clamp(
       160px,
@@ -628,17 +614,6 @@
 
 .sanctuaryBand {
   padding-top: calc(var(--viewport-height-unit, 1vh) * 16);
-}
-
-.depthWatermark {
-  position: absolute;
-  top: var(--viewport-height-unit, 1vh);
-  right: 2vw;
-  font-size: clamp(90px, 15vw, 195px);
-  line-height: 1;
-  color: rgba(255, 255, 255, 0.06);
-  pointer-events: none;
-  user-select: none;
 }
 
 .bandGrid {
@@ -1101,13 +1076,13 @@
     repeating-linear-gradient(0deg, rgba(244, 241, 234, 0.06) 0 1px, transparent 1px 72px);
 }
 
-@media (max-width: 960px) {
+@media (width < 1024px) {
   .pillars {
     padding: calc(var(--viewport-height-unit, 1vh) * 13) 7vw;
   }
 }
 
-@media (max-width: 720px) {
+@media (width < 1024px) {
   .pillars {
     padding: calc(var(--viewport-height-unit, 1vh) * 11) 7vw;
   }
@@ -1574,7 +1549,7 @@
   transform: rotate(8deg);
 }
 
-@media (max-width: 1180px) {
+@media (width < 1024px) {
   .ourStory {
     padding-block: 0;
   }
@@ -1643,7 +1618,7 @@
   }
 }
 
-@media (max-width: 1100px) {
+@media (width < 1024px) {
   .ourStoryInner {
     grid-template-columns: minmax(0, 1fr) minmax(270px, 0.45fr);
     padding-left: 7vw;
@@ -1657,7 +1632,7 @@
   }
 }
 
-@media (max-width: 960px) {
+@media (width < 1024px) {
   .ourStoryImage {
     object-position: 42% center;
   }
@@ -1698,7 +1673,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (width < 1024px) {
   .ourStoryImage {
     object-position: 55% 66%;
     filter: sepia(0.14) saturate(0.86) contrast(1.04) brightness(0.74);
@@ -1756,7 +1731,7 @@
   }
 }
 
-@media (max-height: 700px) and (min-width: 861px) {
+@media (max-height: 700px) and (width >= 1024px) {
   .ourStoryInner {
     padding-top: 78px;
     padding-bottom: 58px;
@@ -2857,24 +2832,9 @@
   }
 }
 
-/* ---- responsive ---- */
+/* Homepage layouts: mobile below 1024px, full size from 1024px (Tailwind lg). */
 
-@media (max-width: 1100px) {
-  .gauge {
-    right: 14px;
-  }
-
-  .gaugeLabel {
-    display: none;
-  }
-
-  .gaugeStop::after {
-    right: -16px;
-    width: 7px;
-  }
-}
-
-@media (max-width: 960px) {
+@media (width < 1024px) {
   .highlight {
     padding: calc(var(--viewport-height-unit, 1vh) * 12) 7vw;
   }
@@ -2955,7 +2915,7 @@
   }
 }
 
-@media (max-width: 860px) {
+@media (width < 1024px) {
   .gauge {
     display: none;
   }
@@ -3025,7 +2985,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (width < 1024px) {
   .highlight {
     padding: calc(var(--viewport-height-unit, 1vh) * 10) 7vw;
   }
@@ -3081,7 +3041,7 @@
   }
 
   .logoCalloutMark {
-    width: min(360px, 88vw);
+    width: min(360px, 100%);
     min-height: 180px;
   }
 
@@ -3290,7 +3250,7 @@
 
 }
 
-@media (max-height: 700px) and (min-width: 861px) {
+@media (max-height: 700px) and (width >= 1024px) {
   .historyOptionInner,
   .promiseInner,
   .handoffInner,

@@ -94,14 +94,24 @@ export type HomeCopy = {
     viewer: VrViewerLabels;
   };
   sanctuary: {
-    kicker: string;
+    kickerLine1: string;
+    kickerLine2: string;
     title: string;
     copy: string;
     stats: [string, string];
     caption: string;
+    guardians: {
+      eyebrow: string;
+      title: string;
+      copy: string;
+      imageAlt: string;
+      cta: string;
+      href: string;
+    };
   };
   swac: {
-    kicker: string;
+    kickerLine1: string;
+    kickerLine2: string;
     title: string;
     copy: string;
     stat: string;
@@ -115,7 +125,8 @@ export type HomeCopy = {
     href: string;
   };
   restoration: {
-    kicker: string;
+    kickerLine1: string;
+    kickerLine2: string;
     title: string;
     paragraphs: string[];
     imageAlt: string;
@@ -325,17 +336,17 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         transmission: "−5 to −20 m — nests and nurseries in view",
       },
       {
+        id: "restoration",
+        depth: 0,
+        label: "Restore",
+        color: "#0a4e4c",
+      },
+      {
         id: "swac",
         depth: 900,
         label: "SWAC",
         color: "#071f33",
         transmission: "−900 m — intake water at 5 °C",
-      },
-      {
-        id: "restoration",
-        depth: 0,
-        label: "Restore",
-        color: "#0a4e4c",
       },
       {
         id: "pillars",
@@ -423,15 +434,25 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       },
     },
     sanctuary: {
-      kicker: "Project 02 — sea turtle + lemon shark sanctuary",
+      kickerLine1: "Project 02 — Sanctuary",
+      kickerLine2: "sea turtles + lemon sharks",
       title: "The nursery in the shallows.",
       copy:
         "Every November, green sea turtles return to the same sand where they hatched. Just offshore, juvenile lemon sharks spend their first years inside the reef's protection. Teti'aroa's sanctuary work holds both beginnings together: nests mapped and guarded through hatching season, reef edge kept intact so the lagoon can keep raising the predators that hold the food web in balance.",
       stats: ["214 nests / 2025 season", "3 km of protected reef edge"],
       caption: "honu to ma'o · sanctuary sequence · −5 to −20 m",
+      guardians: {
+        eyebrow: "Protecting the Sanctuary",
+        title: "Guardians of Teti'aroa",
+        copy: "Guardians patrol the atoll's sensitive zones, support the scientists working in the field, and help enforce the rules that keep Teti'aroa's ecosystem intact.",
+        imageAlt: "Tetiaroa Society rangers heading out on a field mission by boat",
+        cta: "Meet the team",
+        href: `${ENGLISH_TEAM_PATH}#staff`,
+      },
     },
     swac: {
-      kicker: "Project 03 — Teti'aroa's SWAC",
+      kickerLine1: "Project 04 — SWAC",
+      kickerLine2: "Teti'aroa's sea water air conditioning",
       title: "Our island reimagines air conditioning",
       copy:
         "Air conditioning burns energy making something the ocean already has. Our groundbreaking SWAC reaches 900 metres down for five-degree seawater and pumps that chilly water to the surface. Up to 90% less electricity—a breakthrough with consequences far beyond one island.",
@@ -447,12 +468,12 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       href: ENGLISH_IMPACT_PATH,
     },
     restoration: {
-      kicker: "Project 04 — Restore — Tetiaroa Atoll Restoration Program",
+      kickerLine1: "Project 03 — Restore",
+      kickerLine2: "Tetiaroa Atoll Restoration Program",
       title: "Restoring a meta-ecosystem",
       paragraphs: [
-        "Protecting a place is not always enough to ensure that it thrives. Like many islands, Teti'aroa has been impacted by invasive species that threaten its native biodiversity. Invasive species are the leading cause of island extinctions worldwide and have already driven the extinction of Teti'aroa's native land birds while contributing to declines in native seabirds, crabs, and vegetation.",
-        "Fortunately, a few uninvaded islets remained, making Teti'aroa an important refuge for native wildlife. Our large-scale restoration program is unique in French Polynesia and aims to restore the atoll's natural ecological processes by removing invasive species and helping native species return.",
-        "Our ultimate goal? Restoring ecological functions like seabird-driven nutrient flows that once connected land and sea and, with them, the health of the entire atoll.",
+        "Invasive species are the leading cause of island extinctions worldwide and have already driven the extinction of Teti'aroa's native land birds while contributing to declines in native seabirds, crabs, and vegetation.",
+        "Our large-scale restoration program is unique in French Polynesia and aims to restore the atoll's natural ecological processes by removing invasive species and helping native species return.",
       ],
       imageAlt: "A fieldworker tending solar-powered speakers for seabird restoration on Tetiaroa",
     },
@@ -769,17 +790,17 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         transmission: "−5 à −20 m — nids et nurseries en vue",
       },
       {
+        id: "restoration",
+        depth: 0,
+        label: "Restaurer",
+        color: "#0a4e4c",
+      },
+      {
         id: "swac",
         depth: 900,
         label: "SWAC",
         color: "#071f33",
         transmission: "−900 m — eau captée à 5 °C",
-      },
-      {
-        id: "restoration",
-        depth: 0,
-        label: "Restaurer",
-        color: "#0a4e4c",
       },
       {
         id: "pillars",
@@ -867,15 +888,25 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       },
     },
     sanctuary: {
-      kicker: "Projet 02 — sanctuaire tortues marines + requins citrons",
+      kickerLine1: "Projet 02 — Sanctuaire",
+      kickerLine2: "tortues marines + requins citrons",
       title: "La nurserie des eaux peu profondes.",
       copy:
         "Chaque novembre, les tortues vertes reviennent sur le sable même où elles sont nées. Tout près, les jeunes requins citrons passent leurs premières années à l'abri du récif. Le sanctuaire tient ces deux commencements ensemble : des nids cartographiés et protégés jusqu'à l'arrivée des nouveau-nés à la mer, et un bord récifal gardé intact pour que le lagon continue d'élever les prédateurs qui maintiennent l'équilibre du vivant.",
       stats: ["214 nids / saison 2025", "3 km de bord récifal protégé"],
       caption: "honu vers ma'o · séquence du sanctuaire · −5 à −20 m",
+      guardians: {
+        eyebrow: "Protéger le sanctuaire",
+        title: "Les gardiens de Teti’aroa",
+        copy: "Les gardiens patrouillent dans les zones sensibles de l’atoll, accompagnent les scientifiques sur le terrain et contribuent à faire respecter les règles qui préservent l’écosystème de Teti’aroa.",
+        imageAlt: "Des gardes nature de Tetiaroa Society partant en mission de terrain en bateau",
+        cta: "Rencontrer l’équipe",
+        href: `${FRENCH_TEAM_PATH}#staff`,
+      },
     },
     swac: {
-      kicker: "Projet 03 — le SWAC de Teti'aroa",
+      kickerLine1: "Projet 04 — SWAC",
+      kickerLine2: "la climatisation à l’eau de mer de Teti’aroa",
       title: "Notre île réinvente la climatisation",
       copy:
         "La climatisation engloutit de l’énergie pour produire un froid que l’océan offre déjà. Notre SWAC révolutionnaire va chercher, à 900 mètres de profondeur, une eau de mer à cinq degrés et la pompe jusqu’en surface. Jusqu’à 90 % d’électricité en moins — une percée dont la portée dépasse largement une seule île.",
@@ -891,12 +922,12 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       href: FRENCH_IMPACT_PATH,
     },
     restoration: {
-      kicker: "Projet 04 — Restaurer — Programme de restauration de l’atoll de Tetiaroa",
+      kickerLine1: "Projet 03 — Restaurer",
+      kickerLine2: "Programme de restauration de l’atoll de Tetiaroa",
       title: "Restaurer un méta-écosystème",
       paragraphs: [
-        "Protéger un lieu ne suffit pas toujours à lui permettre de prospérer. Comme beaucoup d’îles, Teti’aroa a subi les effets d’espèces invasives qui menacent sa biodiversité indigène. Première cause d’extinction sur les îles dans le monde, ces espèces ont déjà fait disparaître les oiseaux terrestres indigènes de Teti’aroa et contribué au déclin des oiseaux marins, des crabes et de la végétation indigènes.",
-        "Heureusement, quelques îlots sont restés à l’abri de ces invasions, faisant de Teti’aroa un refuge important pour la faune indigène. Notre programme de restauration à grande échelle, unique en Polynésie française, vise à rétablir les processus écologiques naturels de l’atoll en éliminant les espèces invasives et en favorisant le retour des espèces indigènes.",
-        "Notre but ultime ? Rétablir les fonctions écologiques, comme ces échanges de nutriments entre terre et mer qu’assuraient autrefois les oiseaux marins, et, avec elles, la santé de tout l’atoll.",
+        "Les espèces invasives sont la première cause d’extinction sur les îles dans le monde. Elles ont déjà fait disparaître les oiseaux terrestres indigènes de Teti’aroa et contribué au déclin des oiseaux marins, des crabes et de la végétation indigènes.",
+        "Notre programme de restauration à grande échelle, unique en Polynésie française, vise à rétablir les processus écologiques naturels de l’atoll en éliminant les espèces invasives et en favorisant le retour des espèces indigènes.",
       ],
       imageAlt: "Une personne s’occupe de haut-parleurs alimentés par des panneaux solaires pour favoriser le retour des oiseaux marins à Tetiaroa",
     },

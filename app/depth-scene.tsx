@@ -65,7 +65,6 @@ export function DepthScene({
   const backdropRef = useRef<HTMLDivElement | null>(null);
   const vignetteRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const readingRef = useRef<HTMLSpanElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const subRef = useRef<HTMLDivElement | null>(null);
   const subTiltRef = useRef<HTMLDivElement | null>(null);
@@ -76,7 +75,6 @@ export function DepthScene({
     const backdrop = backdropRef.current;
     const vignette = vignetteRef.current;
     const canvas = canvasRef.current;
-    const reading = readingRef.current;
     const track = trackRef.current;
     const sub = subRef.current;
     const subTilt = subTiltRef.current;
@@ -87,7 +85,6 @@ export function DepthScene({
       !backdrop ||
       !vignette ||
       !canvas ||
-      !reading ||
       !track ||
       !sub ||
       !subTilt ||
@@ -216,7 +213,6 @@ export function DepthScene({
       backdrop.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
 
       depthNow = lerp(stops[index].depth, stops[next].depth, t);
-      reading.textContent = `−${Math.max(Math.round(depthNow), 0)} m`;
       const depth01 = clamp(depthNow / MAX_DEPTH, 0, 1);
 
       vignette.style.opacity = String(depth01 * 0.85);
@@ -479,9 +475,6 @@ export function DepthScene({
         </a>
       </div>
       <div className={styles.gauge} aria-label={ariaLabel}>
-        <div className={`${styles.gaugeReading} font-mono`}>
-          <span ref={readingRef}>&minus;0 m</span>
-        </div>
         <div ref={trackRef} className={styles.gaugeTrack}>
           {stops.map((stop) => (
             <button

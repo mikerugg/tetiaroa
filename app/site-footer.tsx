@@ -194,23 +194,26 @@ const defaultCopy: SiteFooterCopy = {
 export function SiteFooter({
   className,
   copy = defaultCopy,
+  homepageLayout = false,
 }: {
   className?: string;
   copy?: SiteFooterCopy;
+  homepageLayout?: boolean;
 }) {
   const rating = copy.rating ?? defaultRating;
 
   return (
     <footer
       className={cn(
-        "bg-background px-5 py-12 text-foreground md:px-8 lg:px-12",
+        "bg-background px-5 py-12 text-foreground lg:px-12",
+        !homepageLayout && "md:px-8",
         className,
       )}
     >
       <div className="mx-auto max-w-[1600px]">
         <Separator />
 
-        <div className={cn("grid gap-8 py-8 md:grid-cols-2", footerGridTracks)}>
+        <div className={cn("grid gap-8 py-8", !homepageLayout && "md:grid-cols-2", footerGridTracks)}>
           <Link href={copy.homeHref} className="block h-fit w-fit">
             <Image
               src="/logos/TSFP_Logo_2026_White_Trimmed.png"
@@ -218,7 +221,7 @@ export function SiteFooter({
               width={432}
               height={209}
               sizes="108px"
-              className="h-20 w-auto object-contain md:h-25 lg:h-27"
+              className={cn("h-20 w-auto object-contain lg:h-27", !homepageLayout && "md:h-25")}
             />
           </Link>
 
@@ -227,7 +230,7 @@ export function SiteFooter({
           ))}
         </div>
 
-        <div className={cn("grid gap-8 pb-8 md:grid-cols-2", footerGridTracks)}>
+        <div className={cn("grid gap-8 pb-8", !homepageLayout && "md:grid-cols-2", footerGridTracks)}>
           <FooterRatingSeal rating={rating} />
 
           <div className="flex h-fit flex-col gap-4 lg:col-span-3">
@@ -248,9 +251,14 @@ export function SiteFooter({
 
         <Separator />
 
-        <div className="flex flex-col gap-4 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p className="order-2 sm:order-1">{copy.legal}</p>
-          <div className="order-1 flex items-center gap-1 sm:order-2">
+        <div className={cn(
+          "flex flex-col gap-4 pt-6 text-xs text-muted-foreground",
+          homepageLayout
+            ? "lg:flex-row lg:items-center lg:justify-between"
+            : "sm:flex-row sm:items-center sm:justify-between",
+        )}>
+          <p className={cn("order-2", homepageLayout ? "lg:order-1" : "sm:order-1")}>{copy.legal}</p>
+          <div className={cn("order-1 flex items-center gap-1", homepageLayout ? "lg:order-2" : "sm:order-2")}>
             {copy.socials.map((social) => (
               <FooterIconLink key={social.platform} social={social} />
             ))}

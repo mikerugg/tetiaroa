@@ -14,7 +14,7 @@ export function HomeStoryHandoff({ copy }: HomeStoryHandoffProps) {
   return (
     <HomeStoryHandoffScroll>
       <div
-        className={`${styles.past} absolute inset-x-0 top-0 h-[62%] overflow-hidden md:inset-0 md:h-auto`}
+        className={`${styles.past} absolute inset-x-0 top-0 h-[62%] overflow-hidden lg:inset-0 lg:h-auto`}
         aria-hidden="true"
       >
         <Image
@@ -22,11 +22,11 @@ export function HomeStoryHandoff({ copy }: HomeStoryHandoffProps) {
           alt=""
           fill
           sizes="100vw"
-          className="scale-[1.2] object-contain object-center md:scale-100"
+          className="scale-[1.2] object-contain object-center lg:scale-100"
         />
       </div>
       <div
-        className={`${styles.present} absolute inset-x-0 top-0 h-[62%] overflow-hidden md:inset-0 md:h-auto`}
+        className={`${styles.present} absolute inset-x-0 top-0 h-[62%] overflow-hidden lg:inset-0 lg:h-auto`}
         aria-hidden="true"
       >
         <Image
@@ -34,7 +34,7 @@ export function HomeStoryHandoff({ copy }: HomeStoryHandoffProps) {
           alt=""
           fill
           sizes="100vw"
-          className="scale-[1.2] object-contain object-center md:scale-100"
+          className="scale-[1.2] object-contain object-center lg:scale-100"
         />
       </div>
       <div
@@ -48,10 +48,10 @@ export function HomeStoryHandoff({ copy }: HomeStoryHandoffProps) {
       <p className="sr-only">{copy.transitionDescription}</p>
 
       <div
-        className={`${styles.safeContent} relative mx-auto flex max-w-[1600px] flex-col justify-between px-5 pb-8 pt-20 sm:px-8 sm:pb-10 sm:pt-24 lg:px-12`}
+        className={`${styles.safeContent} relative mx-auto flex max-w-[1600px] flex-col justify-between px-5 pb-8 pt-20 lg:pb-10 lg:pt-24 lg:px-12`}
       >
         <div className="flex justify-end">
-          <p className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-foreground/55 md:block">
+          <p className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-foreground/55 lg:block">
             {copy.timelineStart}{" "}
             <span className="mx-2 text-primary" aria-hidden="true">
               →
@@ -61,7 +61,7 @@ export function HomeStoryHandoff({ copy }: HomeStoryHandoffProps) {
         </div>
 
         <div className="max-w-5xl">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary sm:text-xs">
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary lg:text-xs">
             {copy.sectionLabel}
           </p>
           <h2
@@ -73,8 +73,8 @@ export function HomeStoryHandoff({ copy }: HomeStoryHandoffProps) {
               {copy.titleAccent}
             </span>
           </h2>
-          <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <p className="max-w-2xl text-base leading-7 text-foreground/76 sm:text-lg sm:leading-8">
+          <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <p className="max-w-2xl text-base leading-7 text-foreground/76 lg:text-lg lg:leading-8">
               {copy.body}
             </p>
             <Button

@@ -172,7 +172,7 @@ export function HomeHighlightCarousel({
                   variant="outline"
                   className={cn(
                     styles.highlightAction,
-                    "hidden h-auto font-mono max-[640px]:order-3 max-[640px]:mt-1.5 max-[640px]:inline-flex max-[640px]:justify-self-center",
+                    "hidden h-auto font-mono max-lg:order-3 max-lg:mt-1.5 max-lg:inline-flex max-lg:justify-self-center",
                   )}
                 >
                   <a href={highlight.href}>
@@ -193,7 +193,7 @@ export function HomeHighlightCarousel({
                     variant="outline"
                     className={cn(
                       styles.highlightAction,
-                      "h-auto font-mono max-[640px]:hidden",
+                      "h-auto font-mono max-lg:hidden",
                     )}
                   >
                     <a href={highlight.href}>

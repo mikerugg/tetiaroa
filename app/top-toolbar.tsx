@@ -86,7 +86,13 @@ function isRouteActive(pathname: string, href: string) {
   return pathname === hrefPathname || pathname.startsWith(`${hrefPathname}/`);
 }
 
-export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
+export function TopToolbar({
+  copy = defaultCopy,
+  homepageLayout = false,
+}: {
+  copy?: TopToolbarCopy;
+  homepageLayout?: boolean;
+}) {
   const pathname = usePathname();
   const activeHref = [
     copy.impactHref,
@@ -100,25 +106,47 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
 
   return (
     <nav
-      className="fixed inset-x-0 top-0 z-40 flex h-14 justify-between gap-3 border-b border-border bg-background/30 px-3 backdrop-blur-md sm:px-4 md:h-16 md:px-7"
+      className={cn(
+        "fixed inset-x-0 top-0 z-40 flex justify-between gap-3 border-b border-border bg-background/30 backdrop-blur-md",
+        homepageLayout
+          ? "h-14 px-3 lg:h-16 lg:px-7"
+          : "h-14 px-3 sm:px-4 md:h-16 md:px-7",
+      )}
       aria-label={copy.ariaLabel}
     >
       <Link
         href={copy.homeHref}
-        className="relative h-full w-40 shrink-0 overflow-hidden max-[420px]:w-24 md:w-48"
+        className={cn(
+          "relative h-full shrink-0 overflow-hidden",
+          homepageLayout
+            ? "w-24 lg:w-[clamp(96px,calc(37.5vw-288px),192px)]"
+            : "w-40 max-[420px]:w-24 md:w-48",
+        )}
       >
         <Image
           src="/logos/TSFP_Logo_2026_White.png"
           alt="Tetiaroa Society"
           width={596}
           height={371}
-          sizes="(max-width: 420px) 96px, (max-width: 768px) 160px, 192px"
-          className="absolute left-0 top-1/2 h-20 w-auto -translate-y-1/2 shrink-0 object-contain max-[420px]:h-14 md:h-24"
+          sizes={homepageLayout
+            ? "(width < 1024px) 96px, 192px"
+            : "(max-width: 420px) 96px, (max-width: 768px) 160px, 192px"}
+          className={cn(
+            "absolute left-0 top-1/2 w-auto -translate-y-1/2 shrink-0 object-contain",
+            homepageLayout
+              ? "h-14 lg:h-[clamp(56px,calc(15.625vw-104px),96px)]"
+              : "h-20 max-[420px]:h-14 md:h-24",
+          )}
           preload
         />
       </Link>
 
-      <div className="hidden h-full min-w-0 items-center gap-[18px] text-sm text-foreground/85 min-[761px]:flex max-[860px]:gap-2.5 max-[420px]:gap-1.5 max-[860px]:text-[13px]">
+      <div className={cn(
+        "hidden h-full min-w-0 items-center text-sm text-foreground/85",
+        homepageLayout
+          ? "gap-[clamp(3px,calc(5.859375vw-57px),18px)] lg:flex"
+          : "gap-[18px] min-[761px]:flex max-[860px]:gap-2.5 max-[420px]:gap-1.5 max-[860px]:text-[13px]",
+      )}>
         <Button
           asChild
           variant="impact"
@@ -139,7 +167,7 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
           asChild
           variant="outline"
           size="sm"
-          className={cn(toolbarOutlineButtonClass, "max-[1100px]:hidden")}
+          className={cn(toolbarOutlineButtonClass, !homepageLayout && "max-[1100px]:hidden")}
         >
           <Link
             href={copy.storyHref}
@@ -152,7 +180,7 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
           asChild
           variant="outline"
           size="sm"
-          className={cn(toolbarOutlineButtonClass, "max-[1000px]:hidden")}
+          className={cn(toolbarOutlineButtonClass, !homepageLayout && "max-[1000px]:hidden")}
         >
           <Link
             href={copy.atollHref}
@@ -165,7 +193,7 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
           asChild
           variant="outline"
           size="sm"
-          className={cn(toolbarOutlineButtonClass, "max-[860px]:hidden")}
+          className={cn(toolbarOutlineButtonClass, !homepageLayout && "max-[860px]:hidden")}
         >
           <Link
             href={copy.stationsHref}
@@ -178,7 +206,7 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
           asChild
           variant="outline"
           size="sm"
-          className={cn(toolbarOutlineButtonClass, "max-[1200px]:hidden")}
+          className={cn(toolbarOutlineButtonClass, !homepageLayout && "max-[1200px]:hidden")}
         >
           <Link
             href="/our-logo"
@@ -191,7 +219,7 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
           asChild
           variant="outline"
           size="sm"
-          className={cn(toolbarOutlineButtonClass, "max-[640px]:hidden")}
+          className={cn(toolbarOutlineButtonClass, !homepageLayout && "max-[640px]:hidden")}
         >
           <Link
             href={copy.teamHref}
@@ -231,7 +259,10 @@ export function TopToolbar({ copy = defaultCopy }: { copy?: TopToolbarCopy }) {
         </Button>
       </div>
 
-      <div className="flex h-full items-center gap-2 min-[761px]:hidden max-[360px]:gap-1.5">
+      <div className={cn(
+        "flex h-full items-center gap-2",
+        homepageLayout ? "lg:hidden" : "min-[761px]:hidden max-[360px]:gap-1.5",
+      )}>
         <Button
           asChild
           variant="outline"

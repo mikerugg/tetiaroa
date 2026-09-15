@@ -671,7 +671,7 @@ function LanternCinema({ night }: { night: LanternCopy }) {
 
 function LanternStatic({ night }: { night: LanternCopy }) {
   return (
-    <div className="px-6 py-24 sm:px-12">
+    <div className="px-6 py-24 lg:px-12">
       <div className="mx-auto max-w-[1180px]">
         <div className="font-mono text-[11px] uppercase tracking-[0.34em] text-[color:var(--flame)]">
           {night.eyebrow}
@@ -731,7 +731,7 @@ function LanternRelease({
     <section
       id="donation-levels"
       aria-labelledby="donation-levels-heading"
-      className="relative scroll-mt-14 overflow-hidden px-6 pb-28 pt-16 sm:px-12 md:scroll-mt-16"
+      className="relative scroll-mt-14 overflow-hidden px-6 pb-28 pt-16 lg:px-12 lg:scroll-mt-16"
     >
       {/* horizon glow behind the release */}
       <div
@@ -748,13 +748,13 @@ function LanternRelease({
           className="font-display text-center text-[clamp(1.5rem,3vw,2.4rem)] leading-[1.3] text-[color:var(--paper)]"
         >
           {night.closeLead}{" "}
-          <strong className="font-normal not-italic text-[color:var(--flame)] max-[640px]:block">
+          <strong className="font-normal not-italic text-[color:var(--flame)] max-lg:block">
             {night.closeStrong}
           </strong>
         </h2>
 
         <div
-          className="mt-14 grid grid-cols-4 gap-6 max-[960px]:grid-cols-2 max-[560px]:grid-cols-1"
+          className="mt-14 grid grid-cols-1 gap-6 lg:grid-cols-4"
           aria-label={labels.ariaLabel}
         >
           {tiers.map((tier, index) => {
