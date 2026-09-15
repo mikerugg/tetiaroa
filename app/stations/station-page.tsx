@@ -255,9 +255,6 @@ export function StationPage({
                 <h2 className="max-w-4xl font-header text-5xl leading-[0.9] sm:text-7xl lg:text-8xl">
                   {station.facilitiesTitle}
                 </h2>
-                <p className="max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
-                  {station.facilitiesIntro}
-                </p>
               </div>
 
               <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
