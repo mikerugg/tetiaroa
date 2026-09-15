@@ -114,6 +114,12 @@ export type HomeCopy = {
     label: string;
     href: string;
   };
+  restoration: {
+    kicker: string;
+    title: string;
+    paragraphs: string[];
+    imageAlt: string;
+  };
   pillars: {
     eyebrow: string;
     title: string;
@@ -326,6 +332,12 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         transmission: "−900 m — intake water at 5 °C",
       },
       {
+        id: "restoration",
+        depth: 0,
+        label: "Restore",
+        color: "#0a4e4c",
+      },
+      {
         id: "pillars",
         depth: 8,
         label: "Pillars",
@@ -433,6 +445,16 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
     impactFeedCta: {
       label: "See All Our Projects on the Impact Feed",
       href: ENGLISH_IMPACT_PATH,
+    },
+    restoration: {
+      kicker: "Project 04 — Restore — Tetiaroa Atoll Restoration Program",
+      title: "Restoring a meta-ecosystem",
+      paragraphs: [
+        "Protecting a place is not always enough to ensure that it thrives. Like many islands, Teti'aroa has been impacted by invasive species that threaten its native biodiversity. Invasive species are the leading cause of island extinctions worldwide and have already driven the extinction of Teti'aroa's native land birds while contributing to declines in native seabirds, crabs, and vegetation.",
+        "Fortunately, a few uninvaded islets remained, making Teti'aroa an important refuge for native wildlife. Our large-scale restoration program is unique in French Polynesia and aims to restore the atoll's natural ecological processes by removing invasive species and helping native species return.",
+        "Our ultimate goal? Restoring ecological functions like seabird-driven nutrient flows that once connected land and sea and, with them, the health of the entire atoll.",
+      ],
+      imageAlt: "A fieldworker tending solar-powered speakers for seabird restoration on Tetiaroa",
     },
     pillars: {
       eyebrow: "Pillars of Tetiaroa",
@@ -754,6 +776,12 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         transmission: "−900 m — eau captée à 5 °C",
       },
       {
+        id: "restoration",
+        depth: 0,
+        label: "Restaurer",
+        color: "#0a4e4c",
+      },
+      {
         id: "pillars",
         depth: 8,
         label: "Piliers",
@@ -861,6 +889,16 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
     impactFeedCta: {
       label: "Voir tous nos projets dans le fil d'impact",
       href: FRENCH_IMPACT_PATH,
+    },
+    restoration: {
+      kicker: "Projet 04 — Restaurer — Programme de restauration de l’atoll de Tetiaroa",
+      title: "Restaurer un méta-écosystème",
+      paragraphs: [
+        "Protéger un lieu ne suffit pas toujours à lui permettre de prospérer. Comme beaucoup d’îles, Teti’aroa a subi les effets d’espèces invasives qui menacent sa biodiversité indigène. Première cause d’extinction sur les îles dans le monde, ces espèces ont déjà fait disparaître les oiseaux terrestres indigènes de Teti’aroa et contribué au déclin des oiseaux marins, des crabes et de la végétation indigènes.",
+        "Heureusement, quelques îlots sont restés à l’abri de ces invasions, faisant de Teti’aroa un refuge important pour la faune indigène. Notre programme de restauration à grande échelle, unique en Polynésie française, vise à rétablir les processus écologiques naturels de l’atoll en éliminant les espèces invasives et en favorisant le retour des espèces indigènes.",
+        "Notre but ultime ? Rétablir les fonctions écologiques, comme ces échanges de nutriments entre terre et mer qu’assuraient autrefois les oiseaux marins, et, avec elles, la santé de tout l’atoll.",
+      ],
+      imageAlt: "Une personne s’occupe de haut-parleurs alimentés par des panneaux solaires pour favoriser le retour des oiseaux marins à Tetiaroa",
     },
     pillars: {
       eyebrow: "Les piliers de Tetiaroa",

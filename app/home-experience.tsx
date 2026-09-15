@@ -40,6 +40,9 @@ export default function HomeExperience({
   highlights?: HomepageHighlight[];
 }) {
   const copy = homeCopies[locale];
+  const visibleKidPrograms = copy.kids.programs.filter(
+    (program) => program.href !== "/turtle-tales",
+  );
   const homepageHighlights = highlights.length
     ? highlights
     : [
@@ -66,8 +69,8 @@ export default function HomeExperience({
         <section className={styles.hero} id="hero">
           <SproutBackgroundVideo
             className={styles.heroVideo}
-            embedUrl={homeVideoSources.turtleClip.embedUrl}
-            title={homeVideoSources.turtleClip.title}
+            embedUrl={homeVideoSources.hero.embedUrl}
+            title={homeVideoSources.hero.title}
             eager
             poster="/homepage-hero-placeholder.png"
           />
@@ -298,13 +301,42 @@ export default function HomeExperience({
               </span>
             </Link>
           </div>
+        </section>
+
+        <section className={styles.band} id="restoration" aria-labelledby="restoration-title">
+          <div className="mx-auto grid max-w-[1240px] items-start gap-10 min-[961px]:grid-cols-[0.95fr_1.05fr] min-[961px]:gap-[clamp(32px,5vw,80px)]">
+            <div className="relative aspect-4/3 overflow-hidden rounded-[22px]">
+              <Image
+                src="/pillars/research-conservation/seabird-restoration.webp"
+                alt={copy.restoration.imageAlt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 960px) 86vw, 40vw"
+              />
+            </div>
+            <div>
+              <div className={cn(styles.bandKicker, "font-mono")}>
+                {copy.restoration.kicker}
+              </div>
+              <h2 id="restoration-title" className={cn(styles.bandTitle, "font-header")}>
+                {copy.restoration.title}
+              </h2>
+              <div className="flex flex-col gap-5">
+                {copy.restoration.paragraphs.map((paragraph) => (
+                  <p key={paragraph} className={styles.bandCopy}>
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
 
           <div className={styles.impactFeedCtaWrap}>
             <Button
               asChild
               variant="outline"
               size="lg"
-              className={cn(styles.impactFeedCta, "h-auto font-mono")}
+              className={cn(styles.impactFeedCta, "h-auto max-w-full font-mono")}
             >
               <a href={copy.impactFeedCta.href}>
                 {copy.impactFeedCta.label}
@@ -346,8 +378,8 @@ export default function HomeExperience({
               {copy.kids.copy}
             </p>
 
-            <div className={styles.kidCards}>
-              {copy.kids.programs.map((program) => (
+            <div className={cn(styles.kidCards, "grid-cols-1 min-[641px]:grid-cols-2")}>
+              {visibleKidPrograms.map((program) => (
                 <Card
                   key={program.title}
                   size="sm"

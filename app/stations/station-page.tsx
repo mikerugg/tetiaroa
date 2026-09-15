@@ -274,7 +274,6 @@ export function StationPage({
                         <CardTitle className="mt-3 font-header text-3xl leading-none tracking-normal">
                           {facility.title}
                         </CardTitle>
-                        <CardDescription>{facility.copy}</CardDescription>
                       </CardHeader>
                       <CardContent className="flex flex-col gap-3">
                         <Separator />

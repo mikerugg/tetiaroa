@@ -249,7 +249,10 @@ export const stations: Record<StationSlug, StationContent> = {
           "Teaching space",
           "Bench and work space",
           "General laboratory equipment",
-          "Chemicals on request, arranged before arrival",
+          "Freezers",
+          "Drying oven",
+          "Dissecting scopes",
+          "Refrigerator",
         ],
       },
       {
@@ -587,7 +590,10 @@ export const stationsFr: typeof stations = {
           "Salle d'enseignement",
           "Paillasse et espace de travail",
           "Équipement de laboratoire courant",
-          "Produits chimiques sur demande, à organiser avant l'arrivée",
+          "Congélateurs",
+          "Étuve de séchage",
+          "Loupes binoculaires",
+          "Réfrigérateur",
         ],
       },
       {

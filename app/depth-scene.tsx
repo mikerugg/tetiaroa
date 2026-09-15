@@ -455,12 +455,15 @@ export function DepthScene({
       <div
         ref={subRef}
         className={showSub ? styles.sub : `${styles.sub} ${styles.subHidden}`}
-        aria-hidden="true"
       >
-        <div ref={commsRef} className={`${styles.subComms} font-mono`} />
-        <div ref={pingRef} className={styles.subPing} />
-        <div>
-          <div className={styles.subBob}>
+        <div ref={commsRef} className={`${styles.subComms} font-mono`} aria-hidden="true" />
+        <div ref={pingRef} className={styles.subPing} aria-hidden="true" />
+        <a
+          href="#honu-xr"
+          aria-label="Honu XR"
+          className="pointer-events-auto block rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+        >
+          <div className={styles.subBob} aria-hidden="true">
             <div ref={subTiltRef} className={styles.subTilt}>
               <div className={styles.subBeam} />
               <Image
@@ -473,7 +476,7 @@ export function DepthScene({
               />
             </div>
           </div>
-        </div>
+        </a>
       </div>
       <div className={styles.gauge} aria-label={ariaLabel}>
         <div className={`${styles.gaugeReading} font-mono`}>

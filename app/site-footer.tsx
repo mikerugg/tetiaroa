@@ -331,7 +331,7 @@ function FooterLinks({ column }: { column: FooterColumn }) {
     <div className="flex flex-col gap-4">
       <p className={footerEyebrow}>{column.title}</p>
       <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-        {column.links.map((link) => (
+        {column.links.filter((link) => link.href !== "/turtle-tales").map((link) => (
           <FooterTextLink key={link.href} link={link} />
         ))}
       </div>

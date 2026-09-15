@@ -4,6 +4,11 @@ export type SproutVideoSource = {
 };
 
 export const homeVideoSources = {
+  hero: {
+    embedUrl:
+      "https://videos.sproutvideo.com/embed/489ad3b4141ae3c7c2/093bcd00f6a0db0d",
+    title: "Tetiaroa Society homepage film",
+  },
   sanctuary: {
     embedUrl:
       "https://videos.sproutvideo.com/embed/aa9ad3b41319e4c720/b71040ae92412507",

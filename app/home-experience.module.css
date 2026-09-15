@@ -318,8 +318,8 @@
   background: linear-gradient(
     180deg,
     rgba(2, 16, 22, 0.45) 0%,
-    rgba(2, 16, 22, 0.16) 42%,
-    rgba(14, 126, 138, 0.55) 86%,
+    rgba(2, 16, 22, 0.16) 22%,
+    rgba(14, 126, 138, 0.55) 95%,
     rgba(14, 126, 138, 0.96) 100%
   );
 }
@@ -1173,7 +1173,6 @@
 
 .kidCards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 26px;
   margin-top: 56px;
 }
@@ -2925,10 +2924,6 @@
     max-width: 420px;
   }
 
-  .kidCards {
-    grid-template-columns: 1fr 1fr;
-  }
-
   .logoCallout {
     grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
   }
@@ -3078,10 +3073,6 @@
 
   .deepPanel {
     height: 340px;
-  }
-
-  .kidCards {
-    grid-template-columns: 1fr;
   }
 
   .logoCallout {
