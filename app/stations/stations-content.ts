@@ -1072,7 +1072,7 @@ export const stationUiCopy = {
   en: {
     backToStations: "Our Stations",
     applyCta: "Apply to visit",
-    facilitiesCta: "Facilities",
+    facilitiesCta: "Facilities & Equipment List",
     arrivalNoteTitle: "Thirteen motus, thirteen names",
     leadTimeTitle: "Plan on a long runway",
     stepLabel: "Step",
@@ -1080,7 +1080,7 @@ export const stationUiCopy = {
   fr: {
     backToStations: "Nos stations",
     applyCta: "Candidater pour venir",
-    facilitiesCta: "Installations",
+    facilitiesCta: "Installations et liste des équipements",
     arrivalNoteTitle: "Treize motu, treize noms",
     leadTimeTitle: "Prévoyez large",
     stepLabel: "Étape",
