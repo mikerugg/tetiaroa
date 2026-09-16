@@ -7,7 +7,7 @@ import {
   ENGLISH_CONTACT_PATH,
   ENGLISH_DONATE_PATH,
   ENGLISH_EMAIL_LIST_PATH,
-  ENGLISH_GEOLOGY_PATH,
+  ENGLISH_ATOLL_PATH,
   ENGLISH_IMPACT_PATH,
   ENGLISH_HOME_PATH,
   ENGLISH_OUR_STORY_PATH,
@@ -17,7 +17,7 @@ import {
   FRENCH_CONTACT_PATH,
   FRENCH_DONATE_PATH,
   FRENCH_EMAIL_LIST_PATH,
-  FRENCH_GEOLOGY_PATH,
+  FRENCH_ATOLL_PATH,
   FRENCH_IMPACT_PATH,
   FRENCH_STATIONS_PATH,
   FRENCH_HOME_PATH,
@@ -87,9 +87,10 @@ export type HomeCopy = {
     kickerLine2: string;
     title: string;
     copy: string;
-    chips: [string, string];
     renderAlt: string;
     renderCaption: string;
+    learnMoreLabel: string;
+    learnMoreHref: string;
     cta: string;
     viewer: VrViewerLabels;
   };
@@ -161,9 +162,6 @@ export type HomeCopy = {
     body: string;
     cta: string;
     ctaHref: string;
-    timelineStart: string;
-    timelineEnd: string;
-    transitionDescription: string;
   };
   night: {
     eyebrow: string;
@@ -210,7 +208,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       logoLabel: "Our Logo",
       storyHref: ENGLISH_OUR_STORY_PATH,
       storyLabel: "Our Story",
-      atollHref: ENGLISH_GEOLOGY_PATH,
+      atollHref: ENGLISH_ATOLL_PATH,
       atollLabel: "Our Atoll",
       stationsHref: ENGLISH_STATIONS_PATH,
       stationsLabel: "Our Stations",
@@ -232,6 +230,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             { href: ENGLISH_TEAM_PATH, label: "Our Team" },
             { href: "/our-logo", label: "Our Logo" },
             { href: ENGLISH_OUR_STORY_PATH, label: "Our Story" },
+            { href: ENGLISH_ATOLL_PATH, label: "Our Atoll" },
           ],
         },
         {
@@ -418,14 +417,12 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       kickerLine2: "the deep-water submersible",
       title: "Meet Honu. Built to bring the ocean to everyone.",
       copy:
-        "Built by Tetiaroa Society with DOER Marine and Google, Honu — Tahitian for sea turtle — carries scientists and budding oceanographers to reefs and species too deep for a diver to reach. Descents will be filmed by state-of-the-art 360° XR cameras: Now any classroom on Earth can put on a headset and go on a VR field trip to Tetiaroa.",
-      chips: [
-        "built with doer marine + google",
-        "xr field trips for every classroom",
-      ],
+        "Built by Doer Marine in partnership with Tetiaroa Society, Honu, Tahitian for sea turtle, will carry scientists, visitors, and budding oceanographers into the deep.\n\nThe Honu submersibles are built for real science and to share what they see and learn, with descents filmed by state-of-the-art 360° XR cameras, allowing Honu to open up the deep ocean to people in Polynesia and around the world.",
       renderAlt:
         "Render of the Honu submersible — acrylic dome, robotic arms, DOER Marine livery",
       renderCaption: "honu · design render · doer marine",
+      learnMoreLabel: "Learn more about Honu",
+      learnMoreHref: ENGLISH_IMPACT_PATH,
       cta: "Watch in fullscreen / VR",
       viewer: {
         recording: "rec — capturing dive 15",
@@ -551,7 +548,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             "For children who visit the atoll: reef observations, junior naturalist prompts, turtle-care moments, and shoreline activities rooted in the real place beneath their feet.",
           image: sharedKidImages.snorkel,
           alt: "Bright coral in shallow water",
-          href: "/stations/bailey-field-station",
+          href: "/pillars/education-culture/activities",
           cta: "See activities",
         },
         {
@@ -587,10 +584,6 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         "Marlon Brando sought to create a living lab that would protect the island, and in turn, all vulnerable island communities. Tetiaroa Society uses fieldwork, research, education, and technology to advance this mission.",
       cta: "Learn more about our story",
       ctaHref: ENGLISH_OUR_STORY_PATH,
-      timelineStart: "1961",
-      timelineEnd: "now",
-      transitionDescription:
-        "As you scroll, an archival view of Tetiaroa gives way to present-day fieldwork on the atoll.",
     },
     night: {
       eyebrow: "We need you",
@@ -661,7 +654,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       logoLabel: "Le logo",
       storyHref: FRENCH_OUR_STORY_PATH,
       storyLabel: "Notre histoire",
-      atollHref: FRENCH_GEOLOGY_PATH,
+      atollHref: FRENCH_ATOLL_PATH,
       atollLabel: "Notre atoll",
       stationsHref: FRENCH_STATIONS_PATH,
       stationsLabel: "Nos stations",
@@ -683,6 +676,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             { href: FRENCH_TEAM_PATH, label: "Notre équipe" },
             { href: "/our-logo", label: "Le logo" },
             { href: FRENCH_OUR_STORY_PATH, label: "Notre histoire" },
+            { href: FRENCH_ATOLL_PATH, label: "Notre atoll" },
           ],
         },
         {
@@ -872,14 +866,12 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       kickerLine2: "le submersible des grands fonds",
       title: "Voici Honu. Conçu pour ouvrir l'océan à tous.",
       copy:
-        "Construit par Tetiaroa Society avec DOER Marine et Google, Honu — tortue marine en tahitien — emmène scientifiques et jeunes océanographes vers des récifs et des espèces trop profonds pour les plongeurs. Les descentes seront filmées avec des caméras XR 360° de pointe : ainsi, n'importe quelle classe dans le monde pourra enfiler un casque et partir en sortie de terrain virtuelle à Tetiaroa.",
-      chips: [
-        "conçu avec doer marine + google",
-        "sorties XR pour toutes les classes",
-      ],
+        "Construit par Doer Marine en partenariat avec Tetiaroa Society, Honu, qui signifie tortue marine en tahitien, emmènera scientifiques, visiteurs et océanographes en herbe dans les profondeurs.\n\nLes submersibles Honu sont conçus pour mener de véritables recherches scientifiques et partager leurs observations et leurs découvertes. Leurs descentes seront filmées par des caméras XR 360° de pointe, permettant à Honu d’ouvrir les grands fonds aux habitants de Polynésie et du monde entier.",
       renderAlt:
         "Rendu du submersible Honu — dôme acrylique, bras robotiques, livrée DOER Marine",
       renderCaption: "honu · rendu de design · doer marine",
+      learnMoreLabel: "En savoir plus sur Honu",
+      learnMoreHref: FRENCH_IMPACT_PATH,
       cta: "Regarder en plein écran / VR",
       viewer: {
         recording: "rec — plongée 15 en cours",
@@ -1005,7 +997,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             "Pour les enfants qui visitent l'atoll : observations du récif, carnet de jeune naturaliste, moments autour des tortues et activités de rivage ancrées dans le lieu réel.",
           image: sharedKidImages.snorkel,
           alt: "Corail lumineux en eau peu profonde",
-          href: "/fr/stations/bailey-field-station",
+          href: "/fr/pillars/education-culture/activities",
           cta: "Voir les activités",
         },
         {
@@ -1041,10 +1033,6 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         "Profondément marqué par ce lieu, Marlon Brando a consacré ses dernières années à le protéger : un laboratoire vivant au service de l'île et, à travers elle, de toutes les communautés insulaires vulnérables. La Tetiaroa Society poursuit cette mission par le travail de terrain, la recherche, l'éducation et la technologie.",
       cta: "En savoir plus sur notre histoire",
       ctaHref: FRENCH_OUR_STORY_PATH,
-      timelineStart: "1961",
-      timelineEnd: "aujourd'hui",
-      transitionDescription:
-        "Au fil du défilement, une vue d'archive de Tetiaroa cède la place au travail de terrain mené aujourd'hui sur l'atoll.",
     },
     night: {
       eyebrow: "Nous avons besoin de vous",

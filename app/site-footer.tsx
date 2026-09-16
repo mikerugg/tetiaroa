@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import {
+  ENGLISH_ATOLL_PATH,
   ENGLISH_CONTACT_PATH,
   ENGLISH_DONATE_PATH,
   ENGLISH_SWAC_PATH,
@@ -131,6 +132,7 @@ const defaultCopy: SiteFooterCopy = {
         { href: "/team", label: "Our Team" },
         { href: "/our-logo", label: "Our Logo" },
         { href: "/our-story", label: "Our Story" },
+        { href: ENGLISH_ATOLL_PATH, label: "Our Atoll" },
       ],
     },
     {

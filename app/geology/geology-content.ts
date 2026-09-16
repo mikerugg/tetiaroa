@@ -42,6 +42,8 @@ export type MapHotspot = {
   title: string;
   description: string;
   evidenceLabel: string;
+  guideHref?: string;
+  guideLabel?: string;
 };
 
 export type GeologyCopy = {
@@ -519,6 +521,8 @@ export const geologyCopies: Record<GeologyLocale, GeologyCopy> = {
           x: 79,
           y: 43,
           label: "Reef crest",
+          guideHref: "/island/invertebrates?subgroup=corals-anemones",
+          guideLabel: "Meet the corals and anemones",
           title: "Coral keeps the reef near sea level",
           description:
             "Living coral grows on the ocean-facing edge of the reef. Reef growth and reef-derived sediment maintain the atoll near sea level even while its foundation moves slowly below.",
@@ -529,6 +533,8 @@ export const geologyCopies: Record<GeologyLocale, GeologyCopy> = {
           x: 27,
           y: 65,
           label: "Motu",
+          guideHref: "/island/guide?habitat=motu-shore",
+          guideLabel: "Explore life on the motu",
           title: "Low islands built from reef material",
           description:
             "Waves deposited coral rubble and sand on the reef flat. The material cemented together and vegetation took root, forming the low islands called motu.",
@@ -539,6 +545,8 @@ export const geologyCopies: Record<GeologyLocale, GeologyCopy> = {
           x: 54,
           y: 48,
           label: "Lagoon",
+          guideHref: "/island/guide?habitat=lagoon-reef",
+          guideLabel: "Explore life in the lagoon",
           title: "The flooded space inside the reef",
           description:
             "The lagoon occupies the space inside the reef and above the submerged volcanic foundation. After the ice-age reflooding, carbonate sediment began accumulating there again.",
@@ -722,6 +730,8 @@ export const geologyCopies: Record<GeologyLocale, GeologyCopy> = {
           x: 79,
           y: 43,
           label: "Crête récifale",
+          guideHref: "/fr/island/invertebrates?subgroup=corals-anemones",
+          guideLabel: "Découvrir les coraux et les anémones",
           title: "Le corail maintient le récif près de la surface",
           description:
             "Le corail vivant se développe sur la bordure du récif face à l'océan. Sa croissance et les sédiments issus du récif maintiennent l'atoll près du niveau marin malgré les lents mouvements de sa fondation.",
@@ -733,6 +743,8 @@ export const geologyCopies: Record<GeologyLocale, GeologyCopy> = {
           y: 65,
           label: "Motu",
           title: "Des îlots bas formés de matériaux récifaux",
+          guideHref: "/fr/island/guide?habitat=motu-shore",
+          guideLabel: "Explorer la vie sur les motu",
           description:
             "Les vagues ont déposé débris coralliens et sable sur le platier. Ces matériaux se sont cimentés et la végétation s'y est installée, formant les îlots appelés motu.",
           evidenceLabel: "Observé aujourd'hui",
@@ -742,6 +754,8 @@ export const geologyCopies: Record<GeologyLocale, GeologyCopy> = {
           x: 54,
           y: 48,
           label: "Lagon",
+          guideHref: "/fr/island/guide?habitat=lagoon-reef",
+          guideLabel: "Explorer la vie dans le lagon",
           title: "L'espace submergé à l'intérieur du récif",
           description:
             "Le lagon occupe l'espace intérieur du récif où se dressait autrefois la terre volcanique. Depuis la remontée postglaciaire des eaux, les sédiments carbonatés s'y accumulent de nouveau.",

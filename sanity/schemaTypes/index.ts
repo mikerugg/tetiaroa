@@ -7,6 +7,7 @@ import { blockContent } from "./objects/blockContent";
 import { htmlPackage } from "./objects/htmlPackage";
 import { impactEntryLocale } from "./objects/impactEntryLocale";
 import { iplacesSource } from "./objects/iplacesSource";
+import { atollCategory, atollHub, guideProfileLocale, speciesGuide } from "./documents/atollGuide";
 
 export const schemaTypes = [
   impactEntry,
@@ -18,4 +19,8 @@ export const schemaTypes = [
   htmlPackage,
   impactEntryLocale,
   iplacesSource,
+  guideProfileLocale,
+  speciesGuide,
+  atollCategory,
+  atollHub,
 ];

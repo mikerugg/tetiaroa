@@ -1,11 +1,13 @@
 import Image from "next/image";
-import { ArrowDownIcon, CheckIcon } from "lucide-react";
+import Link from "next/link";
+import { ArrowDownIcon, ArrowRightIcon, CheckIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { pillarContent, type PillarLocale } from "./pillar-content";
 import { PillarMediaFrame } from "./pillar-media-frame";
 import { paperVars, PillarChrome, PillarEndMatter } from "./pillar-shared";
+import { educationActivitiesCopy, getEducationActivitiesPath } from "./education-activities-content";
 
 const dayCopy = {
   en: {
@@ -36,6 +38,7 @@ export function EducationCulturePage({ locale }: { locale: PillarLocale }) {
   const slug = "education-culture";
   const copy = pillarContent[locale][slug];
   const day = dayCopy[locale];
+  const activities = educationActivitiesCopy[locale].feature;
 
   return (
     <PillarChrome locale={locale} slug={slug}>
@@ -54,12 +57,20 @@ export function EducationCulturePage({ locale }: { locale: PillarLocale }) {
             <p className="mt-7 max-w-xl font-display text-2xl leading-snug text-foreground/80 sm:text-3xl">
               {copy.heroCopy}
             </p>
-            <Button asChild className="mt-8" variant="outline">
-              <a href="#day">
-                {day.action}
-                <ArrowDownIcon data-icon="inline-end" aria-hidden="true" />
-              </a>
-            </Button>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button asChild variant="outline">
+                <a href="#day">
+                  {day.action}
+                  <ArrowDownIcon data-icon="inline-end" aria-hidden="true" />
+                </a>
+              </Button>
+              <Button asChild variant="outline">
+                <Link href={getEducationActivitiesPath(locale)}>
+                  {activities.action}
+                  <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
+                </Link>
+              </Button>
+            </div>
           </div>
 
           <figure className="relative min-h-[58svh] overflow-hidden rounded-md sm:min-h-[68svh] lg:min-h-[78svh]">
@@ -165,6 +176,21 @@ export function EducationCulturePage({ locale }: { locale: PillarLocale }) {
           <div>
             <h2 className="font-display text-4xl leading-tight sm:text-6xl">{copy.bridgeTitle}</h2>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-muted-foreground">{copy.bridgeCopy}</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-secondary px-5 py-16 md:px-8 lg:px-12 lg:py-20">
+        <div className="mx-auto grid max-w-[1250px] gap-8 lg:grid-cols-[1fr_0.75fr] lg:items-center lg:gap-16">
+          <div>
+            <p className="font-mono text-xs uppercase tracking-[0.18em] text-primary">{activities.eyebrow}</p>
+            <h2 className="mt-4 text-balance font-display text-4xl leading-tight sm:text-5xl">{activities.title}</h2>
+          </div>
+          <div>
+            <p className="max-w-xl text-lg leading-8 text-muted-foreground">{activities.copy}</p>
+            <Button asChild className="mt-6 [--primary-foreground:var(--ink-light)]" size="lg">
+              <Link href={getEducationActivitiesPath(locale)}>{activities.action}<ArrowRightIcon data-icon="inline-end" aria-hidden="true" /></Link>
+            </Button>
           </div>
         </div>
       </section>

@@ -1,10 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { HomeCopy } from "./home-copy";
-import { HomeStoryHandoffScroll } from "./home-story-handoff-scroll";
-import styles from "./home-story-handoff.module.css";
+import { HomeStoryVideo } from "./home-story-video";
 
 type HomeStoryHandoffProps = {
   copy: HomeCopy["story"];
@@ -12,55 +10,21 @@ type HomeStoryHandoffProps = {
 
 export function HomeStoryHandoff({ copy }: HomeStoryHandoffProps) {
   return (
-    <HomeStoryHandoffScroll>
-      <div
-        className={`${styles.past} absolute inset-x-0 top-0 h-[62%] overflow-hidden lg:inset-0 lg:h-auto`}
-        aria-hidden="true"
-      >
-        <Image
-          src="/story/history-new-lagoon-witness.webp"
-          alt=""
-          fill
-          sizes="100vw"
-          className="scale-[1.2] object-contain object-center lg:scale-100"
+    <section
+      id="our-story"
+      className="relative isolate scroll-mt-[var(--site-header-height,3.5rem)]! overflow-hidden border-y-50 border-black bg-black text-foreground lg:border-y-100"
+      aria-labelledby="home-story-title"
+    >
+      <div className="relative aspect-[4/3] lg:absolute lg:inset-0 lg:aspect-auto">
+        <HomeStoryVideo />
+        <div
+          className="pointer-events-none absolute inset-0 bg-linear-to-t from-black via-black/10 to-black/10 lg:via-black/25"
+          aria-hidden="true"
         />
       </div>
-      <div
-        className={`${styles.present} absolute inset-x-0 top-0 h-[62%] overflow-hidden lg:inset-0 lg:h-auto`}
-        aria-hidden="true"
-      >
-        <Image
-          src="/story/history-living-updated.png"
-          alt=""
-          fill
-          sizes="100vw"
-          className="scale-[1.2] object-contain object-center lg:scale-100"
-        />
-      </div>
-      <div
-        className="absolute inset-0 bg-[linear-gradient(180deg,rgb(7_16_14_/_0.12)_0%,rgb(7_16_14_/_0.2)_44%,rgb(7_16_14_/_0.95)_100%)]"
-        aria-hidden="true"
-      />
-      <div
-        className={`${styles.seam} absolute inset-y-0 w-px bg-primary/75 shadow-[0_0_30px_var(--primary)]`}
-        aria-hidden="true"
-      />
-      <p className="sr-only">{copy.transitionDescription}</p>
 
-      <div
-        className={`${styles.safeContent} relative mx-auto flex max-w-[1600px] flex-col justify-between px-5 pb-8 pt-20 lg:pb-10 lg:pt-24 lg:px-12`}
-      >
-        <div className="flex justify-end">
-          <p className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-foreground/55 lg:block">
-            {copy.timelineStart}{" "}
-            <span className="mx-2 text-primary" aria-hidden="true">
-              →
-            </span>{" "}
-            {copy.timelineEnd}
-          </p>
-        </div>
-
-        <div className="max-w-5xl">
+      <div className="pointer-events-none relative mx-auto -mt-8 flex max-w-[1600px] flex-col justify-end px-5 pb-10 lg:mt-0 lg:min-h-[calc(var(--viewport-safe-height,100svh)-var(--site-header-height,3.5rem))] lg:px-12 lg:pt-32">
+        <div className="pointer-events-auto max-w-5xl">
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary lg:text-xs">
             {copy.sectionLabel}
           </p>
@@ -91,6 +55,6 @@ export function HomeStoryHandoff({ copy }: HomeStoryHandoffProps) {
           </div>
         </div>
       </div>
-    </HomeStoryHandoffScroll>
+    </section>
   );
 }

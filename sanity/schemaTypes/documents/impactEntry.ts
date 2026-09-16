@@ -29,6 +29,11 @@ export const impactEntry = defineType({
   },
   fields: [
     defineField({
+      name: "guideReplacement", title: "Atoll guide replacement", type: "reference",
+      to: [{ type: "speciesGuide" }, { type: "atollCategory" }, { type: "atollHub" }], group: "legacy", readOnly: true,
+      description: "This source remains archived. Once its replacement is published, the profile is listed in the Atoll Guide and its former URL redirects there.",
+    }),
+    defineField({
       name: "english",
       title: "English content",
       type: "impactEntryLocale",

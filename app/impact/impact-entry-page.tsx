@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
+import { getGuideLegacyRedirect } from "@/lib/sanity/atoll";
 import {
   ArrowLeftIcon,
   ArrowUpRightIcon,
@@ -911,6 +912,8 @@ export async function generateImpactEntryMetadata(
   slug: string,
   locale: ImpactLocale,
 ): Promise<Metadata> {
+  const guidePath = await getGuideLegacyRedirect(`${locale === "fr" ? "/fr" : ""}/impact/${slug}`);
+  if (guidePath) permanentRedirect(guidePath);
   const copy = impactRouteCopy[locale];
   const entry = await getImpactEntryBySlug(slug, locale);
   const path =
@@ -963,6 +966,8 @@ export async function ImpactEntryPageContent({
   locale,
   entrySource,
 }: ImpactEntryPageContentProps) {
+  const guidePath = await getGuideLegacyRedirect(`${locale === "fr" ? "/fr" : ""}/impact/${slug}`);
+  if (guidePath) permanentRedirect(guidePath);
   const copy = impactRouteCopy[locale];
   const entry = await getImpactEntryBySlug(slug, locale);
 

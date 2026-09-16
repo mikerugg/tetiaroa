@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MapPinIcon, XIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -110,6 +111,7 @@ export function ModernAtollMap({ copy }: ModernAtollMapProps) {
               <p className="text-base leading-7 text-background/68">
                 {activeHotspot.description}
               </p>
+              {activeHotspot.guideHref ? <Link href={activeHotspot.guideHref} className="text-sm underline underline-offset-4">{activeHotspot.guideLabel}</Link> : null}
               <div className="flex flex-col gap-3 border-t border-background/15 pt-6">
                 <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-background/55">
                   {copy.motuTitle}
@@ -156,6 +158,7 @@ export function ModernAtollMap({ copy }: ModernAtollMapProps) {
             <p className="text-base leading-7 text-muted-foreground">
               {activeHotspot.description}
             </p>
+            {activeHotspot.guideHref ? <Button asChild variant="outline"><Link href={activeHotspot.guideHref}>{activeHotspot.guideLabel}</Link></Button> : null}
             <div className="flex flex-col gap-3 border-t border-border pt-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
                 {copy.motuTitle}

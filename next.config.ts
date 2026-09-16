@@ -50,6 +50,15 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      ...[
+        ["/fr/ile", "/fr/island"],
+        ["/fr/ile/oiseaux", "/fr/island/birds"],
+        ["/fr/ile/plantes", "/fr/island/plants"],
+        ["/fr/ile/poisson", "/fr/island/fish"],
+        ["/fr/ile/tortues", "/fr/island/turtles"],
+        ["/fr/ile/mammiferes-marins", "/fr/island/marine-mammals"],
+        ["/fr/ile/invertebres", "/fr/island/invertebrates"],
+      ].map(([source, destination]) => ({ source, destination, permanent: true })),
       {
         source: "/programs/research/cool-reef",
         destination: "/impact/cool-reef",

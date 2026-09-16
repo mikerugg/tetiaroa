@@ -146,23 +146,20 @@ export default function HomeExperience({
               <h2 className={`${styles.bandTitle} ${styles.deepTitle} font-header`}>
                 {copy.honu.title}
               </h2>
-              <p className={`${styles.bandCopy} ${styles.deepCopy}`}>
+              <p className={cn(styles.bandCopy, styles.deepCopy, "whitespace-pre-line")}>
                 {copy.honu.copy}
               </p>
-              <div className={styles.deepChips}>
-                <Badge
-                  variant="outline"
-                  className={cn(styles.statChip, "h-auto font-mono")}
-                >
-                  {copy.honu.chips[0]}
-                </Badge>
-                <Badge
-                  variant="outline"
-                  className={cn(styles.statChip, "h-auto font-mono")}
-                >
-                  {copy.honu.chips[1]}
-                </Badge>
-              </div>
+              <Button
+                asChild
+                variant="impact"
+                size="lg"
+                className="mt-6"
+              >
+                <Link href={copy.honu.learnMoreHref}>
+                  {copy.honu.learnMoreLabel}
+                  <ArrowUpRightIcon data-icon="inline-end" aria-hidden="true" />
+                </Link>
+              </Button>
             </div>
               <figure className={styles.deepRender}>
                 <Image

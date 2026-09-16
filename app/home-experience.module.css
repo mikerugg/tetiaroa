@@ -853,12 +853,6 @@
   color: rgba(214, 238, 233, 0.82);
 }
 
-.deepChips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 12px;
-}
-
 .deepCta {
   justify-self: start;
   font-size: 12px;

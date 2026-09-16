@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     "tetiaroa-old/**",
+    ".tetiaroa_old/**",
+    ".migration-cache/**",
   ]),
 ]);
 

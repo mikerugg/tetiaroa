@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { homeCopies } from "@/app/home-copy";
+import { HomeStoryVideo } from "@/app/home-story-video";
 import {
   ENGLISH_DONATE_PATH,
   ENGLISH_IMPACT_PATH,
@@ -351,16 +352,11 @@ export function OurStoryPage({ locale }: { locale: OurStoryLocale }) {
           </section>
         </div>
 
-        <section className="relative isolate min-h-[82svh] overflow-hidden">
-          <Image
-            src="/story/history-new-living-handoff.png"
-            alt="Illustrative composition of Tetiaroa field research and education continuing Marlon Brando's ecological idea"
-            fill
-            sizes="100vw"
-            className="object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(7_16_14_/_0.35)_0%,rgb(7_16_14_/_0.92)_100%)]" aria-hidden="true" />
-          <div className="relative mx-auto flex min-h-[82svh] max-w-5xl flex-col items-center justify-center px-5 py-24 text-center sm:px-8">
+        <section className="bg-black pt-[50px] lg:pt-[100px]">
+          <div className="relative mx-auto aspect-[4/3] w-1/2 lg:aspect-auto lg:h-[41svh]">
+            <HomeStoryVideo />
+          </div>
+          <div className="mx-auto flex max-w-5xl flex-col items-center px-5 py-24 text-center sm:px-8">
             <Eyebrow>{copy.closing.eyebrow}</Eyebrow>
             <h2 className="mt-6 font-header text-6xl leading-[0.86] text-foreground sm:text-8xl lg:text-9xl">
               {copy.closing.title}

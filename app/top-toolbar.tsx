@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { TopToolbarMobileMenu } from "./top-toolbar-mobile-menu";
 import {
   ENGLISH_DONATE_PATH,
-  ENGLISH_GEOLOGY_PATH,
+  ENGLISH_ATOLL_PATH,
   ENGLISH_STATIONS_PATH,
   ENGLISH_TEAM_PATH,
   FRENCH_HOME_PATH,
@@ -63,7 +63,7 @@ const defaultCopy: TopToolbarCopy = {
   logoLabel: "Our Logo",
   storyHref: "/our-story",
   storyLabel: "Our Story",
-  atollHref: ENGLISH_GEOLOGY_PATH,
+  atollHref: ENGLISH_ATOLL_PATH,
   atollLabel: "Our Atoll",
   stationsHref: ENGLISH_STATIONS_PATH,
   stationsLabel: "Our Stations",

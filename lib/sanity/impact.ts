@@ -493,7 +493,7 @@ export async function getHomepageHighlights(
 ): Promise<HomepageHighlight[]> {
   const entries = await fetchSanityData<HomepageHighlightSource[]>(
     homepageHighlightsQuery,
-    {},
+    { language },
     ["impact", "homepage-highlight"],
   ).catch((error) => {
     console.warn("Unable to fetch Sanity homepage highlights.", error);

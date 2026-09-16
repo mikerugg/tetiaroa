@@ -40,12 +40,13 @@ export const paperVars = {
 export function PillarChrome({
   locale,
   slug,
+  languageHref,
   children,
-}: PropsWithChildren<{ locale: PillarLocale; slug: PillarSlug }>) {
+}: PropsWithChildren<{ locale: PillarLocale; slug: PillarSlug; languageHref?: string }>) {
   const counterpartLocale = locale === "fr" ? "en" : "fr";
   const toolbarCopy = {
     ...homeCopies[locale].toolbar,
-    languageHref: getPillarPath(counterpartLocale, slug),
+    languageHref: languageHref ?? getPillarPath(counterpartLocale, slug),
     languageLabel: locale === "fr" ? "EN" : "FR",
     languageHrefLang: counterpartLocale,
     languageLang: counterpartLocale,

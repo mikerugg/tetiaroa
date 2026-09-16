@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" fill="none">
+  <!-- Static overview adapted from app/swac/what-is-swac.tsx. -->
+  <defs>
+    <linearGradient id="water" x1="300" y1="150" x2="300" y2="750" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#12657a"/><stop offset=".5" stop-color="#062b40"/><stop offset="1" stop-color="#01121c"/>
+    </linearGradient>
+    <linearGradient id="sky" x1="300" y1="0" x2="300" y2="150" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0a2230"/><stop offset="1" stop-color="#123a48"/>
+    </linearGradient>
+    <linearGradient id="rock" x1="380" y1="150" x2="380" y2="750" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1d3a33"/><stop offset="1" stop-color="#0a1a1c"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h600v150H0z"/>
+  <path fill="url(#water)" d="M0 150h600v600H0z"/>
+  <path d="M0 150c90-7 170 7 260 0s170 7 340 0" stroke="#59e8dc" stroke-opacity=".5" stroke-width="2"/>
+  <path d="M600 118h-80c-36 2-47 16-63 41-70 111-78 254-178 386C201 649 91 696 0 731v19h600Z" fill="url(#rock)"/>
+  <path d="M600 118h-80c-36 2-47 16-63 41-70 111-78 254-178 386C201 649 91 696 0 731" stroke="#e9f0ec" stroke-opacity=".34" stroke-width="2"/>
+  <!-- Deep seawater intake and return at a shallower depth. -->
+  <path d="M139 611c110-83 154-184 202-296 33-75 78-124 113-151V116" stroke="#16a99c" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="139" cy="611" r="19" fill="#062b40" stroke="#16a99c" stroke-width="6"/>
+  <circle cx="139" cy="611" r="6" fill="#16a99c"/>
+  <path d="M480 116v70c-57 61-88 167-149 260" stroke="#e24a2b" stroke-width="8" stroke-linecap="round"/>
+  <path d="m327 435-25 5m27 6-17 17m23-11-5 25" stroke="#e24a2b" stroke-width="4" stroke-linecap="round"/>
+  <path d="m269 403 31-12 9 30" stroke="#89c8c6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m400 314-28 10-9-27" stroke="#ee9981" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Heat exchanger at the shore; a separate freshwater circuit cools the building. -->
+  <rect x="426" y="77" width="72" height="41" rx="5" fill="#041a22" stroke="#59e8dc" stroke-opacity=".6" stroke-width="2"/>
+  <path d="M439 87v22m22-22v22m22-22v22" stroke="#16a99c" stroke-width="4"/>
+  <path d="M450 87v22m22-22v22" stroke="#e24a2b" stroke-width="4"/>
+  <path d="M498 88h46" stroke="#16a99c" stroke-width="5"/>
+  <path d="M544 105h-46" stroke="#e24a2b" stroke-width="5"/>
+  <path d="M541 77h46v41h-46z" fill="#143730" stroke="#d9ceaf" stroke-opacity=".7" stroke-width="2"/>
+  <path d="m532 77 32-22 32 22" stroke="#d9ceaf" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M550 86h8v10h-8zm19 0h8v10h-8z" fill="#d9ceaf" fill-opacity=".7"/>
+</svg>

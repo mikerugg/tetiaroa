@@ -4,6 +4,11 @@ export type SproutVideoSource = {
 };
 
 export const homeVideoSources = {
+  story: {
+    embedUrl:
+      "https://videos.sproutvideo.com/embed/729ad3b5101ce8c8f8/278a7d2b9248b890",
+    title: "Marlon Brando on the rocks at Tetiaroa",
+  },
   hero: {
     embedUrl:
       "https://videos.sproutvideo.com/embed/489ad3b4141ae3c7c2/093bcd00f6a0db0d",

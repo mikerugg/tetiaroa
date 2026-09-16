@@ -174,9 +174,27 @@ const localizedEntryFilter = `
   )
 `;
 
+// Keep each Impact translation available until its corresponding guide route exists.
+// References to draft-only documents do not resolve in the public client's perspective.
+const guideReplacementIsReady = `coalesce(
+  defined(guideReplacement->_id) &&
+  coalesce(select($language == "fr" => guideReplacement->french.title, guideReplacement->english.title), "") != "" &&
+  (
+    (guideReplacement->_type == "atollHub" && guideReplacement->_id == "atoll-hub") ||
+    (
+      guideReplacement->category in ["birds", "plants", "fish", "turtles", "marine-mammals", "invertebrates"] &&
+      (
+        guideReplacement->_type == "atollCategory" ||
+        (guideReplacement->_type == "speciesGuide" && coalesce(guideReplacement->slug.current, "") != "")
+      )
+    )
+  ), false
+)`;
+
 export const impactEntriesQuery = defineQuery(`
   *[
     _type == "impactEntry" &&
+    !(${guideReplacementIsReady}) &&
     (${localizedEntryFilter})
   ]
   | order(
@@ -193,6 +211,7 @@ export const impactEntriesQuery = defineQuery(`
 export const homepageHighlightsQuery = defineQuery(`
   *[
     _type == "impactEntry" &&
+    !(${guideReplacementIsReady}) &&
     "highlight" in topics[]->slug.current &&
     (
       defined(english.slug.current) ||
@@ -282,6 +301,7 @@ export const impactEntryPreviewByIdQuery = defineQuery(`
 export const impactSitemapEntriesQuery = defineQuery(`
   *[
     _type == "impactEntry" &&
+    !(${guideReplacementIsReady}) &&
     (${localizedEntryFilter})
   ] {
     "slug": select(

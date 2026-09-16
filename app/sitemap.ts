@@ -25,7 +25,11 @@ import {
 } from "./language-links";
 import { getImpactSitemapEntries } from "@/lib/sanity/impact";
 import { getPillarPath, pillarSlugs } from "./pillars/pillar-content";
+import { getEducationActivitiesPath } from "./pillars/education-activities-content";
 import { getStationPath, stationSlugs } from "./stations/stations-content";
+import { getGuideSitemapEntries } from "@/lib/sanity/atoll";
+import { guideCategories } from "@/lib/atoll/types";
+import { getAtollPath } from "@/lib/atoll/config";
 
 export const revalidate = 3600;
 
@@ -69,6 +73,8 @@ const staticRoutes = [
   { path: "/our-logo", priority: 0.6 },
   { path: "/turtle-tales", priority: 0.6 },
   ...pillarRoutes,
+  { path: getEducationActivitiesPath("en"), priority: 0.7 },
+  { path: getEducationActivitiesPath("fr"), priority: 0.6 },
 ] satisfies Array<{ path: string; priority: number }>;
 
 function absoluteUrl(path: string) {
@@ -77,9 +83,10 @@ function absoluteUrl(path: string) {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const updatedAt = new Date();
-  const [englishImpactEntries, frenchImpactEntries] = await Promise.all([
+  const [englishImpactEntries, frenchImpactEntries, guideEntries] = await Promise.all([
     getImpactSitemapEntries("en"),
     getImpactSitemapEntries("fr"),
+    getGuideSitemapEntries(),
   ]);
   const staticSitemapEntries = staticRoutes.map((route) => ({
     url: absoluteUrl(route.path),
@@ -101,5 +108,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticSitemapEntries, ...impactSitemapEntries];
+  const guideStaticEntries = (["en", "fr"] as const).flatMap((locale) => ["", "guide", ...guideCategories].map((suffix) => ({
+    url: absoluteUrl(getAtollPath(locale, suffix)), changeFrequency: "weekly" as const, priority: suffix ? 0.7 : 0.9,
+    alternates: { languages: { en: absoluteUrl(getAtollPath("en", suffix)), fr: absoluteUrl(getAtollPath("fr", suffix)) } },
+  })));
+  return [...staticSitemapEntries, ...impactSitemapEntries, ...guideStaticEntries, ...guideEntries.map((entry) => ({
+    url: absoluteUrl(entry.path), lastModified: entry.updatedAt, changeFrequency: "monthly" as const, priority: 0.6,
+    alternates: entry.alternatePath ? { languages: { [entry.locale]: absoluteUrl(entry.path), [entry.locale === "en" ? "fr" : "en"]: absoluteUrl(entry.alternatePath) } } : undefined,
+  }))];
 }

@@ -6,6 +6,7 @@ import { getSanityWriteClient } from "@/lib/sanity/client";
 type SanityWebhookBody = {
   _id?: string;
   _type?: string;
+  category?: string;
   english?: {
     slug?: { current?: string };
   };
@@ -159,6 +160,18 @@ export async function POST(req: NextRequest) {
     return Response.json({ message: "Invalid signature" }, { status: 401 });
   }
 
+  if (["speciesGuide", "atollCategory", "atollHub"].includes(body?._type ?? "")) {
+    // A shared guide tag also expires previous slugs, directory counts, and related cards.
+    revalidateTag("atoll", "max");
+    revalidateTag("impact", "max");
+    revalidatePath("/island", "layout");
+    revalidatePath("/fr/island", "layout");
+    revalidatePath("/impact", "layout");
+    revalidatePath("/fr/impact", "layout");
+    revalidatePath("/sitemap.xml");
+    return Response.json({ revalidated: true, type: body?._type });
+  }
+
   let cleanupResult = { deletedAssetCount: 0, slugs: [] as string[] };
 
   try {
@@ -179,6 +192,7 @@ export async function POST(req: NextRequest) {
   }
 
   revalidateTag("impact", "max");
+  revalidateTag("atoll", "max");
   revalidateTag("homepage-highlight", "max");
   revalidatePath("/");
   revalidatePath("/fr");

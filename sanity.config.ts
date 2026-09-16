@@ -5,6 +5,7 @@ import { sanityDataset, sanityProjectId } from "./lib/sanity/env";
 import { ImpactEntryIPlacesAction } from "./sanity/components/impactEntryIPlacesAction";
 import { ImpactEntryPreviewAction } from "./sanity/components/impactEntryPreviewAction";
 import { schemaTypes } from "./sanity/schemaTypes";
+import { AtollPreviewAction } from "./sanity/components/atollPreviewAction";
 
 export default defineConfig({
   name: "tetiaroa",
@@ -12,7 +13,14 @@ export default defineConfig({
   basePath: "/studio",
   projectId: sanityProjectId,
   dataset: sanityDataset,
-  plugins: [structureTool(), visionTool()],
+  plugins: [structureTool({ structure: (S) => S.list().title("Content").items([
+    S.listItem().title("Atoll Guide").child(S.list().title("Atoll Guide").items([
+      S.listItem().title("Atoll homepage").child(S.document().schemaType("atollHub").documentId("atoll-hub")),
+      S.documentTypeListItem("atollCategory").title("Guide categories"),
+      S.documentTypeListItem("speciesGuide").title("Species profiles"),
+    ])), S.divider(),
+    ...S.documentTypeListItems().filter((item) => !["atollHub", "atollCategory", "speciesGuide"].includes(item.getId() ?? "")),
+  ]) }), visionTool()],
   schema: {
     types: schemaTypes,
   },
@@ -24,6 +32,8 @@ export default defineConfig({
             ImpactEntryIPlacesAction,
             ImpactEntryPreviewAction,
           ]
-        : previousActions,
+        : ["speciesGuide", "atollCategory", "atollHub"].includes(context.schemaType)
+          ? [...previousActions, AtollPreviewAction]
+          : previousActions,
   },
 });
