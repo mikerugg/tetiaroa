@@ -8,6 +8,7 @@ import { DocumentLanguage } from "@/app/document-language";
 import { homeCopies } from "@/app/home-copy";
 import { HomeVrLightbox } from "@/app/home-vr-experience";
 import { SiteFooter } from "@/app/site-footer";
+import { TopToolbar } from "@/app/top-toolbar";
 import { HonuHero } from "./honu-hero";
 import { HonuAnatomy } from "./honu-anatomy";
 import { HonuMission } from "./honu-mission";
@@ -39,6 +40,7 @@ export default function HonuPage() {
   return (
     <>
       <DocumentLanguage lang="en" />
+      <TopToolbar copy={homeCopies.en.toolbar} homepageLayout position="static" />
       <main className="bg-background text-foreground">
         <HonuHero />
         <section className="mx-auto grid max-w-7xl gap-12 px-6 py-20 sm:px-10 lg:grid-cols-[1.15fr_1fr] lg:gap-24 lg:px-16 lg:py-28">

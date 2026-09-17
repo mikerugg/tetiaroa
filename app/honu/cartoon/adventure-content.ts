@@ -38,8 +38,8 @@ export const neighbors = [
     subFact:
       "HONU’s dome lets researchers observe coral in place. Hold the sub above the branches to take a closer look without touching them.",
     tool: "Observation dome",
-    source: "https://oceanservice.noaa.gov/facts/coral.html",
-    sourceLabel: "More about corals · NOAA",
+    guideHref: "/island/invertebrates/staghorn-coral",
+    guideLabel: "Staghorn coral in our species guide",
   },
   {
     id: "butterflyfish",
@@ -65,9 +65,8 @@ export const neighbors = [
     subFact:
       "Hold HONU steady and watch the fish without chasing it. The thrusters let the pilot adjust position with small movements.",
     tool: "Thrusters",
-    source:
-      "https://www.waikikiaquarium.org/experience/animal-guide/fishes/butterflyfishes/raccoon-butterflyfish/",
-    sourceLabel: "More about butterflyfish · Waikīkī Aquarium",
+    guideHref: "/island/fish/raccoon-butterflyfish",
+    guideLabel: "Raccoon butterflyfish in our species guide",
   },
   {
     id: "turtle",
@@ -93,8 +92,8 @@ export const neighbors = [
     subFact:
       "Ease off and let the turtle pass. HONU’s thrusters help the pilot move through the water or hold a position while researchers watch an animal.",
     tool: "Thrusters",
-    source: "https://www.fisheries.noaa.gov/species/green-turtle",
-    sourceLabel: "More about green sea turtles · NOAA",
+    guideHref: "/island/turtles/green-turtle",
+    guideLabel: "Green sea turtle in our species guide",
   },
   {
     id: "octopus",
@@ -121,9 +120,8 @@ export const neighbors = [
     subFact:
       "HONU’s lights help researchers see in dark water. You used them to spot the octopus near the reef floor.",
     tool: "Observation lights",
-    source:
-      "https://ocean.si.edu/ocean-life/invertebrates/how-octopuses-and-squids-change-color",
-    sourceLabel: "More about octopus camouflage · Smithsonian Ocean",
+    guideHref: "/island/invertebrates/day-octopus",
+    guideLabel: "Day octopus in our species guide",
   },
   {
     id: "jellyfish",
@@ -150,8 +148,8 @@ export const neighbors = [
     subFact:
       "HONU’s lights help researchers see in dark water. With the lamps on, look at the jellyfish’s bell and trailing tentacles.",
     tool: "Observation lights",
-    source: "https://oceanservice.noaa.gov/facts/biolum.html",
-    sourceLabel: "More about bioluminescence · NOAA",
+    guideHref: "/island/invertebrates",
+    guideLabel: "Explore invertebrates in our species guide",
   },
   {
     id: "whale",
@@ -178,8 +176,8 @@ export const neighbors = [
     subFact:
       "HONU’s sonar sends sound through the water and picks up the echoes that return. When the view ahead gets dark, those echoes help researchers work out what lies beyond the dome.",
     tool: "Sonar",
-    source: "https://www.fisheries.noaa.gov/species/sperm-whale",
-    sourceLabel: "More about sperm whales · NOAA",
+    guideHref: "/island/marine-mammals",
+    guideLabel: "Explore marine mammals in our species guide",
   },
 ] as const;
 

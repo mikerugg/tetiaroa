@@ -49,6 +49,11 @@ export function TopToolbarMobileMenu({
       className: menuOutlineLinkClass,
     },
     {
+      href: copy.subsHref,
+      label: copy.subsLabel,
+      className: menuOutlineLinkClass,
+    },
+    {
       href: copy.atollHref,
       label: copy.atollLabel,
       className: menuOutlineLinkClass,
@@ -58,7 +63,6 @@ export function TopToolbarMobileMenu({
       label: copy.stationsLabel,
       className: menuOutlineLinkClass,
     },
-    { href: "/our-logo", label: copy.logoLabel, className: menuOutlineLinkClass },
     { href: copy.teamHref, label: copy.teamLabel, className: menuOutlineLinkClass },
   ];
   const languageLabel =

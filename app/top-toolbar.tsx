@@ -24,9 +24,10 @@ export type TopToolbarCopy = {
   teamLabel: string;
   impactHref: string;
   impactLabel: string;
-  logoLabel: string;
   storyHref: string;
   storyLabel: string;
+  subsHref: string;
+  subsLabel: string;
   atollHref: string;
   atollLabel: string;
   stationsHref: string;
@@ -60,9 +61,10 @@ const defaultCopy: TopToolbarCopy = {
   teamLabel: "Our Team",
   impactHref: "/impact",
   impactLabel: "Impact Feed",
-  logoLabel: "Our Logo",
   storyHref: "/our-story",
   storyLabel: "Our Story",
+  subsHref: "/honu",
+  subsLabel: "Our Subs",
   atollHref: ENGLISH_ATOLL_PATH,
   atollLabel: "Our Atoll",
   stationsHref: ENGLISH_STATIONS_PATH,
@@ -89,17 +91,19 @@ function isRouteActive(pathname: string, href: string) {
 export function TopToolbar({
   copy = defaultCopy,
   homepageLayout = false,
+  position = "fixed",
 }: {
   copy?: TopToolbarCopy;
   homepageLayout?: boolean;
+  position?: "fixed" | "static";
 }) {
   const pathname = usePathname();
   const activeHref = [
     copy.impactHref,
     copy.stationsHref,
     copy.teamHref,
-    "/our-logo",
     copy.storyHref,
+    copy.subsHref,
     copy.atollHref,
     copy.donateHref,
   ].find((href) => isRouteActive(pathname, href));
@@ -107,7 +111,8 @@ export function TopToolbar({
   return (
     <nav
       className={cn(
-        "fixed inset-x-0 top-0 z-40 flex justify-between gap-3 border-b border-border bg-background/30 backdrop-blur-md",
+        "z-40 flex justify-between gap-3 border-b border-border bg-background/30 backdrop-blur-md",
+        position === "fixed" ? "fixed inset-x-0 top-0" : "static",
         homepageLayout
           ? "h-14 px-3 lg:h-16 lg:px-7"
           : "h-14 px-3 sm:px-4 md:h-16 md:px-7",
@@ -144,7 +149,7 @@ export function TopToolbar({
       <div className={cn(
         "hidden h-full min-w-0 items-center text-sm text-foreground/85",
         homepageLayout
-          ? "gap-[clamp(3px,calc(5.859375vw-57px),18px)] lg:flex"
+          ? "gap-[clamp(3px,calc(5.859375vw-57px),18px)] xl:flex"
           : "gap-[18px] min-[761px]:flex max-[860px]:gap-2.5 max-[420px]:gap-1.5 max-[860px]:text-[13px]",
       )}>
         <Button
@@ -180,6 +185,19 @@ export function TopToolbar({
           asChild
           variant="outline"
           size="sm"
+          className={cn(toolbarOutlineButtonClass, !homepageLayout && "max-[1280px]:hidden")}
+        >
+          <Link
+            href={copy.subsHref}
+            aria-current={activeHref === copy.subsHref ? "page" : undefined}
+          >
+            {copy.subsLabel}
+          </Link>
+        </Button>
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
           className={cn(toolbarOutlineButtonClass, !homepageLayout && "max-[1000px]:hidden")}
         >
           <Link
@@ -200,19 +218,6 @@ export function TopToolbar({
             aria-current={activeHref === copy.stationsHref ? "page" : undefined}
           >
             {copy.stationsLabel}
-          </Link>
-        </Button>
-        <Button
-          asChild
-          variant="outline"
-          size="sm"
-          className={cn(toolbarOutlineButtonClass, !homepageLayout && "max-[1200px]:hidden")}
-        >
-          <Link
-            href="/our-logo"
-            aria-current={activeHref === "/our-logo" ? "page" : undefined}
-          >
-            {copy.logoLabel}
           </Link>
         </Button>
         <Button
@@ -261,7 +266,7 @@ export function TopToolbar({
 
       <div className={cn(
         "flex h-full items-center gap-2",
-        homepageLayout ? "lg:hidden" : "min-[761px]:hidden max-[360px]:gap-1.5",
+        homepageLayout ? "xl:hidden" : "min-[761px]:hidden max-[360px]:gap-1.5",
       )}>
         <Button
           asChild

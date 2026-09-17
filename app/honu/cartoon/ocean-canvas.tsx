@@ -30,9 +30,9 @@ export type OceanCanvasProps = {
 
 export const CREATURE_POSITIONS: Record<CreatureId, { x: number; y: number }> =
   {
-    coral: { x: 400, y: 715 },
-    butterflyfish: { x: 630, y: 365 },
-    octopus: { x: 1250, y: 850 },
+    coral: { x: 475, y: 715 },
+    butterflyfish: { x: 630, y: 315 },
+    octopus: { x: 1350, y: 850 },
     turtle: { x: 1250, y: 140 },
     jellyfish: { x: 1830, y: 390 },
     whale: { x: 2620, y: 520 },

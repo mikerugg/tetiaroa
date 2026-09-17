@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useRef, useState, useSyncExternalStore } from "react";
 import { motion, useInView } from "motion/react";
 import {
@@ -8,7 +9,6 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   ArrowUpIcon,
-  ArrowUpRightIcon,
   EyeIcon,
   FishIcon,
   CompassIcon,
@@ -474,16 +474,13 @@ export function HonuAdventure() {
                   {note.subFact}
                 </p>
               </div>
-              <a
-                href={note.source}
-                target="_blank"
-                rel="noreferrer"
+              <Link
+                href={note.guideHref}
                 className="inline-flex items-center gap-1 text-xs text-primary underline underline-offset-4"
               >
-                {note.sourceLabel}
-                <ArrowUpRightIcon className="size-3" aria-hidden="true" />
-                <span className="sr-only"> (opens in a new tab)</span>
-              </a>
+                {note.guideLabel}
+                <ArrowRightIcon className="size-3 shrink-0" aria-hidden="true" />
+              </Link>
               <Button
                 size="lg"
                 className="rounded-full"

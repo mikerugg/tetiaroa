@@ -18,6 +18,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { homeCopies } from "@/app/home-copy";
 import { HomeStoryVideo } from "@/app/home-story-video";
+import { LogoCallout } from "@/app/logo-callout";
 import {
   ENGLISH_DONATE_PATH,
   ENGLISH_IMPACT_PATH,
@@ -191,6 +192,9 @@ export function OurStoryPage({ locale }: { locale: OurStoryLocale }) {
                     </li>
                   ))}
                 </ol>
+              </div>
+              <div className="px-2 sm:px-8 lg:px-16 xl:px-24">
+                <LogoCallout copy={homeCopy.kids.logoCallout} />
               </div>
             </div>
           </section>

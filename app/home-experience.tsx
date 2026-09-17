@@ -25,6 +25,7 @@ import { TopToolbar } from "./top-toolbar";
 import { HomeHighlightCarousel } from "./home-highlight-carousel";
 import { HomePillarCards } from "./home-pillar-cards";
 import { HomeStoryHandoff } from "./home-story-handoff";
+import { LogoCallout } from "./logo-callout";
 import { HomepageViewportFrame } from "./homepage-viewport-frame";
 import { HomeFilmLightbox } from "./home-film-lightbox";
 import { homeVideoSources } from "./home-video-sources";
@@ -467,38 +468,7 @@ export default function HomeExperience({
               </Badge>
             </div>
 
-            <aside>
-              <a
-                className={styles.logoCallout}
-                href={copy.kids.logoCallout.href}
-              >
-                <div className={styles.logoCalloutMark}>
-                  <Image
-                    src={copy.kids.logoCallout.image}
-                    alt={copy.kids.logoCallout.alt}
-                    fill
-                    className={styles.logoCalloutMarkImage}
-                    sizes="(width < 1024px) 180px, 220px"
-                  />
-                </div>
-                <div className={styles.logoCalloutCopy}>
-                  <div className={`${styles.logoCalloutEyebrow} font-mono`}>
-                    {copy.kids.logoCallout.eyebrow}
-                  </div>
-                  <h3 className={`${styles.logoCalloutTitle} font-display`}>
-                    {copy.kids.logoCallout.title}
-                  </h3>
-                  <p>{copy.kids.logoCallout.copy}</p>
-                  <span className={`${styles.logoCalloutAction} font-mono`}>
-                    {copy.kids.logoCallout.cta}
-                    <ArrowUpRightIcon
-                      className={styles.logoCalloutActionIcon}
-                      aria-hidden="true"
-                    />
-                  </span>
-                </div>
-              </a>
-            </aside>
+            <LogoCallout copy={copy.kids.logoCallout} />
           </div>
         </section>
 
