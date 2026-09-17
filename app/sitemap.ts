@@ -64,6 +64,7 @@ const staticRoutes = [
   { path: ENGLISH_GEOLOGY_PATH, priority: 0.8 },
   { path: FRENCH_GEOLOGY_PATH, priority: 0.7 },
   { path: ENGLISH_SWAC_PATH, priority: 0.8 },
+  { path: "/honu", priority: 0.8 },
   { path: FRENCH_SWAC_PATH, priority: 0.7 },
   { path: ENGLISH_OUR_STORY_PATH, priority: 0.8 },
   { path: FRENCH_OUR_STORY_PATH, priority: 0.7 },

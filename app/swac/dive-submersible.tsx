@@ -591,12 +591,14 @@ export function Submersible({
   axis,
   inspectionTarget,
   preview = false,
+  lampsOn = true,
 }: {
   depth: { get: () => number };
   anchor?: THREE.Vector3;
   axis?: THREE.Vector3;
   inspectionTarget?: THREE.Vector3;
   preview?: boolean;
+  lampsOn?: boolean;
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const portPropellerRef = useRef<THREE.Group>(null);
@@ -692,19 +694,21 @@ export function Submersible({
       }
     }
 
-    const bowLightLevel = preview
-      ? 0.45
-      : THREE.MathUtils.smoothstep(
-          metres,
-          BOW_LIGHT_FADE_IN_START,
-          BOW_LIGHT_FADE_IN_END,
-        ) *
-        (1 -
-          THREE.MathUtils.smoothstep(
+    const bowLightLevel = !lampsOn
+      ? 0
+      : preview
+        ? 0.45
+        : THREE.MathUtils.smoothstep(
             metres,
-            BOW_LIGHT_FADE_OUT_START,
-            BOW_LIGHT_FADE_OUT_END,
-          ));
+            BOW_LIGHT_FADE_IN_START,
+            BOW_LIGHT_FADE_IN_END,
+          ) *
+          (1 -
+            THREE.MathUtils.smoothstep(
+              metres,
+              BOW_LIGHT_FADE_OUT_START,
+              BOW_LIGHT_FADE_OUT_END,
+            ));
     if (portLightRef.current) {
       portLightRef.current.visible = bowLightLevel > 0.001;
       portLightRef.current.intensity = BOW_LIGHT_INTENSITY * bowLightLevel;
@@ -851,7 +855,7 @@ export function Submersible({
             <meshStandardMaterial
               color="#e6fff8"
               emissive="#b9fff2"
-              emissiveIntensity={3.2}
+              emissiveIntensity={lampsOn ? 3.2 : 0}
               roughness={0.22}
               toneMapped={false}
               flatShading

@@ -66,6 +66,29 @@
   --sidebar-ring: var(--glow);
 }
 
+.honu-cartoon-theme {
+  --background: #f4f1e7;
+  --foreground: #173e3b;
+  --card: #fffdf6;
+  --card-foreground: #173e3b;
+  --popover: #fffdf6;
+  --popover-foreground: #173e3b;
+  --primary: #326657;
+  --primary-foreground: #173e3b;
+  --secondary: #e0e9dd;
+  --secondary-foreground: #294f43;
+  --muted: #e7eadf;
+  --muted-foreground: #5b6b61;
+  --accent: #e0e9dd;
+  --accent-foreground: #173e3b;
+  --border: #d1d9ca;
+  --input: #bdcdbc;
+  --ring: #326657;
+  --destructive: #a33b28;
+  --lagoon: #39766a;
+  --lagoon-2: #f2be4d;
+}
+
 @media (min-width: 768px) {
   :root {
     --toolbar-height: 4rem;

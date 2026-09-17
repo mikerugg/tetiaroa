@@ -139,7 +139,7 @@ const defaultCopy: SiteFooterCopy = {
       title: "Projects",
       links: [
         { href: "/impact", label: "Impact Feed" },
-        { href: "/#honu-xr", label: "Honu XR" },
+        { href: "/honu", label: "Honu XR" },
         { href: "/#sanctuary", label: "Turtle and shark sanctuary" },
         { href: ENGLISH_SWAC_PATH, label: "Sea Water Air Conditioning" },
       ],

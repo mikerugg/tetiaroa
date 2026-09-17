@@ -405,7 +405,7 @@ const englishContent: Record<PillarSlug, PillarContent> = {
         label: "Watch Honu take shape",
         description:
           "Follow Honu as it becomes an education and research platform.",
-        href: "/#honu-xr",
+        href: "/honu",
       },
     ],
     metadataDescription:

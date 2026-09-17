@@ -159,7 +159,6 @@ export type HomeCopy = {
     sectionLabel: string;
     title: string;
     titleAccent: string;
-    body: string;
     cta: string;
     ctaHref: string;
   };
@@ -238,7 +237,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
           links: [
             { href: ENGLISH_IMPACT_PATH, label: "Impact Feed" },
             { href: ENGLISH_SWAC_PATH, label: "Sea Water Air Conditioning" },
-            { href: "/#honu-xr", label: "Honu XR" },
+            { href: "/honu", label: "Honu XR" },
             { href: "/#sanctuary", label: "Turtle and shark sanctuary" },
           ],
         },
@@ -422,7 +421,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         "Render of the Honu submersible — acrylic dome, robotic arms, DOER Marine livery",
       renderCaption: "honu · design render · doer marine",
       learnMoreLabel: "Learn more about Honu",
-      learnMoreHref: ENGLISH_IMPACT_PATH,
+      learnMoreHref: "/honu",
       cta: "Watch in fullscreen / VR",
       viewer: {
         recording: "rec — capturing dive 15",
@@ -558,7 +557,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
             "School programs, classroom media, and Honu XR field trips are being built to bring Tetiaroa's lagoon, science, and stewardship to children anywhere on Earth.",
           image: sharedKidImages.honuRender,
           alt: "Render of the Honu XR submersible for virtual field trips",
-          href: "#honu-xr",
+          href: "/honu",
           cta: "Explore Honu XR",
           imageFit: "contain",
         },
@@ -580,9 +579,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       sectionLabel: "Our story",
       title: "An idea changes hands.",
       titleAccent: "The Tetiaroa Society helps keep his promise.",
-      body:
-        "Marlon Brando sought to create a living lab that would protect the island, and in turn, all vulnerable island communities. Tetiaroa Society uses fieldwork, research, education, and technology to advance this mission.",
-      cta: "Learn more about our story",
+      cta: "Learn more about Marlon Brando and the Tetiaroa Society",
       ctaHref: ENGLISH_OUR_STORY_PATH,
     },
     night: {
@@ -1029,9 +1026,7 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
       sectionLabel: "Notre histoire",
       title: "Une idée change de mains.",
       titleAccent: "La Tetiaroa Society veille à tenir sa promesse.",
-      body:
-        "Profondément marqué par ce lieu, Marlon Brando a consacré ses dernières années à le protéger : un laboratoire vivant au service de l'île et, à travers elle, de toutes les communautés insulaires vulnérables. La Tetiaroa Society poursuit cette mission par le travail de terrain, la recherche, l'éducation et la technologie.",
-      cta: "En savoir plus sur notre histoire",
+      cta: "En savoir plus sur Marlon Brando et la Tetiaroa Society",
       ctaHref: FRENCH_OUR_STORY_PATH,
     },
     night: {

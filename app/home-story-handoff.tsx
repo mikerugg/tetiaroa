@@ -15,40 +15,39 @@ export function HomeStoryHandoff({ copy }: HomeStoryHandoffProps) {
       className="relative isolate scroll-mt-[var(--site-header-height,3.5rem)]! overflow-hidden border-y-50 border-black bg-black text-foreground lg:border-y-100"
       aria-labelledby="home-story-title"
     >
-      <div className="relative aspect-[4/3] lg:absolute lg:inset-0 lg:aspect-auto">
-        <HomeStoryVideo />
+      <div className="relative aspect-[4/3] lg:absolute lg:inset-x-0 lg:top-0 lg:bottom-[100px] lg:aspect-auto">
+        <div className="absolute inset-x-0 inset-y-[10%]">
+          <HomeStoryVideo />
+        </div>
         <div
           className="pointer-events-none absolute inset-0 bg-linear-to-t from-black via-black/10 to-black/10 lg:via-black/25"
           aria-hidden="true"
         />
       </div>
 
-      <div className="pointer-events-none relative mx-auto -mt-8 flex max-w-[1600px] flex-col justify-end px-5 pb-10 lg:mt-0 lg:min-h-[calc(var(--viewport-safe-height,100svh)-var(--site-header-height,3.5rem))] lg:px-12 lg:pt-32">
-        <div className="pointer-events-auto max-w-5xl">
+      <div className="pointer-events-none relative mx-auto -mt-8 flex max-w-[1600px] flex-col justify-end px-5 pb-10 pt-[100px] lg:mt-0 lg:min-h-[calc(var(--viewport-safe-height,100svh)-var(--site-header-height,3.5rem)+100px)] lg:pl-12 lg:pr-40 lg:pt-32">
+        <div className="pointer-events-auto w-full -translate-y-12">
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary lg:text-xs">
             {copy.sectionLabel}
           </p>
           <h2
             id="home-story-title"
-            className="mt-3 font-header text-[clamp(3.6rem,8.2vw,8.5rem)] leading-[0.76] tracking-[-0.02em]"
+            className="mt-3 max-w-5xl font-header text-[clamp(3.6rem,8.2vw,8.5rem)] leading-[0.76] tracking-[-0.02em]"
           >
             {copy.title}
-            <span className="block font-display text-[0.4em] font-normal italic leading-[1.05] text-primary">
-              {copy.titleAccent}
-            </span>
           </h2>
-          <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <p className="max-w-2xl text-base leading-7 text-foreground/76 lg:text-lg lg:leading-8">
-              {copy.body}
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-8">
+            <p className="min-w-0 font-display text-[clamp(1.44rem,3.28vw,3.4rem)] font-normal italic leading-[1.05] tracking-[-0.02em] text-primary">
+              {copy.titleAccent}
             </p>
             <Button
               asChild
               variant="outline"
               size="lg"
-              className="h-auto w-fit rounded-full bg-background/35 px-5 py-3 backdrop-blur-sm"
+              className="h-auto min-h-12 w-full max-w-80 shrink-0 gap-3 whitespace-normal rounded-full px-5 py-3 has-data-[icon=inline-end]:pr-5 lg:w-80"
             >
               <Link href={copy.ctaHref}>
-                {copy.cta}
+                <span className="text-left">{copy.cta}</span>
                 <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
               </Link>
             </Button>
