@@ -33,6 +33,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/spinner";
+import { GuideImageCredit } from "@/app/atoll/guide-media";
+import type { GuideCard } from "@/lib/atoll/types";
 import { cn } from "@/lib/utils";
 import type { PillarLocale } from "../pillar-content";
 import { nativeLife, tarpCopy, type NativeLifeId } from "./tarp-content";
@@ -74,8 +76,15 @@ function SpriteArt({ file, className }: { file: string; className?: string }) {
   );
 }
 
-export function TarpRestoration({ locale }: { locale: PillarLocale }) {
+export function TarpRestoration({
+  locale,
+  species,
+}: {
+  locale: PillarLocale;
+  species: Partial<Record<NativeLifeId, Pick<GuideCard, "href" | "image"> | null>>;
+}) {
   const copy = tarpCopy[locale];
+  const frame = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const viewport = useRef<HTMLDivElement>(null);
   const returnFocus = useRef<HTMLButtonElement | null>(null);
@@ -104,6 +113,8 @@ export function TarpRestoration({ locale }: { locale: PillarLocale }) {
   const active = started && ready && !paused && !note;
   const native = nativeLife.find((life) => life.id === note);
   const nativeCopy = native?.[locale];
+  const guideEntry = note ? species[note] : null;
+  const photograph = guideEntry?.image;
 
   function assetLoaded(id: string) {
     setLoaded((items) => (items.includes(id) ? items : [...items, id]));
@@ -115,7 +126,7 @@ export function TarpRestoration({ locale }: { locale: PillarLocale }) {
     setHint(copy.firstHint);
     setAnnouncement(copy.firstHint);
     viewport.current?.scrollTo({ left: 0, behavior: "instant" });
-    stage.current?.scrollIntoView({
+    frame.current?.scrollIntoView({
       block: "center",
       behavior: reducedMotion ? "instant" : "smooth",
     });
@@ -211,8 +222,11 @@ export function TarpRestoration({ locale }: { locale: PillarLocale }) {
         </p>
       </div>
 
-      <div className="mx-auto max-w-[1440px] overflow-hidden rounded-[1.75rem] border border-border bg-card shadow-[0_18px_60px_-30px_rgba(23,62,59,0.4)] sm:rounded-[2.25rem]">
-        <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-7">
+      <div
+        ref={frame}
+        className="mx-auto max-w-[1440px] overflow-hidden rounded-[1.75rem] border border-border bg-card shadow-[0_18px_60px_-30px_rgba(23,62,59,0.4)] sm:rounded-[2.25rem] md:max-w-[min(1440px,calc((80svh-3.5rem-2px)*1672/941+2px))] md:scroll-mt-16"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-7 md:h-14 md:flex-nowrap md:py-0">
           <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.15em]">
             <LeafIcon className="size-4 text-primary" aria-hidden="true" />
             TARP
@@ -269,7 +283,7 @@ export function TarpRestoration({ locale }: { locale: PillarLocale }) {
           >
             <div
               className={cn(
-                "relative aspect-[1672/941] min-w-[760px]",
+                "relative aspect-[1672/941] min-w-[760px] md:min-w-0",
                 styles.scene,
               )}
               data-paused={!moving || reducedMotion}
@@ -607,11 +621,26 @@ export function TarpRestoration({ locale }: { locale: PillarLocale }) {
                 <DialogTitle>{nativeCopy.title}</DialogTitle>
                 <DialogDescription>{nativeCopy.body}</DialogDescription>
               </DialogHeader>
-              <div className="mx-auto size-48 sm:size-56">
-                <SpriteArt file={native.image} />
-              </div>
+              {photograph ? (
+                <figure className="min-w-0">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-muted">
+                    <Image
+                      src={photograph.url}
+                      alt={nativeCopy.name}
+                      fill
+                      sizes="(max-width: 639px) calc(100vw - 5rem), 464px"
+                      className="object-contain"
+                    />
+                  </div>
+                  <GuideImageCredit image={photograph} locale={locale} />
+                </figure>
+              ) : native.id === "seedling" ? (
+                <div className="mx-auto size-48 sm:size-56">
+                  <SpriteArt file={native.image} />
+                </div>
+              ) : null}
               <Link
-                href={nativeCopy.guideHref}
+                href={guideEntry?.href ?? nativeCopy.guideHref}
                 className="inline-flex items-center gap-2 text-xs text-primary underline underline-offset-4"
               >
                 {nativeCopy.name} · {copy.guideLabel}

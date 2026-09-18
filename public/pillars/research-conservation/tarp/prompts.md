@@ -2,7 +2,7 @@
 
 Mode: built-in `image_gen.imagegen`, generate.
 
-Intended use: base environment for a future interactive restoration scene on `/pillars/research-conservation`.
+Usage: base environment for the interactive TARP restoration scene on `/pillars/research-conservation`, replacing the Living Atoll Scan section.
 
 Asset: `public/pillars/research-conservation/tarp/island-base.png`.
 
@@ -10,7 +10,7 @@ Output: 1672 × 941 RGB PNG. Visually inspected and copied unchanged from `/home
 
 Style reference inspected: `public/honu-cartoon/ocean.png` and `public/honu-cartoon/turtle.png`, plus the original HONU generation prompts. This is a new illustration, not an edit to the HONU artwork.
 
-This plate contains the island, established edge vegetation and surrounding lagoon only. Rats, yellow crazy ants, returning hermit crabs, seabirds and native regrowth are intended as separate sprite layers. The scene is an illustrative motu rather than a geographic map of a named island.
+This plate contains the island, established edge vegetation and surrounding lagoon only. Rats, yellow crazy ants, returning hermit crabs, seabirds and native regrowth are separate sprite layers in `sprites/`. Their generation prompts and source paths are recorded in [invasive-prompts.md](sprites/invasive-prompts.md) and [native-prompts.md](sprites/native-prompts.md). The scene is an illustrative motu rather than a geographic map of a named island.
 
 ## Generation prompt
 

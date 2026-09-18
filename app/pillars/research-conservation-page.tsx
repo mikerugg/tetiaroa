@@ -2,14 +2,23 @@ import Image from "next/image";
 import { ArrowDownIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getGuideProfile } from "@/lib/sanity/atoll";
 import { pillarContent, type PillarLocale } from "./pillar-content";
 import { paperVars, PillarChrome, PillarEndMatter } from "./pillar-shared";
 import { TarpRestoration } from "./tarp/tarp-restoration";
 import { tarpCopy } from "./tarp/tarp-content";
 
-export function ResearchConservationPage({ locale }: { locale: PillarLocale }) {
+export async function ResearchConservationPage({ locale }: { locale: PillarLocale }) {
   const slug = "research-conservation";
   const copy = pillarContent[locale][slug];
+  const [crab, tern] = await Promise.all([
+    getGuideProfile(locale, "invertebrates", "strawberry-hermit-crab"),
+    getGuideProfile(locale, "birds", "white-common-tern"),
+  ]);
+  const species = {
+    crab: crab ? { href: crab.href, image: crab.image } : null,
+    tern: tern ? { href: tern.href, image: tern.image } : null,
+  };
 
   return (
     <PillarChrome locale={locale} slug={slug}>
@@ -62,7 +71,7 @@ export function ResearchConservationPage({ locale }: { locale: PillarLocale }) {
         </div>
       </section>
 
-      <TarpRestoration locale={locale} />
+      <TarpRestoration locale={locale} species={species} />
 
       <section className="border-y border-border bg-popover px-5 py-16 md:px-8 lg:px-12 lg:py-24">
         <div className="mx-auto grid max-w-[1250px] gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.7fr)] lg:items-end">
