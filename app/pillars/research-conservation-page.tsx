@@ -2,23 +2,20 @@ import Image from "next/image";
 import { ArrowDownIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getGuideProfile } from "@/lib/sanity/atoll";
+import { getGuideCards } from "@/lib/sanity/atoll";
 import { pillarContent, type PillarLocale } from "./pillar-content";
 import { paperVars, PillarChrome, PillarEndMatter } from "./pillar-shared";
 import { TarpRestoration } from "./tarp/tarp-restoration";
-import { tarpCopy } from "./tarp/tarp-content";
+import { nativeLife, tarpCopy } from "./tarp/tarp-content";
 
 export async function ResearchConservationPage({ locale }: { locale: PillarLocale }) {
   const slug = "research-conservation";
   const copy = pillarContent[locale][slug];
-  const [crab, tern] = await Promise.all([
-    getGuideProfile(locale, "invertebrates", "strawberry-hermit-crab"),
-    getGuideProfile(locale, "birds", "white-common-tern"),
-  ]);
-  const species = {
-    crab: crab ? { href: crab.href, image: crab.image } : null,
-    tern: tern ? { href: tern.href, image: tern.image } : null,
-  };
+  const guide = await getGuideCards(locale);
+  const species = Object.fromEntries(nativeLife.map((life) => {
+    const entry = guide.find((card) => card.href === life[locale].guideHref);
+    return [life.id, entry ? { href: entry.href, image: entry.image } : null];
+  }));
 
   return (
     <PillarChrome locale={locale} slug={slug}>

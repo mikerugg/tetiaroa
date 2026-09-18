@@ -18,24 +18,24 @@ test("repeated removal cannot double count an invader or its returning wildlife"
 
 test("removing invaders in a mixed order unlocks wildlife without finishing early", () => {
   let removed = removeInvader([], "rat-3");
-  assert.deepEqual(recoveryState(removed).species, ["tern"]);
+  assert.deepEqual(recoveryState(removed).species, ["booby"]);
 
   removed = removeInvader(removed, "ants-1");
-  assert.deepEqual(new Set(recoveryState(removed).species), new Set(["tern", "crab"]));
+  assert.deepEqual(new Set(recoveryState(removed).species), new Set(["booby", "crab"]));
 
   removed = removeInvader(removed, "ants-2");
   const allTypes = recoveryState(removed);
-  assert.deepEqual(new Set(allTypes.species), new Set(["tern", "crab", "seedling"]));
+  assert.deepEqual(new Set(allTypes.species), new Set(["booby", "crab", "ghostCrab"]));
   assert.equal(allTypes.rats, 1);
   assert.equal(allTypes.ants, 2);
-  assert.equal(allTypes.complete, false, "finding all native types does not finish the restoration");
+  assert.equal(allTypes.complete, false);
 
   removed = removeInvader(removeInvader(removed, "rat-2"), "ants-3");
   const oneLeft = recoveryState(removed);
   assert.equal(oneLeft.cleared.length, 5);
   assert.equal(oneLeft.rats, 2);
   assert.equal(oneLeft.ants, 3);
-  assert.equal(oneLeft.species.length, 3, "repeated native types stay deduplicated");
+  assert.equal(oneLeft.species.length, 5);
   assert.equal(oneLeft.complete, false);
 });
 
@@ -47,7 +47,8 @@ test("removing every invader completes restoration with three rats and three ant
   assert.equal(state.rats, 3);
   assert.equal(state.ants, 3);
   assert.equal(state.cleared.length, 6);
-  assert.deepEqual(new Set(state.species), new Set(["seedling", "crab", "tern"]));
+  assert.deepEqual(new Set(state.species), new Set(["seedling", "crab", "tern", "booby", "ghostCrab", "coconutCrab", "sootyTern"]));
+  assert.equal(state.returning.length, 7);
   assert.deepEqual(recoveryState(removeInvader(removed, "rat-1")), state);
 });
 
@@ -57,6 +58,7 @@ test("an empty removal list resets progress and clears returning wildlife", () =
 
   assert.deepEqual(recoveryState([]), {
     cleared: [],
+    returning: [],
     rats: 0,
     ants: 0,
     species: [],
@@ -66,4 +68,19 @@ test("an empty removal list resets progress and clears returning wildlife", () =
   assert.equal(restarted.cleared.length, 1);
   assert.deepEqual(restarted.species, ["seedling"]);
   assert.equal(restarted.complete, false);
+});
+
+test("ground nesting terns arrive after the last rat, independently of ant removal", () => {
+  const antsCleared = ["ants-1", "ants-2", "ants-3"];
+  assert.equal(recoveryState(antsCleared).species.includes("sootyTern"), false);
+  const twoRats = ["rat-2", "rat-1"];
+  assert.equal(recoveryState(twoRats).species.includes("sootyTern"), false);
+
+  const allRats = removeInvader(twoRats, "rat-3");
+  const state = recoveryState(allRats);
+  assert.equal(state.species.includes("sootyTern"), true);
+  assert.equal(state.returning.filter((item) => item.species === "sootyTern").length, 1);
+  assert.equal(state.ants, 0);
+  assert.equal(state.complete, false);
+  assert.deepEqual(recoveryState(removeInvader(allRats, "rat-3")), state);
 });

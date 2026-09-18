@@ -141,12 +141,12 @@ export function TarpRestoration({
     if (!active || removed.includes(id)) return;
     const item = invaders.find((target) => target.id === id)!;
     const next = removeInvader(removed, id);
-    const line =
-      item.returns === "seedling"
-        ? copy.seedlingsHint
-        : item.returns === "crab"
-          ? copy.crabsHint
-          : copy.ternsHint;
+    const arrival =
+      item.kind === "rat" && recoveryState(next).rats === 3
+        ? "sootyTern"
+        : item.returns;
+    const line = nativeLife.find((life) => life.id === arrival)![locale]
+      .arrivalHint;
     setRemoved((current) => removeInvader(current, id));
     setHint(line);
     setAnnouncement(
@@ -334,15 +334,15 @@ export function TarpRestoration({
 
               <AnimatePresence>
                 {started &&
-                  recovery.cleared.map((item) => {
+                  recovery.returning.map((item) => {
                     const life = nativeLife.find(
-                      (entry) => entry.id === item.returns,
+                      (entry) => entry.id === item.species,
                     )!;
                     return (
                       <motion.button
                         key={`native-${item.id}`}
                         type="button"
-                        data-native={item.returns}
+                        data-native={item.species}
                         aria-label={life[locale].discoverLabel}
                         disabled={!active}
                         initial={
@@ -355,19 +355,23 @@ export function TarpRestoration({
                         whileHover={reducedMotion ? undefined : { scale: 1.07 }}
                         onClick={(event) => {
                           returnFocus.current = event.currentTarget;
-                          setNote(item.returns);
+                          setNote(item.species);
                         }}
                         className="absolute aspect-square -translate-x-1/2 -translate-y-1/2 rounded-full outline-none focus-visible:ring-3 focus-visible:ring-primary focus-visible:ring-offset-2"
                         style={{
-                          left: `${item.returnX}%`,
-                          top: `${item.returnY}%`,
-                          width: item.returns === "tern" ? "13%" : "11%",
+                          left: `${item.x}%`,
+                          top: `${item.y}%`,
+                          width: ["tern", "booby", "coconutCrab"].includes(
+                            item.species,
+                          )
+                            ? "13%"
+                            : "11%",
                         }}
                       >
                         <SpriteArt
                           file={life.image}
                           className={
-                            item.returns === "tern"
+                            item.species === "tern"
                               ? styles.flutter
                               : styles.breathe
                           }
@@ -557,7 +561,8 @@ export function TarpRestoration({
                 <div className="absolute bottom-4 right-4">
                   <Badge variant="secondary">
                     <LeafIcon />
-                    {copy.returningLabel} {recovery.species.length} / 3
+                    {copy.returningLabel} {recovery.species.length} /{" "}
+                    {nativeLife.length}
                   </Badge>
                 </div>
               )}

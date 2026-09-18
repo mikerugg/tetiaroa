@@ -30,9 +30,9 @@ export const invaders = [
     y: 48,
     width: 13,
     mirror: false,
-    returns: "tern",
-    returnX: 77,
-    returnY: 38,
+    returns: "booby",
+    returnX: 76,
+    returnY: 48,
   },
   {
     id: "ants-1",
@@ -52,9 +52,9 @@ export const invaders = [
     y: 54,
     width: 10,
     mirror: false,
-    returns: "seedling",
+    returns: "ghostCrab",
     returnX: 45,
-    returnY: 54,
+    returnY: 65,
   },
   {
     id: "ants-3",
@@ -63,9 +63,9 @@ export const invaders = [
     y: 60,
     width: 10,
     mirror: false,
-    returns: "crab",
+    returns: "coconutCrab",
     returnX: 62,
-    returnY: 64,
+    returnY: 58,
   },
 ] as const;
 
@@ -77,7 +77,7 @@ export const regrowth = [
   { x: 52, y: 58, width: 10, after: 3 },
   { x: 34, y: 61, width: 8, after: 4 },
   { x: 71, y: 55, width: 10, after: 4 },
-  { x: 51, y: 45, width: 12, after: 5 },
+  { x: 67, y: 34, width: 10, after: 5 },
   { x: 39, y: 48, width: 9, after: 6 },
   { x: 59, y: 48, width: 8, after: 6 },
 ] as const;
@@ -91,11 +91,24 @@ export function removeInvader(
 
 export function recoveryState(removed: readonly InvaderId[]) {
   const cleared = invaders.filter((item) => removed.includes(item.id));
+  const rats = cleared.filter((item) => item.kind === "rat").length;
+  const returning = [
+    ...cleared.map((item) => ({
+      id: item.id as string,
+      species: item.returns,
+      x: item.returnX,
+      y: item.returnY,
+    })),
+    ...(rats === 3
+      ? [{ id: "sooty-nest", species: "sootyTern" as const, x: 47, y: 43 }]
+      : []),
+  ];
   return {
     cleared,
-    rats: cleared.filter((item) => item.kind === "rat").length,
+    returning,
+    rats,
     ants: cleared.filter((item) => item.kind === "ants").length,
-    species: [...new Set(cleared.map((item) => item.returns))],
+    species: [...new Set(returning.map((item) => item.species))],
     complete: cleared.length === invaders.length,
   };
 }

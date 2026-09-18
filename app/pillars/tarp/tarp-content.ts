@@ -3,7 +3,7 @@ export const tarpCopy = {
     eyebrow: "Tetiaroa Atoll Restoration Program",
     title: "Help the island recover.",
     intro:
-      "A crab beneath the leaves. A chick high in the branches. Remove the rats and yellow crazy ants, and see who returns to this motu.",
+      "A claw in the leaf litter. A wing above the sand. Remove the rats and yellow crazy ants, and discover how many lives share this small stretch of island.",
     startTitle: "Look closely at the motu.",
     startBody:
       "Look among the trees and along the sand. Tap the rats and yellow crazy ants to remove them, then watch the island change.",
@@ -12,7 +12,7 @@ export const tarpCopy = {
     error: "The island couldn’t load. Let’s try again.",
     retry: "Try again",
     sceneLabel:
-      "A Tetiaroa island. Remove rats and yellow crazy ant colonies to reveal native plants, hermit crabs, and white terns.",
+      "A Tetiaroa island. Remove rats and yellow crazy ant colonies to reveal native plants, land crabs, boobies, and terns.",
     progressLabel: "Removed",
     reset: "Start over",
     pause: "Pause exploration",
@@ -24,13 +24,9 @@ export const tarpCopy = {
     firstHint: "Tap a rat or a cluster of yellow ants.",
     ratRemoved: "One less rat. Keep looking among the leaves.",
     antsRemoved: "This patch is clear of ants. Keep exploring.",
-    seedlingsHint: "New leaves are opening. Tap a seedling to look closer.",
-    crabsHint:
-      "A red crab is back on the sand. Tap it to meet your new neighbor.",
-    ternsHint: "White wings above the trees. Tap a tern to meet it.",
     completeTitle: "Look who’s back.",
     completeBody:
-      "Stay a while with the new arrivals. Out on Tetiaroa, the TARP team keeps watching: checking for invaders, protecting nests, and following each sign of recovery.",
+      "The birds bring the sea home with them. Their droppings feed the soil, and water carries some of those nutrients toward the lagoon. TARP follows this connection from nesting grounds to coral reefs.",
     explore: "Meet the island’s wildlife",
     close: "Back to the island",
     guideLabel: "In our species guide",
@@ -46,7 +42,7 @@ export const tarpCopy = {
     eyebrow: "Programme de restauration de l’atoll de Tetiaroa",
     title: "Aidez le motu à revivre.",
     intro:
-      "Un crabe sous les feuilles. Un poussin dans les branches. Retirez les rats et les fourmis folles jaunes, puis découvrez qui revient sur ce motu.",
+      "Une pince sous les feuilles. Une aile au-dessus du sable. Retirez les rats et les fourmis folles jaunes, puis découvrez tous ceux qui partagent ce petit bout d’île.",
     startTitle: "Regardez le motu de plus près.",
     startBody:
       "Cherchez entre les arbres et sur le sable. Touchez les rats et les fourmis folles jaunes pour les retirer, puis regardez le motu changer.",
@@ -55,7 +51,7 @@ export const tarpCopy = {
     error: "Le motu n’a pas pu s’afficher. Réessayons.",
     retry: "Réessayer",
     sceneLabel:
-      "Un motu de Tetiaroa. Retirez les rats et les colonies de fourmis folles jaunes pour voir revenir plantes indigènes, bernard-l’ermite et gygis blanches.",
+      "Un motu de Tetiaroa. Retirez les rats et les colonies de fourmis folles jaunes pour voir revenir plantes indigènes, crabes terrestres, fous et sternes.",
     progressLabel: "Retirés",
     reset: "Recommencer",
     pause: "Mettre l’exploration en pause",
@@ -67,15 +63,9 @@ export const tarpCopy = {
     firstHint: "Touchez un rat ou un groupe de fourmis jaunes.",
     ratRemoved: "Un rat de moins. Cherchez encore entre les feuilles.",
     antsRemoved: "Les fourmis ont quitté ce coin. Poursuivez l’exploration.",
-    seedlingsHint:
-      "De nouvelles feuilles s’ouvrent. Touchez une jeune pousse pour l’observer.",
-    crabsHint:
-      "Un crabe rouge est de retour sur le sable. Touchez-le pour faire sa connaissance.",
-    ternsHint:
-      "Des ailes blanches au-dessus des arbres. Touchez une gygis pour la découvrir.",
     completeTitle: "Regardez qui est revenu.",
     completeBody:
-      "Restez un moment avec les nouveaux arrivants. Sur Tetiaroa, l’équipe du TARP poursuit son travail : guetter le retour des espèces invasives, protéger les nids et suivre chaque signe de reprise.",
+      "Les oiseaux rapportent un peu de l’océan à terre. Leurs fientes nourrissent le sol, puis l’eau entraîne une partie de ces nutriments vers le lagon. Le TARP suit ce chemin, des lieux de nidification jusqu’aux récifs coralliens.",
     explore: "Rencontrer les habitants du motu",
     close: "Retour au motu",
     guideLabel: "Dans notre guide des espèces",
@@ -99,6 +89,7 @@ export const nativeLife = [
       body: "A new shoot is easy to miss. Rats eat seeds and young plants; removing them gives native vegetation a chance to grow. Those leaves can become shelter for the island’s next generation of seabirds.",
       guideHref: "/island/plants",
       discoverLabel: "Discover the native seedlings",
+      arrivalHint: "New leaves are opening. Tap a seedling to look closer.",
     },
     fr: {
       name: "Jeunes plantes indigènes",
@@ -106,6 +97,8 @@ export const nativeLife = [
       body: "Une jeune pousse passe facilement inaperçue. Les rats mangent graines et plantules ; leur retrait permet à la végétation indigène de grandir. Ces feuilles pourront un jour abriter une nouvelle génération d’oiseaux marins.",
       guideHref: "/fr/island/plants",
       discoverLabel: "Découvrir les jeunes plantes indigènes",
+      arrivalHint:
+        "De nouvelles feuilles s’ouvrent. Touchez une jeune pousse pour l’observer.",
     },
   },
   {
@@ -117,6 +110,7 @@ export const nativeLife = [
       body: "Look for the bright red legs below that borrowed shell. Strawberry hermit crabs eat fallen leaves and other remains along the shore. When invasive ants disappear, native crabs have room to return.",
       guideHref: "/island/invertebrates/strawberry-hermit-crab",
       discoverLabel: "Meet the strawberry hermit crab",
+      arrivalHint: "That shell is moving. Tap the red crab beneath it.",
     },
     fr: {
       name: "Bernard-l’ermite fraise",
@@ -124,6 +118,8 @@ export const nativeLife = [
       body: "Repérez les pattes rouge vif sous la coquille. Le bernard-l’ermite fraise se nourrit de feuilles mortes et d’autres débris sur le rivage. Quand les fourmis invasives disparaissent, les crabes indigènes peuvent revenir.",
       guideHref: "/fr/island/invertebrates/strawberry-hermit-crab",
       discoverLabel: "Rencontrer le bernard-l’ermite fraise",
+      arrivalHint:
+        "Cette coquille bouge. Touchez le crabe rouge qui la porte.",
     },
   },
   {
@@ -135,6 +131,7 @@ export const nativeLife = [
       body: "White terns lay a single egg right on a branch, without building a nest. With rats gone, more eggs can hatch—and more chicks get the chance to take flight.",
       guideHref: "/island/birds/white-common-tern",
       discoverLabel: "Meet the white tern",
+      arrivalHint: "White wings above the trees. Tap a tern to meet it.",
     },
     fr: {
       name: "Gygis blanche",
@@ -142,6 +139,91 @@ export const nativeLife = [
       body: "La gygis blanche pond un seul œuf directement sur une branche, sans construire de nid. Sans les rats, davantage d’œufs peuvent éclore et davantage de poussins ont la chance de prendre leur envol.",
       guideHref: "/fr/island/birds/white-common-tern",
       discoverLabel: "Rencontrer la gygis blanche",
+      arrivalHint:
+        "Des ailes blanches au-dessus des arbres. Touchez une gygis pour la découvrir.",
+    },
+  },
+  {
+    id: "coconutCrab",
+    image: "coconut-crab.png",
+    en: {
+      name: "Coconut crab",
+      title: "Once, it wore a shell.",
+      body: "As a youngster, this forest giant carried a borrowed shell. Now its own armor does the job. Coconut crabs search for food at night, but their lives begin in the sea: females return to the shore to release their larvae.",
+      guideHref: "/island/invertebrates/coconut-crab",
+      discoverLabel: "Meet the coconut crab",
+      arrivalHint: "A forest giant has arrived. Tap the coconut crab.",
+    },
+    fr: {
+      name: "Crabe de cocotier",
+      title: "Il a quitté sa coquille.",
+      body: "Petit, ce géant de la forêt s’abritait dans une coquille empruntée. L’adulte porte sa propre armure et cherche sa nourriture la nuit. Pourtant, tout commence en mer : la femelle retourne au rivage pour y libérer ses larves.",
+      guideHref: "/fr/island/invertebrates/coconut-crab",
+      discoverLabel: "Rencontrer le crabe de cocotier",
+      arrivalHint:
+        "Un géant de la forêt est arrivé. Touchez le crabe de cocotier.",
+    },
+  },
+  {
+    id: "ghostCrab",
+    image: "horned-ghost-crab.png",
+    en: {
+      name: "Horned ghost crab",
+      title: "Gone before you blink.",
+      body: "Those little holes in the beach have an owner. The horned ghost crab slips into a deep burrow to escape heat and drying air. Look for eyes raised on stalks and a pale body that almost disappears against the sand.",
+      guideHref: "/island/invertebrates/horned-ghost-crab",
+      discoverLabel: "Meet the horned ghost crab",
+      arrivalHint: "Eyes above the sand. Tap the ghost crab to look closer.",
+    },
+    fr: {
+      name: "Crabe fantôme cornu",
+      title: "Disparu en un clin d’œil.",
+      body: "Ces petits trous dans la plage ont un propriétaire. Le crabe fantôme cornu se réfugie dans un terrier profond pour échapper à la chaleur et à l’air sec. Repérez ses yeux dressés et son corps pâle, presque invisible sur le sable.",
+      guideHref: "/fr/island/invertebrates/horned-ghost-crab",
+      discoverLabel: "Rencontrer le crabe fantôme cornu",
+      arrivalHint:
+        "Des yeux dépassent du sable. Touchez le crabe fantôme pour l’observer.",
+    },
+  },
+  {
+    id: "booby",
+    image: "brown-booby.png",
+    en: {
+      name: "Brown booby",
+      title: "The nest is down here.",
+      body: "A brown booby plunges into the sea, then pursues fish underwater with its wings and webbed feet. Back on the motu, it nests on the ground. Both parents take turns tending the egg and feeding their chick.",
+      guideHref: "/island/birds/brown-booby",
+      discoverLabel: "Meet the brown booby",
+      arrivalHint: "A seabird settles on the sand. Tap the brown booby.",
+    },
+    fr: {
+      name: "Fou brun",
+      title: "Le nid est ici, au sol.",
+      body: "Le fou brun plonge dans la mer, puis poursuit les poissons sous l’eau à l’aide de ses ailes et de ses pattes palmées. Sur le motu, il niche au sol. Les deux parents se relaient pour couver et nourrir leur poussin.",
+      guideHref: "/fr/island/birds/brown-booby",
+      discoverLabel: "Rencontrer le fou brun",
+      arrivalHint: "Un oiseau marin se pose sur le sable. Touchez le fou brun.",
+    },
+  },
+  {
+    id: "sootyTern",
+    image: "sooty-tern.png",
+    en: {
+      name: "Sooty tern",
+      title: "One egg. A hollow in the sand.",
+      body: "The sooty tern spends much of its life far out at sea. Raising a chick brings it back to land: one speckled egg in a shallow scrape, with both parents sharing the work. On Tetiaroa, it nests on Tahuna Iti.",
+      guideHref: "/island/birds/sooty-tern",
+      discoverLabel: "Meet the sooty tern",
+      arrivalHint: "An ocean traveller comes ashore. Tap the sooty tern.",
+    },
+    fr: {
+      name: "Sterne fuligineuse",
+      title: "Un œuf dans un creux du sable.",
+      body: "La sterne fuligineuse passe une grande partie de sa vie au large. Élever un poussin la ramène à terre : un œuf tacheté dans un léger creux, et deux parents qui partagent le travail. À Tetiaroa, elle niche sur Tahuna Iti.",
+      guideHref: "/fr/island/birds/sooty-tern",
+      discoverLabel: "Rencontrer la sterne fuligineuse",
+      arrivalHint:
+        "Une voyageuse du large rejoint le rivage. Touchez la sterne fuligineuse.",
     },
   },
 ] as const;
