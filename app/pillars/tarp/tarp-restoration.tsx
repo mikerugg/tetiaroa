@@ -59,7 +59,15 @@ function subscribeVisibility(callback: () => void) {
   return () => document.removeEventListener("visibilitychange", callback);
 }
 
-function SpriteArt({ file, className }: { file: string; className?: string }) {
+function SpriteArt({
+  file,
+  className,
+  outlined = false,
+}: {
+  file: string;
+  className?: string;
+  outlined?: boolean;
+}) {
   return (
     <Image
       src={`${assetRoot}/sprites/${file}`}
@@ -70,6 +78,7 @@ function SpriteArt({ file, className }: { file: string; className?: string }) {
       draggable={false}
       className={cn(
         "pointer-events-none size-full select-none object-contain",
+        outlined && styles.spriteOutline,
         className,
       )}
     />
@@ -370,6 +379,7 @@ export function TarpRestoration({
                       >
                         <SpriteArt
                           file={life.image}
+                          outlined
                           className={
                             item.species === "tern"
                               ? styles.flutter
@@ -419,6 +429,7 @@ export function TarpRestoration({
                           {item.kind === "rat" ? (
                             <SpriteArt
                               file="rat.png"
+                              outlined
                               className={
                                 item.mirror ? "-scale-x-100" : undefined
                               }
@@ -438,7 +449,7 @@ export function TarpRestoration({
                                     transform: `rotate(${ant === 1 ? -18 : 14}deg)`,
                                   }}
                                 >
-                                  <SpriteArt file="yellow-crazy-ant.png" />
+                                  <SpriteArt file="yellow-crazy-ant.png" outlined />
                                 </span>
                               ))}
                             </span>
