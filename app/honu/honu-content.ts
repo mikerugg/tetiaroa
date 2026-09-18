@@ -26,14 +26,40 @@ export const honuCopy = {
     body: "That big dome is just the beginning. Tap the markers to discover how Honu moves, sees in the dark, and lends scientists a hand.",
     hint: "Choose a numbered part to look closer",
   },
-  xr: {
-    eyebrow: "03 / Bring the ocean with you",
-    title: "A window seat.",
-    accent: "For the rest of us.",
-    body: "Honu has three seats. With 360° film, the view can travel from the ocean to a classroom. Look around our ocean film and see what catches your eye.",
-    cta: "Open the 360° ocean film",
-    note: "Drag to look around. No headset needed.",
-    caption: "Three seats. One extraordinary view. · Inside Honu",
+  program: {
+    eyebrow: "03 / The HONU program",
+    title: "The work doesn’t end with a dive.",
+    body: "What we learn beneath the surface should matter back on shore. HONU’s five program goals connect ocean exploration with local science, sustainable tourism, and the people who will carry the work forward.",
+    imageAlt:
+      "The HONU program’s five goals arranged around a sea turtle: Hope Spots, year-round exploration, local science, sustainable tourism, and community capacity.",
+    imageLink: "View the full program diagram",
+    pillars: [
+      {
+        number: "01",
+        title: "Give a Hope Spot room to grow",
+        body: "Create or elevate a Hope Spot region, helping more people see why it matters.",
+      },
+      {
+        number: "02",
+        title: "Keep exploring, all year",
+        body: "Enable year-round exploration, so one expedition can lead to the next.",
+      },
+      {
+        number: "03",
+        title: "Back local science",
+        body: "Support the scientists and research labs working close to these waters.",
+      },
+      {
+        number: "04",
+        title: "Show what sustainable tourism can do",
+        body: "Showcase tourism models that help care for the places people come to see.",
+      },
+      {
+        number: "05",
+        title: "Build skills within the community",
+        body: "Help local communities build the knowledge and experience to take part in the work.",
+      },
+    ],
   },
   support: {
     eyebrow: "04 / Be part of the crew",

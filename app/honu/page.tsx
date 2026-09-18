@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { DocumentLanguage } from "@/app/document-language";
 import { homeCopies } from "@/app/home-copy";
-import { HomeVrLightbox } from "@/app/home-vr-experience";
 import { SiteFooter } from "@/app/site-footer";
 import { TopToolbar } from "@/app/top-toolbar";
 import { HonuHero } from "./honu-hero";
@@ -98,58 +97,64 @@ export default function HonuPage() {
         <HonuAnatomy />
         <HonuMission />
         <section
-          id="honu-xr"
+          id="honu-program"
           className="scroll-mt-36 px-6 py-20 sm:px-10 lg:px-16 lg:py-28"
-          aria-labelledby="xr-title"
+          aria-labelledby="program-title"
         >
-          <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1.2fr_1fr] lg:gap-20">
-            <figure>
-              <div className="relative aspect-[1.1] overflow-hidden rounded-[2rem]">
-                <Image
-                  src="/launch-party.webp"
-                  alt="Three people sharing the view inside Honu’s clear observation dome"
-                  fill
-                  sizes="(min-width: 1024px) 50vw, 90vw"
-                  className="object-cover"
-                />
-              </div>
-              <figcaption className="mt-4 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                {copy.xr.caption}
-              </figcaption>
-            </figure>
-            <div>
+          <div className="mx-auto grid max-w-7xl items-center gap-x-12 gap-y-10 lg:grid-cols-[1.15fr_1fr] lg:gap-x-20">
+            <div className="lg:col-start-2">
               <p className="font-mono text-xs uppercase tracking-[0.18em] text-primary">
-                {copy.xr.eyebrow}
+                {copy.program.eyebrow}
               </p>
               <h2
-                id="xr-title"
+                id="program-title"
                 className="mt-5 font-header text-6xl leading-none sm:text-7xl"
               >
-                {copy.xr.title}
-                <span className="mt-2 block font-display text-[0.58em] italic text-primary">
-                  {copy.xr.accent}
-                </span>
+                {copy.program.title}
               </h2>
-              <p className="mt-7 text-sm leading-7 text-muted-foreground">
-                {copy.xr.body}
-              </p>
-              <div className="mt-7">
-                <HomeVrLightbox
-                  label={copy.xr.cta}
-                  labels={{
-                    recording: "Honu XR · ocean film",
-                    depth: "360° exploration",
-                    dragHint: "Drag to look around",
-                  }}
-                  locale="en"
-                  src="/vr-clip.mp4"
-                  title="Explore the ocean in 360°"
-                />
-              </div>
-              <p className="mt-3 text-xs text-muted-foreground">
-                {copy.xr.note}
+              <p className="mt-6 text-sm leading-7 text-muted-foreground">
+                {copy.program.body}
               </p>
             </div>
+            <figure className="mx-auto w-full max-w-2xl lg:col-start-1 lg:row-span-2 lg:row-start-1">
+              <Image
+                src="/honu/program.png"
+                alt={copy.program.imageAlt}
+                width={1254}
+                height={1254}
+                sizes="(min-width: 1280px) 580px, (min-width: 1024px) 48vw, (min-width: 768px) 672px, 90vw"
+                className="h-auto w-full rounded-[2rem]"
+              />
+              <figcaption className="mt-4 text-center">
+                <a
+                  href="/honu/program.png"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 text-xs text-muted-foreground underline underline-offset-4 hover:text-primary"
+                >
+                  {copy.program.imageLink}
+                  <ArrowUpRightIcon className="size-3" aria-hidden="true" />
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              </figcaption>
+            </figure>
+            <ol className="flex flex-col gap-6 lg:col-start-2">
+              {copy.program.pillars.map((pillar) => (
+                <li key={pillar.number} className="flex gap-4">
+                  <span className="pt-1 font-mono text-xs text-primary" aria-hidden="true">
+                    {pillar.number}
+                  </span>
+                  <div>
+                    <h3 className="font-header text-2xl leading-tight sm:text-3xl">
+                      {pillar.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      {pillar.body}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
           </div>
         </section>
         <section
