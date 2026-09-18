@@ -1,0 +1,35 @@
+.wander {
+  animation: wander 4.8s ease-in-out infinite alternate;
+}
+
+.breathe {
+  transform-origin: 50% 80%;
+  animation: breathe 4s ease-in-out infinite alternate;
+}
+
+.flutter {
+  animation: flutter 5s ease-in-out infinite alternate;
+}
+
+.scene[data-paused="true"] :is(.wander, .breathe, .flutter) {
+  animation-play-state: paused;
+}
+
+@keyframes wander {
+  from { transform: translate(-5px, 1px) rotate(-2deg); }
+  to { transform: translate(5px, -2px) rotate(2deg); }
+}
+
+@keyframes breathe {
+  from { transform: rotate(-1deg) scale(0.98); }
+  to { transform: rotate(1deg) scale(1.02); }
+}
+
+@keyframes flutter {
+  from { transform: translate(0, 1px) rotate(-2deg); }
+  to { transform: translate(3px, -7px) rotate(2deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wander, .breathe, .flutter { animation: none; }
+}

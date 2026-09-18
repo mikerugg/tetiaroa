@@ -3,32 +3,13 @@ import { ArrowDownIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { pillarContent, type PillarLocale } from "./pillar-content";
-import { LivingAtollScan, type AtollScanZone } from "./living-atoll-scan";
 import { paperVars, PillarChrome, PillarEndMatter } from "./pillar-shared";
-
-const zoneLabels = {
-  en: [
-    { label: "Motu / remove pressure", coordinate: "land · habitat · biosecurity" },
-    { label: "Lagoon / read response", coordinate: "waterline · nursery · nesting" },
-    { label: "Reef / test what comes next", coordinate: "outer edge · adaptation · data" },
-  ],
-  fr: [
-    { label: "Motu / lever la pression", coordinate: "terre · habitat · biosécurité" },
-    { label: "Lagon / lire la réponse", coordinate: "rivage · nurserie · ponte" },
-    { label: "Récif / tester la suite", coordinate: "bord externe · adaptation · données" },
-  ],
-} as const;
+import { TarpRestoration } from "./tarp/tarp-restoration";
+import { tarpCopy } from "./tarp/tarp-content";
 
 export function ResearchConservationPage({ locale }: { locale: PillarLocale }) {
   const slug = "research-conservation";
   const copy = pillarContent[locale][slug];
-  const zones: AtollScanZone[] = copy.efforts.map((effort, index) => ({
-    ...zoneLabels[locale][index],
-    title: effort.title,
-    copy: effort.copy,
-    details: effort.details,
-    media: copy.media[index],
-  }));
 
   return (
     <PillarChrome locale={locale} slug={slug}>
@@ -60,8 +41,8 @@ export function ResearchConservationPage({ locale }: { locale: PillarLocale }) {
             <div className="border-l border-primary/50 pl-6">
               <p className="font-display text-2xl leading-snug sm:text-3xl">{copy.heroCopy}</p>
               <Button asChild variant="outline" className="mt-6">
-                <a href="#scan">
-                  {locale === "fr" ? "Lancer le scan" : "Begin the scan"}
+                <a href="#tarp-restoration">
+                  {tarpCopy[locale].title}
                   <ArrowDownIcon data-icon="inline-end" aria-hidden="true" />
                 </a>
               </Button>
@@ -81,15 +62,7 @@ export function ResearchConservationPage({ locale }: { locale: PillarLocale }) {
         </div>
       </section>
 
-      <section id="scan" className="relative px-5 py-16 md:px-8 lg:px-12 lg:py-24">
-        <div className="mx-auto max-w-[1450px]">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">Living Atoll Scan</p>
-          <h2 className="mt-3 max-w-4xl font-header text-5xl uppercase leading-none sm:text-7xl">{copy.mediaTitle}</h2>
-          <div className="mt-10">
-            <LivingAtollScan zones={zones} />
-          </div>
-        </div>
-      </section>
+      <TarpRestoration locale={locale} />
 
       <section className="border-y border-border bg-popover px-5 py-16 md:px-8 lg:px-12 lg:py-24">
         <div className="mx-auto grid max-w-[1250px] gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.7fr)] lg:items-end">

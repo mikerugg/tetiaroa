@@ -66,7 +66,8 @@
   --sidebar-ring: var(--glow);
 }
 
-.honu-cartoon-theme {
+.honu-cartoon-theme,
+.tarp-theme {
   --background: #f4f1e7;
   --foreground: #173e3b;
   --card: #fffdf6;
