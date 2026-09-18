@@ -1,12 +1,72 @@
 export const assetRoot = "/pillars/research-conservation/tarp";
 
 export const invaders = [
-  { id: "rat-1", kind: "rat", x: 30, y: 44, width: 13, mirror: false, returns: "seedling", returnX: 32, returnY: 46 },
-  { id: "rat-2", kind: "rat", x: 55, y: 36, width: 12, mirror: true, returns: "tern", returnX: 55, returnY: 28 },
-  { id: "rat-3", kind: "rat", x: 75, y: 48, width: 13, mirror: false, returns: "tern", returnX: 77, returnY: 38 },
-  { id: "ants-1", kind: "ants", x: 24, y: 60, width: 10, mirror: false, returns: "crab", returnX: 27, returnY: 63 },
-  { id: "ants-2", kind: "ants", x: 45, y: 54, width: 10, mirror: false, returns: "seedling", returnX: 45, returnY: 54 },
-  { id: "ants-3", kind: "ants", x: 65, y: 60, width: 10, mirror: false, returns: "crab", returnX: 62, returnY: 64 },
+  {
+    id: "rat-1",
+    kind: "rat",
+    x: 30,
+    y: 44,
+    width: 13,
+    mirror: false,
+    returns: "seedling",
+    returnX: 32,
+    returnY: 46,
+  },
+  {
+    id: "rat-2",
+    kind: "rat",
+    x: 55,
+    y: 36,
+    width: 12,
+    mirror: true,
+    returns: "tern",
+    returnX: 55,
+    returnY: 28,
+  },
+  {
+    id: "rat-3",
+    kind: "rat",
+    x: 75,
+    y: 48,
+    width: 13,
+    mirror: false,
+    returns: "tern",
+    returnX: 77,
+    returnY: 38,
+  },
+  {
+    id: "ants-1",
+    kind: "ants",
+    x: 24,
+    y: 60,
+    width: 10,
+    mirror: false,
+    returns: "crab",
+    returnX: 27,
+    returnY: 63,
+  },
+  {
+    id: "ants-2",
+    kind: "ants",
+    x: 45,
+    y: 54,
+    width: 10,
+    mirror: false,
+    returns: "seedling",
+    returnX: 45,
+    returnY: 54,
+  },
+  {
+    id: "ants-3",
+    kind: "ants",
+    x: 65,
+    y: 60,
+    width: 10,
+    mirror: false,
+    returns: "crab",
+    returnX: 62,
+    returnY: 64,
+  },
 ] as const;
 
 export type InvaderId = (typeof invaders)[number]["id"];
@@ -22,7 +82,10 @@ export const regrowth = [
   { x: 59, y: 48, width: 8, after: 6 },
 ] as const;
 
-export function removeInvader(removed: readonly InvaderId[], id: InvaderId): InvaderId[] {
+export function removeInvader(
+  removed: readonly InvaderId[],
+  id: InvaderId,
+): InvaderId[] {
   return removed.includes(id) ? [...removed] : [...removed, id];
 }
 

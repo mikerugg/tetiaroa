@@ -25,7 +25,8 @@ export const tarpCopy = {
     ratRemoved: "One less rat. Keep looking among the leaves.",
     antsRemoved: "This patch is clear of ants. Keep exploring.",
     seedlingsHint: "New leaves are opening. Tap a seedling to look closer.",
-    crabsHint: "A red crab is back on the sand. Tap it to meet your new neighbor.",
+    crabsHint:
+      "A red crab is back on the sand. Tap it to meet your new neighbor.",
     ternsHint: "White wings above the trees. Tap a tern to meet it.",
     completeTitle: "Look who’s back.",
     completeBody:
@@ -66,9 +67,12 @@ export const tarpCopy = {
     firstHint: "Touchez un rat ou un groupe de fourmis jaunes.",
     ratRemoved: "Un rat de moins. Cherchez encore entre les feuilles.",
     antsRemoved: "Les fourmis ont quitté ce coin. Poursuivez l’exploration.",
-    seedlingsHint: "De nouvelles feuilles s’ouvrent. Touchez une jeune pousse pour l’observer.",
-    crabsHint: "Un crabe rouge est de retour sur le sable. Touchez-le pour faire sa connaissance.",
-    ternsHint: "Des ailes blanches au-dessus des arbres. Touchez une gygis pour la découvrir.",
+    seedlingsHint:
+      "De nouvelles feuilles s’ouvrent. Touchez une jeune pousse pour l’observer.",
+    crabsHint:
+      "Un crabe rouge est de retour sur le sable. Touchez-le pour faire sa connaissance.",
+    ternsHint:
+      "Des ailes blanches au-dessus des arbres. Touchez une gygis pour la découvrir.",
     completeTitle: "Regardez qui est revenu.",
     completeBody:
       "Restez un moment avec les nouveaux arrivants. Sur Tetiaroa, l’équipe du TARP poursuit son travail : guetter le retour des espèces invasives, protéger les nids et suivre chaque signe de reprise.",
@@ -92,16 +96,14 @@ export const nativeLife = [
     en: {
       name: "Native seedlings",
       title: "A forest starts close to the ground.",
-      body:
-        "A new shoot is easy to miss. Rats eat seeds and young plants; removing them gives native vegetation a chance to grow. Those leaves can become shelter for the island’s next generation of seabirds.",
+      body: "A new shoot is easy to miss. Rats eat seeds and young plants; removing them gives native vegetation a chance to grow. Those leaves can become shelter for the island’s next generation of seabirds.",
       guideHref: "/island/plants",
       discoverLabel: "Discover the native seedlings",
     },
     fr: {
       name: "Jeunes plantes indigènes",
       title: "La forêt commence au ras du sol.",
-      body:
-        "Une jeune pousse passe facilement inaperçue. Les rats mangent graines et plantules ; leur retrait permet à la végétation indigène de grandir. Ces feuilles pourront un jour abriter une nouvelle génération d’oiseaux marins.",
+      body: "Une jeune pousse passe facilement inaperçue. Les rats mangent graines et plantules ; leur retrait permet à la végétation indigène de grandir. Ces feuilles pourront un jour abriter une nouvelle génération d’oiseaux marins.",
       guideHref: "/fr/island/plants",
       discoverLabel: "Découvrir les jeunes plantes indigènes",
     },
@@ -112,16 +114,14 @@ export const nativeLife = [
     en: {
       name: "Strawberry hermit crab",
       title: "That shell is going somewhere.",
-      body:
-        "Look for the bright red legs below that borrowed shell. Strawberry hermit crabs eat fallen leaves and other remains along the shore. When invasive ants disappear, native crabs have room to return.",
+      body: "Look for the bright red legs below that borrowed shell. Strawberry hermit crabs eat fallen leaves and other remains along the shore. When invasive ants disappear, native crabs have room to return.",
       guideHref: "/island/invertebrates/strawberry-hermit-crab",
       discoverLabel: "Meet the strawberry hermit crab",
     },
     fr: {
       name: "Bernard-l’ermite fraise",
       title: "Une coquille qui se promène.",
-      body:
-        "Repérez les pattes rouge vif sous la coquille. Le bernard-l’ermite fraise se nourrit de feuilles mortes et d’autres débris sur le rivage. Quand les fourmis invasives disparaissent, les crabes indigènes peuvent revenir.",
+      body: "Repérez les pattes rouge vif sous la coquille. Le bernard-l’ermite fraise se nourrit de feuilles mortes et d’autres débris sur le rivage. Quand les fourmis invasives disparaissent, les crabes indigènes peuvent revenir.",
       guideHref: "/fr/island/invertebrates/strawberry-hermit-crab",
       discoverLabel: "Rencontrer le bernard-l’ermite fraise",
     },
@@ -132,16 +132,14 @@ export const nativeLife = [
     en: {
       name: "White tern",
       title: "An egg out in the open.",
-      body:
-        "White terns lay a single egg right on a branch, without building a nest. With rats gone, more eggs can hatch—and more chicks get the chance to take flight.",
+      body: "White terns lay a single egg right on a branch, without building a nest. With rats gone, more eggs can hatch—and more chicks get the chance to take flight.",
       guideHref: "/island/birds/white-common-tern",
       discoverLabel: "Meet the white tern",
     },
     fr: {
       name: "Gygis blanche",
       title: "Un œuf à découvert.",
-      body:
-        "La gygis blanche pond un seul œuf directement sur une branche, sans construire de nid. Sans les rats, davantage d’œufs peuvent éclore et davantage de poussins ont la chance de prendre leur envol.",
+      body: "La gygis blanche pond un seul œuf directement sur une branche, sans construire de nid. Sans les rats, davantage d’œufs peuvent éclore et davantage de poussins ont la chance de prendre leur envol.",
       guideHref: "/fr/island/birds/white-common-tern",
       discoverLabel: "Rencontrer la gygis blanche",
     },

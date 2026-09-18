@@ -16,20 +16,36 @@
 }
 
 @keyframes wander {
-  from { transform: translate(-5px, 1px) rotate(-2deg); }
-  to { transform: translate(5px, -2px) rotate(2deg); }
+  from {
+    transform: translate(-5px, 1px) rotate(-2deg);
+  }
+  to {
+    transform: translate(5px, -2px) rotate(2deg);
+  }
 }
 
 @keyframes breathe {
-  from { transform: rotate(-1deg) scale(0.98); }
-  to { transform: rotate(1deg) scale(1.02); }
+  from {
+    transform: rotate(-1deg) scale(0.98);
+  }
+  to {
+    transform: rotate(1deg) scale(1.02);
+  }
 }
 
 @keyframes flutter {
-  from { transform: translate(0, 1px) rotate(-2deg); }
-  to { transform: translate(3px, -7px) rotate(2deg); }
+  from {
+    transform: translate(0, 1px) rotate(-2deg);
+  }
+  to {
+    transform: translate(3px, -7px) rotate(2deg);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wander, .breathe, .flutter { animation: none; }
+  .wander,
+  .breathe,
+  .flutter {
+    animation: none;
+  }
 }
