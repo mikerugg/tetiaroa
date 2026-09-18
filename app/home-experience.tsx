@@ -293,6 +293,12 @@ export default function HomeExperience({
                   </p>
                 ))}
               </div>
+              <Button asChild variant="impact" size="lg" className="mt-6">
+                <Link href={copy.restoration.href}>
+                  {copy.restoration.cta}
+                  <ArrowUpRightIcon data-icon="inline-end" aria-hidden="true" />
+                </Link>
+              </Button>
             </div>
           </div>
         </section>

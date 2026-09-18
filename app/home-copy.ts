@@ -131,6 +131,8 @@ export type HomeCopy = {
     title: string;
     paragraphs: string[];
     imageAlt: string;
+    cta: string;
+    href: string;
   };
   pillars: {
     eyebrow: string;
@@ -473,6 +475,8 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         "Our large-scale restoration program is unique in French Polynesia and aims to restore the atoll's natural ecological processes by removing invasive species and helping native species return.",
       ],
       imageAlt: "A fieldworker tending solar-powered speakers for seabird restoration on Tetiaroa",
+      cta: "Learn more",
+      href: "/pillars/research-conservation",
     },
     pillars: {
       eyebrow: "Pillars of Tetiaroa",
@@ -921,6 +925,8 @@ export const homeCopies: Record<HomeLocale, HomeCopy> = {
         "Notre programme de restauration à grande échelle, unique en Polynésie française, vise à rétablir les processus écologiques naturels de l’atoll en éliminant les espèces invasives et en favorisant le retour des espèces indigènes.",
       ],
       imageAlt: "Une personne s’occupe de haut-parleurs alimentés par des panneaux solaires pour favoriser le retour des oiseaux marins à Tetiaroa",
+      cta: "En savoir plus",
+      href: "/fr/pillars/research-conservation",
     },
     pillars: {
       eyebrow: "Les piliers de Tetiaroa",
